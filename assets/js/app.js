@@ -254,7 +254,7 @@
     var subs = Bank.subjects();
     $('#ppSubject').innerHTML = '<option value="">全部</option>' + subs.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join('');
     refreshTopics();
-    refreshSources();
+    renderSourceChecklist('#ppSources', '#ppSrcCount', '#ppSrcAll', '#ppSrcNone');
   }
   function refreshTopics() {
     var sub = $('#ppSubject').value;
@@ -266,19 +266,23 @@
     var s = t.source || '';
     return s.replace(/\s*Q\d+[a-z]?$/i, '') || '(未标注来源)';
   }
-  function refreshSources() {
+  function renderSourceChecklist(boxId, countId, allId, noneId) {
     var seen = {}, list = [];
     Bank.all().forEach(function (t) {
       var s = sourceSetOf(t);
       if (!seen[s]) { seen[s] = 1; list.push(s); }
     });
     list.sort();
-    $('#ppSources').innerHTML = list.map(function (s) {
+    var box = $(boxId);
+    box.innerHTML = list.map(function (s) {
       return '<label class="srcitem"><input type="checkbox" value="' + esc(s) + '"> ' + esc(s) + '</label>';
     }).join('');
-    $('#ppSrcCount').textContent = list.length + ' 个来源';
-    $('#ppSrcAll').onclick = function () { $$('#ppSources input').forEach(function (c) { c.checked = true; }); };
-    $('#ppSrcNone').onclick = function () { $$('#ppSources input').forEach(function (c) { c.checked = false; }); };
+    if (countId) $(countId).textContent = list.length + ' 个来源';
+    if (allId) $(allId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = true; }); };
+    if (noneId) $(noneId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = false; }); };
+  }
+  function checkedSources(boxId) {
+    return Array.prototype.slice.call($$(boxId + ' input:checked')).map(function (c) { return c.value; });
   }
 
   function genPaper() {
@@ -294,7 +298,7 @@
     else if (scope === 'new') ids = SRS.newIds(ids);
     if (topic && scope !== 'topic') ids = ids.filter(function (id) { var t = Bank.byId(id); return t && (t.topic || '') === topic; });
 
-    var srcs = Array.prototype.slice.call($$('#ppSources input:checked')).map(function (c) { return c.value; });
+    var srcs = checkedSources('#ppSources');
     if (srcs.length) ids = ids.filter(function (id) { var t = Bank.byId(id); return t && srcs.indexOf(sourceSetOf(t)) >= 0; });
 
     if (!ids.length) { toast('该条件下没有题目'); return; }
@@ -461,9 +465,13 @@
 
   /* ---------------- 题库管理 ---------------- */
   function renderBank() {
-    var all = Bank.all(), custom = Store.customBank().map(function (t) { return t.id; });
-    $('#bankInfo').innerHTML = '共 ' + all.length + ' 个题型模板（内置 ' + Bank.base.length + '，本机导入 ' + custom.length + '）';
-    if (!all.length) { $('#bankList').innerHTML = '<p class="muted">题库为空。</p>'; return; }
+    renderSourceChecklist('#bankSrcBox', '#bankSrcCount', '#bankSrcAll', '#bankSrcNone');
+    var srcs = checkedSources('#bankSrcBox');
+    var allBank = Bank.all();
+    var all = allBank.filter(function (t) { return !srcs.length || srcs.indexOf(sourceSetOf(t)) >= 0; });
+    var custom = Store.customBank().map(function (t) { return t.id; });
+    $('#bankInfo').innerHTML = '共 ' + all.length + ' / ' + allBank.length + ' 个题型模板（内置 ' + Bank.base.length + '，本机导入 ' + custom.length + '）' + (srcs.length ? ' · 已按来源筛选' : '');
+    if (!all.length) { $('#bankList').innerHTML = '<p class="muted">该来源下没有题型。</p>'; return; }
     var p = Store.progress();
     $('#bankList').innerHTML = all.map(function (t) {
       var st = p[t.id];

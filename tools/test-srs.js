@@ -72,10 +72,12 @@ SRS.record(s1[0].id, false, {});
 const st2 = SRS.state(s1[0].id);
 ok &= chk('抽样答错 -> 取消掌握并重回错题本', !st2.mastered && st2.streak === 0 && Store.wrong().some(x => x.id === s1[0].id));
 
-// 9. 每个模板都能被调度到（跑 30 轮覆盖全部题型）
+// 9. 每个模板都能被调度到（轮数按题库规模自适应：需约 n·ln n 次新题抽取才能覆盖全部）
 let covered = new Set();
-for (let i = 0; i < 40; i++) SRS.buildSession({ mode: 'daily' }).forEach(x => covered.add(x.id));
-ok &= chk('40 轮日常练习可覆盖全部题型', covered.size === bank.templates.length, covered.size + '/' + bank.templates.length);
+const N = bank.templates.length;
+const rounds = Math.ceil((N * (Math.log(N) + 5)) / 2 / 10) * 10;
+for (let i = 0; i < rounds; i++) SRS.buildSession({ mode: 'daily' }).forEach(x => covered.add(x.id));
+ok &= chk(rounds + ' 轮日常练习可覆盖全部题型', covered.size === N, covered.size + '/' + N);
 
 console.log(log.join('\n'));
 console.log('-'.repeat(60));

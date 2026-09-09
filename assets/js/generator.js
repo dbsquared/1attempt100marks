@@ -181,6 +181,7 @@
 
   function checkSanity(tpl, ans) {
     var s = tpl.sanity || {};
+    if (ans.type === 'choice') return true; // choice 的 value 是选项下标（多选为数组），不做数值检查
     var v = ans.display === undefined ? ans.value : ans.value;
     if (typeof v === 'string') return true;
     if (!isFinite(v)) return false;

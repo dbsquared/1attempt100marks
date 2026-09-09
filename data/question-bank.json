@@ -10,18 +10,50 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "异分母分数加法",
-      "tags": ["分数", "计算"],
+      "tags": [
+        "分数",
+        "计算"
+      ],
       "source": "示例模板",
       "stem": "计算：[[{a}/{b}]] ＋ [[{c}/{d}]] ＝",
       "vars": {
-        "a": { "type": "int", "min": 1, "max": 8 },
-        "b": { "type": "int", "min": 2, "max": 9 },
-        "c": { "type": "int", "min": 1, "max": 8 },
-        "d": { "type": "int", "min": 2, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        }
       },
-      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "gcd(b,d) == 1", "(a*d + c*b) % (b*d) != 0"],
-      "answer": { "type": "fraction", "expr": "a*d + c*b", "denom": "b*d" },
-      "sanity": { "maxDen": 72 },
+      "constraints": [
+        "a < b",
+        "c < d",
+        "gcd(a,b) == 1",
+        "gcd(c,d) == 1",
+        "gcd(b,d) == 1",
+        "(a*d + c*b) % (b*d) != 0"
+      ],
+      "answer": {
+        "type": "fraction",
+        "expr": "a*d + c*b",
+        "denom": "b*d"
+      },
+      "sanity": {
+        "maxDen": 72
+      },
       "solution": "先通分：[[{a}/{b}]] ＝ [[{a*d}/{b*d}]]，[[{c}/{d}]] ＝ [[{c*b}/{b*d}]]；再相加：[[{a*d+c*b}/{b*d}]]。"
     },
     {
@@ -31,18 +63,51 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "异分母分数减法",
-      "tags": ["分数", "计算"],
+      "tags": [
+        "分数",
+        "计算"
+      ],
       "source": "示例模板",
       "stem": "计算：[[{a}/{b}]] − [[{c}/{d}]] ＝",
       "vars": {
-        "a": { "type": "int", "min": 1, "max": 8 },
-        "b": { "type": "int", "min": 2, "max": 9 },
-        "c": { "type": "int", "min": 1, "max": 8 },
-        "d": { "type": "int", "min": 2, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        }
       },
-      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "gcd(b,d) == 1", "a*d > c*b", "(a*d - c*b) % (b*d) != 0"],
-      "answer": { "type": "fraction", "expr": "a*d - c*b", "denom": "b*d" },
-      "sanity": { "maxDen": 72 },
+      "constraints": [
+        "a < b",
+        "c < d",
+        "gcd(a,b) == 1",
+        "gcd(c,d) == 1",
+        "gcd(b,d) == 1",
+        "a*d > c*b",
+        "(a*d - c*b) % (b*d) != 0"
+      ],
+      "answer": {
+        "type": "fraction",
+        "expr": "a*d - c*b",
+        "denom": "b*d"
+      },
+      "sanity": {
+        "maxDen": 72
+      },
       "solution": "通分后相减：[[{a*d}/{b*d}]] − [[{c*b}/{b*d}]] ＝ [[{a*d-c*b}/{b*d}]]。"
     },
     {
@@ -52,18 +117,49 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "分数乘分数",
-      "tags": ["分数", "计算"],
+      "tags": [
+        "分数",
+        "计算"
+      ],
       "source": "示例模板",
       "stem": "计算：[[{a}/{b}]] × [[{c}/{d}]] ＝",
       "vars": {
-        "a": { "type": "int", "min": 1, "max": 8 },
-        "b": { "type": "int", "min": 2, "max": 9 },
-        "c": { "type": "int", "min": 1, "max": 8 },
-        "d": { "type": "int", "min": 2, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        }
       },
-      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "gcd(a,d) + gcd(c,b) > 2"],
-      "answer": { "type": "fraction", "expr": "a*c", "denom": "b*d" },
-      "sanity": { "maxDen": 81 },
+      "constraints": [
+        "a < b",
+        "c < d",
+        "gcd(a,b) == 1",
+        "gcd(c,d) == 1",
+        "gcd(a,d) + gcd(c,b) > 2"
+      ],
+      "answer": {
+        "type": "fraction",
+        "expr": "a*c",
+        "denom": "b*d"
+      },
+      "sanity": {
+        "maxDen": 81
+      },
       "solution": "分子相乘作分子，分母相乘作分母：[[{a*c}/{b*d}]]，能约分的要约成最简分数。"
     },
     {
@@ -73,18 +169,49 @@
       "grade": "六年级",
       "difficulty": 3,
       "title": "分数除以分数",
-      "tags": ["分数", "计算"],
+      "tags": [
+        "分数",
+        "计算"
+      ],
       "source": "示例模板",
       "stem": "计算：[[{a}/{b}]] ÷ [[{c}/{d}]] ＝",
       "vars": {
-        "a": { "type": "int", "min": 1, "max": 8 },
-        "b": { "type": "int", "min": 2, "max": 9 },
-        "c": { "type": "int", "min": 1, "max": 8 },
-        "d": { "type": "int", "min": 2, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        }
       },
-      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "a*d != b*c"],
-      "answer": { "type": "fraction", "expr": "a*d", "denom": "b*c" },
-      "sanity": { "maxDen": 81 },
+      "constraints": [
+        "a < b",
+        "c < d",
+        "gcd(a,b) == 1",
+        "gcd(c,d) == 1",
+        "a*d != b*c"
+      ],
+      "answer": {
+        "type": "fraction",
+        "expr": "a*d",
+        "denom": "b*c"
+      },
+      "sanity": {
+        "maxDen": 81
+      },
       "solution": "除以一个分数等于乘它的倒数：[[{a}/{b}]] × [[{d}/{c}]] ＝ [[{a*d}/{b*c}]]。"
     },
     {
@@ -94,17 +221,41 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "解 ax＋b＝c 型方程",
-      "tags": ["方程"],
+      "tags": [
+        "方程"
+      ],
       "source": "示例模板",
       "stem": "解方程：{a}x ＋ {b} ＝ {c}，则 x ＝",
       "vars": {
-        "a": { "type": "int", "min": 2, "max": 9 },
-        "b": { "type": "int", "min": 1, "max": 30 },
-        "c": { "type": "int", "min": 10, "max": 80 }
+        "a": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "b": {
+          "type": "int",
+          "min": 1,
+          "max": 30
+        },
+        "c": {
+          "type": "int",
+          "min": 10,
+          "max": 80
+        }
       },
-      "constraints": ["c > b", "(c - b) % a == 0"],
-      "answer": { "type": "integer", "expr": "(c - b) / a" },
-      "sanity": { "integer": true, "min": 1, "max": 30 },
+      "constraints": [
+        "c > b",
+        "(c - b) % a == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "(c - b) / a"
+      },
+      "sanity": {
+        "integer": true,
+        "min": 1,
+        "max": 30
+      },
       "solution": "移项得 {a}x ＝ {c} − {b} ＝ {c-b}，所以 x ＝ {c-b} ÷ {a} ＝ {(c-b)/a}。"
     },
     {
@@ -114,14 +265,27 @@
       "grade": "五年级",
       "difficulty": 1,
       "title": "长方形面积",
-      "tags": ["面积"],
+      "tags": [
+        "面积"
+      ],
       "source": "示例模板",
       "stem": "一个长方形花坛，长 {a} 厘米，宽 {b} 厘米。它的面积是多少？",
       "vars": {
-        "a": { "type": "int", "min": 3, "max": 25 },
-        "b": { "type": "int", "min": 2, "max": 18 }
+        "a": {
+          "type": "int",
+          "min": 3,
+          "max": 25
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 18
+        }
       },
-      "answer": { "type": "integer", "expr": "a * b" },
+      "answer": {
+        "type": "integer",
+        "expr": "a * b"
+      },
       "unit": "平方厘米",
       "solution": "长方形面积 ＝ 长 × 宽 ＝ {a} × {b} ＝ {a*b}（平方厘米）。"
     },
@@ -132,15 +296,30 @@
       "grade": "五年级",
       "difficulty": 2,
       "title": "三角形面积",
-      "tags": ["面积"],
+      "tags": [
+        "面积"
+      ],
       "source": "示例模板",
       "stem": "一个三角形的底是 {a} 厘米，这条底边上的高是 {h} 厘米。它的面积是多少？",
       "vars": {
-        "a": { "type": "int", "min": 4, "max": 24 },
-        "h": { "type": "int", "min": 3, "max": 20 }
+        "a": {
+          "type": "int",
+          "min": 4,
+          "max": 24
+        },
+        "h": {
+          "type": "int",
+          "min": 3,
+          "max": 20
+        }
       },
-      "constraints": ["(a * h) % 2 == 0"],
-      "answer": { "type": "integer", "expr": "a * h / 2" },
+      "constraints": [
+        "(a * h) % 2 == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "a * h / 2"
+      },
       "unit": "平方厘米",
       "solution": "三角形面积 ＝ 底 × 高 ÷ 2 ＝ {a} × {h} ÷ 2 ＝ {a*h/2}（平方厘米）。"
     },
@@ -151,11 +330,24 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "已知半径求圆面积",
-      "tags": ["圆", "面积"],
+      "tags": [
+        "圆",
+        "面积"
+      ],
       "source": "示例模板",
       "stem": "一个圆形花坛的半径是 {r} 米，它的占地面积是多少？（π 取 3.14）",
-      "vars": { "r": { "type": "int", "min": 1, "max": 12 } },
-      "answer": { "type": "number", "expr": "roundTo(3.14 * r^2, 2)", "digits": 2 },
+      "vars": {
+        "r": {
+          "type": "int",
+          "min": 1,
+          "max": 12
+        }
+      },
+      "answer": {
+        "type": "number",
+        "expr": "roundTo(3.14 * r^2, 2)",
+        "digits": 2
+      },
       "unit": "平方米",
       "solution": "S ＝ πr² ＝ 3.14 × {r} × {r} ＝ {roundTo(3.14*r^2, 2)}（平方米）。"
     },
@@ -166,11 +358,24 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "已知直径求圆周长",
-      "tags": ["圆", "周长"],
+      "tags": [
+        "圆",
+        "周长"
+      ],
       "source": "示例模板",
       "stem": "一个圆形水池的直径是 {d} 米，绕它走一圈是多少米？（π 取 3.14）",
-      "vars": { "d": { "type": "int", "min": 2, "max": 30 } },
-      "answer": { "type": "number", "expr": "roundTo(3.14 * d, 2)", "digits": 2 },
+      "vars": {
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 30
+        }
+      },
+      "answer": {
+        "type": "number",
+        "expr": "roundTo(3.14 * d, 2)",
+        "digits": 2
+      },
       "unit": "米",
       "solution": "C ＝ πd ＝ 3.14 × {d} ＝ {roundTo(3.14*d, 2)}（米）。"
     },
@@ -181,16 +386,44 @@
       "grade": "六年级",
       "difficulty": 2,
       "title": "求一个数的百分之几",
-      "tags": ["百分数"],
+      "tags": [
+        "百分数"
+      ],
       "source": "示例模板",
       "stem": "{a} 的 {b}% 是多少？",
       "vars": {
-        "a": { "type": "int", "min": 20, "max": 600, "step": 10 },
-        "b": { "type": "pick", "from": [5, 10, 15, 20, 25, 40, 50, 60, 75, 80] }
+        "a": {
+          "type": "int",
+          "min": 20,
+          "max": 600,
+          "step": 10
+        },
+        "b": {
+          "type": "pick",
+          "from": [
+            5,
+            10,
+            15,
+            20,
+            25,
+            40,
+            50,
+            60,
+            75,
+            80
+          ]
+        }
       },
-      "constraints": ["(a * b) % 100 == 0"],
-      "answer": { "type": "integer", "expr": "a * b / 100" },
-      "sanity": { "integer": true },
+      "constraints": [
+        "(a * b) % 100 == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "a * b / 100"
+      },
+      "sanity": {
+        "integer": true
+      },
       "solution": "求一个数的百分之几用乘法：{a} × {b}% ＝ {a} × [[{b}/100]] ＝ {a*b/100}。"
     },
     {
@@ -200,15 +433,38 @@
       "grade": "六年级",
       "difficulty": 3,
       "title": "打折问题",
-      "tags": ["百分数", "应用题"],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
       "source": "示例模板",
       "stem": "一件商品原价 {a} 元，现在打 {b} 折出售。现价是多少元？",
       "vars": {
-        "a": { "type": "int", "min": 50, "max": 2000, "step": 10 },
-        "b": { "type": "pick", "from": [5, 6, 7, 8, 9] }
+        "a": {
+          "type": "int",
+          "min": 50,
+          "max": 2000,
+          "step": 10
+        },
+        "b": {
+          "type": "pick",
+          "from": [
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
       },
-      "constraints": ["(a * b) % 10 == 0"],
-      "answer": { "type": "number", "expr": "a * b / 10", "digits": 2 },
+      "constraints": [
+        "(a * b) % 10 == 0"
+      ],
+      "answer": {
+        "type": "number",
+        "expr": "a * b / 10",
+        "digits": 2
+      },
       "unit": "元",
       "solution": "{b} 折就是原价的 [[{b}/10]]，所以现价 ＝ {a} × [[{b}/10]] ＝ {a*b/10}（元）。"
     },
@@ -219,15 +475,37 @@
       "grade": "五年级",
       "difficulty": 2,
       "title": "路程÷速度＝时间",
-      "tags": ["应用题"],
+      "tags": [
+        "应用题"
+      ],
       "source": "示例模板",
       "stem": "甲乙两地相距 {a} 千米。一辆汽车每小时行驶 {b} 千米，从甲地到乙地需要多少小时？",
       "vars": {
-        "a": { "type": "int", "min": 60, "max": 600, "step": 10 },
-        "b": { "type": "pick", "from": [30, 40, 50, 60, 75, 80] }
+        "a": {
+          "type": "int",
+          "min": 60,
+          "max": 600,
+          "step": 10
+        },
+        "b": {
+          "type": "pick",
+          "from": [
+            30,
+            40,
+            50,
+            60,
+            75,
+            80
+          ]
+        }
       },
-      "constraints": ["a % b == 0"],
-      "answer": { "type": "integer", "expr": "a / b" },
+      "constraints": [
+        "a % b == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "a / b"
+      },
       "unit": "小时",
       "solution": "时间 ＝ 路程 ÷ 速度 ＝ {a} ÷ {b} ＝ {a/b}（小时）。"
     },
@@ -238,16 +516,35 @@
       "grade": "四年级",
       "difficulty": 2,
       "title": "单价×数量＝总价",
-      "tags": ["小数", "应用题"],
+      "tags": [
+        "小数",
+        "应用题"
+      ],
       "source": "示例模板",
       "stem": "一支钢笔 {a} 元，买 {b} 支一共需要多少元？",
       "vars": {
-        "a": { "type": "dec", "min": 1.5, "max": 29.5, "digits": 1 },
-        "b": { "type": "int", "min": 2, "max": 24 }
+        "a": {
+          "type": "dec",
+          "min": 1.5,
+          "max": 29.5,
+          "digits": 1
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 24
+        }
       },
-      "answer": { "type": "number", "expr": "a * b", "digits": 2 },
+      "answer": {
+        "type": "number",
+        "expr": "a * b",
+        "digits": 2
+      },
       "unit": "元",
-      "sanity": { "maxDigits": 2, "max": 800 },
+      "sanity": {
+        "maxDigits": 2,
+        "max": 800
+      },
       "solution": "总价 ＝ 单价 × 数量 ＝ {a} × {b} ＝ {a*b}（元）。"
     },
     {
@@ -257,18 +554,39 @@
       "grade": "五年级",
       "difficulty": 2,
       "title": "求三个数的平均数",
-      "tags": ["统计"],
+      "tags": [
+        "统计"
+      ],
       "source": "示例模板",
       "stem": "小明三次数学测验的成绩分别是 {a} 分、{b} 分和 {c} 分。这三次的平均成绩是多少分？",
       "vars": {
-        "a": { "type": "int", "min": 70, "max": 100 },
-        "b": { "type": "int", "min": 70, "max": 100 },
-        "c": { "type": "int", "min": 70, "max": 100 }
+        "a": {
+          "type": "int",
+          "min": 70,
+          "max": 100
+        },
+        "b": {
+          "type": "int",
+          "min": 70,
+          "max": 100
+        },
+        "c": {
+          "type": "int",
+          "min": 70,
+          "max": 100
+        }
       },
-      "constraints": ["(a + b + c) % 3 == 0"],
-      "answer": { "type": "integer", "expr": "(a + b + c) / 3" },
+      "constraints": [
+        "(a + b + c) % 3 == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "(a + b + c) / 3"
+      },
       "unit": "分",
-      "sanity": { "integer": true },
+      "sanity": {
+        "integer": true
+      },
       "solution": "平均数 ＝ 总和 ÷ 个数 ＝（{a} ＋ {b} ＋ {c}）÷ 3 ＝ {a+b+c} ÷ 3 ＝ {(a+b+c)/3}（分）。"
     },
     {
@@ -278,18 +596,39 @@
       "grade": "五年级",
       "difficulty": 4,
       "title": "鸡兔同笼求兔数",
-      "tags": ["应用题", "假设法"],
+      "tags": [
+        "应用题",
+        "假设法"
+      ],
       "source": "示例模板",
       "stem": "鸡和兔关在同一个笼子里，从上面数一共有 {h} 个头，从下面数一共有 {f} 只脚。兔子有多少只？",
       "vars": {
-        "h": { "type": "int", "min": 6, "max": 22 },
-        "r": { "type": "int", "min": 1, "max": 14 }
+        "h": {
+          "type": "int",
+          "min": 6,
+          "max": 22
+        },
+        "r": {
+          "type": "int",
+          "min": 1,
+          "max": 14
+        }
       },
-      "constraints": ["r < h"],
-      "derived": { "f": "2*h + 2*r" },
-      "answer": { "type": "integer", "expr": "(f - 2*h) / 2" },
+      "constraints": [
+        "r < h"
+      ],
+      "derived": {
+        "f": "2*h + 2*r"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "(f - 2*h) / 2"
+      },
       "unit": "只",
-      "sanity": { "integer": true, "min": 1 },
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
       "solution": "假设全是鸡，应有 {2*h} 只脚；实际多出 {f} − {2*h} ＝ {f-2*h} 只脚。每把一只鸡换成一只兔会多 2 只脚，所以兔有 {f-2*h} ÷ 2 ＝ {(f-2*h)/2} 只。"
     },
     {
@@ -299,11 +638,22 @@
       "grade": "四年级",
       "difficulty": 1,
       "title": "千米换算成米",
-      "tags": ["单位"],
+      "tags": [
+        "单位"
+      ],
       "source": "示例模板",
       "stem": "{a} 千米 ＝ 多少米？",
-      "vars": { "a": { "type": "int", "min": 2, "max": 40 } },
-      "answer": { "type": "integer", "expr": "a * 1000" },
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 2,
+          "max": 40
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "a * 1000"
+      },
       "unit": "米",
       "solution": "1 千米 ＝ 1000 米，所以 {a} 千米 ＝ {a} × 1000 ＝ {a*1000} 米。"
     },
@@ -314,17 +664,40 @@
       "grade": "六年级",
       "difficulty": 3,
       "title": "化简成最简整数比",
-      "tags": ["比"],
+      "tags": [
+        "比"
+      ],
       "source": "示例模板",
       "stem": "甲数是 {a}，乙数是 {b}。甲数与乙数的最简整数比是多少？（请写成 m:n 的形式）",
       "vars": {
-        "k": { "type": "int", "min": 2, "max": 9 },
-        "m": { "type": "int", "min": 1, "max": 9 },
-        "n": { "type": "int", "min": 2, "max": 9 }
+        "k": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "m": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "n": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        }
       },
-      "constraints": ["m != n", "gcd(m,n) == 1"],
-      "derived": { "a": "k*m", "b": "k*n" },
-      "answer": { "type": "text", "expr": "{m}:{n}" },
+      "constraints": [
+        "m != n",
+        "gcd(m,n) == 1"
+      ],
+      "derived": {
+        "a": "k*m",
+        "b": "k*n"
+      },
+      "answer": {
+        "type": "text",
+        "expr": "{m}:{n}"
+      },
       "solution": "{a} : {b} ＝（{a} ÷ {k}）:（{b} ÷ {k}）＝ {m}:{n}。"
     },
     {
@@ -334,15 +707,32 @@
       "grade": "四年级",
       "difficulty": 2,
       "title": "先乘除后加减",
-      "tags": ["计算"],
+      "tags": [
+        "计算"
+      ],
       "source": "示例模板",
       "stem": "计算：{a} ＋ {b} × {c} ＝",
       "vars": {
-        "a": { "type": "int", "min": 5, "max": 60 },
-        "b": { "type": "int", "min": 2, "max": 9 },
-        "c": { "type": "int", "min": 2, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 5,
+          "max": 60
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "c": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        }
       },
-      "answer": { "type": "integer", "expr": "a + b*c" },
+      "answer": {
+        "type": "integer",
+        "expr": "a + b*c"
+      },
       "solution": "先算乘法：{b} × {c} ＝ {b*c}，再算加法：{a} ＋ {b*c} ＝ {a+b*c}。"
     },
     {
@@ -352,15 +742,30 @@
       "grade": "四年级",
       "difficulty": 2,
       "title": "整数除法",
-      "tags": ["计算"],
+      "tags": [
+        "计算"
+      ],
       "source": "示例模板",
       "stem": "计算：{a} ÷ {b} ＝",
       "vars": {
-        "b": { "type": "int", "min": 2, "max": 9 },
-        "k": { "type": "int", "min": 3, "max": 40 }
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "k": {
+          "type": "int",
+          "min": 3,
+          "max": 40
+        }
       },
-      "derived": { "a": "b*k" },
-      "answer": { "type": "integer", "expr": "a / b" },
+      "derived": {
+        "a": "b*k"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "a / b"
+      },
       "solution": "想乘法算除法：{b} × {k} ＝ {a}，所以 {a} ÷ {b} ＝ {k}。"
     },
     {
@@ -370,16 +775,32 @@
       "grade": "四年级",
       "difficulty": 2,
       "title": "下面哪个算式结果最大",
-      "tags": ["选择", "估算"],
+      "tags": [
+        "选择",
+        "估算"
+      ],
       "source": "示例模板",
       "stem": "下面四个算式中，结果最大的是哪一个？",
       "vars": {
-        "a": { "type": "int", "min": 3, "max": 9 },
-        "b": { "type": "int", "min": 3, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "b": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        }
       },
       "answer": {
         "type": "choice",
-        "options": ["{a} × {b}", "{a} ＋ {b}", "{a} − {b}", "{a} ÷ {b}"],
+        "options": [
+          "{a} × {b}",
+          "{a} ＋ {b}",
+          "{a} − {b}",
+          "{a} ÷ {b}"
+        ],
         "correctIndex": 0
       },
       "solution": "{a} × {b} ＝ {a*b}，{a} ＋ {b} ＝ {a+b}，{a} − {b} ＝ {a-b}，{a} ÷ {b} ≈ {roundTo(a/b,2)}。最大的是 {a} × {b}。"
@@ -391,17 +812,1248 @@
       "grade": "六年级",
       "difficulty": 3,
       "title": "已知 a×x＝b 求 x（分数解）",
-      "tags": ["方程", "分数"],
+      "tags": [
+        "方程",
+        "分数"
+      ],
       "source": "示例模板",
       "stem": "已知 {a} × x ＝ {b}，求 x 的值。",
       "vars": {
-        "a": { "type": "int", "min": 2, "max": 9 },
-        "b": { "type": "int", "min": 1, "max": 9 }
+        "a": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "b": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        }
       },
-      "constraints": ["b % a != 0"],
-      "answer": { "type": "fraction", "expr": "b", "denom": "a" },
-      "sanity": { "maxDen": 9 },
+      "constraints": [
+        "b % a != 0"
+      ],
+      "answer": {
+        "type": "fraction",
+        "expr": "b",
+        "denom": "a"
+      },
+      "sanity": {
+        "maxDen": 9
+      },
       "solution": "x ＝ {b} ÷ {a} ＝ [[{b}/{a}]]。"
+    },
+    {
+      "id": "icas22y2m-01",
+      "subject": "数学",
+      "topic": "数数",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "数一数花瓶里的花",
+      "tags": [
+        "数数"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第1题",
+      "image": "assets/originals/2022y2m-q01.png",
+      "stem": "花瓶里一共有多少朵花？（见原题图）",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "6",
+          "7",
+          "8",
+          "9"
+        ],
+        "correctIndex": 1
+      },
+      "solution": "一朵一朵指着数：花瓶里一共有 7 朵花。"
+    },
+    {
+      "id": "icas22y2m-02",
+      "subject": "数学",
+      "topic": "可能性",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "一定会发生／可能发生／一定不会发生",
+      "tags": [
+        "可能性",
+        "日期"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第2题",
+      "image": "assets/originals/2022y2m-q02.png",
+      "stem": "今天是 6 月 6 日，星期一，天气晴。下面哪一句说的是**一定**会发生的事？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "明天将是星期四",
+          "下星期一将是 6 月 13 日",
+          "明天也会是晴天"
+        ],
+        "correctIndex": 1
+      },
+      "solution": "明天是星期二，不是星期四——一定不会发生；今天星期一，过 7 天正好是下星期一，6＋7＝13，所以下星期一一定是 6 月 13 日——一定会发生；明天晴不晴要等到才知道——只是可能发生。"
+    },
+    {
+      "id": "icas22y2m-03",
+      "subject": "数学",
+      "topic": "找规律",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "小棒搭图形的规律",
+      "tags": [
+        "找规律",
+        "加法"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第3题",
+      "image": "assets/originals/2022y2m-q03.png",
+      "stem": "杰丝用小棒搭图形：图形 1 用了 {a} 根小棒，图形 2 用了 {a+d} 根，图形 3 用了 {a+2*d} 根。照这个规律，搭图形 {n} 要用多少根小棒？",
+      "vars": {
+        "a": {
+          "type": "pick",
+          "from": [
+            3,
+            4,
+            5
+          ]
+        },
+        "d": {
+          "type": "pick",
+          "from": [
+            2,
+            3
+          ]
+        },
+        "n": {
+          "type": "pick",
+          "from": [
+            4,
+            5,
+            6
+          ]
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "a + (n-1)*d"
+      },
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "每往后一个图形多用 {d} 根：图形 1 用 {a} 根，图形 2 用 {a+d} 根，图形 3 用 {a+2*d} 根……图形 {n} 比图形 1 多（{n}-1）＝{n-1} 次，所以是 {a}＋{d}×{n-1}＝{a+(n-1)*d} 根。"
+    },
+    {
+      "id": "icas22y2m-04",
+      "subject": "数学",
+      "topic": "平面图形",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "六边形还缺几条边",
+      "tags": [
+        "图形",
+        "边"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第4题",
+      "image": "assets/originals/2022y2m-q04.png",
+      "stem": "马克在画一个六边形，已经画了 {k} 条边。他还要再画几条边才能画完这个六边形？",
+      "vars": {
+        "k": {
+          "type": "pick",
+          "from": [
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "6 - k"
+      },
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "六边形有 6 条边。已经画了 {k} 条，还缺 6−{k}＝{6-k} 条。"
+    },
+    {
+      "id": "icas22y2m-05",
+      "subject": "数学",
+      "topic": "位值",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "按规则摆两位数",
+      "tags": [
+        "位值",
+        "两位数"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第5题",
+      "image": "assets/originals/2022y2m-q05.png",
+      "stem": "莉兹用数字卡片 2、3、4、6、9 摆了一个两位数：个位数字比十位数字大 {d}。她摆的两位数是多少？",
+      "vars": {
+        "t": {
+          "type": "pick",
+          "from": [
+            2,
+            3,
+            4
+          ]
+        },
+        "d": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      },
+      "derived": {
+        "u": "t + d"
+      },
+      "constraints": [
+        "(u==3)||(u==4)||(u==6)||(u==9)"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "10*t + u"
+      },
+      "sanity": {
+        "integer": true
+      },
+      "solution": "十位是 {t}，个位比它大 {d}，个位是 {t}＋{d}＝{u}。这个两位数是 {10*t+u}。"
+    },
+    {
+      "id": "icas22y2m-06",
+      "subject": "数学",
+      "topic": "平面图形",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "房子画里没用的形状",
+      "tags": [
+        "图形"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第6题",
+      "image": "assets/originals/2022y2m-q06.png",
+      "stem": "看这幅房子的画（见原题图）：正方形的窗户、长方形的门和墙、圆形的门把手。哪种形状在画里**没有**用到？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "三角形",
+          "正方形",
+          "长方形",
+          "圆形"
+        ],
+        "correctIndex": 0
+      },
+      "solution": "画里有正方形（窗户）、长方形（门、墙）、圆形（门把手），唯独没有三角形。"
+    },
+    {
+      "id": "icas22y2m-07",
+      "subject": "数学",
+      "topic": "数轴",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "数轴上的箭头指几",
+      "tags": [
+        "数轴",
+        "等分"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第7题",
+      "image": "assets/originals/2022y2m-q07.png",
+      "stem": "一条数轴上，0 到 {E} 之间被平均分成了 {n} 小格。箭头指在从 0 数起的第 {k} 格刻度上，这个刻度表示多少？",
+      "vars": {
+        "E": {
+          "type": "pick",
+          "from": [
+            20,
+            40,
+            50,
+            100
+          ]
+        },
+        "n": {
+          "type": "pick",
+          "from": [
+            4,
+            5,
+            10
+          ]
+        },
+        "k": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        }
+      },
+      "constraints": [
+        "k < n",
+        "(k*E) % n == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "k*E/n"
+      },
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "每小格表示 {E}÷{n}＝{E/n}。第 {k} 格就是 {k}×{E/n}＝{k*E/n}。"
+    },
+    {
+      "id": "icas22y2m-08",
+      "subject": "数学",
+      "topic": "推理匹配",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "礼物盒里装什么",
+      "tags": [
+        "推理",
+        "大小比较"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第8题",
+      "image": "assets/originals/2022y2m-q08.png",
+      "stem": "杰克收到四个礼物盒（见原题图）。打开**最大的那个细长盒子**时，他最可能找到什么？",
+      "answer": {
+        "type": "text",
+        "expr": "滑板",
+        "alternatives": [
+          "skateboard",
+          "滑板鞋"
+        ]
+      },
+      "solution": "滑板又长又扁，适合装在最大的细长盒子里；篮球装高盒子、手表装最小的盒子、鞋子装中等偏大的盒子。"
+    },
+    {
+      "id": "icas22y2m-09",
+      "subject": "数学",
+      "topic": "统计图",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "象形统计图：比某队恰好多 2 球",
+      "tags": [
+        "统计图",
+        "比较"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第9题",
+      "image": "assets/originals/2022y2m-q09.png",
+      "stem": "四支球队最近一场比赛的进球数：甲队 {a} 球，乙队 {b} 球，丙队 {c} 球，丁队 {dd} 球。哪队进的球正好比丙队多 2 球？",
+      "vars": {
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 6
+        },
+        "b": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "dd": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        }
+      },
+      "derived": {
+        "a": "c + 2"
+      },
+      "constraints": [
+        "b != c + 2",
+        "dd != c + 2"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "甲队",
+          "乙队",
+          "丙队",
+          "丁队"
+        ],
+        "correctIndex": 0
+      },
+      "solution": "丙队进 {c} 球，多 2 球就是 {c+2} 球——正好是甲队（{a} 球）。乙队 {b} 球、丁队 {dd} 球都不对。"
+    },
+    {
+      "id": "icas22y2m-10",
+      "subject": "数学",
+      "topic": "符号算式",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "图形符号加减",
+      "tags": [
+        "符号代换",
+        "加减法"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第10题",
+      "image": "assets/originals/2022y2m-q10.png",
+      "stem": "◆ ＝ {a}，❁ ＝ {b}，✿ ＝ {c}。那么 ◆ ＋ ❁ − ✿ ＝ ？",
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 5,
+          "max": 9
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 4
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "a + b - c"
+      },
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "把每个符号换成它的数：{a}＋{b}−{c}＝{a+b-c}。"
+    },
+    {
+      "id": "icas22y2m-11",
+      "subject": "数学",
+      "topic": "加法",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "选出三张和为定值的卡片（多选）",
+      "tags": [
+        "加法",
+        "多选"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第11题",
+      "image": "assets/originals/2022y2m-q11.png",
+      "stem": "从下面五张卡片中选出**三张**，使三张卡片上的数加起来正好是 {T}。（点选三张卡片）",
+      "vars": {
+        "v1": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "v2": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "v3": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "v4": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "v5": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        }
+      },
+      "derived": {
+        "T": "v1 + v3 + v4"
+      },
+      "constraints": [
+        "v1 != v2",
+        "v1 != v3",
+        "v1 != v4",
+        "v1 != v5",
+        "v2 != v3",
+        "v2 != v4",
+        "v2 != v5",
+        "v3 != v4",
+        "v3 != v5",
+        "v4 != v5",
+        "v2 + v5 != v3 + v4",
+        "v2 + v5 != v1 + v4"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{v1}",
+          "{v2}",
+          "{v3}",
+          "{v4}",
+          "{v5}"
+        ],
+        "correctIndex": [
+          0,
+          2,
+          3
+        ]
+      },
+      "solution": "三张正确的卡片是 {v1}、{v3}、{v4}：{v1}＋{v3}＋{v4}＝{T}。其他任何三张的和都不等于 {T}。"
+    },
+    {
+      "id": "icas22y2m-12",
+      "subject": "数学",
+      "topic": "认识时间",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "快半小时的钟",
+      "tags": [
+        "时间",
+        "钟表"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第12题",
+      "image": "assets/originals/2022y2m-q12.png",
+      "stem": "现在是 12 点整。哪个钟显示的时间比现在**快半小时**？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "11:30",
+          "12:00",
+          "12:15",
+          "12:30"
+        ],
+        "correctIndex": 3
+      },
+      "solution": "“快半小时”就是多走半小时：12 点再过半小时是 12:30。"
+    },
+    {
+      "id": "icas22y2m-13a",
+      "subject": "数学",
+      "topic": "楼层加减",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "电梯上上下下（出到地上楼层）",
+      "tags": [
+        "加减法",
+        "数轴"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第13题",
+      "image": "assets/originals/2022y2m-q13.png",
+      "stem": "卡拉在地下 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，她出了电梯。她是在地上几楼出的电梯？（B1 是地下 1 层，G 是地面层，地上从 1 楼数起）",
+      "vars": {
+        "b": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3
+          ]
+        },
+        "u": {
+          "type": "int",
+          "min": 4,
+          "max": 9
+        },
+        "d": {
+          "type": "int",
+          "min": 1,
+          "max": 3
+        }
+      },
+      "constraints": [
+        "0 - b + u - d >= 1",
+        "0 - b + u - d <= 6"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "0 - b + u - d"
+      },
+      "unit": "楼",
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "B{b} 相当于 −{b} 层：−{b}＋{u}−{d}＝{0-b+u-d}，所以她在 {0-b+u-d} 楼出电梯。"
+    },
+    {
+      "id": "icas22y2m-13b",
+      "subject": "数学",
+      "topic": "楼层加减",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "电梯上上下下（出到地下楼层）",
+      "tags": [
+        "加减法",
+        "数轴"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第13题",
+      "image": "assets/originals/2022y2m-q13.png",
+      "stem": "卡拉在地下 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，她出了电梯。她是在地下哪一层出的电梯？（B1 是地下 1 层）",
+      "vars": {
+        "b": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3
+          ]
+        },
+        "u": {
+          "type": "int",
+          "min": 1,
+          "max": 5
+        },
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        }
+      },
+      "constraints": [
+        "0 - b + u - d <= -1",
+        "0 - b + u - d >= -4"
+      ],
+      "answer": {
+        "type": "text",
+        "expr": "B{0 - (0 - b + u - d)}"
+      },
+      "solution": "B{b} 相当于 −{b} 层：−{b}＋{u}−{d}＝{0-b+u-d}，负数表示在地下，就是 B{0-(0-b+u-d)} 层。"
+    },
+    {
+      "id": "icas22y2m-14",
+      "subject": "数学",
+      "topic": "统计表",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "数一数两种车一共有几辆",
+      "tags": [
+        "统计",
+        "加法"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第14题",
+      "image": "assets/originals/2022y2m-q14.png",
+      "stem": "玛丽在公交站数车：小汽车 {a} 辆，自行车 {b} 辆，卡车 {c} 辆，公交车 {dd} 辆。她看到的小汽车和卡车一共有多少辆？",
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 3,
+          "max": 12
+        },
+        "b": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        },
+        "c": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "dd": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "a + c"
+      },
+      "unit": "辆",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "只要把小汽车和卡车加起来：{a}＋{c}＝{a+c} 辆（自行车和公交车是干扰信息）。"
+    },
+    {
+      "id": "icas22y2m-15",
+      "subject": "数学",
+      "topic": "一半与对折",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "吃一半再吃一半，还剩几颗",
+      "tags": [
+        "一半",
+        "逆推"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第15题",
+      "image": "assets/originals/2022y2m-q15.png",
+      "stem": "库尔特摘了一些草莓。他周五吃掉了一半，周六又吃掉了剩下的一半，最后还剩 {L} 颗。库尔特一共摘了多少颗草莓？",
+      "vars": {
+        "L": {
+          "type": "pick",
+          "from": [
+            2,
+            4,
+            5,
+            6,
+            8,
+            10
+          ]
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "4 * L"
+      },
+      "unit": "颗",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "倒着推：剩下 {L} 颗，说明周六吃之前有 {L}×2＝{2*L} 颗；周五吃之前有 {2*L}×2＝{4*L} 颗。一共摘了 {4*L} 颗。"
+    },
+    {
+      "id": "icas22y2m-16",
+      "subject": "数学",
+      "topic": "位置与方向",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "书架上找书",
+      "tags": [
+        "位置",
+        "方向"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第16题",
+      "image": "assets/originals/2022y2m-q16.png",
+      "stem": "看书架图（见原题图）。萨拉最喜欢的书在**从上数第二层、从右数第三本**。这本书的位置是下面哪一句？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "最上层从左数第二本",
+          "第二层从右数第三本",
+          "第三层从左数第一本",
+          "最下层从右数第二本"
+        ],
+        "correctIndex": 1
+      },
+      "solution": "先找到从上数第二层，再从右边往左数第三本，就是萨拉最喜欢的书。"
+    },
+    {
+      "id": "icas22y2m-17",
+      "subject": "数学",
+      "topic": "一半与对折",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "小棍的一半有几段",
+      "tags": [
+        "一半",
+        "等分"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第17题",
+      "image": "assets/originals/2022y2m-q17.png",
+      "stem": "一根小棍被平均分成了 {k} 小段，涂成红白相间（见原题图）。这根小棍的一半是多少小段？",
+      "vars": {
+        "k": {
+          "type": "pick",
+          "from": [
+            6,
+            8,
+            10
+          ]
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "k / 2"
+      },
+      "unit": "段",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "一半就是把 {k} 段平均分成两份：{k}÷2＝{k/2} 段。"
+    },
+    {
+      "id": "icas22y2m-18",
+      "subject": "数学",
+      "topic": "倒数规律",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "轮流倒数数到谁",
+      "tags": [
+        "周期",
+        "倒数"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第18题",
+      "image": "assets/originals/2022y2m-q18.png",
+      "stem": "四个小伙伴轮流从 {S} 往下倒数：甲先说“{S}”，乙接着说“{S-1}”，丙说“{S-2}”，丁说“{S-3}”，然后又轮到甲……照这样数下去，“{n}”会轮到谁说？",
+      "vars": {
+        "S": {
+          "type": "pick",
+          "from": [
+            20,
+            24,
+            28
+          ]
+        },
+        "n": {
+          "type": "pick",
+          "from": [
+            4,
+            8,
+            12,
+            16
+          ]
+        }
+      },
+      "constraints": [
+        "n < S",
+        "(S - n) % 4 == 0"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "甲",
+          "乙",
+          "丙",
+          "丁"
+        ],
+        "correctIndex": 0
+      },
+      "solution": "从 {S} 数到 {n} 一共数了 {S-n} 个数，4 人一轮，{S-n}÷4 正好除尽（余 0），说明又轮回到第 1 个人——甲。"
+    },
+    {
+      "id": "icas22y2m-19",
+      "subject": "数学",
+      "topic": "植树问题",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "正方形围栏要多少根柱子",
+      "tags": [
+        "植树问题",
+        "周期"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第19题",
+      "image": "assets/originals/2022y2m-q19.png",
+      "stem": "农场主要围一块正方形的地。每条边上立 {p} 根柱子，四个角各有一根（角上的柱子两条边共用）。他一共要用多少根柱子？",
+      "vars": {
+        "p": {
+          "type": "int",
+          "min": 4,
+          "max": 8
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "4 * (p - 1)"
+      },
+      "unit": "根",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "如果直接 4×{p}＝{4*p}，四个角的柱子就被数了两次，要多减去 4。所以一共 4×{p}−4＝{4*p-4} 根。"
+    },
+    {
+      "id": "icas22y2m-20",
+      "subject": "数学",
+      "topic": "和差问题",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "比多比少求总数",
+      "tags": [
+        "应用题",
+        "加减法"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第20题",
+      "image": "assets/originals/2022y2m-q20.png",
+      "stem": "阿布迪有 {a} 颗弹珠。珍妮比阿布迪多 {m} 颗，彼得比珍妮少 {k} 颗。他们三人一共有多少颗弹珠？",
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 4,
+          "max": 12
+        },
+        "m": {
+          "type": "int",
+          "min": 2,
+          "max": 12
+        },
+        "k": {
+          "type": "int",
+          "min": 1,
+          "max": 6
+        }
+      },
+      "constraints": [
+        "a + m - k >= 1"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "3*a + 2*m - k"
+      },
+      "unit": "颗",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "珍妮有 {a}＋{m}＝{a+m} 颗，彼得有 {a+m}−{k}＝{a+m-k} 颗。一共 {a}＋{a+m}＋{a+m-k}＝{3*a+2*m-k} 颗。"
+    },
+    {
+      "id": "icas22y2m-21",
+      "subject": "数学",
+      "topic": "周期规律",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "灯笼按顺序重复",
+      "tags": [
+        "找规律",
+        "周期"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第21题",
+      "image": "assets/originals/2022y2m-q21.png",
+      "stem": "杰米挂灯笼，按「红、黄、蓝、绿」的顺序不断重复。第 {n} 个灯笼是什么颜色？",
+      "vars": {
+        "n": {
+          "type": "pick",
+          "from": [
+            5,
+            9,
+            13,
+            17,
+            21,
+            25
+          ]
+        }
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "红色",
+          "黄色",
+          "蓝色",
+          "绿色"
+        ],
+        "correctIndex": 0
+      },
+      "solution": "4 个灯笼为一组。{n}÷4＝{n/4} 组余 1，余 1 就是每组里的第 1 个——红色。"
+    },
+    {
+      "id": "icas22y2m-22",
+      "subject": "数学",
+      "topic": "季节与数据",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "两个城市的季节",
+      "tags": [
+        "数据阅读"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第22题",
+      "image": "assets/originals/2022y2m-q22.png",
+      "stem": "悉尼一年有四季：春天是 9、10、11 月。达尔文只有两季：雨季是 11 月到次年 4 月（见原题圆盘图）。哪一个月悉尼是春天、达尔文正好是雨季？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "4 月",
+          "9 月",
+          "10 月",
+          "11 月"
+        ],
+        "correctIndex": 3
+      },
+      "solution": "悉尼的春天是 9—11 月；达尔文的雨季是 11—4 月。两个月里只有 11 月同时满足。"
+    },
+    {
+      "id": "icas22y2m-23",
+      "subject": "数学",
+      "topic": "钱币",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "用尽可能多的硬币付款",
+      "tags": [
+        "钱币",
+        "推理"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第23题",
+      "image": "assets/originals/2022y2m-q23.png",
+      "stem": "安娜的钱包里有 14 枚硬币（面值见原题图）。她要买 50 分的棒棒糖和 95 分的巧克力棒，一共 145 分。她要正好付清，并且**用尽可能多的硬币**。她用了多少枚硬币？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "5",
+          "9",
+          "10",
+          "14"
+        ],
+        "correctIndex": 2
+      },
+      "solution": "一共 145 分。想用最多的硬币，就尽量用小面值：钱包里的 5 分、10 分、20 分、50 分硬币凑出 145 分，最多能用到 10 枚。"
+    },
+    {
+      "id": "icas22y2m-24",
+      "subject": "数学",
+      "topic": "图案推理",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "补全桌面的花纹",
+      "tags": [
+        "图案",
+        "推理"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第24题",
+      "image": "assets/originals/2022y2m-q24.png",
+      "stem": "本在桌面铺蓝黄相间的方砖（见原题图），虚线框处缺了一块 4×4 的补块。补块应该是什么样子的？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "第二行第二格是黄色的补块",
+          "第二行第二格是蓝色的补块",
+          "第一行第二格是黄色的补块",
+          "第三行第三格是黄色的补块"
+        ],
+        "correctIndex": 0
+      },
+      "solution": "按桌面花纹的行列对齐去接，缺的那一块接上后第二行第二格应该是黄色。"
+    },
+    {
+      "id": "icas22y2m-25",
+      "subject": "数学",
+      "topic": "倍数问题",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "三张纸的倍数关系",
+      "tags": [
+        "倍数",
+        "面积"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第25题",
+      "image": "assets/originals/2022y2m-q25.png",
+      "stem": "鲍比有三张长方形纸：黄纸是红纸的 {m} 倍大，红纸是蓝纸的 {k} 倍大。一张黄纸能正好铺满多少张蓝纸？",
+      "vars": {
+        "m": {
+          "type": "pick",
+          "from": [
+            3,
+            4,
+            5
+          ]
+        },
+        "k": {
+          "type": "pick",
+          "from": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "m * k"
+      },
+      "unit": "张",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "黄纸＝{m} 张红纸＝{m}×{k} 张蓝纸，所以一张黄纸正好铺 {m*k} 张蓝纸。"
+    },
+    {
+      "id": "icas22y2m-26",
+      "subject": "数学",
+      "topic": "位置与方向",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "棋盘上走子",
+      "tags": [
+        "位置",
+        "方向"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第26题",
+      "image": "assets/originals/2022y2m-q26.png",
+      "stem": "西塔的棋子在黑白棋盘的黑格上（见原题图）。她把棋子往左移 1 格，又朝马克的方向前移 2 格。棋子最后停在哪一格？",
+      "answer": {
+        "type": "choice",
+        "options": [
+          "倒数第二行最右边的白格",
+          "倒数第二行左起第二格",
+          "第三行左起第一格",
+          "最下一行中间的白格"
+        ],
+        "correctIndex": 0
+      },
+      "solution": "从西塔的位置往左 1 格、再向马克（往下）2 格，正好落在倒数第二行最右边的白格上。"
+    },
+    {
+      "id": "icas22y2m-27",
+      "subject": "数学",
+      "topic": "统计表",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "池塘边的鸟：飞来又飞走",
+      "tags": [
+        "统计表",
+        "加减法"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第27题",
+      "image": "assets/originals/2022y2m-q27.png",
+      "stem": "池塘里原有 {s} 只鸟。蒂娜每 5 分钟记一次：第 5 分钟飞来 {a1} 只、飞走 {f1} 只；第 10 分钟飞来 {a2} 只、飞走 {f2} 只；第 15 分钟飞来 {a3} 只、飞走 {f3} 只；第 20 分钟飞来 {a4} 只、飞走 {f4} 只。20 分钟后池塘里有多少只鸟？",
+      "vars": {
+        "s": {
+          "type": "int",
+          "min": 8,
+          "max": 14
+        },
+        "a1": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "f1": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        },
+        "a2": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "f2": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        },
+        "a3": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "f3": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        },
+        "a4": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "f4": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        }
+      },
+      "derived": {
+        "T": "s + a1 + a2 + a3 + a4 - f1 - f2 - f3 - f4"
+      },
+      "constraints": [
+        "T >= 1"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "T"
+      },
+      "unit": "只",
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "把每一次变化接着算：{s}＋{a1}−{f1}＋{a2}−{f2}＋{a3}−{f3}＋{a4}−{f4}＝{T} 只。"
+    },
+    {
+      "id": "icas22y2m-28",
+      "subject": "数学",
+      "topic": "排列组合",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "固定底座的积木塔",
+      "tags": [
+        "排列",
+        "组合"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第28题",
+      "image": "assets/originals/2022y2m-q28.png",
+      "stem": "吉娜有 {n} 块颜色不同的积木（黄、蓝、绿、粉……），想搭一座 {n} 层的高塔，其中绿积木必须在最底层。她能搭出多少座不一样的塔？",
+      "vars": {
+        "n": {
+          "type": "pick",
+          "from": [
+            4,
+            5
+          ]
+        }
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "(n-1)*(n-2)*(n-3)"
+      },
+      "unit": "座",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "绿积木固定在最底层不用动，剩下的 {n-1} 块排上面：第 2 层有 {n-1} 种选法，第 3 层剩 {n-2} 种，第 4 层剩 {n-3} 种……一共 {(n-1)*(n-2)*(n-3)} 座。"
+    },
+    {
+      "id": "icas22y2m-29",
+      "subject": "数学",
+      "topic": "符号方程",
+      "grade": "二年级",
+      "difficulty": 5,
+      "title": "三个算式求符号的值",
+      "tags": [
+        "符号代换",
+        "推理"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第29题",
+      "image": "assets/originals/2022y2m-q29.png",
+      "stem": "◆＋▲＋●＝ {A}；▲＋▲＋●＋●＝ {B}；◆＋◆＋▲＋●＋●＋●＝ {C}。● 代表的数是多少？",
+      "vars": {
+        "c": {
+          "type": "pick",
+          "from": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ]
+        },
+        "t": {
+          "type": "int",
+          "min": 5,
+          "max": 20
+        },
+        "d": {
+          "type": "int",
+          "min": 5,
+          "max": 15
+        }
+      },
+      "derived": {
+        "A": "d + t + c",
+        "B": "2*(t + c)",
+        "C": "2*d + t + 3*c"
+      },
+      "constraints": [
+        "t != c",
+        "d != c",
+        "d != t"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "c"
+      },
+      "sanity": {
+        "integer": true,
+        "min": 1
+      },
+      "solution": "第二式两边除以 2：▲＋●＝{B/2}。由第一式：◆＝{A}−{B/2}＝{d}。代入第三式：▲＋3●＝{C}−2×{d}＝{C-2*d}；再减去▲＋●＝{B/2}，得 2●＝{C-2*d-B/2}，所以 ●＝{c}。"
+    },
+    {
+      "id": "icas22y2m-30",
+      "subject": "数学",
+      "topic": "最值问题",
+      "grade": "二年级",
+      "difficulty": 5,
+      "title": "移动最少的猪使每个圈一样多",
+      "tags": [
+        "最值",
+        "应用题"
+      ],
+      "source": "ICAS 2022 Year 2 Mathematics 第30题",
+      "image": "assets/originals/2022y2m-q30.png",
+      "stem": "农夫乔有 4 个猪圈（见原题图），猪只能按图中箭头的方向赶过门。他想让每个猪圈的猪一样多，最少要移动几头猪？",
+      "answer": {
+        "type": "integer",
+        "expr": "7"
+      },
+      "unit": "头",
+      "sanity": {
+        "integer": true
+      },
+      "solution": "先数出四个圈的猪，算出平均数，再沿着箭头允许的方向把多的圈里的猪补到少的圈里，最少要移动 7 头。"
     }
   ]
 }

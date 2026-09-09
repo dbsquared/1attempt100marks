@@ -21,6 +21,9 @@
 
   var DEFAULT_SETTINGS = {
     studentName: '',
+    sid: '',            // 学生 ID，多设备共用一个才能同步
+    devId: '',          // 本机标识
+    autoSync: true,     // 打开页面时自动拉取云端进度
     sessionSize: 10,        // 每次测试题量
     newPerSession: 4,       // 每次最多引入的新题型
     masterStreak: 3,        // 连续答对多少次算"掌握"
@@ -39,10 +42,30 @@
       Object.keys(DEFAULT_SETTINGS).forEach(function (k) {
         if (s[k] === undefined) { s[k] = DEFAULT_SETTINGS[k]; changed = true; }
       });
+      if (!s.sid || !s.devId) {
+        s.sid = s.sid || ('s' + global.Sync.randomId(5));
+        s.devId = s.devId || global.Sync.randomId(4).toUpperCase();
+        changed = true;
+      }
       if (changed) write('settings', s);
       return s;
     },
     saveSettings: function (s) { write('settings', s); },
+
+    /* ---------- 同步 ---------- */
+    lastSync: function () { return read('lastSync', 0) || 0; },
+    setLastSync: function (ts) { write('lastSync', ts); },
+    /** 用云端状态合并本机；返回统计 */
+    applyCloud: function (cloud) {
+      var n = global.Sync.normalize(cloud);
+      var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), Store.wrong()));
+      var r = global.Sync.merge(cur, { p: cloud.p, w: cloud.w });
+      var out = global.Sync.toLocal(cur);
+      Store.saveProgress(out.progress);
+      Store.saveWrong(out.wrong);
+      Store.setLastSync(Date.now());
+      return r;
+    }
 
     /* ---------- 进度 ---------- */
     progress: function () { return read('progress', {}) || {}; },

@@ -5,6 +5,7 @@
 - 在线地址：<https://dbsquared.github.io/1attempt100marks/>
 - 学生端：`index.html`（练习 / 组卷 / 错题本 / 掌握度 / 题库管理）
 - 无后端、无数据库、无账号，**所有学习数据只存在本机浏览器 localStorage**
+- 多设备同步：进度用一串**同步码**在设备间传递，**无需服务器**即可让平板/手机/电脑共用一份进度
 
 ---
 
@@ -50,10 +51,14 @@ assets/js/generator.js     模板 → 题目实例（随机抽数 + 约束 + 结
 assets/js/grader.js        判分
 assets/js/store.js         localStorage 持久化 + 题库装载
 assets/js/srs.js           掌握度 / 错题调度 / 间隔重复
+assets/js/sync.js          多设备同步：同步码生成 / 解析 / 幂等合并（浏览器与 Node 共用）
 assets/js/app.js           界面逻辑
 data/question-bank.json    题库（模板）
+data/state/<sid>.json      某学生编号的云端汇总进度（由 merge-sync.js 生成）
 tools/test-bank.js         模板自检：每模板生成 300 次 + 判分自检
-tools/test-srs.js          错题调度自检
+tools/test-srs.js          错题 / 掌握 / 抽样调度链路
+tools/test-sync.js         同步码：往返 / 合并 / 冲突后写胜出 / 墓碑删除
+tools/merge-sync.js        把一串同步码合并进 data/state/<sid>.json（WorkBuddy 端用）
 tools/merge-bank.js        合并 data/imports/*.json 进主题库
 inbox/                     放待识别的真题图片
 assets/originals/          原题裁切图（模板里用 "image" 引用）
@@ -75,6 +80,31 @@ python -m http.server 8000      # 或 npx serve
 ```bash
 node tools/test-bank.js     # 题库模板：每模板生成 300 次并检查判分
 node tools/test-srs.js      # 错题 / 掌握 / 抽样调度链路
+node tools/test-sync.js     # 同步码：往返 / 合并 / 冲突后写胜出 / 墓碑删除
+```
+
+## 多设备同步（无需服务器）
+
+进度只存在本机。想让平板、手机、电脑共用一份进度，靠一串**同步码**在设备间传递：
+
+1. 在每台设备上打开「题库管理 → 多设备同步」，把**学生编号**设成同一个（这是云端"文件夹名"，决定进度存到 `data/state/<学生编号>.json`）。
+2. 任意一台做完练习后：点「生成增量同步码」得到一串 `A1M1{...}` 文本 → 复制，或点「发邮件」发到你邮箱。
+3. 回收进度，二选一：
+   - **方式 A（自己合并）**：把同步码粘回网页「多设备同步」里的框 → 点「导入框里的同步码」，立即合并进本机。
+   - **方式 B（交给 WorkBuddy）**：把邮件里的同步码贴给 WorkBuddy，它跑 `node tools/merge-sync.js "A1M1{...}"` 把进度合并进 `data/state/<学生编号>.json` 并 commit，于是**所有设备**下次「拉取云端进度」就能拿到汇总进度。
+4. 每台设备打开网页时会自动「拉取云端进度」（可在多设备同步页关闭），也可以手动点「拉取云端进度」。
+
+**设计要点**
+
+- 同步码是**增量**的（只含上次同步后的变动），重复发送幂等、不出错；被邮件客户端折行也能解析。
+- 「已清零的错题」会带墓碑记录，别的设备也能同步删除。
+- 不同学生编号分文件存放，互不干扰。
+- 合并脚本既能直接收码，也能从文件读、支持 `--dry` 只预览不写盘：
+
+```bash
+node tools/merge-sync.js "A1M1{...}"          # 直接传码
+node tools/merge-sync.js -f sync.txt          # 从文件读
+node tools/merge-sync.js --dry "A1M1{...}"    # 只预览不写盘
 ```
 
 ## 加新题（两种方式）
@@ -87,4 +117,4 @@ node tools/test-srs.js      # 错题 / 掌握 / 抽样调度链路
 ## 注意
 
 - 换设备/清缓存前，先在题库管理里**导出备份**。
-- `git push` 请带 `GIT_TERMINAL_PROMPT=0`，否则多凭据条目时可能卡住。
+- 本机用 `node tools/gh-push.js "提交说明"` 直接通过 GitHub API 提交（本环境 git 走 HTTPS 会卡住，故不用 `git push`）。

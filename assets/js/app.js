@@ -464,8 +464,22 @@
   }
 
   /* ---------------- 题库管理 ---------------- */
-  function renderBank() {
-    renderSourceChecklist('#bankSrcBox', '#bankSrcCount', '#bankSrcAll', '#bankSrcNone');
+  function renderBankSources() {
+    var seen = {}, list = [];
+    Bank.all().forEach(function (t) { var s = sourceSetOf(t); if (!seen[s]) { seen[s] = 1; list.push(s); } });
+    list.sort();
+    var box = $('#bankSrcBox');
+    var sig = list.join('');
+    if (box.dataset.sig === sig) return; // 来源集合没变，保留已勾选状态
+    var prev = {};
+    Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { if (c.checked) prev[c.value] = 1; });
+    box.innerHTML = list.map(function (s) {
+      return '<label class="srcitem"><input type="checkbox" value="' + esc(s) + '"' + (prev[s] ? ' checked' : '') + '> ' + esc(s) + '</label>';
+    }).join('');
+    box.dataset.sig = sig;
+    $('#bankSrcCount').textContent = list.length + ' 个来源';
+  }
+  function renderBankList() {
     var srcs = checkedSources('#bankSrcBox');
     var allBank = Bank.all();
     var all = allBank.filter(function (t) { return !srcs.length || srcs.indexOf(sourceSetOf(t)) >= 0; });
@@ -505,6 +519,10 @@
         renderBank();
       });
     });
+  }
+  function renderBank() {
+    renderBankSources();
+    renderBankList();
   }
 
   function doImport(text) {
@@ -648,6 +666,7 @@
       e.target.value = '';
     });
     $('#btnBankReload').addEventListener('click', function () { Bank.load().then(function () { renderBank(); toast('已重新加载'); }); });
+    $('#bankSrcBox').addEventListener('change', renderBankList);
 
     /* ---- 多设备同步：结果页 + 题库管理页 ---- */
     $('#btnSendResult').addEventListener('click', function () {

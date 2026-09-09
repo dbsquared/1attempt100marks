@@ -183,6 +183,8 @@ table.tbl tr:last-child td { border-bottom: none; }
 .paper-q { border-top: 1px dashed var(--border); padding: 14px 0; }
 .paper-q:first-child { border-top: none; }
 .paper-q .no { font-weight: 700; color: var(--brand); margin-right: 6px; }
+.paper-img { margin: 8px 0 12px; }
+.paper-img img { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; }
 
 .hidden { display: none !important; }
 .center { text-align: center; }

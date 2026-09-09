@@ -336,9 +336,10 @@
     paper.questions.forEach(function (q, i) {
       var a = paper.answers[q.key];
       h += '<div class="paper-q"><div><span class="no">' + (i + 1) + '.</span>' +
-        '<span class="pill">' + esc(q.tpl.topic || '') + '</span> ' + q.stemHtml +
+        q.stemHtml +
         (q.unit ? ' <span class="unit">（' + esc(q.unit) + '）</span>' : '') +
-        '<span class="print-only"> ______________________</span></div>';
+        '<span class="print-only"> ______________________</span></div>' +
+        (q.tpl.image ? '<div class="paper-img"><img src="' + esc(q.tpl.image) + '" alt="原题图"></div>' : '');
       if (q.type === 'choice') {
         h += '<div class="opts" style="margin-top:8px">' + q.options.map(function (o, k) {
           var cls = 'opt';

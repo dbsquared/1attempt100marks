@@ -102,6 +102,21 @@
     return s.replace(/\^\{?([0-9a-zA-Z]+)\}?/g, '^$1').replace(/_\{?([0-9a-zA-Z]+)\}?/g, '_$1');
   }
 
+  // 双语字段：题干/解析/选项/答案都可能是 {zh,en}，实例化时随机（或由 preferLang 指定）选一种
+  function resolveField(f, lang) {
+    if (f && typeof f === 'object' && !Array.isArray(f)) {
+      if (typeof f.zh !== 'undefined' || typeof f.en !== 'undefined') {
+        if (typeof f[lang] !== 'undefined') return f[lang];
+        return (typeof f.en !== 'undefined') ? f.en : f.zh;
+      }
+    }
+    return f;
+  }
+  function pickLang(tpl) {
+    if (Generator.preferLang === 'zh' || Generator.preferLang === 'en') return Generator.preferLang;
+    return Math.random() < 0.5 ? 'zh' : 'en';
+  }
+
   /* ---------- 变量生成 ---------- */
   function genVars(tpl) {
     var vars = {}, spec = tpl.vars || {};
@@ -130,12 +145,12 @@
     return true;
   }
 
-  function computeAnswer(tpl, vars) {
+  function computeAnswer(tpl, vars, lang) {
     var a = tpl.answer || {};
     var out = { type: a.type || 'number' };
 
     if (out.type === 'choice') {
-      var opts = (a.options || []).map(function (o) { return renderText(o, vars); });
+      var opts = (a.options || []).map(function (o) { return renderText(resolveField(o, lang), vars); });
       var ci = a.correctIndex;
       var multi = Array.isArray(ci);
       var idxs = opts.map(function (_, i) { return i; });
@@ -155,9 +170,9 @@
     }
 
     if (out.type === 'text') {
-      out.value = renderText(a.expr, vars);
+      out.value = renderText(resolveField(a.expr, lang), vars);
       out.display = out.value;
-      out.alternatives = (a.alternatives || []).map(function (x) { return renderText(x, vars); });
+      out.alternatives = (a.alternatives || []).map(function (x) { return renderText(resolveField(x, lang), vars); });
       return out;
     }
 
@@ -217,8 +232,9 @@
       var vars;
       try { vars = genVars(tpl); } catch (e) { continue; }
       if (!checkConstraints(tpl, vars)) continue;
+      var lang = pickLang(tpl);
       var ans;
-      try { ans = computeAnswer(tpl, vars); } catch (e) { continue; }
+      try { ans = computeAnswer(tpl, vars, lang); } catch (e) { continue; }
       if (!checkSanity(tpl, ans)) continue;
 
       var sig = hashCode(JSON.stringify(vars));
@@ -229,10 +245,11 @@
         tplId: tpl.id,
         tpl: tpl,
         vars: vars,
-        stemHtml: renderHtml(tpl.stem, vars),
-        stemText: renderText(tpl.stem, vars),
-        solutionHtml: renderHtml(tpl.solution, vars),
-        solutionText: renderText(tpl.solution, vars),
+        lang: lang,
+        stemHtml: renderHtml(resolveField(tpl.stem, lang), vars),
+        stemText: renderText(resolveField(tpl.stem, lang), vars),
+        solutionHtml: renderHtml(resolveField(tpl.solution, lang), vars),
+        solutionText: renderText(resolveField(tpl.solution, lang), vars),
         type: ans.type,
         value: ans.value,
         display: ans.display,
@@ -243,7 +260,7 @@
         digits: ans.digits,
         alternatives: ans.alternatives,
         unit: tpl.unit || '',
-        hint: renderHtml(tpl.hint, vars)
+        hint: renderHtml(resolveField(tpl.hint, lang), vars)
       };
       break;
     }
@@ -256,6 +273,7 @@
     renderText: renderText,
     fmtNum: fmtNum,
     randInt: randInt,
-    hashCode: hashCode
+    hashCode: hashCode,
+    preferLang: null // 'zh' | 'en' | null(随机)
   };
 })(window);

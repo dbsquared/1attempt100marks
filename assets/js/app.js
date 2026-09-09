@@ -12,6 +12,7 @@
   var curChoice = null;   // 选择题当前选项
   var locked = false;
   var paper = null;       // {questions:[], answers:{}, graded:false}
+  var lastResults = null; // 最近一轮的作答结果（用于生成可读答卷汇总邮件）
 
   /* ---------------- 基础工具 ---------------- */
   function toast(msg) {
@@ -246,6 +247,7 @@
           (r.solution ? '<div class="small muted">' + r.solution + '</div>' : '')) +
         '</div>';
     }).join('') || '<p class="muted">本轮没有作答记录。</p>';
+    lastResults = rs;
     session = null;
   }
 
@@ -614,6 +616,42 @@
       '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
 
+  /* 把一轮作答整理成家长/老师能直接读的文字 */
+  function roundSummaryText(results) {
+    if (!results || !results.length) return '';
+    var ok = results.filter(function (r) { return r.ok; }).length;
+    var lines = ['本轮答卷汇总', '──────────────'];
+    results.forEach(function (r, i) {
+      var mark = r.ok ? '✓ 对' : '✗ 错';
+      var line = (i + 1) + '. [' + mark + '] ' + (r.stemText || '').replace(/\s+/g, ' ').slice(0, 80);
+      if (!r.ok) line += '　你写：' + r.given + '　正确答案：' + r.expected;
+      else if (r.given) line += '　你写：' + r.given;
+      lines.push(line);
+    });
+    lines.push('');
+    lines.push('共 ' + results.length + ' 题，答对 ' + ok + ' 题（' + Math.round(ok / results.length * 100) + '%）');
+    return lines.join('\n');
+  }
+
+  /* 直接把答卷 + 同步码发到 WorkBuddy 的智能体邮箱，由我自动合并 */
+  function mailWB(code) {
+    var s = Store.settings();
+    var to = (s.agentMail || '').trim();
+    if (!to) {
+      alert('WorkBuddy 邮箱尚未配置。请先在 WorkBuddy 里开通「我的邮箱」，或改用「发邮件」发到你自己的邮箱再粘给 WorkBuddy。');
+      return;
+    }
+    var stats = SRS.stats();
+    var head = '一次一百分 同步（学生 ' + (s.studentName || s.sid || '?') + '）\n' +
+      '已掌握 ' + stats.mastered + ' / 待清错题 ' + stats.wrong + ' / 到期待检测 ' + stats.due + '\n';
+    var summary = roundSummaryText(lastResults);
+    var body = head + (summary ? (summary + '\n\n') : '') +
+      '── 同步码（WorkBuddy 自动读取合并，无需手动处理）──\n' + code;
+    var subject = '[1a1m-sync] ' + (s.sid || '');
+    window.location.href = 'mailto:' + encodeURIComponent(to) +
+      '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
   /* ---------------- 设置 ---------------- */
   function fillSettings() {
     var s = Store.settings();
@@ -690,6 +728,8 @@
     });
     $('#btnCopySync').addEventListener('click', function () { copyText($('#syncBox')); });
     $('#btnMailSync').addEventListener('click', function () { mailCode($('#syncBox').value); });
+    $('#btnMailWB').addEventListener('click', function () { mailWB(syncCode(true)); });
+    $('#btnMailWBSync').addEventListener('click', function () { mailWB(syncCode(true)); });
     $('#btnImportSync').addEventListener('click', function () {
       var text = $('#syncBox').value;
       if (!text || !text.trim()) { toast('框里还没有同步码'); return; }

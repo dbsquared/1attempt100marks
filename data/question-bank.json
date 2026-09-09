@@ -949,7 +949,6 @@
         "加法"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q3",
-      "image": "assets/originals/2022y2m-q03.png",
       "stem": {
         "en": "Jess made shapes with sticks: shape 1 used {a} sticks, shape 2 used {a+d}, shape 3 used {a+2*d}. Following the pattern, how many sticks are needed for shape {n}?",
         "zh": "杰丝用小棒搭图形：图形 1 用了 {a} 根小棒，图形 2 用了 {a+d} 根，图形 3 用了 {a+2*d} 根。照这个规律，搭图形 {n} 要用多少根小棒？"
@@ -1005,7 +1004,6 @@
         "边"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q4",
-      "image": "assets/originals/2022y2m-q04.png",
       "stem": {
         "en": "Max was drawing a hexagon and had drawn {k} sides. How many more sides does he need to draw to finish it?",
         "zh": "马克在画一个六边形，已经画了 {k} 条边。他还要再画几条边才能画完这个六边形？"
@@ -1046,7 +1044,6 @@
         "两位数"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q5",
-      "image": "assets/originals/2022y2m-q05.png",
       "stem": {
         "en": "Liz made a two-digit number with the digit cards 2, 3, 4, 6, 9: the ones digit is {d} more than the tens digit. What is the number?",
         "zh": "莉兹用数字卡片 2、3、4、6、9 摆了一个两位数：个位数字比十位数字大 {d}。她摆的两位数是多少？"
@@ -1148,7 +1145,6 @@
         "等分"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q7",
-      "image": "assets/originals/2022y2m-q07.png",
       "stem": {
         "en": "On the number line, the distance from 0 to {E} is divided into {n} equal parts. The arrow points at the {k}th mark from 0. What number is shown at the arrow?",
         "zh": "一条数轴上，0 到 {E} 之间被平均分成了 {n} 小格。箭头指在从 0 数起的第 {k} 格刻度上，这个刻度表示多少？"
@@ -1243,7 +1239,6 @@
         "比较"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q9",
-      "image": "assets/originals/2022y2m-q09.png",
       "stem": {
         "en": "Goals scored by four teams last match: Team A {a}, Team B {b}, Team C {c}, Team D {dd}. Which team scored exactly 2 more goals than Team C?",
         "zh": "四支球队最近一场比赛的进球数：甲队 {a} 球，乙队 {b} 球，丙队 {c} 球，丁队 {dd} 球。哪队进的球正好比丙队多 2 球？"
@@ -1312,7 +1307,6 @@
         "加减法"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q10",
-      "image": "assets/originals/2022y2m-q10.png",
       "stem": {
         "en": "◆ ＝ {a}, ❁ ＝ {b}, ✿ ＝ {c}. What is ◆ ＋ ❁ − ✿ ?",
         "zh": "◆ ＝ {a}，❁ ＝ {b}，✿ ＝ {c}。那么 ◆ ＋ ❁ − ✿ ＝ ？"
@@ -1360,7 +1354,6 @@
         "多选"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q11",
-      "image": "assets/originals/2022y2m-q11.png",
       "stem": {
         "en": "Choose THREE cards so that the three numbers add to exactly {T}. (Select three cards)",
         "zh": "从下面五张卡片中选出「三张」，使三张卡片上的数加起来正好是 {T}。（点选三张卡片）"
@@ -1475,7 +1468,6 @@
         "数轴"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q13",
-      "image": "assets/originals/2022y2m-q13.png",
       "stem": {
         "en": "Cara got into a lift at level B{b} below ground. She went up {u} levels and down {d} levels, then got out. What level ABOVE ground did she get out at? (B1 is one level below ground; G is ground level; above-ground floors count from 1.)",
         "zh": "卡拉在地下 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，她出了电梯。她是在地上几楼出的电梯？（B1 是地下 1 层，G 是地面层，地上从 1 楼数起）"
@@ -1531,7 +1523,6 @@
         "数轴"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q13",
-      "image": "assets/originals/2022y2m-q13.png",
       "stem": {
         "en": "Cara got into a lift at level B{b} below ground. She went up {u} levels and down {d} levels, then got out. What level BELOW ground (B?) did she get out at? (B1 is one level below ground.)",
         "zh": "卡拉在地下 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，她出了电梯。她是在地下哪一层出的电梯？（B1 是地下 1 层）"
@@ -1582,7 +1573,6 @@
         "加法"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q14",
-      "image": "assets/originals/2022y2m-q14.png",
       "stem": {
         "en": "Mary counted vehicles at a bus stop: {a} cars, {b} bikes, {c} trucks, {dd} buses. How many cars and trucks were there altogether?",
         "zh": "玛丽在公交站数车：小汽车 {a} 辆，自行车 {b} 辆，卡车 {c} 辆，公交车 {dd} 辆。她看到的小汽车和卡车一共有多少辆？"
@@ -1635,7 +1625,6 @@
         "逆推"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q15",
-      "image": "assets/originals/2022y2m-q15.png",
       "stem": {
         "en": "Kurt picked some strawberries. He ate half on Friday and half of what was left on Saturday, leaving {L}. How many strawberries did he pick altogether?",
         "zh": "库尔特摘了一些草莓。他周五吃掉了一半，周六又吃掉了剩下的一半，最后还剩 {L} 颗。库尔特一共摘了多少颗草莓？"
@@ -1724,7 +1713,6 @@
         "等分"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q17",
-      "image": "assets/originals/2022y2m-q17.png",
       "stem": {
         "en": "A stick is divided into {k} equal segments, coloured red and white (see original picture). What is half of the stick in segments?",
         "zh": "一根小棍被平均分成了 {k} 小段，涂成红白相间（见原题图）。这根小棍的一半是多少小段？"
@@ -1765,7 +1753,6 @@
         "倒数"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q18",
-      "image": "assets/originals/2022y2m-q18.png",
       "stem": {
         "en": "Four children count backwards in turn from {S}: A says “{S}”, B says “{S-1}”, C says “{S-2}”, D says “{S-3}”, then back to A… Following this, who says “{n}”?",
         "zh": "四个小伙伴轮流从 {S} 往下倒数：甲先说“{S}”，乙接着说“{S-1}”，丙说“{S-2}”，丁说“{S-3}”，然后又轮到甲……照这样数下去，“{n}”会轮到谁说？"
@@ -1833,7 +1820,6 @@
         "周期"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q19",
-      "image": "assets/originals/2022y2m-q19.png",
       "stem": {
         "en": "A farmer wants a square paddock. He puts {p} posts on each side, with one post at each corner (corner posts are shared by two sides). How many posts does he need in total?",
         "zh": "农场主要围一块正方形的地。每条边上立 {p} 根柱子，四个角各有一根（角上的柱子两条边共用）。他一共要用多少根柱子？"
@@ -1871,7 +1857,6 @@
         "加减法"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q20",
-      "image": "assets/originals/2022y2m-q20.png",
       "stem": {
         "en": "Abdi has {a} marbles. Jenny has {m} more than Abdi. Peter has {k} fewer than Jenny. How many marbles do the three have altogether?",
         "zh": "阿布迪有 {a} 颗弹珠。珍妮比阿布迪多 {m} 颗，彼得比珍妮少 {k} 颗。他们三人一共有多少颗弹珠？"
@@ -1922,7 +1907,6 @@
         "周期"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q21",
-      "image": "assets/originals/2022y2m-q21.png",
       "stem": {
         "en": "Jamie hangs lanterns in the repeating order red, yellow, blue, green. What colour is the {n}th lantern?",
         "zh": "杰米挂灯笼，按「红、黄、蓝、绿」的顺序不断重复。第 {n} 个灯笼是什么颜色？"
@@ -2102,7 +2086,6 @@
         "面积"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q25",
-      "image": "assets/originals/2022y2m-q25.png",
       "stem": {
         "en": "Bobby has three rectangular sheets: the yellow sheet is {m} times the red sheet, and the red sheet is {k} times the blue sheet. How many blue sheets exactly cover one yellow sheet?",
         "zh": "鲍比有三张长方形纸：黄纸是红纸的 {m} 倍大，红纸是蓝纸的 {k} 倍大。一张黄纸能正好铺满多少张蓝纸？"
@@ -2196,7 +2179,6 @@
         "加减法"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q27",
-      "image": "assets/originals/2022y2m-q27.png",
       "stem": {
         "en": "There were {s} birds on the pond. Tina records every 5 minutes: at 5 min {a1} fly in, {f1} fly away; at 10 min {a2} in, {f2} away; at 15 min {a3} in, {f3} away; at 20 min {a4} in, {f4} away. How many birds are on the pond after 20 minutes?",
         "zh": "池塘里原有 {s} 只鸟。蒂娜每 5 分钟记一次：第 5 分钟飞来 {a1} 只、飞走 {f1} 只；第 10 分钟飞来 {a2} 只、飞走 {f2} 只；第 15 分钟飞来 {a3} 只、飞走 {f3} 只；第 20 分钟飞来 {a4} 只、飞走 {f4} 只。20 分钟后池塘里有多少只鸟？"
@@ -2281,7 +2263,6 @@
         "组合"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q28",
-      "image": "assets/originals/2022y2m-q28.png",
       "stem": {
         "en": "Gina has {n} differently coloured blocks (yellow, blue, green, pink…). She builds an {n}-level tower with the green block fixed at the bottom. How many DIFFERENT towers can she build?",
         "zh": "吉娜有 {n} 块颜色不同的积木（黄、蓝、绿、粉……），想搭一座 {n} 层的高塔，其中绿积木必须在最底层。她能搭出多少座不一样的塔？"
@@ -2321,7 +2302,6 @@
         "推理"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q29",
-      "image": "assets/originals/2022y2m-q29.png",
       "stem": {
         "en": "◆＋▲＋●＝ {A}; ▲＋▲＋●＋●＝ {B}; ◆＋◆＋▲＋●＋●＋●＝ {C}. What number does ● stand for?",
         "zh": "◆＋▲＋●＝ {A}；▲＋▲＋●＋●＝ {B}；◆＋◆＋▲＋●＋●＋●＝ {C}。● 代表的数是多少？"

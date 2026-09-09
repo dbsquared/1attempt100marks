@@ -1,0 +1,407 @@
+{
+  "v": 1,
+  "updated": "2026-09-09",
+  "note": "内置示例题库。真题模板由 WorkBuddy 从试卷图片识别后生成，写入本文件或通过网页「题库管理」导入。模板字段说明见 PIPELINE.md。",
+  "templates": [
+    {
+      "id": "m6-frac-add",
+      "subject": "数学",
+      "topic": "分数加减法",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "异分母分数加法",
+      "tags": ["分数", "计算"],
+      "source": "示例模板",
+      "stem": "计算：[[{a}/{b}]] ＋ [[{c}/{d}]] ＝",
+      "vars": {
+        "a": { "type": "int", "min": 1, "max": 8 },
+        "b": { "type": "int", "min": 2, "max": 9 },
+        "c": { "type": "int", "min": 1, "max": 8 },
+        "d": { "type": "int", "min": 2, "max": 9 }
+      },
+      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "gcd(b,d) == 1", "(a*d + c*b) % (b*d) != 0"],
+      "answer": { "type": "fraction", "expr": "a*d + c*b", "denom": "b*d" },
+      "sanity": { "maxDen": 72 },
+      "solution": "先通分：[[{a}/{b}]] ＝ [[{a*d}/{b*d}]]，[[{c}/{d}]] ＝ [[{c*b}/{b*d}]]；再相加：[[{a*d+c*b}/{b*d}]]。"
+    },
+    {
+      "id": "m6-frac-sub",
+      "subject": "数学",
+      "topic": "分数加减法",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "异分母分数减法",
+      "tags": ["分数", "计算"],
+      "source": "示例模板",
+      "stem": "计算：[[{a}/{b}]] − [[{c}/{d}]] ＝",
+      "vars": {
+        "a": { "type": "int", "min": 1, "max": 8 },
+        "b": { "type": "int", "min": 2, "max": 9 },
+        "c": { "type": "int", "min": 1, "max": 8 },
+        "d": { "type": "int", "min": 2, "max": 9 }
+      },
+      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "gcd(b,d) == 1", "a*d > c*b", "(a*d - c*b) % (b*d) != 0"],
+      "answer": { "type": "fraction", "expr": "a*d - c*b", "denom": "b*d" },
+      "sanity": { "maxDen": 72 },
+      "solution": "通分后相减：[[{a*d}/{b*d}]] − [[{c*b}/{b*d}]] ＝ [[{a*d-c*b}/{b*d}]]。"
+    },
+    {
+      "id": "m6-frac-mul",
+      "subject": "数学",
+      "topic": "分数乘除法",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "分数乘分数",
+      "tags": ["分数", "计算"],
+      "source": "示例模板",
+      "stem": "计算：[[{a}/{b}]] × [[{c}/{d}]] ＝",
+      "vars": {
+        "a": { "type": "int", "min": 1, "max": 8 },
+        "b": { "type": "int", "min": 2, "max": 9 },
+        "c": { "type": "int", "min": 1, "max": 8 },
+        "d": { "type": "int", "min": 2, "max": 9 }
+      },
+      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "gcd(a,d) + gcd(c,b) > 2"],
+      "answer": { "type": "fraction", "expr": "a*c", "denom": "b*d" },
+      "sanity": { "maxDen": 81 },
+      "solution": "分子相乘作分子，分母相乘作分母：[[{a*c}/{b*d}]]，能约分的要约成最简分数。"
+    },
+    {
+      "id": "m6-frac-div",
+      "subject": "数学",
+      "topic": "分数乘除法",
+      "grade": "六年级",
+      "difficulty": 3,
+      "title": "分数除以分数",
+      "tags": ["分数", "计算"],
+      "source": "示例模板",
+      "stem": "计算：[[{a}/{b}]] ÷ [[{c}/{d}]] ＝",
+      "vars": {
+        "a": { "type": "int", "min": 1, "max": 8 },
+        "b": { "type": "int", "min": 2, "max": 9 },
+        "c": { "type": "int", "min": 1, "max": 8 },
+        "d": { "type": "int", "min": 2, "max": 9 }
+      },
+      "constraints": ["a < b", "c < d", "gcd(a,b) == 1", "gcd(c,d) == 1", "a*d != b*c"],
+      "answer": { "type": "fraction", "expr": "a*d", "denom": "b*c" },
+      "sanity": { "maxDen": 81 },
+      "solution": "除以一个分数等于乘它的倒数：[[{a}/{b}]] × [[{d}/{c}]] ＝ [[{a*d}/{b*c}]]。"
+    },
+    {
+      "id": "m6-equation-1",
+      "subject": "数学",
+      "topic": "解方程",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "解 ax＋b＝c 型方程",
+      "tags": ["方程"],
+      "source": "示例模板",
+      "stem": "解方程：{a}x ＋ {b} ＝ {c}，则 x ＝",
+      "vars": {
+        "a": { "type": "int", "min": 2, "max": 9 },
+        "b": { "type": "int", "min": 1, "max": 30 },
+        "c": { "type": "int", "min": 10, "max": 80 }
+      },
+      "constraints": ["c > b", "(c - b) % a == 0"],
+      "answer": { "type": "integer", "expr": "(c - b) / a" },
+      "sanity": { "integer": true, "min": 1, "max": 30 },
+      "solution": "移项得 {a}x ＝ {c} − {b} ＝ {c-b}，所以 x ＝ {c-b} ÷ {a} ＝ {(c-b)/a}。"
+    },
+    {
+      "id": "m5-rect-area",
+      "subject": "数学",
+      "topic": "平面图形面积",
+      "grade": "五年级",
+      "difficulty": 1,
+      "title": "长方形面积",
+      "tags": ["面积"],
+      "source": "示例模板",
+      "stem": "一个长方形花坛，长 {a} 厘米，宽 {b} 厘米。它的面积是多少？",
+      "vars": {
+        "a": { "type": "int", "min": 3, "max": 25 },
+        "b": { "type": "int", "min": 2, "max": 18 }
+      },
+      "answer": { "type": "integer", "expr": "a * b" },
+      "unit": "平方厘米",
+      "solution": "长方形面积 ＝ 长 × 宽 ＝ {a} × {b} ＝ {a*b}（平方厘米）。"
+    },
+    {
+      "id": "m5-triangle-area",
+      "subject": "数学",
+      "topic": "平面图形面积",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "三角形面积",
+      "tags": ["面积"],
+      "source": "示例模板",
+      "stem": "一个三角形的底是 {a} 厘米，这条底边上的高是 {h} 厘米。它的面积是多少？",
+      "vars": {
+        "a": { "type": "int", "min": 4, "max": 24 },
+        "h": { "type": "int", "min": 3, "max": 20 }
+      },
+      "constraints": ["(a * h) % 2 == 0"],
+      "answer": { "type": "integer", "expr": "a * h / 2" },
+      "unit": "平方厘米",
+      "solution": "三角形面积 ＝ 底 × 高 ÷ 2 ＝ {a} × {h} ÷ 2 ＝ {a*h/2}（平方厘米）。"
+    },
+    {
+      "id": "m6-circle-area",
+      "subject": "数学",
+      "topic": "圆",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "已知半径求圆面积",
+      "tags": ["圆", "面积"],
+      "source": "示例模板",
+      "stem": "一个圆形花坛的半径是 {r} 米，它的占地面积是多少？（π 取 3.14）",
+      "vars": { "r": { "type": "int", "min": 1, "max": 12 } },
+      "answer": { "type": "number", "expr": "roundTo(3.14 * r^2, 2)", "digits": 2 },
+      "unit": "平方米",
+      "solution": "S ＝ πr² ＝ 3.14 × {r} × {r} ＝ {roundTo(3.14*r^2, 2)}（平方米）。"
+    },
+    {
+      "id": "m6-circle-peri",
+      "subject": "数学",
+      "topic": "圆",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "已知直径求圆周长",
+      "tags": ["圆", "周长"],
+      "source": "示例模板",
+      "stem": "一个圆形水池的直径是 {d} 米，绕它走一圈是多少米？（π 取 3.14）",
+      "vars": { "d": { "type": "int", "min": 2, "max": 30 } },
+      "answer": { "type": "number", "expr": "roundTo(3.14 * d, 2)", "digits": 2 },
+      "unit": "米",
+      "solution": "C ＝ πd ＝ 3.14 × {d} ＝ {roundTo(3.14*d, 2)}（米）。"
+    },
+    {
+      "id": "m6-percent-of",
+      "subject": "数学",
+      "topic": "百分数",
+      "grade": "六年级",
+      "difficulty": 2,
+      "title": "求一个数的百分之几",
+      "tags": ["百分数"],
+      "source": "示例模板",
+      "stem": "{a} 的 {b}% 是多少？",
+      "vars": {
+        "a": { "type": "int", "min": 20, "max": 600, "step": 10 },
+        "b": { "type": "pick", "from": [5, 10, 15, 20, 25, 40, 50, 60, 75, 80] }
+      },
+      "constraints": ["(a * b) % 100 == 0"],
+      "answer": { "type": "integer", "expr": "a * b / 100" },
+      "sanity": { "integer": true },
+      "solution": "求一个数的百分之几用乘法：{a} × {b}% ＝ {a} × [[{b}/100]] ＝ {a*b/100}。"
+    },
+    {
+      "id": "m6-discount",
+      "subject": "数学",
+      "topic": "百分数",
+      "grade": "六年级",
+      "difficulty": 3,
+      "title": "打折问题",
+      "tags": ["百分数", "应用题"],
+      "source": "示例模板",
+      "stem": "一件商品原价 {a} 元，现在打 {b} 折出售。现价是多少元？",
+      "vars": {
+        "a": { "type": "int", "min": 50, "max": 2000, "step": 10 },
+        "b": { "type": "pick", "from": [5, 6, 7, 8, 9] }
+      },
+      "constraints": ["(a * b) % 10 == 0"],
+      "answer": { "type": "number", "expr": "a * b / 10", "digits": 2 },
+      "unit": "元",
+      "solution": "{b} 折就是原价的 [[{b}/10]]，所以现价 ＝ {a} × [[{b}/10]] ＝ {a*b/10}（元）。"
+    },
+    {
+      "id": "m5-travel",
+      "subject": "数学",
+      "topic": "行程问题",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "路程÷速度＝时间",
+      "tags": ["应用题"],
+      "source": "示例模板",
+      "stem": "甲乙两地相距 {a} 千米。一辆汽车每小时行驶 {b} 千米，从甲地到乙地需要多少小时？",
+      "vars": {
+        "a": { "type": "int", "min": 60, "max": 600, "step": 10 },
+        "b": { "type": "pick", "from": [30, 40, 50, 60, 75, 80] }
+      },
+      "constraints": ["a % b == 0"],
+      "answer": { "type": "integer", "expr": "a / b" },
+      "unit": "小时",
+      "solution": "时间 ＝ 路程 ÷ 速度 ＝ {a} ÷ {b} ＝ {a/b}（小时）。"
+    },
+    {
+      "id": "m4-unit-price",
+      "subject": "数学",
+      "topic": "小数乘法",
+      "grade": "四年级",
+      "difficulty": 2,
+      "title": "单价×数量＝总价",
+      "tags": ["小数", "应用题"],
+      "source": "示例模板",
+      "stem": "一支钢笔 {a} 元，买 {b} 支一共需要多少元？",
+      "vars": {
+        "a": { "type": "dec", "min": 1.5, "max": 29.5, "digits": 1 },
+        "b": { "type": "int", "min": 2, "max": 24 }
+      },
+      "answer": { "type": "number", "expr": "a * b", "digits": 2 },
+      "unit": "元",
+      "sanity": { "maxDigits": 2, "max": 800 },
+      "solution": "总价 ＝ 单价 × 数量 ＝ {a} × {b} ＝ {a*b}（元）。"
+    },
+    {
+      "id": "m5-average",
+      "subject": "数学",
+      "topic": "统计与平均数",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "求三个数的平均数",
+      "tags": ["统计"],
+      "source": "示例模板",
+      "stem": "小明三次数学测验的成绩分别是 {a} 分、{b} 分和 {c} 分。这三次的平均成绩是多少分？",
+      "vars": {
+        "a": { "type": "int", "min": 70, "max": 100 },
+        "b": { "type": "int", "min": 70, "max": 100 },
+        "c": { "type": "int", "min": 70, "max": 100 }
+      },
+      "constraints": ["(a + b + c) % 3 == 0"],
+      "answer": { "type": "integer", "expr": "(a + b + c) / 3" },
+      "unit": "分",
+      "sanity": { "integer": true },
+      "solution": "平均数 ＝ 总和 ÷ 个数 ＝（{a} ＋ {b} ＋ {c}）÷ 3 ＝ {a+b+c} ÷ 3 ＝ {(a+b+c)/3}（分）。"
+    },
+    {
+      "id": "m5-chicken-rabbit",
+      "subject": "数学",
+      "topic": "鸡兔同笼",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "鸡兔同笼求兔数",
+      "tags": ["应用题", "假设法"],
+      "source": "示例模板",
+      "stem": "鸡和兔关在同一个笼子里，从上面数一共有 {h} 个头，从下面数一共有 {f} 只脚。兔子有多少只？",
+      "vars": {
+        "h": { "type": "int", "min": 6, "max": 22 },
+        "r": { "type": "int", "min": 1, "max": 14 }
+      },
+      "constraints": ["r < h"],
+      "derived": { "f": "2*h + 2*r" },
+      "answer": { "type": "integer", "expr": "(f - 2*h) / 2" },
+      "unit": "只",
+      "sanity": { "integer": true, "min": 1 },
+      "solution": "假设全是鸡，应有 {2*h} 只脚；实际多出 {f} − {2*h} ＝ {f-2*h} 只脚。每把一只鸡换成一只兔会多 2 只脚，所以兔有 {f-2*h} ÷ 2 ＝ {(f-2*h)/2} 只。"
+    },
+    {
+      "id": "m4-unit-conv",
+      "subject": "数学",
+      "topic": "单位换算",
+      "grade": "四年级",
+      "difficulty": 1,
+      "title": "千米换算成米",
+      "tags": ["单位"],
+      "source": "示例模板",
+      "stem": "{a} 千米 ＝ 多少米？",
+      "vars": { "a": { "type": "int", "min": 2, "max": 40 } },
+      "answer": { "type": "integer", "expr": "a * 1000" },
+      "unit": "米",
+      "solution": "1 千米 ＝ 1000 米，所以 {a} 千米 ＝ {a} × 1000 ＝ {a*1000} 米。"
+    },
+    {
+      "id": "m6-ratio-simplify",
+      "subject": "数学",
+      "topic": "比和比例",
+      "grade": "六年级",
+      "difficulty": 3,
+      "title": "化简成最简整数比",
+      "tags": ["比"],
+      "source": "示例模板",
+      "stem": "甲数是 {a}，乙数是 {b}。甲数与乙数的最简整数比是多少？（请写成 m:n 的形式）",
+      "vars": {
+        "k": { "type": "int", "min": 2, "max": 9 },
+        "m": { "type": "int", "min": 1, "max": 9 },
+        "n": { "type": "int", "min": 2, "max": 9 }
+      },
+      "constraints": ["m != n", "gcd(m,n) == 1"],
+      "derived": { "a": "k*m", "b": "k*n" },
+      "answer": { "type": "text", "expr": "{m}:{n}" },
+      "solution": "{a} : {b} ＝（{a} ÷ {k}）:（{b} ÷ {k}）＝ {m}:{n}。"
+    },
+    {
+      "id": "m4-order-ops",
+      "subject": "数学",
+      "topic": "四则混合运算",
+      "grade": "四年级",
+      "difficulty": 2,
+      "title": "先乘除后加减",
+      "tags": ["计算"],
+      "source": "示例模板",
+      "stem": "计算：{a} ＋ {b} × {c} ＝",
+      "vars": {
+        "a": { "type": "int", "min": 5, "max": 60 },
+        "b": { "type": "int", "min": 2, "max": 9 },
+        "c": { "type": "int", "min": 2, "max": 9 }
+      },
+      "answer": { "type": "integer", "expr": "a + b*c" },
+      "solution": "先算乘法：{b} × {c} ＝ {b*c}，再算加法：{a} ＋ {b*c} ＝ {a+b*c}。"
+    },
+    {
+      "id": "m4-div-exact",
+      "subject": "数学",
+      "topic": "四则混合运算",
+      "grade": "四年级",
+      "difficulty": 2,
+      "title": "整数除法",
+      "tags": ["计算"],
+      "source": "示例模板",
+      "stem": "计算：{a} ÷ {b} ＝",
+      "vars": {
+        "b": { "type": "int", "min": 2, "max": 9 },
+        "k": { "type": "int", "min": 3, "max": 40 }
+      },
+      "derived": { "a": "b*k" },
+      "answer": { "type": "integer", "expr": "a / b" },
+      "solution": "想乘法算除法：{b} × {k} ＝ {a}，所以 {a} ÷ {b} ＝ {k}。"
+    },
+    {
+      "id": "m4-choice-max",
+      "subject": "数学",
+      "topic": "四则混合运算",
+      "grade": "四年级",
+      "difficulty": 2,
+      "title": "下面哪个算式结果最大",
+      "tags": ["选择", "估算"],
+      "source": "示例模板",
+      "stem": "下面四个算式中，结果最大的是哪一个？",
+      "vars": {
+        "a": { "type": "int", "min": 3, "max": 9 },
+        "b": { "type": "int", "min": 3, "max": 9 }
+      },
+      "answer": {
+        "type": "choice",
+        "options": ["{a} × {b}", "{a} ＋ {b}", "{a} − {b}", "{a} ÷ {b}"],
+        "correctIndex": 0
+      },
+      "solution": "{a} × {b} ＝ {a*b}，{a} ＋ {b} ＝ {a+b}，{a} − {b} ＝ {a-b}，{a} ÷ {b} ≈ {roundTo(a/b,2)}。最大的是 {a} × {b}。"
+    },
+    {
+      "id": "m6-unknown-factor",
+      "subject": "数学",
+      "topic": "解方程",
+      "grade": "六年级",
+      "difficulty": 3,
+      "title": "已知 a×x＝b 求 x（分数解）",
+      "tags": ["方程", "分数"],
+      "source": "示例模板",
+      "stem": "已知 {a} × x ＝ {b}，求 x 的值。",
+      "vars": {
+        "a": { "type": "int", "min": 2, "max": 9 },
+        "b": { "type": "int", "min": 1, "max": 9 }
+      },
+      "constraints": ["b % a != 0"],
+      "answer": { "type": "fraction", "expr": "b", "denom": "a" },
+      "sanity": { "maxDen": 9 },
+      "solution": "x ＝ {b} ÷ {a} ＝ [[{b}/{a}]]。"
+    }
+  ]
+}

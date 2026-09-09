@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一次一百分 · 智能练习</title>
+<meta name="description" content="真题变式练习：一次一百分，错题自动重练直到完全掌握。">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <span class="logo">100</span>
+      <span>一次一百分<small> 真题变式 · 错题必清</small></span>
+    </div>
+    <div class="top-spacer"></div>
+    <button class="icon-btn" id="btnTheme" title="切换深浅色">🌗</button>
+    <button class="icon-btn" id="btnWho" title="点击修改姓名">👤</button>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-view="practice" class="active">练习</button>
+    <button data-view="paper">组卷</button>
+    <button data-view="wrong">错题本</button>
+    <button data-view="stats">掌握度</button>
+    <button data-view="bank">题库管理</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ 练习 ============ -->
+  <section id="view-practice">
+    <div id="pStart">
+      <div class="card">
+        <h2>今天练什么？</h2>
+        <div class="grid" id="pStats" style="margin-bottom:16px"></div>
+        <div class="row">
+          <button class="btn primary" data-mode="daily">开始今日测试</button>
+          <button class="btn" data-mode="wrong">只练错题 <span class="pill wrong" id="wrongCount">0</span></button>
+          <button class="btn" data-mode="review">抽样检测 <span class="pill review" id="dueCount">0</span></button>
+          <button class="btn" data-mode="random">随机抽测</button>
+        </div>
+        <p class="small muted" style="margin:12px 0 0">
+          错题会在下一次测试里自动换成<b>新数值</b>的同型题，直到连续答对 <span id="mStreak">3</span> 次才算掌握；
+          掌握后仍会在 1/2/4/7/15/30/60 天后不定期抽样检测。
+        </p>
+      </div>
+      <div class="card">
+        <h2>按知识点练习</h2>
+        <div class="row" id="topicBtns"></div>
+      </div>
+    </div>
+
+    <div id="pQuiz" class="hidden">
+      <div class="card">
+        <div class="qhead">
+          <span class="pill" id="qProgress">1 / 10</span>
+          <span id="qBadges"></span>
+          <span class="spacer"></span>
+          <button class="btn sm ghost no-print" id="btnQuit">结束本轮</button>
+        </div>
+        <div class="progress-line" style="margin-bottom:14px"><i id="qBar"></i></div>
+        <div id="qcard"></div>
+        <div id="qfb"></div>
+      </div>
+    </div>
+
+    <div id="pResult" class="hidden">
+      <div class="card">
+        <h2>本轮成绩</h2>
+        <div class="grid" id="rStats" style="margin-bottom:14px"></div>
+        <div id="rList"></div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn primary" id="btnAgain">再来一轮</button>
+          <button class="btn" id="btnBackHome">返回</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 组卷 ============ -->
+  <section id="view-paper" class="hidden">
+    <div class="card">
+      <h2>生成一套卷子</h2>
+      <p class="small muted">同一份真题模板会自动换一套数值，可反复生成同思路的不同卷子。</p>
+      <div class="row" style="margin-top:10px">
+        <label class="small">科目
+          <select id="ppSubject" style="min-width:120px"></select>
+        </label>
+        <label class="small">知识点
+          <select id="ppTopic" style="min-width:160px"></select>
+        </label>
+        <label class="small">题量
+          <input type="number" id="ppSize" value="10" min="1" max="60" style="max-width:90px">
+        </label>
+        <label class="small">范围
+          <select id="ppScope" style="min-width:130px">
+            <option value="all">全部</option>
+            <option value="topic">仅该知识点</option>
+            <option value="wrong">仅错题</option>
+            <option value="unmastered">未掌握</option>
+            <option value="new">没练过的</option>
+          </select>
+        </label>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="btnGenPaper">生成卷子</button>
+        <button class="btn hidden" id="btnPrintPaper">打印 / 存为 PDF</button>
+        <button class="btn hidden" id="btnSubmitPaper">交卷判分</button>
+      </div>
+    </div>
+    <div id="paperArea"></div>
+  </section>
+
+  <!-- ============ 错题本 ============ -->
+  <section id="view-wrong" class="hidden">
+    <div class="card">
+      <h2>错题本</h2>
+      <p class="small muted">这里的题型会在下次测试里带着<b>新数值</b>重新出现，直到彻底掌握。</p>
+      <div id="wrongList" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <!-- ============ 掌握度 ============ -->
+  <section id="view-stats" class="hidden">
+    <div class="card">
+      <h2>掌握度总览</h2>
+      <div class="grid" id="sStats"></div>
+    </div>
+    <div class="card">
+      <h2>各知识点掌握情况</h2>
+      <div id="sTopics"></div>
+    </div>
+    <div class="card">
+      <h2>最近作答</h2>
+      <div id="sHistory" style="max-height:420px;overflow:auto"></div>
+    </div>
+  </section>
+
+  <!-- ============ 题库管理 ============ -->
+  <section id="view-bank" class="hidden">
+    <div class="card">
+      <h2>题库</h2>
+      <div class="row">
+        <span class="small muted" id="bankInfo"></span>
+        <span class="spacer"></span>
+        <button class="btn sm" id="btnBankReload">重新加载</button>
+      </div>
+      <div id="bankList" style="margin-top:12px;max-height:340px;overflow:auto"></div>
+    </div>
+
+    <div class="card">
+      <h2>导入新题（WorkBuddy 生成）</h2>
+      <p class="small muted">把 WorkBuddy 从真题图片识别后生成的 JSON 粘进来即可，题会保存在本机；同时建议把它提交进 <code>data/question-bank.json</code> 以便所有设备都能用。</p>
+      <textarea id="bankInput" rows="8" placeholder='{"templates":[ { "id":"...", ... } ]}  或直接粘贴一个模板对象 / 模板数组'></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="btnImport">导入到本机题库</button>
+        <button class="btn" id="btnImportFile">从文件导入</button>
+        <input type="file" id="fileInput" accept=".json,.txt" class="hidden">
+      </div>
+      <div id="importMsg" class="small" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
+      <h2>数据备份</h2>
+      <p class="small muted">所有学习数据只保存在这台设备的浏览器里。换设备或清缓存前请先导出。</p>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="btnExport">导出全部数据</button>
+        <button class="btn" id="btnExportFile">下载为文件</button>
+        <button class="btn" id="btnImportAll">导入备份</button>
+        <button class="btn" id="btnExportBank">导出当前题库 JSON</button>
+      </div>
+      <textarea id="ioBox" rows="6" class="hidden" style="margin-top:10px"></textarea>
+      <div class="row hidden" id="ioRow" style="margin-top:10px">
+        <button class="btn primary" id="btnDoImportAll">确认导入</button>
+        <button class="btn" id="btnCancelImport">取消</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>练习设置</h2>
+      <div class="row">
+        <label class="small">每次题量 <input type="number" id="setSize" min="3" max="50" style="max-width:90px"></label>
+        <label class="small">每次新题型 <input type="number" id="setNew" min="0" max="20" style="max-width:90px"></label>
+        <label class="small">连续答对几次算掌握 <input type="number" id="setStreak" min="2" max="6" style="max-width:90px"></label>
+        <label class="small">错题需答对几次移出 <input type="number" id="setNeed" min="1" max="5" style="max-width:90px"></label>
+        <label class="small"><input type="checkbox" id="setRetry" style="width:auto"> 错题当场换数重练</label>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="btnSaveSet">保存设置</button>
+        <span class="spacer"></span>
+        <button class="btn" id="btnResetProg">清空学习进度</button>
+        <button class="btn" id="btnWipe">清空全部数据</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>使用说明</h2>
+      <ul class="small muted" style="line-height:1.9;padding-left:20px">
+        <li>学生端只做练习；家长/老师可在「掌握度」看正确率与薄弱知识点。</li>
+        <li>新题由 WorkBuddy 从真题图片识别后生成模板，模板里只写「变量范围 + 答案公式」，每次出卷自动换数。</li>
+        <li>判分支持整数、小数、分数（<code>3/4</code> 或 <code>0.75</code> 都算对）、带单位（<code>12米</code>）、百分数、选择题、填空文字。</li>
+        <li>快捷键：<kbd>Enter</kbd> 提交答案，<kbd>Ctrl</kbd>+<kbd>Enter</kbd> 下一题。</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/expr.js"></script>
+<script src="assets/js/generator.js"></script>
+<script src="assets/js/grader.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/srs.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

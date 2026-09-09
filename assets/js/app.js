@@ -261,10 +261,15 @@
     var ts = Bank.topics(sub || null);
     $('#ppTopic').innerHTML = '<option value="">全部</option>' + ts.map(function (t) { return '<option>' + esc(t) + '</option>'; }).join('');
   }
+  function sourceSetOf(t) {
+    if (t.sourceSet) return t.sourceSet;
+    var s = t.source || '';
+    return s.replace(/\s*Q\d+[a-z]?$/i, '') || '(未标注来源)';
+  }
   function refreshSources() {
     var seen = {}, list = [];
     Bank.all().forEach(function (t) {
-      var s = t.source || '(未标注来源)';
+      var s = sourceSetOf(t);
       if (!seen[s]) { seen[s] = 1; list.push(s); }
     });
     list.sort();
@@ -290,7 +295,7 @@
     if (topic && scope !== 'topic') ids = ids.filter(function (id) { var t = Bank.byId(id); return t && (t.topic || '') === topic; });
 
     var srcs = Array.prototype.slice.call($$('#ppSources input:checked')).map(function (c) { return c.value; });
-    if (srcs.length) ids = ids.filter(function (id) { var t = Bank.byId(id); return t && srcs.indexOf(t.source || '(未标注来源)') >= 0; });
+    if (srcs.length) ids = ids.filter(function (id) { var t = Bank.byId(id); return t && srcs.indexOf(sourceSetOf(t)) >= 0; });
 
     if (!ids.length) { toast('该条件下没有题目'); return; }
     shuffle(ids);

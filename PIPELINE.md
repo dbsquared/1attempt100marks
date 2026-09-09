@@ -52,7 +52,8 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
   "difficulty": 2,                   // 1-5
   "title": "异分母分数加法",          // 列表页显示用的一句话描述
   "tags": ["分数", "计算"],
-  "source": "2024 年 XX 区期末卷 第三大题第 1 小题",   // 真题出处
+  "source": "2024 年 XX 区期末卷 第三大题第 1 小题",   // 真题出处（逐题，可带 " Q1" 之类编号）
+  "sourceSet": "2024 年 XX 区期末卷",                  // 题集名；组卷「试题来源」按此聚合（可多选）。缺省时由 source 去掉末尾 " Qn" 推断
   "image": "assets/originals/xxx.png",                // 可选，原题图
   "unit": "平方厘米",                 // 可选，答案单位
 

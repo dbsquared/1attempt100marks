@@ -54,7 +54,8 @@
       "sanity": {
         "maxDen": 72
       },
-      "solution": "先通分：[[{a}/{b}]] ＝ [[{a*d}/{b*d}]]，[[{c}/{d}]] ＝ [[{c*b}/{b*d}]]；再相加：[[{a*d+c*b}/{b*d}]]。"
+      "solution": "先通分：[[{a}/{b}]] ＝ [[{a*d}/{b*d}]]，[[{c}/{d}]] ＝ [[{c*b}/{b*d}]]；再相加：[[{a*d+c*b}/{b*d}]]。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-frac-sub",
@@ -108,7 +109,8 @@
       "sanity": {
         "maxDen": 72
       },
-      "solution": "通分后相减：[[{a*d}/{b*d}]] − [[{c*b}/{b*d}]] ＝ [[{a*d-c*b}/{b*d}]]。"
+      "solution": "通分后相减：[[{a*d}/{b*d}]] − [[{c*b}/{b*d}]] ＝ [[{a*d-c*b}/{b*d}]]。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-frac-mul",
@@ -160,7 +162,8 @@
       "sanity": {
         "maxDen": 81
       },
-      "solution": "分子相乘作分子，分母相乘作分母：[[{a*c}/{b*d}]]，能约分的要约成最简分数。"
+      "solution": "分子相乘作分子，分母相乘作分母：[[{a*c}/{b*d}]]，能约分的要约成最简分数。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-frac-div",
@@ -212,7 +215,8 @@
       "sanity": {
         "maxDen": 81
       },
-      "solution": "除以一个分数等于乘它的倒数：[[{a}/{b}]] × [[{d}/{c}]] ＝ [[{a*d}/{b*c}]]。"
+      "solution": "除以一个分数等于乘它的倒数：[[{a}/{b}]] × [[{d}/{c}]] ＝ [[{a*d}/{b*c}]]。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-equation-1",
@@ -256,7 +260,8 @@
         "min": 1,
         "max": 30
       },
-      "solution": "移项得 {a}x ＝ {c} − {b} ＝ {c-b}，所以 x ＝ {c-b} ÷ {a} ＝ {(c-b)/a}。"
+      "solution": "移项得 {a}x ＝ {c} − {b} ＝ {c-b}，所以 x ＝ {c-b} ÷ {a} ＝ {(c-b)/a}。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m5-rect-area",
@@ -287,7 +292,8 @@
         "expr": "a * b"
       },
       "unit": "平方厘米",
-      "solution": "长方形面积 ＝ 长 × 宽 ＝ {a} × {b} ＝ {a*b}（平方厘米）。"
+      "solution": "长方形面积 ＝ 长 × 宽 ＝ {a} × {b} ＝ {a*b}（平方厘米）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m5-triangle-area",
@@ -321,7 +327,8 @@
         "expr": "a * h / 2"
       },
       "unit": "平方厘米",
-      "solution": "三角形面积 ＝ 底 × 高 ÷ 2 ＝ {a} × {h} ÷ 2 ＝ {a*h/2}（平方厘米）。"
+      "solution": "三角形面积 ＝ 底 × 高 ÷ 2 ＝ {a} × {h} ÷ 2 ＝ {a*h/2}（平方厘米）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-circle-area",
@@ -349,7 +356,8 @@
         "digits": 2
       },
       "unit": "平方米",
-      "solution": "S ＝ πr² ＝ 3.14 × {r} × {r} ＝ {roundTo(3.14*r^2, 2)}（平方米）。"
+      "solution": "S ＝ πr² ＝ 3.14 × {r} × {r} ＝ {roundTo(3.14*r^2, 2)}（平方米）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-circle-peri",
@@ -377,7 +385,8 @@
         "digits": 2
       },
       "unit": "米",
-      "solution": "C ＝ πd ＝ 3.14 × {d} ＝ {roundTo(3.14*d, 2)}（米）。"
+      "solution": "C ＝ πd ＝ 3.14 × {d} ＝ {roundTo(3.14*d, 2)}（米）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-percent-of",
@@ -424,7 +433,8 @@
       "sanity": {
         "integer": true
       },
-      "solution": "求一个数的百分之几用乘法：{a} × {b}% ＝ {a} × [[{b}/100]] ＝ {a*b/100}。"
+      "solution": "求一个数的百分之几用乘法：{a} × {b}% ＝ {a} × [[{b}/100]] ＝ {a*b/100}。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-discount",
@@ -466,7 +476,8 @@
         "digits": 2
       },
       "unit": "元",
-      "solution": "{b} 折就是原价的 [[{b}/10]]，所以现价 ＝ {a} × [[{b}/10]] ＝ {a*b/10}（元）。"
+      "solution": "{b} 折就是原价的 [[{b}/10]]，所以现价 ＝ {a} × [[{b}/10]] ＝ {a*b/10}（元）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m5-travel",
@@ -507,7 +518,8 @@
         "expr": "a / b"
       },
       "unit": "小时",
-      "solution": "时间 ＝ 路程 ÷ 速度 ＝ {a} ÷ {b} ＝ {a/b}（小时）。"
+      "solution": "时间 ＝ 路程 ÷ 速度 ＝ {a} ÷ {b} ＝ {a/b}（小时）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m4-unit-price",
@@ -545,7 +557,8 @@
         "maxDigits": 2,
         "max": 800
       },
-      "solution": "总价 ＝ 单价 × 数量 ＝ {a} × {b} ＝ {a*b}（元）。"
+      "solution": "总价 ＝ 单价 × 数量 ＝ {a} × {b} ＝ {a*b}（元）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m5-average",
@@ -587,7 +600,8 @@
       "sanity": {
         "integer": true
       },
-      "solution": "平均数 ＝ 总和 ÷ 个数 ＝（{a} ＋ {b} ＋ {c}）÷ 3 ＝ {a+b+c} ÷ 3 ＝ {(a+b+c)/3}（分）。"
+      "solution": "平均数 ＝ 总和 ÷ 个数 ＝（{a} ＋ {b} ＋ {c}）÷ 3 ＝ {a+b+c} ÷ 3 ＝ {(a+b+c)/3}（分）。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m5-chicken-rabbit",
@@ -629,7 +643,8 @@
         "integer": true,
         "min": 1
       },
-      "solution": "假设全是鸡，应有 {2*h} 只脚；实际多出 {f} − {2*h} ＝ {f-2*h} 只脚。每把一只鸡换成一只兔会多 2 只脚，所以兔有 {f-2*h} ÷ 2 ＝ {(f-2*h)/2} 只。"
+      "solution": "假设全是鸡，应有 {2*h} 只脚；实际多出 {f} − {2*h} ＝ {f-2*h} 只脚。每把一只鸡换成一只兔会多 2 只脚，所以兔有 {f-2*h} ÷ 2 ＝ {(f-2*h)/2} 只。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m4-unit-conv",
@@ -655,7 +670,8 @@
         "expr": "a * 1000"
       },
       "unit": "米",
-      "solution": "1 千米 ＝ 1000 米，所以 {a} 千米 ＝ {a} × 1000 ＝ {a*1000} 米。"
+      "solution": "1 千米 ＝ 1000 米，所以 {a} 千米 ＝ {a} × 1000 ＝ {a*1000} 米。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-ratio-simplify",
@@ -698,7 +714,8 @@
         "type": "text",
         "expr": "{m}:{n}"
       },
-      "solution": "{a} : {b} ＝（{a} ÷ {k}）:（{b} ÷ {k}）＝ {m}:{n}。"
+      "solution": "{a} : {b} ＝（{a} ÷ {k}）:（{b} ÷ {k}）＝ {m}:{n}。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m4-order-ops",
@@ -733,7 +750,8 @@
         "type": "integer",
         "expr": "a + b*c"
       },
-      "solution": "先算乘法：{b} × {c} ＝ {b*c}，再算加法：{a} ＋ {b*c} ＝ {a+b*c}。"
+      "solution": "先算乘法：{b} × {c} ＝ {b*c}，再算加法：{a} ＋ {b*c} ＝ {a+b*c}。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m4-div-exact",
@@ -766,7 +784,8 @@
         "type": "integer",
         "expr": "a / b"
       },
-      "solution": "想乘法算除法：{b} × {k} ＝ {a}，所以 {a} ÷ {b} ＝ {k}。"
+      "solution": "想乘法算除法：{b} × {k} ＝ {a}，所以 {a} ÷ {b} ＝ {k}。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m4-choice-max",
@@ -803,7 +822,8 @@
         ],
         "correctIndex": 0
       },
-      "solution": "{a} × {b} ＝ {a*b}，{a} ＋ {b} ＝ {a+b}，{a} − {b} ＝ {a-b}，{a} ÷ {b} ≈ {roundTo(a/b,2)}。最大的是 {a} × {b}。"
+      "solution": "{a} × {b} ＝ {a*b}，{a} ＋ {b} ＝ {a+b}，{a} − {b} ＝ {a-b}，{a} ÷ {b} ≈ {roundTo(a/b,2)}。最大的是 {a} × {b}。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "m6-unknown-factor",
@@ -841,7 +861,8 @@
       "sanity": {
         "maxDen": 9
       },
-      "solution": "x ＝ {b} ÷ {a} ＝ [[{b}/{a}]]。"
+      "solution": "x ＝ {b} ÷ {a} ＝ [[{b}/{a}]]。",
+      "sourceSet": "示例模板"
     },
     {
       "id": "icas22y2m-01",
@@ -872,7 +893,8 @@
       "solution": {
         "en": "Count the flowers one by one: there are 7 flowers in the vase.",
         "zh": "一朵一朵指着数：花瓶里一共有 7 朵花。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-02",
@@ -912,7 +934,8 @@
       "solution": {
         "en": "Tomorrow is Tuesday, not Thursday — will NOT happen. Today is Monday; 7 days later is next Monday, 6+7=13, so next Monday WILL be 13 June. Whether it is sunny tomorrow is yet to be seen — it MIGHT happen.",
         "zh": "明天是星期二，不是星期四——一定不会发生；今天星期一，过 7 天正好是下星期一，6＋7＝13，所以下星期一一定是 6 月 13 日——一定会发生；明天晴不晴要等到才知道——只是可能发生。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-03",
@@ -967,7 +990,8 @@
       "solution": {
         "en": "Each next shape uses {d} more sticks: shape 1 is {a}, shape 2 is {a+d}, shape 3 is {a+2*d}… shape {n} is {n-1} steps after shape 1, so {a}＋{d}×{n-1}＝{a+(n-1)*d} sticks.",
         "zh": "每往后一个图形多用 {d} 根：图形 1 用 {a} 根，图形 2 用 {a+d} 根，图形 3 用 {a+2*d} 根……图形 {n} 比图形 1 多（{n}-1）＝{n-1} 次，所以是 {a}＋{d}×{n-1}＝{a+(n-1)*d} 根。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-04",
@@ -1007,7 +1031,8 @@
       "solution": {
         "en": "A hexagon has 6 sides. {k} are drawn, so {6-k} more are needed.",
         "zh": "六边形有 6 条边。已经画了 {k} 条，还缺 6−{k}＝{6-k} 条。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-05",
@@ -1064,7 +1089,8 @@
       "solution": {
         "en": "The tens digit is {t}; the ones digit is {d} more, so {t}＋{d}＝{u}. The two-digit number is {10*t+u}.",
         "zh": "十位是 {t}，个位比它大 {d}，个位是 {t}＋{d}＝{u}。这个两位数是 {10*t+u}。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-06",
@@ -1107,7 +1133,8 @@
       "solution": {
         "en": "The picture has squares (windows), rectangles (door, walls) and circles (doorknob) — but no triangle.",
         "zh": "画里有正方形（窗户）、长方形（门、墙）、圆形（门把手），唯独没有三角形。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-07",
@@ -1165,7 +1192,8 @@
       "solution": {
         "en": "Each part is {E}÷{n}＝{E/n}. The {k}th mark is {k}×{E/n}＝{k*E/n}.",
         "zh": "每小格表示 {E}÷{n}＝{E/n}。第 {k} 格就是 {k}×{E/n}＝{k*E/n}。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-08",
@@ -1200,7 +1228,8 @@
       "solution": {
         "en": "A skateboard is long and flat, so it fits the largest thin box; a ball goes in a tall box, a watch in the smallest box, shoes in a medium-large box.",
         "zh": "滑板又长又扁，适合装在最大的细长盒子里；篮球装高盒子、手表装最小的盒子、鞋子装中等偏大的盒子。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-09",
@@ -1268,7 +1297,8 @@
       "solution": {
         "en": "Team C scored {c}; 2 more is {c+2} — that is exactly Team A ({a}). Team B {b} and Team D {dd} are wrong.",
         "zh": "丙队进 {c} 球，多 2 球就是 {c+2} 球——正好是甲队（{a} 球）。乙队 {b} 球、丁队 {dd} 球都不对。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-10",
@@ -1315,7 +1345,8 @@
       "solution": {
         "en": "Replace each symbol with its number: {a}＋{b}−{c}＝{a+b-c}.",
         "zh": "把每个符号换成它的数：{a}＋{b}−{c}＝{a+b-c}。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-11",
@@ -1396,7 +1427,8 @@
       "solution": {
         "en": "The correct three cards are {v1}, {v3}, {v4}: {v1}＋{v3}＋{v4}＝{T}. No other three cards add to {T}.",
         "zh": "三张正确的卡片是 {v1}、{v3}、{v4}：{v1}＋{v3}＋{v4}＝{T}。其他任何三张的和都不等于 {T}。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-12",
@@ -1428,7 +1460,8 @@
       "solution": {
         "en": "\"Half an hour later\" means 30 minutes after 12, which is 12:30.",
         "zh": "「快半小时」就是多走半小时：12 点再过半小时是 12:30。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-13a",
@@ -1483,7 +1516,8 @@
       "solution": {
         "en": "B{b} is level −{b}: −{b}＋{u}−{d}＝{0-b+u-d}, so she got out at level {0-b+u-d} above ground.",
         "zh": "B{b} 相当于 −{b} 层：−{b}＋{u}−{d}＝{0-b+u-d}，所以她在 {0-b+u-d} 楼出电梯。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-13b",
@@ -1533,7 +1567,8 @@
       "solution": {
         "en": "B{b} is level −{b}: −{b}＋{u}−{d}＝{0-b+u-d}; a negative result means below ground, i.e. level B{0-(0-b+u-d)}.",
         "zh": "B{b} 相当于 −{b} 层：−{b}＋{u}−{d}＝{0-b+u-d}，负数表示在地下，就是 B{0-(0-b+u-d)} 层。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-14",
@@ -1585,7 +1620,8 @@
       "solution": {
         "en": "Only add the cars and trucks: {a}＋{c}＝{a+c} (bikes and buses are distractors).",
         "zh": "只要把小汽车和卡车加起来：{a}＋{c}＝{a+c} 辆（自行车和公交车是干扰信息）。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-15",
@@ -1628,7 +1664,8 @@
       "solution": {
         "en": "Work backwards: {L} left means before Saturday there were {L}×2＝{2*L}; before Friday there were {2*L}×2＝{4*L}. He picked {4*L} in all.",
         "zh": "倒着推：剩下 {L} 颗，说明周六吃之前有 {L}×2＝{2*L} 颗；周五吃之前有 {2*L}×2＝{4*L} 颗。一共摘了 {4*L} 颗。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-16",
@@ -1672,7 +1709,8 @@
       "solution": {
         "en": "Find the second shelf from the top, then count three books from the right — that is Sara's favourite book.",
         "zh": "先找到从上数第二层，再从右边往左数第三本，就是萨拉最喜欢的书。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-17",
@@ -1712,7 +1750,8 @@
       "solution": {
         "en": "Half means split the {k} segments into two equal parts: {k}÷2＝{k/2} segments.",
         "zh": "一半就是把 {k} 段平均分成两份：{k}÷2＝{k/2} 段。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-18",
@@ -1779,7 +1818,8 @@
       "solution": {
         "en": "From {S} to {n} is {S-n} numbers; with 4 children per round, {S-n}÷4 divides exactly (remainder 0), so it comes back to the first speaker — A.",
         "zh": "从 {S} 数到 {n} 一共数了 {S-n} 个数，4 人一轮，{S-n}÷4 正好除尽（余 0），说明又轮回到第 1 个人——甲。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-19",
@@ -1816,7 +1856,8 @@
       "solution": {
         "en": "Simply 4×{p}＝{4*p} would count each corner post twice, so subtract 4. Total = 4×{p}−4＝{4*p-4} posts.",
         "zh": "如果直接 4×{p}＝{4*p}，四个角的柱子就被数了两次，要多减去 4。所以一共 4×{p}−4＝{4*p-4} 根。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-20",
@@ -1866,7 +1907,8 @@
       "solution": {
         "en": "Jenny has {a}＋{m}＝{a+m}; Peter has {a+m}−{k}＝{a+m-k}. Total = {a}＋{a+m}＋{a+m-k}＝{3*a+2*m-k}.",
         "zh": "珍妮有 {a}＋{m}＝{a+m} 颗，彼得有 {a+m}−{k}＝{a+m-k} 颗。一共 {a}＋{a+m}＋{a+m-k}＝{3*a+2*m-k} 颗。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-21",
@@ -1923,7 +1965,8 @@
       "solution": {
         "en": "4 lanterns make one group. {n}÷4＝{n/4} groups with remainder 1; remainder 1 is the first in each group — red.",
         "zh": "4 个灯笼为一组。{n}÷4＝{n/4} 组余 1，余 1 就是每组里的第 1 个——红色。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-22",
@@ -1966,7 +2009,8 @@
       "solution": {
         "en": "Sydney's spring is Sep–Nov; Darwin's wet season is Nov–Apr. Only November is in both.",
         "zh": "悉尼的春天是 9—11 月；达尔文的雨季是 11—4 月。两个月里只有 11 月同时满足。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-23",
@@ -1998,7 +2042,8 @@
       "solution": {
         "en": "The total is 145c. To use the MOST coins, use as many small values as possible; with the 5c, 10c, 20c and 50c coins in the purse, 145c can be made with at most 10 coins.",
         "zh": "一共 145 分。想用最多的硬币，就尽量用小面值：钱包里的 5 分、10 分、20 分、50 分硬币凑出 145 分，最多能用到 10 枚。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-24",
@@ -2042,7 +2087,8 @@
       "solution": {
         "en": "Line the missing patch up with the rows and columns of the table; the completed pattern has a yellow square at row 2, column 2 of the patch.",
         "zh": "按桌面花纹的行列对齐去接，缺的那一块接上后第二行第二格应该是黄色。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-25",
@@ -2090,7 +2136,8 @@
       "solution": {
         "en": "Yellow = {m} red sheets = {m}×{k} blue sheets, so one yellow sheet covers exactly {m*k} blue sheets.",
         "zh": "黄纸＝{m} 张红纸＝{m}×{k} 张蓝纸，所以一张黄纸正好铺 {m*k} 张蓝纸。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-26",
@@ -2134,7 +2181,8 @@
       "solution": {
         "en": "From Sita's square, 1 left and then 2 toward Mark (downwards) lands exactly on the white square at the far right of the second-last row.",
         "zh": "从西塔的位置往左 1 格、再向马克（往下）2 格，正好落在倒数第二行最右边的白格上。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-27",
@@ -2218,7 +2266,8 @@
       "solution": {
         "en": "Add each change in turn: {s}＋{a1}−{f1}＋{a2}−{f2}＋{a3}−{f3}＋{a4}−{f4}＝{T} birds.",
         "zh": "把每一次变化接着算：{s}＋{a1}−{f1}＋{a2}−{f2}＋{a3}−{f3}＋{a4}−{f4}＝{T} 只。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-28",
@@ -2257,7 +2306,8 @@
       "solution": {
         "en": "Green is fixed at the bottom; the remaining {n-1} blocks go on top: {n-1} choices for level 2, {n-2} for level 3, {n-3} for level 4… = {(n-1)*(n-2)*(n-3)} towers.",
         "zh": "绿积木固定在最底层不用动，剩下的 {n-1} 块排上面：第 2 层有 {n-1} 种选法，第 3 层剩 {n-2} 种，第 4 层剩 {n-3} 种……一共 {(n-1)*(n-2)*(n-3)} 座。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-29",
@@ -2319,7 +2369,8 @@
       "solution": {
         "en": "Divide the 2nd equation by 2: ▲＋●＝{B/2}. From the 1st, ◆＝{A}−{B/2}＝{d}. Put into the 3rd: ▲＋3●＝{C}−2×{d}＝{C-2*d}; subtract ▲＋●＝{B/2} to get 2●＝{C-2*d-B/2}, so ●＝{c}.",
         "zh": "第二式两边除以 2：▲＋●＝{B/2}。由第一式：◆＝{A}−{B/2}＝{d}。代入第三式：▲＋3●＝{C}−2×{d}＝{C-2*d}；再减去▲＋●＝{B/2}，得 2●＝{C-2*d-B/2}，所以 ●＝{c}。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     },
     {
       "id": "icas22y2m-30",
@@ -2349,7 +2400,8 @@
       "solution": {
         "en": "Count the pigs in each pen, find the average, then move pigs from fuller pens to emptier ones only along the allowed arrow directions; the fewest moves needed is 7.",
         "zh": "先数出四个圈的猪，算出平均数，再沿着箭头允许的方向把多的圈里的猪补到少的圈里，最少要移动 7 头。"
-      }
+      },
+      "sourceSet": "ICAS 2022 Year 2 Mathematics"
     }
   ]
 }

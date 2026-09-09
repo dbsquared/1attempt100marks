@@ -115,6 +115,15 @@
           </select>
         </label>
       </div>
+      <fieldset class="srcset">
+        <legend>试题来源（可多选；不选 = 全部来源）</legend>
+        <div class="row" style="margin-bottom:8px">
+          <button type="button" class="btn sm" id="ppSrcAll">全选</button>
+          <button type="button" class="btn sm" id="ppSrcNone">清空</button>
+          <span class="small muted" id="ppSrcCount"></span>
+        </div>
+        <div id="ppSources" class="srcbox"></div>
+      </fieldset>
       <div class="row" style="margin-top:12px">
         <button class="btn primary" id="btnGenPaper">生成卷子</button>
         <button class="btn hidden" id="btnPrintPaper">打印 / 存为 PDF</button>

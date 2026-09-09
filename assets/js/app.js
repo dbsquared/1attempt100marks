@@ -254,11 +254,26 @@
     var subs = Bank.subjects();
     $('#ppSubject').innerHTML = '<option value="">全部</option>' + subs.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join('');
     refreshTopics();
+    refreshSources();
   }
   function refreshTopics() {
     var sub = $('#ppSubject').value;
     var ts = Bank.topics(sub || null);
     $('#ppTopic').innerHTML = '<option value="">全部</option>' + ts.map(function (t) { return '<option>' + esc(t) + '</option>'; }).join('');
+  }
+  function refreshSources() {
+    var seen = {}, list = [];
+    Bank.all().forEach(function (t) {
+      var s = t.source || '(未标注来源)';
+      if (!seen[s]) { seen[s] = 1; list.push(s); }
+    });
+    list.sort();
+    $('#ppSources').innerHTML = list.map(function (s) {
+      return '<label class="srcitem"><input type="checkbox" value="' + esc(s) + '"> ' + esc(s) + '</label>';
+    }).join('');
+    $('#ppSrcCount').textContent = list.length + ' 个来源';
+    $('#ppSrcAll').onclick = function () { $$('#ppSources input').forEach(function (c) { c.checked = true; }); };
+    $('#ppSrcNone').onclick = function () { $$('#ppSources input').forEach(function (c) { c.checked = false; }); };
   }
 
   function genPaper() {
@@ -273,6 +288,9 @@
     else if (scope === 'unmastered') ids = ids.filter(function (id) { return !p[id] || !p[id].mastered; });
     else if (scope === 'new') ids = SRS.newIds(ids);
     if (topic && scope !== 'topic') ids = ids.filter(function (id) { var t = Bank.byId(id); return t && (t.topic || '') === topic; });
+
+    var srcs = Array.prototype.slice.call($$('#ppSources input:checked')).map(function (c) { return c.value; });
+    if (srcs.length) ids = ids.filter(function (id) { var t = Bank.byId(id); return t && srcs.indexOf(t.source || '(未标注来源)') >= 0; });
 
     if (!ids.length) { toast('该条件下没有题目'); return; }
     shuffle(ids);

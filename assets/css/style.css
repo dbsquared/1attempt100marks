@@ -172,6 +172,14 @@ table.tbl tr:last-child td { border-bottom: none; }
 .bar > i { display: block; height: 100%; background: var(--ok); }
 
 /* ---------- 组卷 ---------- */
+.srcset { border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; margin: 12px 0 0; }
+.srcset legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
+.srcbox {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 5px 14px; max-height: 170px; overflow: auto; padding: 4px 2px 2px;
+}
+.srcitem { display: flex; align-items: center; gap: 7px; font-size: 13px; cursor: pointer; line-height: 1.5; }
+.srcitem input { width: auto; margin: 0; }
 .paper-q { border-top: 1px dashed var(--border); padding: 14px 0; }
 .paper-q:first-child { border-top: none; }
 .paper-q .no { font-weight: 700; color: var(--brand); margin-right: 6px; }

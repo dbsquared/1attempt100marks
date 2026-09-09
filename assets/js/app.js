@@ -488,6 +488,83 @@
     renderStart(); fillPaperSelects();
   }
 
+  /* ---------------- 多设备同步 ---------------- */
+  function syncCode(full) {
+    var s = Store.settings();
+    return Sync.makeCode({
+      sid: s.sid, dev: s.devId, ts: Date.now(), full: !!full,
+      from: Store.lastSync(),
+      progress: Store.progress(), wrong: Store.wrongAll()
+    });
+  }
+  function importCode(text) {
+    var d = Sync.parseCode(text);
+    var cur = Sync.normalize(Sync.packLocal(Store.progress(), Store.wrongAll()));
+    var r = Sync.merge(cur, d);
+    var out = Sync.toLocal(cur);
+    Store.saveProgress(out.progress);
+    Store.saveWrong(out.wrong);
+    return r;
+  }
+  function pullCloud(quiet) {
+    var s = Store.settings();
+    return fetch('data/state/' + s.sid + '.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (!j) { if (!quiet) toast('云端还没有这个编号的进度'); return null; }
+        var r = Store.applyCloud(j);
+        renderSyncInfo(); renderStart();
+        if (!quiet) toast('已合并云端：新增 ' + r.pNew + ' 题，更新 ' + r.pUpd + ' 题');
+        return r;
+      })
+      .catch(function (e) { if (!quiet) toast('拉取失败：' + e.message); return null; });
+  }
+  function renderSyncInfo() {
+    var s = Store.settings();
+    if ($('#syncSid')) {
+      $('#syncSid').value = s.sid || '';
+      $('#syncMail').value = s.parentEmail || '';
+      $('#syncDev').textContent = '本机：' + (s.devId || '-');
+      var ls = Store.lastSync();
+      $('#syncLast').textContent = ls ? '上次同步 ' + fmtDate(ls) : '尚未同步过';
+      $('#setAutoSync').checked = s.autoSync !== false;
+    }
+  }
+  function showCode(code, where) {
+    var ta = where === 'result' ? $('#sendCode') : $('#syncBox');
+    ta.value = code;
+    ta.classList.remove('hidden');
+    if (where === 'result') {
+      $('#sendBox').classList.remove('hidden');
+      $('#sendInfo').textContent = code.length + ' 字符';
+    } else {
+      $('#syncBoxRow').classList.remove('hidden');
+      $('#syncMsg').innerHTML = '<span class="muted">已生成 ' + code.length + ' 字符，可复制或发邮件。</span>';
+    }
+    ta.select();
+  }
+  function copyText(el) {
+    if (!el) return;
+    el.select(); el.setSelectionRange(0, 999999);
+    try {
+      if (navigator.clipboard) { navigator.clipboard.writeText(el.value); toast('已复制'); return; }
+    } catch (e) { }
+    try { document.execCommand('copy'); toast('已复制'); } catch (e) { toast('请手动全选复制'); }
+  }
+  function mailCode(code) {
+    var s = Store.settings();
+    var to = (s.parentEmail || '').trim();
+    if (!to) {
+      to = prompt('家长邮箱（用于接收同步码）', '');
+      if (!to) return;
+      s.parentEmail = to.trim(); Store.saveSettings(s); renderSyncInfo();
+    }
+    var subject = '一次一百分 同步码 ' + (s.sid || '');
+    var body = code + '\n\n—— 把这串码交给 WorkBuddy 合并即可同步进度。';
+    window.location.href = 'mailto:' + encodeURIComponent(to) +
+      '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
   /* ---------------- 设置 ---------------- */
   function fillSettings() {
     var s = Store.settings();
@@ -505,7 +582,8 @@
     if (theme) document.documentElement.dataset.theme = theme;
 
     Bank.load().then(function () {
-      renderStart(); fillPaperSelects(); fillSettings(); updateWho();
+      renderStart(); fillPaperSelects(); fillSettings(); updateWho(); renderSyncInfo();
+      if (Store.settings().autoSync !== false) pullCloud(true);
     }).catch(function (e) {
       console.error(e);
       renderStart();
@@ -539,6 +617,43 @@
       e.target.value = '';
     });
     $('#btnBankReload').addEventListener('click', function () { Bank.load().then(function () { renderBank(); toast('已重新加载'); }); });
+
+    /* ---- 多设备同步：结果页 + 题库管理页 ---- */
+    $('#btnSendResult').addEventListener('click', function () {
+      if ($('#sendBox').classList.contains('hidden')) showCode(syncCode(false), 'result');
+      else { $('#sendBox').classList.add('hidden'); $('#sendCode').classList.add('hidden'); }
+    });
+    $('#btnCopyCode').addEventListener('click', function () { copyText($('#sendCode')); });
+    $('#btnMailCode').addEventListener('click', function () { mailCode($('#sendCode').value); });
+
+    $('#syncSid').addEventListener('input', function () {
+      var s = Store.settings(); s.sid = $('#syncSid').value.trim(); Store.saveSettings(s);
+    });
+    $('#syncMail').addEventListener('input', function () {
+      var s = Store.settings(); s.parentEmail = $('#syncMail').value.trim(); Store.saveSettings(s);
+    });
+    $('#btnPull').addEventListener('click', function () { pullCloud(false); });
+    $('#btnMakeDelta').addEventListener('click', function () { showCode(syncCode(false), 'sync'); });
+    $('#btnMakeFull').addEventListener('click', function () { showCode(syncCode(true), 'sync'); });
+    $('#setAutoSync').addEventListener('change', function () {
+      var s = Store.settings(); s.autoSync = $('#setAutoSync').checked; Store.saveSettings(s);
+    });
+    $('#btnCopySync').addEventListener('click', function () { copyText($('#syncBox')); });
+    $('#btnMailSync').addEventListener('click', function () { mailCode($('#syncBox').value); });
+    $('#btnImportSync').addEventListener('click', function () {
+      var text = $('#syncBox').value;
+      if (!text || !text.trim()) { toast('框里还没有同步码'); return; }
+      try {
+        var r = importCode(text);
+        Store.setLastSync(Date.now());
+        renderStart(); renderSyncInfo();
+        $('#syncMsg').innerHTML = '<span style="color:var(--ok)">已导入：新增 ' + r.pNew + ' 题、更新 ' + r.pUpd +
+          ' 题，新增错题 ' + r.wNew + '、更新错题 ' + r.wUpd + (r.wDel ? '、删除错题 ' + r.wDel : '') + '</span>';
+        toast('已导入同步码');
+      } catch (e) {
+        $('#syncMsg').innerHTML = '<span style="color:var(--bad)">导入失败：' + esc(e.message) + '</span>';
+      }
+    });
 
     $('#btnExport').addEventListener('click', function () {
       var box = $('#ioBox'); box.classList.remove('hidden');

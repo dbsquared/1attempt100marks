@@ -58,21 +58,24 @@
     /** 用云端状态合并本机；返回统计 */
     applyCloud: function (cloud) {
       var n = global.Sync.normalize(cloud);
-      var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), Store.wrong()));
+      var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), Store.wrongAll()));
       var r = global.Sync.merge(cur, { p: cloud.p, w: cloud.w });
       var out = global.Sync.toLocal(cur);
       Store.saveProgress(out.progress);
       Store.saveWrong(out.wrong);
       Store.setLastSync(Date.now());
       return r;
-    }
+    },
 
     /* ---------- 进度 ---------- */
     progress: function () { return read('progress', {}) || {}; },
     saveProgress: function (p) { write('progress', p); },
 
-    /* ---------- 错题本 ---------- */
-    wrong: function () { return read('wrong', []) || []; },
+    /* ---------- 错题本 ----------
+     * 内部保存 need<=0 的"墓碑"记录，这样"已清零"这件事才能同步给别的设备。
+     * 对外读取一律用 wrong()（只返回 need>0），需要同步时用 wrongAll()。 */
+    wrong: function () { return (read('wrong', []) || []).filter(function (x) { return x.need > 0; }); },
+    wrongAll: function () { return read('wrong', []) || []; },
     saveWrong: function (w) { write('wrong', w); },
 
     /* ---------- 历史 ---------- */

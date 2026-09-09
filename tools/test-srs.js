@@ -13,7 +13,7 @@ const localStorage = {
 const ctx = { console, Math, JSON, Object, Array, Number, String, isFinite, parseFloat, Date, Set, localStorage };
 ctx.window = ctx; ctx.globalThis = ctx;
 vm.createContext(ctx);
-['assets/js/expr.js', 'assets/js/generator.js', 'assets/js/grader.js', 'assets/js/store.js', 'assets/js/srs.js'].forEach(f => {
+['assets/js/expr.js', 'assets/js/generator.js', 'assets/js/grader.js', 'assets/js/sync.js', 'assets/js/store.js', 'assets/js/srs.js'].forEach(f => {
   vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 });
 const { Store, Bank, SRS } = ctx;

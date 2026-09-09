@@ -75,6 +75,16 @@
         <div class="row" style="margin-top:14px">
           <button class="btn primary" id="btnAgain">再来一轮</button>
           <button class="btn" id="btnBackHome">返回</button>
+          <button class="btn" id="btnSendResult">发送成绩 / 多设备同步</button>
+        </div>
+        <div id="sendBox" class="hidden" style="margin-top:14px;border-top:1px dashed var(--border);padding-top:14px">
+          <p class="small muted">复制下面这串<b>同步码</b>发给家长，或在家长端粘贴导入即可。它只包含本次之后变动的部分，重复发送不会出错。</p>
+          <textarea id="sendCode" rows="4" style="font-size:12px"></textarea>
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="btnCopyCode">复制</button>
+            <button class="btn" id="btnMailCode">发邮件</button>
+            <span class="small muted" id="sendInfo"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -180,6 +190,40 @@
     </div>
 
     <div class="card">
+      <h2>多设备同步</h2>
+      <p class="small muted">
+        进度存在本机。想让平板、手机、电脑共用一份进度：在每台设备上把<b>学生编号</b>设成同一个，
+        然后「拉取云端」拿到别人的进度，「生成同步码」把本机的进度交出去。
+      </p>
+      <div class="row" style="margin-top:10px">
+        <label class="small">学生编号
+          <input type="text" id="syncSid" style="max-width:160px">
+        </label>
+        <label class="small">家长邮箱
+          <input type="text" id="syncMail" placeholder="用于发送同步码" style="max-width:220px">
+        </label>
+        <span class="small muted" id="syncDev"></span>
+        <span class="spacer"></span>
+        <span class="small muted" id="syncLast"></span>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="btnPull">拉取云端进度</button>
+        <button class="btn" id="btnMakeDelta">生成增量同步码</button>
+        <button class="btn" id="btnMakeFull">生成全量同步码</button>
+        <label class="small" style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="setAutoSync" style="width:auto"> 打开页面时自动拉取
+        </label>
+      </div>
+      <textarea id="syncBox" rows="5" class="hidden" style="margin-top:10px;font-size:12px" placeholder="同步码会出现在这里；也可以把收到的同步码粘进来再点「导入」"></textarea>
+      <div class="row hidden" id="syncBoxRow" style="margin-top:10px">
+        <button class="btn primary" id="btnCopySync">复制</button>
+        <button class="btn" id="btnMailSync">发邮件</button>
+        <button class="btn" id="btnImportSync">导入框里的同步码</button>
+      </div>
+      <div id="syncMsg" class="small" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
       <h2>练习设置</h2>
       <div class="row">
         <label class="small">每次题量 <input type="number" id="setSize" min="3" max="50" style="max-width:90px"></label>
@@ -214,6 +258,7 @@
 <script src="assets/js/expr.js"></script>
 <script src="assets/js/generator.js"></script>
 <script src="assets/js/grader.js"></script>
+<script src="assets/js/sync.js"></script>
 <script src="assets/js/store.js"></script>
 <script src="assets/js/srs.js"></script>
 <script src="assets/js/app.js"></script>

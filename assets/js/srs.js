@@ -52,8 +52,8 @@
       p[id] = st;
       global.Store.saveProgress(p);
 
-      // 错题本维护
-      var w = global.Store.wrong();
+      // 错题本维护（用 wrongAll，保留 need<=0 的墓碑以便同步"已清零"）
+      var w = global.Store.wrongAll();
       var idx = -1;
       for (var i = 0; i < w.length; i++) if (w[i].id === id) { idx = i; break; }
       if (!ok) {
@@ -66,7 +66,6 @@
         w[idx].need -= 1;
         w[idx].lastTs = now();
         if (extra) { w[idx].lastGiven = extra.given; w[idx].lastExpected = extra.expected; }
-        if (w[idx].need <= 0) w.splice(idx, 1);
       }
       global.Store.saveWrong(w);
       return st;

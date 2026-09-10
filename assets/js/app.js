@@ -484,6 +484,12 @@
     box.dataset.sig = sig;
     $('#bankSrcCount').textContent = list.length + ' 个来源';
   }
+  // 模板的题干（未代入变量时）：stem 可能是 {zh,en}，直接 String(对象) 会得到 [object Object]
+  function tplStemText(t) {
+    var s = t && t.stem;
+    if (s && typeof s === 'object' && !Array.isArray(s)) s = s.zh || s.en || '';
+    return String(s || '');
+  }
   function renderBankList() {
     var srcs = checkedSources('#bankSrcBox');
     var allBank = Bank.all();
@@ -494,16 +500,25 @@
     var p = Store.progress();
     $('#bankList').innerHTML = all.map(function (t) {
       var st = p[t.id];
-      return '<div class="list-item"><div class="t">' + esc(t.subject || '') + ' · ' + esc(t.topic || '') +
+      var desc = t.title || tplStemText(t).replace(/\{[^}]*\}/g, '…');
+      var orig = t.originalImage
+        ? '<a href="' + esc(t.originalImage) + '" target="_blank" rel="noopener" title="点击看大图">' +
+          '<img src="' + esc(t.originalImage) + '" alt="原题" class="orig-img"></a>'
+        : '<span class="small muted">（无原题图）</span>';
+      return '<div class="list-item"><div class="cmp">' +
+        '<div class="cmp-col"><div class="cmp-h">原题</div><div class="cmp-body">' + orig + '</div></div>' +
+        '<div class="cmp-col"><div class="cmp-h">导入的题</div><div class="cmp-body">' +
+        '<div class="t">' + esc(t.subject || '') + ' · ' + esc(t.topic || '') +
         ' <span class="pill">' + stars(t.difficulty || 2) + '</span>' +
         (st && st.mastered ? ' <span class="pill ok">已掌握</span>' : (st && st.seen ? ' <span class="pill">练过 ' + st.seen + ' 次</span>' : ' <span class="pill new">未练</span>')) +
         (custom.indexOf(t.id) >= 0 ? ' <span class="pill review">本机</span>' : '') + '</div>' +
-        '<div class="small muted">' + esc(t.title || Generator.renderText(t.stem, {})) + '</div>' +
+        '<div class="small muted">' + esc(desc) + '</div>' +
         '<div class="row" style="margin-top:6px"><code class="small muted">' + esc(t.id) + '</code>' +
         '<span class="spacer"></span>' +
         '<button class="btn sm" data-preview="' + esc(t.id) + '">预览变式</button>' +
         (custom.indexOf(t.id) >= 0 ? '<button class="btn sm" data-del="' + esc(t.id) + '">删除</button>' : '') +
-        '</div><div class="small" data-pv="' + esc(t.id) + '"></div></div>';
+        '</div><div class="small" data-pv="' + esc(t.id) + '"></div>' +
+        '</div></div></div></div>';
     }).join('');
     $$('#bankList [data-preview]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -511,10 +526,12 @@
         var out = [];
         for (var i = 0; i < 3; i++) {
           var q = Generator.instantiate(tpl);
-          out.push(q ? Generator.renderText(tpl.stem, q.vars) + ' = ' + q.display : '（生成失败）');
+          if (!q) { out.push('（生成失败）'); continue; }
+          out.push(esc(q.stemText + ' = ' + q.display + (q.unit ? ' ' + q.unit : '')) +
+            (q.diagramSvg ? '<div class="diagram-wrap">' + q.diagramSvg + '</div>' : ''));
         }
         $('[data-pv="' + b.dataset.preview + '"]').innerHTML = '<div style="margin-top:6px" class="small">' +
-          out.map(function (o) { return esc(o); }).join('<br>') + '</div>';
+          out.join('<hr style="border:none;border-top:1px dashed var(--border);margin:6px 0">') + '</div>';
       });
     });
     $$('#bankList [data-del]').forEach(function (b) {

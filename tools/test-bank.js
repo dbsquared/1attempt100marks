@@ -4,10 +4,19 @@ const root = path.join(__dirname, '..');
 const ctx = { console, Math, JSON, Object, Array, Number, String, isFinite, parseFloat, Date, Set };
 ctx.window = ctx; ctx.globalThis = ctx;
 vm.createContext(ctx);
-['assets/js/expr.js', 'assets/js/generator.js', 'assets/js/grader.js'].forEach(f => {
+['assets/js/expr.js', 'assets/js/diagrams.js', 'assets/js/generator.js', 'assets/js/grader.js'].forEach(f => {
   vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 });
 const { Generator, Grader } = ctx;
+
+/* 题干提到"图"时，模板必须有 image（静态原题图）或 diagram（可变量 SVG），
+   否则学生看到的题干会引用一张不存在的图 —— 这正是之前漏掉的一类错误。 */
+function refsFigure(tpl) {
+  const s = tpl.stem;
+  const txt = typeof s === 'string' ? s : (((s && s.zh) || '') + ' ' + ((s && s.en) || ''));
+  return /原题图|如下图|图中|下图中|看图|见.{0,4}图/.test(txt) ||
+         /original picture|see the (diagram|picture|figure)|diagram below|shown below/i.test(txt);
+}
 const bankPath = process.argv[2] || path.join(root, 'data/question-bank.json');
 const bank = JSON.parse(fs.readFileSync(bankPath, 'utf8'));
 const list = Array.isArray(bank) ? bank : bank.templates;
@@ -57,8 +66,17 @@ for (const tpl of list) {
     console.log(' 渲染残留 ' + tpl.id + '：' + leftover[0].stemHtml + ' | ' + leftover[0].solutionHtml);
   }
 
+  // 配图一致性：题干说到"图"就必须有 image 或 diagram；写了 diagram 就必须真能渲染
+  let figErr = '';
+  if (refsFigure(tpl) && !tpl.image && !tpl.diagram) figErr = '题干提到图，但既无 image 也无 diagram';
+  else if (tpl.diagram && (!qs.length || !qs.every(q => q.diagramSvg))) figErr = 'diagram 渲染为空';
+  if (figErr) {
+    fail++;
+    console.log(' 缺配图 ' + tpl.id + '：' + figErr);
+  }
+
   const uniq = new Set(qs.map(q => q.sig)).size;
-  console.log(((ok && !leftover.length) ? '  OK  ' : ' FAIL ') + tpl.id.padEnd(22) +
+  console.log(((ok && !leftover.length && !figErr) ? '  OK  ' : ' FAIL ') + tpl.id.padEnd(22) +
     '生成 ' + String(qs.length).padStart(3) + '/300  不同数值 ' + String(uniq).padStart(3) +
     '  判分错 ' + gradeErr + (nullCount ? '  生成失败 ' + nullCount : ''));
   if (qs.length) {

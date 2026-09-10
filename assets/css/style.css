@@ -185,6 +185,8 @@ table.tbl tr:last-child td { border-bottom: none; }
 .paper-q .no { font-weight: 700; color: var(--brand); margin-right: 6px; }
 .paper-img { margin: 8px 0 12px; }
 .paper-img img { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; }
+.diagram-wrap { margin: 10px 0 16px; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; }
+.diagram { display: block; width: 100%; max-width: 480px; height: auto; margin: 0 auto; }
 
 .hidden { display: none !important; }
 .center { text-align: center; }

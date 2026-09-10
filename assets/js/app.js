@@ -124,6 +124,7 @@
 
   function renderQuestionCard(q, tpl) {
     var h = '<div class="stem">' + q.stemHtml + '</div>';
+    if (q.diagramSvg) h += '<div class="diagram-wrap">' + q.diagramSvg + '</div>';
     if (q.type === 'choice') {
       var multi = Array.isArray(q.correctIndex);
       h += '<div class="opts">' + q.options.map(function (o, i) {
@@ -339,6 +340,7 @@
         q.stemHtml +
         (q.unit ? ' <span class="unit">（' + esc(q.unit) + '）</span>' : '') +
         '<span class="print-only"> ______________________</span></div>' +
+        (q.diagramSvg ? '<div class="diagram-wrap">' + q.diagramSvg + '</div>' : '') +
         (q.tpl.image ? '<div class="paper-img"><img src="' + esc(q.tpl.image) + '" alt="原题图"></div>' : '');
       if (q.type === 'choice') {
         h += '<div class="opts" style="margin-top:8px">' + q.options.map(function (o, k) {

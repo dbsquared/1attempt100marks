@@ -1030,7 +1030,11 @@
         "en": "A hexagon has 6 sides. {k} are drawn, so {6-k} more are needed.",
         "zh": "六边形有 6 条边。已经画了 {k} 条，还缺 6−{k}＝{6-k} 条。"
       },
-      "sourceSet": "ICAS 2022 Year 2 Mathematics"
+      "sourceSet": "ICAS 2022 Year 2 Mathematics",
+      "diagram": {
+        "type": "hexagon",
+        "drawn": "k"
+      }
     },
     {
       "id": "icas22y2m-05",
@@ -1189,7 +1193,13 @@
         "en": "Each part is {E}÷{n}＝{E/n}. The {k}th mark is {k}×{E/n}＝{k*E/n}.",
         "zh": "每小格表示 {E}÷{n}＝{E/n}。第 {k} 格就是 {k}×{E/n}＝{k*E/n}。"
       },
-      "sourceSet": "ICAS 2022 Year 2 Mathematics"
+      "sourceSet": "ICAS 2022 Year 2 Mathematics",
+      "diagram": {
+        "type": "numberline",
+        "E": "E",
+        "n": "n",
+        "k": "k"
+      }
     },
     {
       "id": "icas22y2m-08",
@@ -1714,8 +1724,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q17",
       "stem": {
-        "en": "A stick is divided into {k} equal segments, coloured red and white (see original picture). What is half of the stick in segments?",
-        "zh": "一根小棍被平均分成了 {k} 小段，涂成红白相间（见原题图）。这根小棍的一半是多少小段？"
+        "en": "A stick is divided into {k} equal segments, coloured red and white (see the diagram below). What is half of the stick in segments?",
+        "zh": "一根小棍被平均分成了 {k} 小段，涂成红白相间（如下图）。这根小棍的一半是多少小段？"
       },
       "vars": {
         "k": {
@@ -1739,7 +1749,11 @@
         "en": "Half means split the {k} segments into two equal parts: {k}÷2＝{k/2} segments.",
         "zh": "一半就是把 {k} 段平均分成两份：{k}÷2＝{k/2} 段。"
       },
-      "sourceSet": "ICAS 2022 Year 2 Mathematics"
+      "sourceSet": "ICAS 2022 Year 2 Mathematics",
+      "diagram": {
+        "type": "stick",
+        "parts": "k"
+      }
     },
     {
       "id": "icas22y2m-18",
@@ -1843,7 +1857,11 @@
         "en": "Simply 4×{p}＝{4*p} would count each corner post twice, so subtract 4. Total = 4×{p}−4＝{4*p-4} posts.",
         "zh": "如果直接 4×{p}＝{4*p}，四个角的柱子就被数了两次，要多减去 4。所以一共 4×{p}−4＝{4*p-4} 根。"
       },
-      "sourceSet": "ICAS 2022 Year 2 Mathematics"
+      "sourceSet": "ICAS 2022 Year 2 Mathematics",
+      "diagram": {
+        "type": "squareposts",
+        "p": "p"
+      }
     },
     {
       "id": "icas22y2m-20",
@@ -1950,7 +1968,11 @@
         "en": "4 lanterns make one group. {n}÷4＝{n/4} groups with remainder 1; remainder 1 is the first in each group — red.",
         "zh": "4 个灯笼为一组。{n}÷4＝{n/4} 组余 1，余 1 就是每组里的第 1 个——红色。"
       },
-      "sourceSet": "ICAS 2022 Year 2 Mathematics"
+      "sourceSet": "ICAS 2022 Year 2 Mathematics",
+      "diagram": {
+        "type": "lanterns",
+        "count": 12
+      }
     },
     {
       "id": "icas22y2m-22",

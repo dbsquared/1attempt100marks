@@ -260,7 +260,8 @@
         digits: ans.digits,
         alternatives: ans.alternatives,
         unit: tpl.unit || '',
-        hint: renderHtml(resolveField(tpl.hint, lang), vars)
+        hint: renderHtml(resolveField(tpl.hint, lang), vars),
+        diagramSvg: (tpl.diagram && global.Diagrams) ? global.Diagrams.render(tpl.diagram, vars) : ''
       };
       break;
     }

@@ -128,7 +128,8 @@
     if (q.type === 'choice') {
       var multi = Array.isArray(q.correctIndex);
       h += '<div class="opts">' + q.options.map(function (o, i) {
-        return '<div class="opt" data-i="' + i + '"><span class="k">' + 'ABCDEFGH'[i] + '</span><span>' + o + '</span></div>';
+        var g = (q.optionsSvg && q.optionsSvg[i]) ? '<span class="opt-svg">' + q.optionsSvg[i] + '</span>' : '';
+        return '<div class="opt" data-i="' + i + '"><span class="k">' + 'ABCDEFGH'[i] + '</span><span>' + o + '</span>' + g + '</div>';
       }).join('') + '</div>';
       if (multi) h += '<div class="small muted">本题为多选</div>';
       h += '<div class="row"><button class="btn primary" id="btnSubmit">提交答案</button></div>';
@@ -351,7 +352,8 @@
             var isS = a && a.picked && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k);
             if (isC) cls += ' correct'; else if (isS) cls += ' wrongsel';
           } else if (a && a.picked && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k)) cls += ' sel';
-          return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span><span>' + o + '</span></div>';
+          var g = (q.optionsSvg && q.optionsSvg[k]) ? '<span class="opt-svg">' + q.optionsSvg[k] + '</span>' : '';
+          return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span><span>' + o + '</span>' + g + '</div>';
         }).join('') + '</div>';
       } else {
         var val = a && a.raw !== undefined ? a.raw : '';
@@ -490,6 +492,23 @@
     if (s && typeof s === 'object' && !Array.isArray(s)) s = s.zh || s.en || '';
     return String(s || '');
   }
+  /* 题库对照右栏：直接画出「拆解后的简化 SVG」，而不是原题截图。
+     有 SVG 选项的题把选项图也一并列出，方便一眼看出选项是不是泄题。 */
+  function figHtml(t) {
+    if (!t.diagram && !(t.answer && t.answer.optionsSvg)) return '';
+    var q;
+    try { q = Generator.instantiate(t); } catch (e) { q = null; }
+    if (!q) return '';
+    var h = '';
+    if (q.diagramSvg) h += '<div class="diagram-wrap" style="margin:8px 0">' + q.diagramSvg + '</div>';
+    if (q.optionsSvg && q.optionsSvg.length) {
+      h += '<div class="cmp-opts">' + q.optionsSvg.map(function (s, i) {
+        return '<span class="cmp-opt"><b>' + 'ABCDEFGH'[i] + '</b>' + s + '</span>';
+      }).join('') + '</div>';
+    }
+    return h;
+  }
+
   function renderBankList() {
     var srcs = checkedSources('#bankSrcBox');
     var allBank = Bank.all();
@@ -513,6 +532,7 @@
         (st && st.mastered ? ' <span class="pill ok">已掌握</span>' : (st && st.seen ? ' <span class="pill">练过 ' + st.seen + ' 次</span>' : ' <span class="pill new">未练</span>')) +
         (custom.indexOf(t.id) >= 0 ? ' <span class="pill review">本机</span>' : '') + '</div>' +
         '<div class="small muted">' + esc(desc) + '</div>' +
+        figHtml(t) +
         '<div class="row" style="margin-top:6px"><code class="small muted">' + esc(t.id) + '</code>' +
         '<span class="spacer"></span>' +
         '<button class="btn sm" data-preview="' + esc(t.id) + '">预览变式</button>' +

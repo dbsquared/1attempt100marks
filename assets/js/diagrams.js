@@ -38,6 +38,26 @@
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" class="diagram" role="img" aria-label="' + esc(label) + '" preserveAspectRatio="xMidYMid meet">';
   }
 
+  /* 简化钟面：cx,cy 圆心，r 半径，hh 小时(0-11)，mm 分钟 */
+  function clockFace(cx, cy, r, hh, mm) {
+    var s = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+    for (var t = 0; t < 12; t++) {
+      var a = t * Math.PI / 6, r1 = r - 9, r2 = r - 2;
+      s += '<line x1="' + (cx + r1 * Math.sin(a)).toFixed(1) + '" y1="' + (cy - r1 * Math.cos(a)).toFixed(1) +
+           '" x2="' + (cx + r2 * Math.sin(a)).toFixed(1) + '" y2="' + (cy - r2 * Math.cos(a)).toFixed(1) +
+           '" stroke="' + INK + '" stroke-width="2"/>';
+    }
+    var ha = ((hh % 12) + mm / 60) * Math.PI / 6, ma = (mm % 60) * Math.PI / 30;
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + r * 0.48 * Math.sin(ha)).toFixed(1) + '" y2="' + (cy - r * 0.48 * Math.cos(ha)).toFixed(1) + '" stroke="' + INK + '" stroke-width="4" stroke-linecap="round"/>';
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + r * 0.76 * Math.sin(ma)).toFixed(1) + '" y2="' + (cy - r * 0.76 * Math.cos(ma)).toFixed(1) + '" stroke="' + BLUE + '" stroke-width="3" stroke-linecap="round"/>';
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="' + INK + '"/>';
+    return s;
+  }
+
+  /* 悉尼四季：月份 -> 季节下标（0春 1夏 2秋 3冬），与模板 derived 保持同一公式 */
+  function seasonOf(mm) { return Math.floor((((mm + 3) % 12)) / 3); }
+  var SEASON_COLORS = ['#2ea043', '#e5484d', '#d97706', '#1f6feb'];
+
   var TYPES = {
     /* 小棍：平均分成 parts 小段，红白相间（Q17） */
     stick: function (spec, vars) {
@@ -135,8 +155,265 @@
       }
       s += '</svg>';
       return s;
+    },
+
+    /* 花瓶里的花：count 朵，答案就是朵数（Q1，可变） */
+    vase: function (spec, vars) {
+      var n = Math.max(1, Math.min(12, Math.round(num(spec.count, vars))));
+      var W = 320, H = 250, pal = [RED, YELLOW, BLUE, GREEN, '#b25be0', '#f2708a'];
+      var per = 5, i, row, cnt, x, y;
+      var s = svgOpen(W, H, 'vase with ' + n + ' flowers');
+      s += '<rect x="112" y="142" width="96" height="16" rx="4" fill="#5aa860" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<path d="M120,158 L200,158 L188,236 Q160,246 132,236 Z" fill="#7bc47f" stroke="' + INK + '" stroke-width="2"/>';
+      for (i = 0; i < n; i++) {   // 先画茎
+        row = Math.floor(i / per); cnt = Math.min(per, n - row * per);
+        x = 160 + ((i % per) - (cnt - 1) / 2) * 34; y = 108 - row * 40;
+        s += '<line x1="' + x + '" y1="' + (y + 6) + '" x2="160" y2="152" stroke="#3f8f4a" stroke-width="2"/>';
+      }
+      for (i = 0; i < n; i++) {   // 再画花（盖住茎）
+        row = Math.floor(i / per); cnt = Math.min(per, n - row * per);
+        x = 160 + ((i % per) - (cnt - 1) / 2) * 34; y = 108 - row * 40;
+        s += '<circle cx="' + x + '" cy="' + y + '" r="11" fill="' + pal[i % pal.length] + '" stroke="' + INK + '" stroke-width="1.5"/>';
+        s += '<circle cx="' + x + '" cy="' + y + '" r="4" fill="#fff3b0" stroke="' + INK + '" stroke-width="1"/>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 房子：随机"少用一种形状"（0三角形 1正方形 2长方形 3圆形），其余三种都出现（Q6，可变） */
+    house: function (spec, vars) {
+      var omit = Math.round(num(spec.omit, vars));
+      var s = svgOpen(300, 260, 'house picture');
+      s += '<line x1="20" y1="228" x2="280" y2="228" stroke="' + INK + '" stroke-width="2"/>';
+      if (omit === 0) s += '<polygon points="52,120 100,66 200,66 248,120" fill="#c98b5b" stroke="' + INK + '" stroke-width="2"/>';
+      else s += '<polygon points="52,120 150,58 248,120" fill="#c98b5b" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<rect x="60" y="120" width="180" height="108" fill="#f2e6c9" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<rect x="128" y="164" width="44" height="64" fill="#a9743f" stroke="' + INK + '" stroke-width="2"/>';
+      if (omit === 1) {
+        s += '<circle cx="92" cy="150" r="15" fill="#bfe3ff" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<circle cx="208" cy="150" r="15" fill="#bfe3ff" stroke="' + INK + '" stroke-width="2"/>';
+      } else {
+        s += '<rect x="77" y="135" width="30" height="30" fill="#bfe3ff" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<rect x="193" y="135" width="30" height="30" fill="#bfe3ff" stroke="' + INK + '" stroke-width="2"/>';
+      }
+      if (omit !== 3) s += '<circle cx="164" cy="196" r="5" fill="#f5c518" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四个钟面 A/B/C/D：correctCell 那个显示 baseH:30，其余显示 :00/:15/:45（Q12，可变） */
+    clocks: function (spec, vars) {
+      var h = ((Math.round(num(spec.baseH, vars)) % 12) + 12) % 12 || 12;
+      var cell = Math.max(0, Math.min(3, Math.round(num(spec.correctCell, vars))));
+      var others = [[h, 0], [h, 15], [h, 45]], times = [], oi = 0, i;
+      for (i = 0; i < 4; i++) times[i] = (i === cell) ? [h, 30] : others[oi++];
+      var pos = [[84, 74], [236, 74], [84, 216], [236, 216]];
+      var s = svgOpen(320, 300, 'four clocks');
+      for (i = 0; i < 4; i++) s += clockFace(pos[i][0], pos[i][1], 52, times[i][0] % 12, times[i][1]);
+      s += '</svg>';
+      return s;
+    },
+
+    /* 书架：rows 层 × cols 本，颜色按 索引%4 循环；不标出目标，学生自己定位（Q16，可变） */
+    bookshelf: function (spec, vars) {
+      var rows = Math.max(1, Math.min(6, Math.round(num(spec.rows, vars)) || 3));
+      var cols = Math.max(1, Math.min(8, Math.round(num(spec.cols, vars)) || 5));
+      var pal = [RED, YELLOW, BLUE, GREEN];
+      var W = 44 + cols * 44, H = 26 + rows * 56, r, c;
+      var s = svgOpen(W, H, 'bookshelf');
+      for (r = 0; r < rows; r++) {
+        var y = 18 + r * 56;
+        s += '<rect x="12" y="' + y + '" width="' + (W - 24) + '" height="50" fill="#f7f1e3" stroke="' + INK + '" stroke-width="2"/>';
+        for (c = 0; c < cols; c++) {
+          s += '<rect x="' + (22 + c * 44) + '" y="' + (y + 6) + '" width="28" height="40" rx="3" fill="' + pal[(r * cols + c) % pal.length] + '" stroke="' + INK + '" stroke-width="1.5"/>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 悉尼四季圆盘：12 个月按季节着色 + 月份数字 + 图例（Q22，可变） */
+    seasonwheel: function (spec, vars) {
+      var W = 340, H = 330, cx = 170, cy = 150, R = 112;
+      var s = svgOpen(W, H, 'season wheel');
+      for (var i = 0; i < 12; i++) {
+        var c0 = (i * 30 - 90 - 15) * Math.PI / 180, c1 = (i * 30 - 90 + 15) * Math.PI / 180, cm = (i * 30 - 90) * Math.PI / 180;
+        s += '<path d="M' + cx + ',' + cy +
+             ' L' + (cx + R * Math.cos(c0)).toFixed(1) + ',' + (cy + R * Math.sin(c0)).toFixed(1) +
+             ' A' + R + ',' + R + ' 0 0 1 ' + (cx + R * Math.cos(c1)).toFixed(1) + ',' + (cy + R * Math.sin(c1)).toFixed(1) + ' Z"' +
+             ' fill="' + SEASON_COLORS[seasonOf(i + 1)] + '" stroke="#ffffff" stroke-width="1.5"/>';
+        s += '<text x="' + (cx + R * 0.72 * Math.cos(cm)).toFixed(1) + '" y="' + (cy + R * 0.72 * Math.sin(cm) + 5).toFixed(1) +
+             '" font-size="14" text-anchor="middle" fill="#ffffff" font-weight="700">' + (i + 1) + '</text>';
+      }
+      var names = ['春 9-11月', '夏 12-2月', '秋 3-5月', '冬 6-8月'];
+      for (var k = 0; k < 4; k++) {
+        s += '<rect x="' + (38 + k * 76) + '" y="288" width="14" height="14" rx="3" fill="' + SEASON_COLORS[k] + '" stroke="' + INK + '" stroke-width="1"/>';
+        s += '<text x="' + (38 + k * 76) + '" y="316" font-size="12" fill="' + INK + '">' + names[k] + '</text>';
+      }
+      s += '</svg>';
+      return s;
     }
   };
+
+  /* 小猪：cx,cy 中心，s 半尺寸（Q30） */
+  function pig(cx, cy, s) {
+    var p = '#f2a6b3', d = '#c9748a', o = '';
+    o += '<ellipse cx="' + cx + '" cy="' + (cy + s * 0.36).toFixed(1) + '" rx="' + (s * 0.52).toFixed(1) + '" ry="' + (s * 0.30).toFixed(1) + '" fill="' + p + '" stroke="' + INK + '" stroke-width="1"/>';
+    o += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s * 0.38).toFixed(1) + '" fill="' + p + '" stroke="' + INK + '" stroke-width="1"/>';
+    o += '<polygon points="' + (cx - s * 0.34).toFixed(1) + ',' + (cy - s * 0.16).toFixed(1) + ' ' + (cx - s * 0.10).toFixed(1) + ',' + (cy - s * 0.54).toFixed(1) + ' ' + (cx - s * 0.01).toFixed(1) + ',' + (cy - s * 0.18).toFixed(1) + '" fill="' + p + '" stroke="' + INK + '" stroke-width="1"/>';
+    o += '<polygon points="' + (cx + s * 0.34).toFixed(1) + ',' + (cy - s * 0.16).toFixed(1) + ' ' + (cx + s * 0.10).toFixed(1) + ',' + (cy - s * 0.54).toFixed(1) + ' ' + (cx + s * 0.01).toFixed(1) + ',' + (cy - s * 0.18).toFixed(1) + '" fill="' + p + '" stroke="' + INK + '" stroke-width="1"/>';
+    o += '<ellipse cx="' + cx + '" cy="' + (cy + s * 0.13).toFixed(1) + '" rx="' + (s * 0.17).toFixed(1) + '" ry="' + (s * 0.12).toFixed(1) + '" fill="' + d + '" stroke="' + INK + '" stroke-width="0.8"/>';
+    o += '<circle cx="' + (cx - s * 0.15).toFixed(1) + '" cy="' + (cy - s * 0.06).toFixed(1) + '" r="' + (s * 0.06).toFixed(1) + '" fill="' + INK + '"/>';
+    o += '<circle cx="' + (cx + s * 0.15).toFixed(1) + '" cy="' + (cy - s * 0.06).toFixed(1) + '" r="' + (s * 0.06).toFixed(1) + '" fill="' + INK + '"/>';
+    return o;
+  }
+
+  /* 棋盘格颜色：(行+列) 偶数 -> 蓝，奇数 -> 黄 */
+  function checker(r, c) { return ((r + c) % 2 === 0) ? BLUE : YELLOW; }
+
+  var TYPES2 = {
+    /* 四个礼物盒 A(长扁) B(高) C(最小) D(中等)，pick 高亮其中一个（Q8） */
+    giftboxes: function (spec, vars) {
+      var pick = Math.max(0, Math.min(3, Math.round(num(spec.pick, vars))));
+      var W = 500, H = 268, base = 214;
+      var boxes = [
+        { x: 18, w: 176, h: 46, t: 'A' },
+        { x: 210, w: 64, h: 124, t: 'B' },
+        { x: 290, w: 56, h: 56, t: 'C' },
+        { x: 362, w: 112, h: 88, t: 'D' }
+      ];
+      var cols = ['#f2a6b3', '#9fd3f0', '#f7d774', '#b7e3a8'];
+      var s = svgOpen(W, H, 'four present boxes');
+      s += '<line x1="8" y1="' + (base + 1) + '" x2="492" y2="' + (base + 1) + '" stroke="' + INK + '" stroke-width="2"/>';
+      boxes.forEach(function (b, i) {
+        var y = base - b.h, fill = cols[i];
+        if (i === pick) s += '<rect x="' + (b.x - 8) + '" y="' + (y - 8) + '" width="' + (b.w + 16) + '" height="' + (b.h + 16) + '" fill="none" stroke="' + RED + '" stroke-width="3" stroke-dasharray="8 6"/>';
+        s += '<rect x="' + b.x + '" y="' + y + '" width="' + b.w + '" height="' + b.h + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<rect x="' + (b.x + b.w / 2 - 7) + '" y="' + y + '" width="14" height="' + b.h + '" fill="#e5484d" opacity="0.75"/>';
+        s += '<rect x="' + b.x + '" y="' + (y + b.h / 2 - 7) + '" width="' + b.w + '" height="14" fill="#e5484d" opacity="0.75"/>';
+        s += '<text x="' + (b.x + b.w / 2) + '" y="' + (base + 26) + '" font-size="19" font-weight="700" text-anchor="middle" fill="' + (i === pick ? RED : INK) + '">' + b.t + '</text>';
+      });
+      s += '</svg>';
+      return s;
+    },
+
+    /* 钱包里可用的硬币面值（Q23） */
+    coins: function (spec, vars) {
+      var vals = [5, 10, 20, 50], r = [22, 27, 33, 40];
+      var W = 440, H = 150, s = svgOpen(W, H, 'coins 5 10 20 50');
+      s += '<path d="M22,78 Q22,44 78,44 Q134,44 134,78 Q134,116 78,116 Q22,116 22,78 Z" fill="#e0c9a6" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<path d="M46,46 Q78,20 110,46" fill="none" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<text x="78" y="86" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">钱包</text>';
+      for (var i = 0; i < 4; i++) {
+        var cx = 200 + r[i] + i * 2 + (i ? r[i - 1] : 0) + i * 12, cy = 76;
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r[i] + '" fill="#f5d67b" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r[i] - 7) + '" fill="none" stroke="' + INK + '" stroke-width="1" stroke-dasharray="4 4"/>';
+        s += '<text x="' + cx + '" y="' + (cy + 6) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + vals[i] + 'c</text>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 蓝黄方砖桌面，2×2 虚线缺口在 (r,c)（Q24 主图） */
+    tiling: function (spec, vars) {
+      var n = Math.max(3, Math.min(7, Math.round(num(spec.n, vars)) || 5));
+      var r = Math.max(0, Math.min(n - 2, Math.round(num(spec.r, vars))));
+      var c = Math.max(0, Math.min(n - 2, Math.round(num(spec.c, vars))));
+      var cell = 52, W = n * cell + 20, H = n * cell + 20, i, j;
+      var s = svgOpen(W, H, 'tiled table with a missing patch');
+      for (i = 0; i < n; i++) for (j = 0; j < n; j++) {
+        var hole = (i >= r && i <= r + 1 && j >= c && j <= c + 1);
+        s += '<rect x="' + (10 + j * cell) + '" y="' + (10 + i * cell) + '" width="' + cell + '" height="' + cell +
+             '" fill="' + (hole ? '#ffffff' : checker(i, j)) + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      }
+      s += '<rect x="' + (10 + c * cell) + '" y="' + (10 + r * cell) + '" width="' + (cell * 2) + '" height="' + (cell * 2) +
+           '" fill="none" stroke="' + RED + '" stroke-width="3" stroke-dasharray="9 6"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 2×2 补块候选：按 (r,c) 位置算正确配色，flip>=0 时把第 flip 格反过来（Q24 选项） */
+    tilepatch: function (spec, vars) {
+      var r = Math.round(num(spec.r, vars)), c = Math.round(num(spec.c, vars));
+      var f = Math.round(num(spec.flip, vars));
+      var cell = 40, W = 2 * cell + 16, H = 2 * cell + 16, i, j;
+      var s = svgOpen(W, H, 'patch option');
+      for (i = 0; i < 2; i++) for (j = 0; j < 2; j++) {
+        var k = i * 2 + j, col = checker(r + i, c + j);
+        if (k === f) col = (col === BLUE) ? YELLOW : BLUE;
+        s += '<rect x="' + (8 + j * cell) + '" y="' + (8 + i * cell) + '" width="' + cell + '" height="' + cell +
+             '" fill="' + col + '" stroke="' + INK + '" stroke-width="2"/>';
+      }
+      s += '<rect x="8" y="8" width="' + (cell * 2) + '" height="' + (cell * 2) + '" fill="none" stroke="' + INK + '" stroke-width="3"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 黑白棋盘 + 西塔的棋子；马克在下方（Q26 主图） */
+    board: function (spec, vars) {
+      var rows = Math.max(3, Math.min(7, Math.round(num(spec.rows, vars)) || 5));
+      var cols = Math.max(3, Math.min(7, Math.round(num(spec.cols, vars)) || 6));
+      var sr = Math.max(0, Math.min(rows - 1, Math.round(num(spec.sr, vars))));
+      var sc = Math.max(0, Math.min(cols - 1, Math.round(num(spec.sc, vars))));
+      var cell = 52, W = cols * cell + 20, H = rows * cell + 56, i, j;
+      var s = svgOpen(W, H, 'checker board');
+      for (i = 0; i < rows; i++) for (j = 0; j < cols; j++) {
+        s += '<rect x="' + (10 + j * cell) + '" y="' + (10 + i * cell) + '" width="' + cell + '" height="' + cell +
+             '" fill="' + (((i + j) % 2 === 0) ? '#3a3f45' : '#f2f2f2') + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      }
+      s += '<circle cx="' + (10 + sc * cell + cell / 2) + '" cy="' + (10 + sr * cell + cell / 2) + '" r="17" fill="' + BLUE + '" stroke="#ffffff" stroke-width="3"/>';
+      s += '<text x="' + (W / 2) + '" y="' + (rows * cell + 34) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">↓ 马克 Mark ↓</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 棋盘候选：在 (hr,hc) 画红圈（Q26 选项） */
+    boardopt: function (spec, vars) {
+      var rows = Math.max(3, Math.min(7, Math.round(num(spec.rows, vars)) || 5));
+      var cols = Math.max(3, Math.min(7, Math.round(num(spec.cols, vars)) || 6));
+      var hr = Math.max(0, Math.min(rows - 1, Math.round(num(spec.hr, vars))));
+      var hc = Math.max(0, Math.min(cols - 1, Math.round(num(spec.hc, vars))));
+      var cell = 34, W = cols * cell + 16, H = rows * cell + 16, i, j;
+      var s = svgOpen(W, H, 'board option');
+      for (i = 0; i < rows; i++) for (j = 0; j < cols; j++) {
+        s += '<rect x="' + (8 + j * cell) + '" y="' + (8 + i * cell) + '" width="' + cell + '" height="' + cell +
+             '" fill="' + (((i + j) % 2 === 0) ? '#3a3f45' : '#f2f2f2') + '" stroke="' + INK + '" stroke-width="1"/>';
+      }
+      s += '<circle cx="' + (8 + hc * cell + cell / 2) + '" cy="' + (8 + hr * cell + cell / 2) + '" r="' + (cell * 0.34).toFixed(1) +
+           '" fill="none" stroke="' + RED + '" stroke-width="4"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四个猪圈成一排，箭头只能 A→B→C→D，圈内是猪（Q30） */
+    pens: function (spec, vars) {
+      var p = [0, 1, 2, 3].map(function (k) {
+        return Math.max(0, Math.min(12, Math.round(num(spec['p' + 'ABCD'[k]], vars))));
+      });
+      var pw = 124, ph = 156, gap = 42, x0 = 8, y0 = 22, i, j, k;
+      var W = 4 * pw + 3 * gap + 16, H = ph + 62;
+      var s = svgOpen(W, H, 'four pig pens');
+      for (k = 0; k < 4; k++) {
+        var bx = x0 + k * (pw + gap);
+        s += '<rect x="' + bx + '" y="' + y0 + '" width="' + pw + '" height="' + ph + '" fill="#f3f7ef" stroke="' + INK + '" stroke-width="2.5" rx="6"/>';
+        s += '<text x="' + (bx + pw / 2) + '" y="' + (y0 + ph + 26) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + 'ABCD'[k] + '</text>';
+        for (i = 0; i < p[k]; i++) {
+          var col = i % 3, rowi = Math.floor(i / 3);
+          s += pig(bx + 26 + col * 34, y0 + 30 + rowi * 34, 13);
+        }
+        if (k < 3) {
+          var ax = bx + pw + 4;
+          s += '<line x1="' + ax + '" y1="' + (y0 + ph / 2) + '" x2="' + (ax + gap - 12) + '" y2="' + (y0 + ph / 2) + '" stroke="' + INK + '" stroke-width="2.5"/>';
+          s += '<polygon points="' + (ax + gap - 12) + ',' + (y0 + ph / 2) + ' ' + (ax + gap - 24) + ',' + (y0 + ph / 2 - 7) + ' ' + (ax + gap - 24) + ',' + (y0 + ph / 2 + 7) + '" fill="' + INK + '"/>';
+        }
+      }
+      s += '<text x="' + (W / 2) + '" y="' + (y0 + ph + 52) + '" font-size="14" text-anchor="middle" fill="#666">猪只能按箭头方向穿过门</text>';
+      s += '</svg>';
+      return s;
+    }
+  };
+
+  Object.keys(TYPES2).forEach(function (k) { TYPES[k] = TYPES2[k]; });
 
   function render(spec, vars) {
     if (!spec || !spec.type) return '';

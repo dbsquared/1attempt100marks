@@ -13,27 +13,36 @@
         "数数"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q1",
-      "image": "assets/originals/2022y2m-q01.png",
       "stem": {
-        "en": "How many flowers are in the vase? (see original picture)",
-        "zh": "花瓶里一共有多少朵花？（见原题图）"
+        "en": "How many flowers are in the vase?",
+        "zh": "花瓶里一共有多少朵花？"
       },
       "answer": {
-        "type": "choice",
-        "options": [
-          "6",
-          "7",
-          "8",
-          "9"
-        ],
-        "correctIndex": 1
+        "type": "integer",
+        "expr": "n"
       },
       "solution": {
-        "en": "Count the flowers one by one: there are 7 flowers in the vase.",
-        "zh": "一朵一朵指着数：花瓶里一共有 7 朵花。"
+        "en": "Count them one by one: there are {n} flowers in the vase.",
+        "zh": "一朵一朵指着数：花瓶里一共有 {n} 朵花。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q01.png"
+      "originalImage": "assets/originals/2022y2m-q01.png",
+      "vars": {
+        "n": {
+          "type": "int",
+          "min": 5,
+          "max": 12
+        }
+      },
+      "diagram": {
+        "type": "vase",
+        "count": "n"
+      },
+      "unit": "朵",
+      "sanity": {
+        "integer": true,
+        "min": 1
+      }
     },
     {
       "id": "icas22y2m-02",
@@ -47,10 +56,9 @@
         "日期"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q2",
-      "image": "assets/originals/2022y2m-q02.png",
       "stem": {
-        "en": "Today is Monday 6 June, and it is sunny. Which of these statements tells something that WILL happen?",
-        "zh": "今天是 6 月 6 日，星期一，天气晴。下面哪一句说的是「一定」会发生的事？"
+        "en": "Today is Monday {d} June. Which of these statements tells something that WILL happen?",
+        "zh": "今天是 6 月 {d} 日，星期一。下面哪一句说的是「一定」会发生的事？"
       },
       "answer": {
         "type": "choice",
@@ -60,22 +68,29 @@
             "zh": "明天将是星期四"
           },
           {
-            "en": "Next Monday will be 13 June",
-            "zh": "下星期一将是 6 月 13 日"
+            "en": "Next Monday will be {d+7} June",
+            "zh": "下星期一将是 6 月 {d+7} 日"
           },
           {
-            "en": "Tomorrow will be sunny",
+            "en": "It will be sunny tomorrow as well",
             "zh": "明天也会是晴天"
           }
         ],
         "correctIndex": 1
       },
       "solution": {
-        "en": "Tomorrow is Tuesday, not Thursday — will NOT happen. Today is Monday; 7 days later is next Monday, 6+7=13, so next Monday WILL be 13 June. Whether it is sunny tomorrow is yet to be seen — it MIGHT happen.",
-        "zh": "明天是星期二，不是星期四——一定不会发生；今天星期一，过 7 天正好是下星期一，6＋7＝13，所以下星期一一定是 6 月 13 日——一定会发生；明天晴不晴要等到才知道——只是可能发生。"
+        "en": "Tomorrow is Tuesday, not Thursday — that cannot happen. Monday plus 7 days is next Monday: {d}+7={d+7}, so next Monday will definitely be {d+7} June. Whether it is sunny tomorrow is only possible, not certain.",
+        "zh": "明天是星期二，不是星期四——一定不会发生；今天星期一，过 7 天正好是下星期一，{d}＋7＝{d+7}，所以下星期一一定是 6 月 {d+7} 日——一定会发生；明天晴不晴要等到才知道——只是可能发生。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q02.png"
+      "originalImage": "assets/originals/2022y2m-q02.png",
+      "vars": {
+        "d": {
+          "type": "int",
+          "min": 1,
+          "max": 23
+        }
+      }
     },
     {
       "id": "icas22y2m-03",
@@ -247,10 +262,9 @@
         "图形"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q6",
-      "image": "assets/originals/2022y2m-q06.png",
       "stem": {
-        "en": "Look at the picture of the house (see original picture): square windows, rectangular door and walls, round doorknob. Which shape was NOT used in the picture?",
-        "zh": "看这幅房子的画（见原题图）：正方形的窗户、长方形的门和墙、圆形的门把手。哪种形状在画里「没有」用到？"
+        "en": "Look at the picture. Which shape was NOT used in the picture?",
+        "zh": "看这幅画。下面哪种形状在画里「没有」用到？"
       },
       "answer": {
         "type": "choice",
@@ -272,14 +286,28 @@
             "zh": "圆形"
           }
         ],
-        "correctIndex": 0
+        "correctIndex": "omitIdx"
       },
       "solution": {
-        "en": "The picture has squares (windows), rectangles (door, walls) and circles (doorknob) — but no triangle.",
-        "zh": "画里有正方形（窗户）、长方形（门、墙）、圆形（门把手），唯独没有三角形。"
+        "en": "Find every shape you can see in the picture, then compare with the options — the one you cannot find is the answer.",
+        "zh": "把画里能看到的形状逐一找出来（窗户、门、墙、门把手），再和选项一一对照，找不到的那一种就是答案。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q06.png"
+      "originalImage": "assets/originals/2022y2m-q06.png",
+      "vars": {
+        "omitIdx": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            3
+          ]
+        }
+      },
+      "diagram": {
+        "type": "house",
+        "omit": "omitIdx"
+      }
     },
     {
       "id": "icas22y2m-07",
@@ -358,30 +386,53 @@
         "大小比较"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q8",
-      "image": "assets/originals/2022y2m-q08.png",
       "stem": {
-        "en": "Jack received four present boxes (see original picture). When he opens the largest, longest thin box, what would he most likely find inside?",
-        "zh": "杰克收到四个礼物盒（见原题图）。打开「最大的那个细长盒子」时，他最可能找到什么？"
+        "zh": "杰克收到四个礼物盒（如下图）。红色虚线框标出的那个盒子，打开后他最可能找到什么？",
+        "en": "Jack received four present boxes (diagram below). The box marked with the red dashed outline — what would he most likely find inside?"
       },
       "answer": {
-        "type": "text",
-        "expr": {
-          "en": "skateboard",
-          "zh": "滑板"
-        },
-        "alternatives": [
+        "type": "choice",
+        "options": [
           {
-            "en": "skateboard",
-            "zh": "滑板"
+            "zh": "滑板",
+            "en": "a skateboard"
+          },
+          {
+            "zh": "篮球",
+            "en": "a ball"
+          },
+          {
+            "zh": "手表",
+            "en": "a watch"
+          },
+          {
+            "zh": "鞋子",
+            "en": "a pair of shoes"
           }
-        ]
+        ],
+        "correctIndex": "bidx"
       },
       "solution": {
-        "en": "A skateboard is long and flat, so it fits the largest thin box; a ball goes in a tall box, a watch in the smallest box, shoes in a medium-large box.",
-        "zh": "滑板又长又扁，适合装在最大的细长盒子里；篮球装高盒子、手表装最小的盒子、鞋子装中等偏大的盒子。"
+        "zh": "看盒子的形状：又长又扁的最大盒子装滑板；又高又窄的装篮球；最小的装手表；中等偏大的装鞋子。",
+        "en": "Match the shape: the long flat box holds a skateboard, the tall narrow box a ball, the smallest a watch, the medium box shoes."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q08.png"
+      "originalImage": "assets/originals/2022y2m-q08.png",
+      "vars": {
+        "bidx": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "diagram": {
+        "type": "giftboxes",
+        "pick": "bidx"
+      }
     },
     {
       "id": "icas22y2m-09",
@@ -594,27 +645,59 @@
         "钟表"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q12",
-      "image": "assets/originals/2022y2m-q12.png",
       "stem": {
-        "en": "It is exactly 12 o'clock now. Which clock shows a time half an hour LATER?",
-        "zh": "现在是 12 点整。哪个钟显示的时间比现在「快半小时」？"
+        "en": "It is now {h} o'clock. Which clock shows a time that is half an hour LATER than now?",
+        "zh": "现在是 {h} 点整。哪个钟显示的时间比现在「快半小时」？"
       },
       "answer": {
         "type": "choice",
         "options": [
-          "11:30",
-          "12:00",
-          "12:15",
-          "12:30"
+          {
+            "en": "top-left clock",
+            "zh": "左上的钟"
+          },
+          {
+            "en": "top-right clock",
+            "zh": "右上的钟"
+          },
+          {
+            "en": "bottom-left clock",
+            "zh": "左下的钟"
+          },
+          {
+            "en": "bottom-right clock",
+            "zh": "右下的钟"
+          }
         ],
-        "correctIndex": 3
+        "correctIndex": "cell"
       },
       "solution": {
-        "en": "\"Half an hour later\" means 30 minutes after 12, which is 12:30.",
-        "zh": "「快半小时」就是多走半小时：12 点再过半小时是 12:30。"
+        "en": "Half an hour later than {h}:00 is {h}:30. Find the clock whose hands show {h}:30.",
+        "zh": "「快半小时」就是多走半小时：{h} 点再过半小时是 {h}:30。找出指针正好指向 {h}:30 的那个钟。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q12.png"
+      "originalImage": "assets/originals/2022y2m-q12.png",
+      "vars": {
+        "h": {
+          "type": "int",
+          "min": 1,
+          "max": 11
+        },
+        "cell": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "diagram": {
+        "type": "clocks",
+        "baseH": "h",
+        "correctCell": "cell"
+      }
     },
     {
       "id": "icas22y2m-13a",
@@ -832,39 +915,58 @@
         "方向"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q16",
-      "image": "assets/originals/2022y2m-q16.png",
       "stem": {
-        "en": "Look at the bookshelf (see original picture). Sara's favourite book is on the second shelf from the top and the third from the right. Which description is it?",
-        "zh": "看书架图（见原题图）。萨拉最喜欢的书在「从上数第二层、从右数第三本」。这本书的位置是下面哪一句？"
+        "en": "Look at the bookshelf. What colour is the book on shelf {r} counted from the top and position {c} counted from the right?",
+        "zh": "看书架图。从上数第 {r} 层、从右数第 {c} 本是什么颜色的书？"
       },
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "the second book from the left on the top shelf",
-            "zh": "最上层从左数第二本"
+            "en": "red",
+            "zh": "红色"
           },
           {
-            "en": "the third book from the right on the second shelf",
-            "zh": "第二层从右数第三本"
+            "en": "yellow",
+            "zh": "黄色"
           },
           {
-            "en": "the first book from the left on the third shelf",
-            "zh": "第三层从左数第一本"
+            "en": "blue",
+            "zh": "蓝色"
           },
           {
-            "en": "the second book from the right on the bottom shelf",
-            "zh": "最下层从右数第二本"
+            "en": "green",
+            "zh": "绿色"
           }
         ],
-        "correctIndex": 1
+        "correctIndex": "ci"
       },
       "solution": {
-        "en": "Find the second shelf from the top, then count three books from the right — that is Sara's favourite book.",
-        "zh": "先找到从上数第二层，再从右边往左数第三本，就是萨拉最喜欢的书。"
+        "en": "Count the shelves from the top down to number {r}, then count {c} books from the right. Read that book's colour.",
+        "zh": "从上往下数到第 {r} 层，再从右往左数到第 {c} 本，读出它的颜色。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q16.png"
+      "originalImage": "assets/originals/2022y2m-q16.png",
+      "vars": {
+        "r": {
+          "type": "int",
+          "min": 1,
+          "max": 3
+        },
+        "c": {
+          "type": "int",
+          "min": 1,
+          "max": 5
+        }
+      },
+      "derived": {
+        "ci": "((r-1)*5 + (5-c)) % 4"
+      },
+      "diagram": {
+        "type": "bookshelf",
+        "rows": 3,
+        "cols": 5
+      }
     },
     {
       "id": "icas22y2m-17",
@@ -1145,39 +1247,52 @@
         "数据阅读"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q22",
-      "image": "assets/originals/2022y2m-q22.png",
       "stem": {
-        "en": "Sydney has four seasons: spring is in September, October, November. Darwin has two seasons: the wet season is from November to April (see original wheel charts). Which month is spring in Sydney AND the wet season in Darwin?",
-        "zh": "悉尼一年有四季：春天是 9、10、11 月。达尔文只有两季：雨季是 11 月到次年 4 月（见原题圆盘图）。哪一个月悉尼是春天、达尔文正好是雨季？"
+        "en": "The wheel shows the seasons in Sydney. Which season is it in Sydney in month {m}?",
+        "zh": "圆盘上是悉尼的四季。悉尼 {m} 月是什么季节？"
       },
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "April",
-            "zh": "4 月"
+            "en": "spring",
+            "zh": "春天"
           },
           {
-            "en": "September",
-            "zh": "9 月"
+            "en": "summer",
+            "zh": "夏天"
           },
           {
-            "en": "October",
-            "zh": "10 月"
+            "en": "autumn",
+            "zh": "秋天"
           },
           {
-            "en": "November",
-            "zh": "11 月"
+            "en": "winter",
+            "zh": "冬天"
           }
         ],
-        "correctIndex": 3
+        "correctIndex": "si"
       },
       "solution": {
-        "en": "Sydney's spring is Sep–Nov; Darwin's wet season is Nov–Apr. Only November is in both.",
-        "zh": "悉尼的春天是 9—11 月；达尔文的雨季是 11—4 月。两个月里只有 11 月同时满足。"
+        "en": "In Sydney: spring is Sep–Nov, summer Dec–Feb, autumn Mar–May, winter Jun–Aug. Month {m} belongs to the matching season.",
+        "zh": "悉尼的四季：春天 9–11 月，夏天 12–2 月，秋天 3–5 月，冬天 6–8 月。{m} 月就属于对应的那个季节。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q22.png"
+      "originalImage": "assets/originals/2022y2m-q22.png",
+      "vars": {
+        "m": {
+          "type": "int",
+          "min": 1,
+          "max": 12
+        }
+      },
+      "derived": {
+        "si": "floor(((m+3) % 12) / 3)"
+      },
+      "diagram": {
+        "type": "seasonwheel",
+        "month": "m"
+      }
     },
     {
       "id": "icas22y2m-23",
@@ -1191,27 +1306,37 @@
         "推理"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q23",
-      "image": "assets/originals/2022y2m-q23.png",
       "stem": {
-        "en": "Anna has 14 coins in her purse (denominations shown in the original picture). She buys a 50c lollipop and a 95c chocolate bar, totalling 145c. She pays exactly and uses AS MANY COINS AS POSSIBLE. How many coins did she use?",
-        "zh": "安娜的钱包里有 14 枚硬币（面值见原题图）。她要买 50 分的棒棒糖和 95 分的巧克力棒，一共 145 分。她要正好付清，并且「用尽可能多的硬币」。她用了多少枚硬币？"
+        "zh": "安娜的钱包里有很多 5 分、10 分、20 分、50 分的硬币（如下图）。她要正好付 {amt} 分，并且想「用尽可能多的硬币」。她最多要用多少枚硬币？",
+        "en": "Anna has plenty of 5c, 10c, 20c and 50c coins (diagram below). She must pay exactly {amt}c and wants to use AS MANY coins as possible. What is the greatest number of coins she can use?"
       },
       "answer": {
-        "type": "choice",
-        "options": [
-          "5",
-          "9",
-          "10",
-          "14"
-        ],
-        "correctIndex": 2
+        "type": "integer",
+        "expr": "T",
+        "unit": "枚",
+        "sanity": {
+          "integer": true
+        }
       },
       "solution": {
-        "en": "The total is 145c. To use the MOST coins, use as many small values as possible; with the 5c, 10c, 20c and 50c coins in the purse, 145c can be made with at most 10 coins.",
-        "zh": "一共 145 分。想用最多的硬币，就尽量用小面值：钱包里的 5 分、10 分、20 分、50 分硬币凑出 145 分，最多能用到 10 枚。"
+        "zh": "想用的硬币最多，就要尽量用最小面值的 5 分硬币：{amt} ÷ 5 = {T}（枚），而且 {amt} 正好是 5 的倍数，所以最多 {T} 枚。",
+        "en": "To use the most coins, use the smallest value (5c) as much as possible: {amt} ÷ 5 = {T} coins."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q23.png"
+      "originalImage": "assets/originals/2022y2m-q23.png",
+      "vars": {
+        "T": {
+          "type": "int",
+          "min": 10,
+          "max": 30
+        }
+      },
+      "derived": {
+        "amt": "T * 5"
+      },
+      "diagram": {
+        "type": "coins"
+      }
     },
     {
       "id": "icas22y2m-24",
@@ -1225,39 +1350,98 @@
         "推理"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q24",
-      "image": "assets/originals/2022y2m-q24.png",
       "stem": {
-        "en": "Ben's table top is tiled in a blue/yellow checker pattern (see original picture); a 4×4 patch is missing in the dashed box. What should the missing patch look like?",
-        "zh": "本在桌面铺蓝黄相间的方砖（见原题图），虚线框处缺了一块 4×4 的补块。补块应该是什么样子的？"
+        "zh": "本的桌面铺着蓝黄相间的方砖（如下图），红色虚线框里缺了一块 2×2 的补块。补块应该是什么样子的？",
+        "en": "Ben's table top is tiled in a blue/yellow checker pattern (diagram below); a 2×2 patch is missing inside the red dashed box. What should the missing patch look like?"
       },
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "the patch with a yellow square in row 2, column 2",
-            "zh": "第二行第二格是黄色的补块"
+            "zh": "甲",
+            "en": "A"
           },
           {
-            "en": "the patch with a blue square in row 2, column 2",
-            "zh": "第二行第二格是蓝色的补块"
+            "zh": "乙",
+            "en": "B"
           },
           {
-            "en": "the patch with a yellow square in row 1, column 2",
-            "zh": "第一行第二格是黄色的补块"
+            "zh": "丙",
+            "en": "C"
           },
           {
-            "en": "the patch with a yellow square in row 3, column 3",
-            "zh": "第三行第三格是黄色的补块"
+            "zh": "丁",
+            "en": "D"
+          }
+        ],
+        "optionsSvg": [
+          {
+            "type": "tilepatch",
+            "r": "r",
+            "c": "c",
+            "flip": -1
+          },
+          {
+            "type": "tilepatch",
+            "r": "r",
+            "c": "c",
+            "flip": 0
+          },
+          {
+            "type": "tilepatch",
+            "r": "r",
+            "c": "c",
+            "flip": 1
+          },
+          {
+            "type": "tilepatch",
+            "r": "r",
+            "c": "c",
+            "flip": 2
           }
         ],
         "correctIndex": 0
       },
       "solution": {
-        "en": "Line the missing patch up with the rows and columns of the table; the completed pattern has a yellow square at row 2, column 2 of the patch.",
-        "zh": "按桌面花纹的行列对齐去接，缺的那一块接上后第二行第二格应该是黄色。"
+        "zh": "把补块按桌面花纹的行列一格一格接上去：横向、纵向都是蓝黄交替，缺口从第 {rr} 行第 {cc} 列开始，四格的颜色就被唯一确定了。",
+        "en": "Line the patch up with the rows and columns: the pattern alternates both ways, and the gap starts at row {rr}, column {cc}, so the four colours are fixed."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q24.png"
+      "originalImage": "assets/originals/2022y2m-q24.png",
+      "vars": {
+        "n": {
+          "type": "pick",
+          "from": [
+            4,
+            5,
+            6
+          ]
+        },
+        "r": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        },
+        "c": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "constraints": [
+        "r + 2 <= n",
+        "c + 2 <= n"
+      ],
+      "derived": {
+        "rr": "r + 1",
+        "cc": "c + 1"
+      },
+      "diagram": {
+        "type": "tiling",
+        "n": "n",
+        "r": "r",
+        "c": "c"
+      }
     },
     {
       "id": "icas22y2m-25",
@@ -1320,39 +1504,117 @@
         "方向"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q26",
-      "image": "assets/originals/2022y2m-q26.png",
       "stem": {
-        "en": "Sita's counter is on a black square of a black-and-white board (see original picture). She moves it 1 square left and 2 squares forward toward Mark. On which square does it land?",
-        "zh": "西塔的棋子在黑白棋盘的黑格上（见原题图）。她把棋子往左移 1 格，又朝马克的方向前移 2 格。棋子最后停在哪一格？"
+        "zh": "西塔的棋子（蓝点）在黑白棋盘上，马克站在棋盘的下方（如下图）。她把棋子往左移 1 格，又朝马克的方向前移 2 格。棋子最后停在哪一格？",
+        "en": "Sita's counter (blue dot) is on a black-and-white board and Mark stands below the board (diagram below). She moves it 1 square left and then 2 squares forward toward Mark. On which square does it land?"
       },
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "the white square on the far right of the second-last row",
-            "zh": "倒数第二行最右边的白格"
+            "zh": "甲",
+            "en": "A"
           },
           {
-            "en": "the second square from the left on the second-last row",
-            "zh": "倒数第二行左起第二格"
+            "zh": "乙",
+            "en": "B"
           },
           {
-            "en": "the first square from the left on the third row",
-            "zh": "第三行左起第一格"
+            "zh": "丙",
+            "en": "C"
           },
           {
-            "en": "the middle white square on the bottom row",
-            "zh": "最下一行中间的白格"
+            "zh": "丁",
+            "en": "D"
+          }
+        ],
+        "optionsSvg": [
+          {
+            "type": "boardopt",
+            "rows": "rows",
+            "cols": "cols",
+            "hr": "o0r",
+            "hc": "o0c"
+          },
+          {
+            "type": "boardopt",
+            "rows": "rows",
+            "cols": "cols",
+            "hr": "o1r",
+            "hc": "o1c"
+          },
+          {
+            "type": "boardopt",
+            "rows": "rows",
+            "cols": "cols",
+            "hr": "o2r",
+            "hc": "o2c"
+          },
+          {
+            "type": "boardopt",
+            "rows": "rows",
+            "cols": "cols",
+            "hr": "o3r",
+            "hc": "o3c"
           }
         ],
         "correctIndex": 0
       },
       "solution": {
-        "en": "From Sita's square, 1 left and then 2 toward Mark (downwards) lands exactly on the white square at the far right of the second-last row.",
-        "zh": "从西塔的位置往左 1 格、再向马克（往下）2 格，正好落在倒数第二行最右边的白格上。"
+        "zh": "从棋子出发，先往左 1 格，再朝马克（向下）2 格，落在第 {ar} 行第 {ac} 列（从上往下、从左往右数）。",
+        "en": "From the counter, 1 left then 2 toward Mark (downwards) lands on row {ar}, column {ac} (counting from the top-left)."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q26.png"
+      "originalImage": "assets/originals/2022y2m-q26.png",
+      "vars": {
+        "rows": {
+          "type": "pick",
+          "from": [
+            5,
+            6
+          ]
+        },
+        "cols": {
+          "type": "pick",
+          "from": [
+            5,
+            6
+          ]
+        },
+        "sr": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        },
+        "sc": {
+          "type": "int",
+          "min": 1,
+          "max": 5
+        }
+      },
+      "constraints": [
+        "sr + 3 <= rows",
+        "sc <= cols - 1"
+      ],
+      "derived": {
+        "o0r": "sr + 2",
+        "o0c": "sc - 1",
+        "o1r": "sr + 2",
+        "o1c": "sc",
+        "o2r": "sr + 1",
+        "o2c": "sc - 1",
+        "o3r": "sr",
+        "o3c": "sc - 1",
+        "ar": "sr + 3",
+        "ac": "sc"
+      },
+      "diagram": {
+        "type": "board",
+        "rows": "rows",
+        "cols": "cols",
+        "sr": "sr",
+        "sc": "sc"
+      }
     },
     {
       "id": "icas22y2m-27",
@@ -1554,25 +1816,71 @@
         "应用题"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q30",
-      "image": "assets/originals/2022y2m-q30.png",
       "stem": {
-        "en": "Farmer Joe has 4 pens (see original picture); pigs may only be moved through the gates in the direction of the arrows. He wants every pen to have the same number of pigs. What is the FEWEST pigs he must move?",
-        "zh": "农夫乔有 4 个猪圈（见原题图），猪只能按图中箭头的方向赶过门。他想让每个猪圈的猪一样多，最少要移动几头猪？"
+        "zh": "农夫乔有 A、B、C、D 四个猪圈（如下图），猪只能按箭头方向从一个圈赶到相邻的下一个圈。他想让每个猪圈的猪一样多，最少要移动多少头猪？",
+        "en": "Farmer Joe has four pens A, B, C and D (diagram below); pigs may only be moved in the direction of the arrows into the next pen. He wants every pen to hold the same number of pigs. What is the fewest pigs he must move?"
       },
       "answer": {
         "type": "integer",
-        "expr": "7"
+        "expr": "ans",
+        "unit": "头",
+        "sanity": {
+          "integer": true
+        }
       },
       "unit": "头",
       "sanity": {
         "integer": true
       },
       "solution": {
-        "en": "Count the pigs in each pen, find the average, then move pigs from fuller pens to emptier ones only along the allowed arrow directions; the fewest moves needed is 7.",
-        "zh": "先数出四个圈的猪，算出平均数，再沿着箭头允许的方向把多的圈里的猪补到少的圈里，最少要移动 7 头。"
+        "zh": "四个圈一共 {tot} 头猪，平均每个圈 {a} 头。只能按 A→B→C→D 的方向赶：A 多 {f1} 头只能给 B；B 接着多 {f2} 头给 C；C 再多 {f3} 头给 D。一共要移动 {ans} 头。",
+        "en": "There are {tot} pigs in all, so {a} per pen. Pigs only move A→B→C→D: A passes {f1} on, B passes {f2}, C passes {f3}. Total moved: {ans}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q30.png"
+      "originalImage": "assets/originals/2022y2m-q30.png",
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "f1": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        },
+        "f2": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        },
+        "f3": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "constraints": [
+        "a + f2 >= f1",
+        "a + f3 >= f2",
+        "a >= f3",
+        "f1 + f2 + f3 >= 1"
+      ],
+      "derived": {
+        "pA": "a + f1",
+        "pB": "a + f2 - f1",
+        "pC": "a + f3 - f2",
+        "pD": "a - f3",
+        "tot": "a * 4",
+        "ans": "f1 + f2 + f3"
+      },
+      "diagram": {
+        "type": "pens",
+        "pA": "pA",
+        "pB": "pB",
+        "pC": "pC",
+        "pD": "pD"
+      }
     }
   ]
 }

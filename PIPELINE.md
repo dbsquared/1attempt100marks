@@ -121,11 +121,53 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
    - **凡题干里带变量的图，必须走这条**（静态原题图数值一变必然对不上）。
    - 模板加 `"diagram": { "type": "...", ... }`，参数写变量名（如 `{"type":"stick","parts":"k"}`）。
    - 现有类型见 `assets/js/diagrams.js`：`stick`(小棍分段) / `numberline`(数轴) / `hexagon`(六边形) /
-     `squareposts`(正方形围栏) / `lanterns`(循环灯笼)。需要新类型就在 diagrams.js 加一个函数并在本节登记。
+     `squareposts`(正方形围栏) / `lanterns`(循环灯笼) / `vase`(花瓶数花) / `house`(房子缺形状) /
+     `clocks`(四个钟面) / `bookshelf`(书架取书) / `seasonwheel`(四季圆盘) / `giftboxes`(四个礼物盒) /
+     `coins`(硬币面值) / `tiling`(方砖缺块) / `board`(棋盘走子) / `pens`(猪圈赶猪)。
+     需要新类型就在 diagrams.js 加一个函数并在本节登记。
 4. **实在画不出来 / 拿不准？** 把该题单独列出来交给用户判断，**不要**默默留空或硬塞一张对不上的图。
 
 > 判定口诀：**变量题禁止引用静态原题图**；固定答案的看图题可以保留静态原题图（`image`）。
 > `node tools/test-bank.js` 会自动校验：题干提到「图」却没有 `image` / `diagram` 会直接 FAIL。
+
+### 4.5.1 选项是图时：必须用 `answer.optionsSvg`（禁止用文字描述图形）
+
+如果正确答案"是某个图形/某个格子"，**不能**把图形翻译成文字写进 `options`
+（例如「第二行第二格是黄色的补块」——这等于把答案念出来了）。做法：
+
+```json
+"answer": {
+  "type": "choice",
+  "options": [{"zh":"甲"},{"zh":"乙"},{"zh":"丙"},{"zh":"丁"}],
+  "optionsSvg": [
+    {"type":"tilepatch","r":"r","c":"c","flip":-1},
+    {"type":"tilepatch","r":"r","c":"c","flip":0},
+    {"type":"tilepatch","r":"r","c":"c","flip":1},
+    {"type":"tilepatch","r":"r","c":"c","flip":2}
+  ],
+  "correctIndex": 0
+}
+```
+
+- `optionsSvg[i]` 与 `options[i]` 一一对应，生成器会**跟着选项一起洗牌**，不需要自己处理顺序。
+- 选项文字用中性编号（甲/乙/丙/丁），不要用会泄题的描述。
+- 目标位置随变量变化时，用 `derived` 算出每个候选的坐标（如 `o0r`/`o0c`），再在 spec 里写变量名。
+
+### 4.6 变式检查（每道题**必做**）
+
+模板的意义就是"换数出新题"。写完后必须确认它**真的能出变式**：
+
+1. `node tools/test-bank.js` 会跑 300 次，统计**不同数值/形式**的数量。
+2. **只有 1 个变式 ⇒ 直接 FAIL**，除非在模板上显式写明原因：
+   ```json
+   "figureTodo": "待画 X 的简化 SVG 并参数化"   // 或 "todo" / "noVariantReason"
+   ```
+   脚本会在结尾把这类"暂时欠着"的题集中打印出来，不会被遗忘。
+3. 常见"假变式"原因：变量被写死（`min == max`）、`constraints` 过严导致只剩一种组合、
+   图题保留了固定答案。**发现就改，不要靠用户截图来提醒。**
+
+> 想看图形长什么样：`node tools/_preview_figs.js` 会生成 `tools/_figs-preview.html`，
+> 每个配图模板出两个随机变式，肉眼核图用。
 
 ## 5. 表达式语法（constraints / answer.expr / derived）
 

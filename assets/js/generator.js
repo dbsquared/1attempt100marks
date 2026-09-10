@@ -150,13 +150,23 @@
     var out = { type: a.type || 'number' };
 
     if (out.type === 'choice') {
-      var opts = (a.options || []).map(function (o) { return renderText(resolveField(o, lang), vars); });
+      // correctIndex 可以是数字/数组（多选题），也可以是表达式字符串（如 "omitIdx"，用于答案随变量变化）
       var ci = a.correctIndex;
+      if (typeof ci === 'string') {
+        try { ci = Math.round(Expr.eval(ci, vars)); } catch (e2) { ci = 0; }
+      }
+      var opts = (a.options || []).map(function (o) { return renderText(resolveField(o, lang), vars); });
       var multi = Array.isArray(ci);
       var idxs = opts.map(function (_, i) { return i; });
       // 洗牌
       for (var i = idxs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = idxs[i]; idxs[i] = idxs[j]; idxs[j] = t; }
       var newOpts = idxs.map(function (i) { return opts[i]; });
+      // 选项配图（图形式的选项，避免用文字描述图形而"泄题"），与选项一起洗牌
+      if (a.optionsSvg && global.Diagrams) {
+        out.optionsSvg = idxs.map(function (i) {
+          return global.Diagrams.render(a.optionsSvg[i], vars) || '';
+        });
+      }
       var newCi;
       if (multi) newCi = idxs.map(function (o, pos) { return pos; }).filter(function (pos) { return ci.indexOf(idxs[pos]) >= 0; });
       else newCi = idxs.indexOf(Array.isArray(ci) ? ci[0] : ci);
@@ -254,6 +264,7 @@
         value: ans.value,
         display: ans.display,
         options: ans.options,
+        optionsSvg: ans.optionsSvg,
         correctIndex: ans.correctIndex,
         num: ans.num, den: ans.den,
         tolerance: ans.tolerance,

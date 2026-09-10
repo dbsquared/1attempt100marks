@@ -187,6 +187,12 @@ table.tbl tr:last-child td { border-bottom: none; }
 .paper-img img { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; }
 .diagram-wrap { margin: 10px 0 16px; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; }
 .diagram { display: block; width: 100%; max-width: 480px; height: auto; margin: 0 auto; }
+.opt .opt-svg { display: block; margin: 8px 0 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; }
+.opt .opt-svg .diagram { max-width: 260px; }
+.cmp-opts { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+.cmp-opt { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px; text-align: center; }
+.cmp-opt b { display: block; font-size: 12px; color: var(--muted); }
+.cmp-opt .diagram { max-width: 110px; }
 
 .hidden { display: none !important; }
 .center { text-align: center; }

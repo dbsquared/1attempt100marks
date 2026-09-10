@@ -70,19 +70,37 @@ for (const tpl of list) {
   let figErr = '';
   if (refsFigure(tpl) && !tpl.image && !tpl.diagram) figErr = '题干提到图，但既无 image 也无 diagram';
   else if (tpl.diagram && (!qs.length || !qs.every(q => q.diagramSvg))) figErr = 'diagram 渲染为空';
+  else if ((tpl.answer && tpl.answer.optionsSvg) &&
+           !qs.every(q => Array.isArray(q.optionsSvg) && q.optionsSvg.length === q.options.length && q.optionsSvg.every(Boolean))) {
+    figErr = 'optionsSvg 渲染为空或数量不匹配';
+  }
   if (figErr) {
     fail++;
     console.log(' 缺配图 ' + tpl.id + '：' + figErr);
   }
 
+  /* 变式检查：一份模板必须能生成 ≥2 种不同数值/形式的题，否则就是"死题"。
+     确实无法参数化（图依赖、题面固定）的，必须显式写 todo/figureTodo，否则 FAIL。 */
   const uniq = new Set(qs.map(q => q.sig)).size;
-  console.log(((ok && !leftover.length && !figErr) ? '  OK  ' : ' FAIL ') + tpl.id.padEnd(22) +
+  let varErr = '';
+  if (uniq < 2 && !tpl.todo && !tpl.figureTodo && !tpl.noVariantReason) {
+    varErr = '只有 1 个变式（未参数化）；无法参数化请显式标记 todo/figureTodo';
+    fail++;
+  }
+
+  console.log(((ok && !leftover.length && !figErr && !varErr) ? '  OK  ' : ' FAIL ') + tpl.id.padEnd(22) +
     '生成 ' + String(qs.length).padStart(3) + '/300  不同数值 ' + String(uniq).padStart(3) +
     '  判分错 ' + gradeErr + (nullCount ? '  生成失败 ' + nullCount : ''));
+  if (varErr) console.log(' ! 变式 ' + tpl.id + '：' + varErr);
   if (qs.length) {
     qs.slice(0, 2).forEach(q => console.log('        ' + q.stemText + '   ⇒ ' + q.display + (q.unit ? ' ' + q.unit : '')));
   }
 }
 console.log('='.repeat(70));
+const todoList = list.filter(t => t.figureTodo || t.todo);
+if (todoList.length) {
+  console.log('待办（已显式标记，暂缓参数化）：' + todoList.length + ' 题');
+  todoList.forEach(t => console.log('   · ' + t.id + '  ' + (t.figureTodo || t.todo)));
+}
 console.log(fail ? '✗ ' + fail + ' 个模板有问题' : '✓ 全部模板通过');
 process.exit(fail ? 1 : 0);

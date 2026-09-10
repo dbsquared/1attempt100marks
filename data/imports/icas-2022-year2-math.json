@@ -57,30 +57,30 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q2",
       "stem": {
-        "en": "Today is Monday {d} June. Which of these statements tells something that WILL happen?",
-        "zh": "今天是 6 月 {d} 日，星期一。下面哪一句说的是「一定」会发生的事？"
+        "zh": "看下图：今天是 6 月 {d} 日，星期一，天气晴朗。下面哪一句说的是「一定」会发生的事？",
+        "en": "Look at the picture: today is Monday {d} June and it is sunny. Which statement is CERTAIN to happen?"
       },
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "Tomorrow will be Thursday",
-            "zh": "明天将是星期四"
+            "zh": "明天将会是星期四",
+            "en": "Tomorrow will be Thursday"
           },
           {
-            "en": "Next Monday will be {d+7} June",
-            "zh": "下星期一将是 6 月 {d+7} 日"
+            "zh": "下星期一将会是 6 月 {d+7} 日",
+            "en": "Next Monday will be {d+7} June"
           },
           {
-            "en": "It will be sunny tomorrow as well",
-            "zh": "明天也会是晴天"
+            "zh": "明天也会是晴天",
+            "en": "It will be sunny tomorrow as well"
           }
         ],
         "correctIndex": 1
       },
       "solution": {
-        "en": "Tomorrow is Tuesday, not Thursday — that cannot happen. Monday plus 7 days is next Monday: {d}+7={d+7}, so next Monday will definitely be {d+7} June. Whether it is sunny tomorrow is only possible, not certain.",
-        "zh": "明天是星期二，不是星期四——一定不会发生；今天星期一，过 7 天正好是下星期一，{d}＋7＝{d+7}，所以下星期一一定是 6 月 {d+7} 日——一定会发生；明天晴不晴要等到才知道——只是可能发生。"
+        "zh": "今天是星期一，所以明天是星期二，「明天是星期四」一定不会发生。天气明天可能晴也可能不晴，只是「可能」。但今天是 6 月 {d} 日星期一，再过 7 天（下星期一）一定是 6 月 {d+7} 日 —— 这是「一定」。",
+        "en": "Today is Monday, so tomorrow is Tuesday: \"Thursday tomorrow\" will NOT happen. Tomorrow's weather only MIGHT be sunny. But Monday {d} June plus 7 days is always {d+7} June, so that one is certain."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q02.png",
@@ -90,6 +90,12 @@
           "min": 1,
           "max": 23
         }
+      },
+      "diagram": {
+        "type": "weathercard",
+        "day": "d",
+        "month": 6,
+        "weather": "sunny"
       }
     },
     {
@@ -105,48 +111,43 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q3",
       "stem": {
-        "en": "Jess made shapes with sticks: shape 1 used {a} sticks, shape 2 used {a+d}, shape 3 used {a+2*d}. Following the pattern, how many sticks are needed for shape {n}?",
-        "zh": "杰丝用小棒搭图形：图形 1 用了 {a} 根小棒，图形 2 用了 {a+d} 根，图形 3 用了 {a+2*d} 根。照这个规律，搭图形 {n} 要用多少根小棒？"
+        "zh": "杰丝用小棒搭图形：图形 1、图形 2、图形 3 的样子如下图。照这个规律，搭图形 {n} 一共要用多少根小棒？",
+        "en": "Jess makes shapes with sticks. Shapes 1, 2 and 3 are shown below. Following the same pattern, how many sticks does she need to make shape {n}?"
       },
       "vars": {
-        "a": {
-          "type": "pick",
-          "from": [
-            3,
-            4,
-            5
-          ]
-        },
-        "d": {
-          "type": "pick",
-          "from": [
-            2,
-            3
-          ]
-        },
         "n": {
           "type": "pick",
           "from": [
             4,
             5,
-            6
+            6,
+            7,
+            8
           ]
         }
       },
       "answer": {
         "type": "integer",
-        "expr": "a + (n-1)*d"
+        "expr": "2*n + 1",
+        "unit": "根",
+        "sanity": {
+          "integer": true
+        }
       },
       "sanity": {
         "integer": true,
         "min": 1
       },
       "solution": {
-        "en": "Each next shape uses {d} more sticks: shape 1 is {a}, shape 2 is {a+d}, shape 3 is {a+2*d}… shape {n} is {n-1} steps after shape 1, so {a}＋{d}×{n-1}＝{a+(n-1)*d} sticks.",
-        "zh": "每往后一个图形多用 {d} 根：图形 1 用 {a} 根，图形 2 用 {a+d} 根，图形 3 用 {a+2*d} 根……图形 {n} 比图形 1 多（{n}-1）＝{n-1} 次，所以是 {a}＋{d}×{n-1}＝{a+(n-1)*d} 根。"
+        "zh": "仔细看图：每多搭一个三角形，新三角形都和原来的共用一条边，所以只需要再加 2 根小棒。图形 1 用 3 根、图形 2 用 5 根、图形 3 用 7 根……图形 {n} 就是 3 + 2×({n}−1) = {2*n+1} 根。",
+        "en": "Each new triangle shares a side with the previous one, so every extra triangle only needs 2 more sticks: 3, 5, 7, … Shape {n} needs 3 + 2×({n}−1) = {2*n+1} sticks."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q03.png"
+      "originalImage": "assets/originals/2022y2m-q03.png",
+      "diagram": {
+        "type": "stickrow",
+        "shapes": 3
+      }
     },
     {
       "id": "icas22y2m-04",
@@ -206,32 +207,23 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q5",
       "stem": {
-        "en": "Liz made a two-digit number with the digit cards 2, 3, 4, 6, 9: the ones digit is {d} more than the tens digit. What is the number?",
-        "zh": "莉兹用数字卡片 2、3、4、6、9 摆了一个两位数：个位数字比十位数字大 {d}。她摆的两位数是多少？"
+        "zh": "莉兹用下图里的数字卡片摆了一个两位数（每张卡片只能用一次）：个位数字比十位数字大 {d}。她摆的两位数是多少？",
+        "en": "Liz used the digit cards below to make a two-digit number (each card used once). The units digit is {d} more than the tens digit. What number did she make?"
       },
       "vars": {
-        "t": {
+        "p": {
           "type": "pick",
           "from": [
-            2,
-            3,
-            4
-          ]
-        },
-        "d": {
-          "type": "pick",
-          "from": [
+            0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7
+            3
           ]
         }
       },
       "derived": {
+        "t": "2*(p==0) + 4*(p==1) + 3*(p==2) + 2*(p==3)",
+        "d": "4*(p==0) + 5*(p==1) + 6*(p==2) + 7*(p==3)",
         "u": "t + d"
       },
       "constraints": [
@@ -239,17 +231,31 @@
       ],
       "answer": {
         "type": "integer",
-        "expr": "10*t + u"
+        "expr": "10*t + u",
+        "sanity": {
+          "integer": true
+        }
       },
       "sanity": {
         "integer": true
       },
       "solution": {
-        "en": "The tens digit is {t}; the ones digit is {d} more, so {t}＋{d}＝{u}. The two-digit number is {10*t+u}.",
-        "zh": "十位是 {t}，个位比它大 {d}，个位是 {t}＋{d}＝{u}。这个两位数是 {10*t+u}。"
+        "zh": "从卡片 2、3、4、6、9 里找相差 {d} 的两张：只有 {t} 和 {u} 这一对，所以十位是 {t}、个位是 {u}，两位数是 {10*t+u}。",
+        "en": "Among the cards 2, 3, 4, 6 and 9, only {t} and {u} differ by {d}, so the tens digit is {t} and the units digit is {u}: {10*t+u}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q05.png"
+      "originalImage": "assets/originals/2022y2m-q05.png",
+      "diagram": {
+        "type": "cardrow",
+        "cards": [
+          2,
+          3,
+          4,
+          6,
+          9
+        ],
+        "slots": 2
+      }
     },
     {
       "id": "icas22y2m-06",
@@ -447,61 +453,82 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q9",
       "stem": {
-        "en": "Goals scored by four teams last match: Team A {a}, Team B {b}, Team C {c}, Team D {dd}. Which team scored exactly 2 more goals than Team C?",
-        "zh": "四支球队最近一场比赛的进球数：甲队 {a} 球，乙队 {b} 球，丙队 {c} 球，丁队 {dd} 球。哪队进的球正好比丙队多 2 球？"
+        "zh": "下图是四支球队上一场比赛进球数的象形统计图（每个球代表 1 个进球）。哪一支队进的球正好比鹰队多 2 个？",
+        "en": "The pictograph below shows the goals four teams scored in their last game (each ball = 1 goal). Which team scored exactly 2 more goals than the Hawks?"
       },
       "vars": {
-        "c": {
+        "c0": {
           "type": "int",
           "min": 1,
-          "max": 6
+          "max": 8
         },
-        "b": {
+        "c1": {
           "type": "int",
           "min": 1,
-          "max": 9
+          "max": 8
         },
-        "dd": {
+        "c2": {
           "type": "int",
           "min": 1,
-          "max": 9
+          "max": 8
+        },
+        "c3": {
+          "type": "int",
+          "min": 1,
+          "max": 8
         }
       },
       "derived": {
-        "a": "c + 2"
+        "T": "c2 + 2",
+        "ci": "0*(c0==T) + 1*(c1==T) + 2*(c2==T) + 3*(c3==T)"
       },
       "constraints": [
-        "b != c + 2",
-        "dd != c + 2"
+        "((c0==T)+(c1==T)+(c2==T)+(c3==T)) == 1"
       ],
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "Team A",
-            "zh": "甲队"
+            "zh": "老虎队",
+            "en": "Tigers"
           },
           {
-            "en": "Team B",
-            "zh": "乙队"
+            "zh": "鳗鱼队",
+            "en": "Eels"
           },
           {
-            "en": "Team C",
-            "zh": "丙队"
+            "zh": "鹰队",
+            "en": "Hawks"
           },
           {
-            "en": "Team D",
-            "zh": "丁队"
+            "zh": "蜜蜂队",
+            "en": "Bees"
           }
         ],
-        "correctIndex": 0
+        "correctIndex": "ci"
       },
       "solution": {
-        "en": "Team C scored {c}; 2 more is {c+2} — that is exactly Team A ({a}). Team B {b} and Team D {dd} are wrong.",
-        "zh": "丙队进 {c} 球，多 2 球就是 {c+2} 球——正好是甲队（{a} 球）。乙队 {b} 球、丁队 {dd} 球都不对。"
+        "zh": "先从图上数出鹰队是 {c2} 个球。比 {c2} 多 2 就是 {T} 个，再到图上找进球数是 {T} 的那一队，就是答案。",
+        "en": "Read the Hawks from the graph: {c2} goals. Two more than {c2} is {T}; find the column with {T} balls in the graph."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q09.png"
+      "originalImage": "assets/originals/2022y2m-q09.png",
+      "diagram": {
+        "type": "pictograph",
+        "labels": [
+          "Tigers 虎",
+          "Eels 鳗",
+          "Hawks 鹰",
+          "Bees 蜂"
+        ],
+        "counts": [
+          "c0",
+          "c1",
+          "c2",
+          "c3"
+        ],
+        "unit": "个进球"
+      }
     },
     {
       "id": "icas22y2m-10",
@@ -516,8 +543,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q10",
       "stem": {
-        "en": "◆ ＝ {a}, ❁ ＝ {b}, ✿ ＝ {c}. What is ◆ ＋ ❁ − ✿ ?",
-        "zh": "◆ ＝ {a}，❁ ＝ {b}，✿ ＝ {c}。那么 ◆ ＋ ❁ − ✿ ＝ ？"
+        "zh": "看下图的算式（每个图形代表一个数）。◆ ＋ ✿ − ❁ 等于多少？",
+        "en": "Look at the equations below (each shape stands for a number). What is ◆ + ✿ − ❁ ?"
       },
       "vars": {
         "a": {
@@ -538,18 +565,50 @@
       },
       "answer": {
         "type": "integer",
-        "expr": "a + b - c"
+        "expr": "a + b - c",
+        "sanity": {
+          "integer": true
+        }
       },
       "sanity": {
         "integer": true,
         "min": 1
       },
       "solution": {
-        "en": "Replace each symbol with its number: {a}＋{b}−{c}＝{a+b-c}.",
-        "zh": "把每个符号换成它的数：{a}＋{b}−{c}＝{a+b-c}。"
+        "zh": "从图上读出 ◆＝{a}、✿＝{b}、❁＝{c}，代入算式：{a}＋{b}−{c}＝{a+b-c}。",
+        "en": "From the picture ◆＝{a}, ✿＝{b}, ❁＝{c}, so {a}+{b}−{c}＝{a+b-c}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q10.png"
+      "originalImage": "assets/originals/2022y2m-q10.png",
+      "diagram": {
+        "type": "symeq",
+        "legend": [
+          {
+            "s": "◆",
+            "v": "a"
+          },
+          {
+            "s": "✿",
+            "v": "b"
+          },
+          {
+            "s": "❁",
+            "v": "c"
+          }
+        ],
+        "rows": [
+          {
+            "terms": [
+              "◆",
+              "+",
+              "✿",
+              "-",
+              "❁"
+            ],
+            "rhs": "?"
+          }
+        ]
+      }
     },
     {
       "id": "icas22y2m-11",
@@ -564,8 +623,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q11",
       "stem": {
-        "en": "Choose THREE cards so that the three numbers add to exactly {T}. (Select three cards)",
-        "zh": "从下面五张卡片中选出「三张」，使三张卡片上的数加起来正好是 {T}。（点选三张卡片）"
+        "zh": "从下图五张卡片中选出「三张」，使三张卡片上的数加起来正好是 {T}。（点选三张卡片）",
+        "en": "Choose THREE of the five cards below so that the three numbers add up to exactly {T}."
       },
       "vars": {
         "v1": {
@@ -609,7 +668,8 @@
         "v3 != v5",
         "v4 != v5",
         "v2 + v5 != v3 + v4",
-        "v2 + v5 != v1 + v4"
+        "v2 + v5 != v1 + v4",
+        "v2 + v5 != v1 + v3"
       ],
       "answer": {
         "type": "choice",
@@ -627,11 +687,22 @@
         ]
       },
       "solution": {
-        "en": "The correct three cards are {v1}, {v3}, {v4}: {v1}＋{v3}＋{v4}＝{T}. No other three cards add to {T}.",
-        "zh": "三张正确的卡片是 {v1}、{v3}、{v4}：{v1}＋{v3}＋{v4}＝{T}。其他任何三张的和都不等于 {T}。"
+        "zh": "把三张卡片相加试试：{v1}＋{v3}＋{v4}＝{T}，正好符合，所以选这三张。",
+        "en": "{v1}+{v3}+{v4}＝{T}, so these three cards are the answer."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q11.png"
+      "originalImage": "assets/originals/2022y2m-q11.png",
+      "diagram": {
+        "type": "cardrow",
+        "cards": [
+          "v1",
+          "v2",
+          "v3",
+          "v4",
+          "v5"
+        ],
+        "slots": 0
+      }
     },
     {
       "id": "icas22y2m-12",
@@ -712,8 +783,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q13",
       "stem": {
-        "en": "Cara got into a lift at level B{b} below ground. She went up {u} levels and down {d} levels, then got out. What level ABOVE ground did she get out at? (B1 is one level below ground; G is ground level; above-ground floors count from 1.)",
-        "zh": "卡拉在地下 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，她出了电梯。她是在地上几楼出的电梯？（B1 是地下 1 层，G 是地面层，地上从 1 楼数起）"
+        "zh": "卡拉从下图这栋楼的 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，然后她出了电梯。她是在地上几楼出的电梯？（G 是地面层，地上从 1 楼数起）",
+        "en": "Cara got into the lift at level B{b} of the building below. She went up {u} levels, then down {d} levels, and got out. What floor ABOVE ground did she get out at? (G is the ground floor; floors above count from 1.)"
       },
       "vars": {
         "b": {
@@ -733,15 +804,33 @@
           "type": "int",
           "min": 1,
           "max": 3
+        },
+        "up": {
+          "type": "pick",
+          "from": [
+            6,
+            7
+          ]
+        },
+        "down": {
+          "type": "pick",
+          "from": [
+            4,
+            5
+          ]
         }
       },
       "constraints": [
         "0 - b + u - d >= 1",
-        "0 - b + u - d <= 6"
+        "0 - b + u - d <= up"
       ],
       "answer": {
         "type": "integer",
-        "expr": "0 - b + u - d"
+        "expr": "0 - b + u - d",
+        "sanity": {
+          "integer": true,
+          "min": 1
+        }
       },
       "unit": "楼",
       "sanity": {
@@ -749,11 +838,16 @@
         "min": 1
       },
       "solution": {
-        "en": "B{b} is level −{b}: −{b}＋{u}−{d}＝{0-b+u-d}, so she got out at level {0-b+u-d} above ground.",
-        "zh": "B{b} 相当于 −{b} 层：−{b}＋{u}−{d}＝{0-b+u-d}，所以她在 {0-b+u-d} 楼出电梯。"
+        "zh": "把 B{b} 层当成 −{b}：从 −{b} 出发，上升 {u} 层、下降 {d} 层，就是 −{b}＋{u}−{d}＝{0-b+u-d}。结果是正数，说明在地面以上，也就是地上 {0-b+u-d} 楼。",
+        "en": "Treat B{b} as −{b}: −{b}+{u}−{d}＝{0-b+u-d}. A positive answer means above ground, so she got out at floor {0-b+u-d}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q13.png"
+      "originalImage": "assets/originals/2022y2m-q13.png",
+      "diagram": {
+        "type": "building",
+        "up": "up",
+        "down": "down"
+      }
     },
     {
       "id": "icas22y2m-13b",
@@ -768,8 +862,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q13",
       "stem": {
-        "en": "Cara got into a lift at level B{b} below ground. She went up {u} levels and down {d} levels, then got out. What level BELOW ground (B?) did she get out at? (B1 is one level below ground.)",
-        "zh": "卡拉在地下 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，她出了电梯。她是在地下哪一层出的电梯？（B1 是地下 1 层）"
+        "zh": "卡拉从下图这栋楼的 B{b} 层进了电梯。电梯上升了 {u} 层，又下降了 {d} 层，然后她出了电梯。她是在地下哪一层出的电梯？（B1 是地下 1 层）",
+        "en": "Cara got into the lift at level B{b} of the building below. She went up {u} levels, then down {d} levels, and got out. What level BELOW ground did she get out at? (B1 is one level below ground.)"
       },
       "vars": {
         "b": {
@@ -789,22 +883,41 @@
           "type": "int",
           "min": 2,
           "max": 6
+        },
+        "up": {
+          "type": "pick",
+          "from": [
+            6,
+            7
+          ]
+        },
+        "down": {
+          "type": "pick",
+          "from": [
+            4,
+            5
+          ]
         }
       },
       "constraints": [
         "0 - b + u - d <= -1",
-        "0 - b + u - d >= -4"
+        "0 - b + u - d >= 0 - down"
       ],
       "answer": {
         "type": "text",
         "expr": "B{0 - (0 - b + u - d)}"
       },
       "solution": {
-        "en": "B{b} is level −{b}: −{b}＋{u}−{d}＝{0-b+u-d}; a negative result means below ground, i.e. level B{0-(0-b+u-d)}.",
-        "zh": "B{b} 相当于 −{b} 层：−{b}＋{u}−{d}＝{0-b+u-d}，负数表示在地下，就是 B{0-(0-b+u-d)} 层。"
+        "zh": "把 B{b} 层当成 −{b}：−{b}＋{u}−{d}＝{0-b+u-d}。结果是负数，说明仍在地下，就是 B{0-(0-b+u-d)} 层。",
+        "en": "Treat B{b} as −{b}: −{b}+{u}−{d}＝{0-b+u-d}. Negative means below ground, i.e. level B{0-(0-b+u-d)}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q13.png"
+      "originalImage": "assets/originals/2022y2m-q13.png",
+      "diagram": {
+        "type": "building",
+        "up": "up",
+        "down": "down"
+      }
     },
     {
       "id": "icas22y2m-14",
@@ -819,8 +932,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q14",
       "stem": {
-        "en": "Mary counted vehicles at a bus stop: {a} cars, {b} bikes, {c} trucks, {dd} buses. How many cars and trucks were there altogether?",
-        "zh": "玛丽在公交站数车：小汽车 {a} 辆，自行车 {b} 辆，卡车 {c} 辆，公交车 {dd} 辆。她看到的小汽车和卡车一共有多少辆？"
+        "zh": "下图是玛丽在公交站数到的车（划记统计表，每 5 个一组）。她看到的小汽车和卡车一共有多少辆？",
+        "en": "The tally chart below shows the vehicles Mary counted at the bus stop (tally marks in groups of 5). How many cars and trucks did she see altogether?"
       },
       "vars": {
         "a": {
@@ -846,18 +959,47 @@
       },
       "answer": {
         "type": "integer",
-        "expr": "a + c"
+        "expr": "a + c",
+        "unit": "辆",
+        "sanity": {
+          "integer": true
+        }
       },
       "unit": "辆",
       "sanity": {
         "integer": true
       },
       "solution": {
-        "en": "Only add the cars and trucks: {a}＋{c}＝{a+c} (bikes and buses are distractors).",
-        "zh": "只要把小汽车和卡车加起来：{a}＋{c}＝{a+c} 辆（自行车和公交车是干扰信息）。"
+        "zh": "从图上数划记：小汽车 {a} 辆，卡车 {c} 辆，一共 {a}＋{c}＝{a+c} 辆。",
+        "en": "Count the tallies: {a} cars and {c} trucks, so {a}+{c}＝{a+c}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q14.png"
+      "originalImage": "assets/originals/2022y2m-q14.png",
+      "diagram": {
+        "type": "tallychart",
+        "rows": [
+          {
+            "kind": "car",
+            "label": "小汽车 Cars",
+            "count": "a"
+          },
+          {
+            "kind": "bike",
+            "label": "自行车 Bikes",
+            "count": "b"
+          },
+          {
+            "kind": "truck",
+            "label": "卡车 Trucks",
+            "count": "c"
+          },
+          {
+            "kind": "bus",
+            "label": "公交车 Buses",
+            "count": "dd"
+          }
+        ]
+      }
     },
     {
       "id": "icas22y2m-15",
@@ -901,7 +1043,8 @@
         "zh": "倒着推：剩下 {L} 颗，说明周六吃之前有 {L}×2＝{2*L} 颗；周五吃之前有 {2*L}×2＝{4*L} 颗。一共摘了 {4*L} 颗。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q15.png"
+      "originalImage": "assets/originals/2022y2m-q15.png",
+      "noFigure": "原题为纯文字应用题（草莓吃一半再吃一半），无图"
     },
     {
       "id": "icas22y2m-16",
@@ -1026,8 +1169,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q18",
       "stem": {
-        "en": "Four children count backwards in turn from {S}: A says “{S}”, B says “{S-1}”, C says “{S-2}”, D says “{S-3}”, then back to A… Following this, who says “{n}”?",
-        "zh": "四个小伙伴轮流从 {S} 往下倒数：甲先说“{S}”，乙接着说“{S-1}”，丙说“{S-2}”，丁说“{S-3}”，然后又轮到甲……照这样数下去，“{n}”会轮到谁说？"
+        "zh": "四个小伙伴围成一圈轮流往下倒数，数数的顺序和头几个数如下图。照这样数下去，「{n}」会轮到谁说？",
+        "en": "Four friends take turns counting backwards around a circle; the order and the first few numbers are shown below. Who will say \"{n}\"?"
       },
       "vars": {
         "S": {
@@ -1039,47 +1182,47 @@
           ]
         },
         "n": {
-          "type": "pick",
-          "from": [
-            4,
-            8,
-            12,
-            16
-          ]
+          "type": "int",
+          "min": 3,
+          "max": 27
         }
       },
       "constraints": [
         "n < S",
-        "(S - n) % 4 == 0"
+        "n >= S - 16"
       ],
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "A",
-            "zh": "甲"
+            "zh": "甲",
+            "en": "A"
           },
           {
-            "en": "B",
-            "zh": "乙"
+            "zh": "乙",
+            "en": "B"
           },
           {
-            "en": "C",
-            "zh": "丙"
+            "zh": "丙",
+            "en": "C"
           },
           {
-            "en": "D",
-            "zh": "丁"
+            "zh": "丁",
+            "en": "D"
           }
         ],
-        "correctIndex": 0
+        "correctIndex": "(S - n) % 4"
       },
       "solution": {
-        "en": "From {S} to {n} is {S-n} numbers; with 4 children per round, {S-n}÷4 divides exactly (remainder 0), so it comes back to the first speaker — A.",
-        "zh": "从 {S} 数到 {n} 一共数了 {S-n} 个数，4 人一轮，{S-n}÷4 正好除尽（余 0），说明又轮回到第 1 个人——甲。"
+        "zh": "从图上看，甲、乙、丙、丁依次报一个数，四个人轮一圈。从 {S} 数到 {n} 一共报了 {S}−{n}＝{S-n} 个数，{S-n}÷4 的余数是 {(S-n)%4}，所以是第 {(S-n)%4+1} 个人报的，也就是答案。",
+        "en": "From the picture the turn order is a four-person cycle. From {S} down to {n} is {S}−{n}＝{S-n} numbers; the remainder of {S-n}÷4 is {(S-n)%4}, so it is the {(S-n)%4+1}th person in the cycle."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q18.png"
+      "originalImage": "assets/originals/2022y2m-q18.png",
+      "diagram": {
+        "type": "standcircle",
+        "start": "S"
+      }
     },
     {
       "id": "icas22y2m-19",
@@ -1172,7 +1315,8 @@
         "zh": "珍妮有 {a}＋{m}＝{a+m} 颗，彼得有 {a+m}−{k}＝{a+m-k} 颗。一共 {a}＋{a+m}＋{a+m-k}＝{3*a+2*m-k} 颗。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q20.png"
+      "originalImage": "assets/originals/2022y2m-q20.png",
+      "noFigure": "原题为纯文字应用题（比多比少求总数），无图"
     },
     {
       "id": "icas22y2m-21",
@@ -1456,8 +1600,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q25",
       "stem": {
-        "en": "Bobby has three rectangular sheets: the yellow sheet is {m} times the red sheet, and the red sheet is {k} times the blue sheet. How many blue sheets exactly cover one yellow sheet?",
-        "zh": "鲍比有三张长方形纸：黄纸是红纸的 {m} 倍大，红纸是蓝纸的 {k} 倍大。一张黄纸能正好铺满多少张蓝纸？"
+        "zh": "鲍比有三张长方形纸，下图按实际大小画出了它们（同样宽，长度不同）。黄纸的大小是红纸的 {m} 倍，红纸是蓝纸的 {k} 倍。一张黄纸能正好铺满多少张蓝纸？",
+        "en": "Bobby has three rectangular sheets, drawn to scale below (same width, different lengths). The yellow sheet is {m} times the size of the red sheet, and the red sheet is {k} times the size of the blue sheet. How many blue sheets exactly cover one yellow sheet?"
       },
       "vars": {
         "m": {
@@ -1479,18 +1623,27 @@
       },
       "answer": {
         "type": "integer",
-        "expr": "m * k"
+        "expr": "m * k",
+        "unit": "张",
+        "sanity": {
+          "integer": true
+        }
       },
       "unit": "张",
       "sanity": {
         "integer": true
       },
       "solution": {
-        "en": "Yellow = {m} red sheets = {m}×{k} blue sheets, so one yellow sheet covers exactly {m*k} blue sheets.",
-        "zh": "黄纸＝{m} 张红纸＝{m}×{k} 张蓝纸，所以一张黄纸正好铺 {m*k} 张蓝纸。"
+        "zh": "红纸是蓝纸的 {k} 倍，黄纸又是红纸的 {m} 倍，所以黄纸是蓝纸的 {k}×{m}＝{m*k} 倍 —— 要 {m*k} 张蓝纸才能正好铺满一张黄纸。",
+        "en": "Red is {k} times blue and yellow is {m} times red, so yellow is {k}×{m}＝{m*k} times blue: {m*k} blue sheets cover one yellow sheet."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q25.png"
+      "originalImage": "assets/originals/2022y2m-q25.png",
+      "diagram": {
+        "type": "papers",
+        "m": "m",
+        "k": "k"
+      }
     },
     {
       "id": "icas22y2m-26",
@@ -1629,8 +1782,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q27",
       "stem": {
-        "en": "There were {s} birds on the pond. Tina records every 5 minutes: at 5 min {a1} fly in, {f1} fly away; at 10 min {a2} in, {f2} away; at 15 min {a3} in, {f3} away; at 20 min {a4} in, {f4} away. How many birds are on the pond after 20 minutes?",
-        "zh": "池塘里原有 {s} 只鸟。蒂娜每 5 分钟记一次：第 5 分钟飞来 {a1} 只、飞走 {f1} 只；第 10 分钟飞来 {a2} 只、飞走 {f2} 只；第 15 分钟飞来 {a3} 只、飞走 {f3} 只；第 20 分钟飞来 {a4} 只、飞走 {f4} 只。20 分钟后池塘里有多少只鸟？"
+        "zh": "池塘里原有 {s} 只鸟。蒂娜每隔 5 分钟记录一次飞来的和飞走的鸟数（见下表）。20 分钟后池塘里有多少只鸟？",
+        "en": "There were {s} birds on the pond. Tina recorded the birds arriving and flying away every 5 minutes (see the table). How many birds are on the pond after 20 minutes?"
       },
       "vars": {
         "s": {
@@ -1695,11 +1848,41 @@
         "min": 1
       },
       "solution": {
-        "en": "Add each change in turn: {s}＋{a1}−{f1}＋{a2}−{f2}＋{a3}−{f3}＋{a4}−{f4}＝{T} birds.",
-        "zh": "把每一次变化接着算：{s}＋{a1}−{f1}＋{a2}−{f2}＋{a3}−{f3}＋{a4}−{f4}＝{T} 只。"
+        "zh": "把表里的每次变化依次算下来：{s}＋{a1}−{f1}＝{s+a1-f1}；{s+a1-f1}＋{a2}−{f2}＝{s+a1+a2-f1-f2}；再 {a3} 进 {f3} 出得 {s+a1+a2+a3-f1-f2-f3}；最后 {a4} 进 {f4} 出，得 {T} 只。",
+        "en": "Work through the table step by step: {s}+{a1}−{f1}＝{s+a1-f1}; then +{a2}−{f2}＝{s+a1+a2-f1-f2}; then +{a3}−{f3}＝{s+a1+a2+a3-f1-f2-f3}; finally +{a4}−{f4}＝{T}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q27.png"
+      "originalImage": "assets/originals/2022y2m-q27.png",
+      "diagram": {
+        "type": "datatable",
+        "cols": [
+          "分钟 min",
+          "飞来 Arrive",
+          "飞走 Fly away"
+        ],
+        "rows": [
+          [
+            "5",
+            "a1",
+            "f1"
+          ],
+          [
+            "10",
+            "a2",
+            "f2"
+          ],
+          [
+            "15",
+            "a3",
+            "f3"
+          ],
+          [
+            "20",
+            "a4",
+            "f4"
+          ]
+        ]
+      }
     },
     {
       "id": "icas22y2m-28",
@@ -1714,8 +1897,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q28",
       "stem": {
-        "en": "Gina has {n} differently coloured blocks (yellow, blue, green, pink…). She builds an {n}-level tower with the green block fixed at the bottom. How many DIFFERENT towers can she build?",
-        "zh": "吉娜有 {n} 块颜色不同的积木（黄、蓝、绿、粉……），想搭一座 {n} 层的高塔，其中绿积木必须在最底层。她能搭出多少座不一样的塔？"
+        "zh": "吉娜有 {n} 块颜色不同的积木（见下图，每块颜色都不一样）。她想搭一座 {n} 层的高塔，其中绿积木必须在最底层。她能搭出多少座不一样的塔？",
+        "en": "Gina has {n} blocks, all different colours (see the picture). She builds towers {n} blocks high, and the green block must be at the bottom. How many different towers can she build?"
       },
       "vars": {
         "n": {
@@ -1724,22 +1907,50 @@
             4,
             5
           ]
+        },
+        "off": {
+          "type": "int",
+          "min": 0,
+          "max": 5
         }
       },
       "answer": {
         "type": "integer",
-        "expr": "(n-1)*(n-2)*(n-3)"
+        "expr": "(n-1)*(n-2)*(n-3)",
+        "unit": "座",
+        "sanity": {
+          "integer": true
+        }
       },
       "unit": "座",
       "sanity": {
         "integer": true
       },
       "solution": {
-        "en": "Green is fixed at the bottom; the remaining {n-1} blocks go on top: {n-1} choices for level 2, {n-2} for level 3, {n-3} for level 4… = {(n-1)*(n-2)*(n-3)} towers.",
-        "zh": "绿积木固定在最底层不用动，剩下的 {n-1} 块排上面：第 2 层有 {n-1} 种选法，第 3 层剩 {n-2} 种，第 4 层剩 {n-3} 种……一共 {(n-1)*(n-2)*(n-3)} 座。"
+        "zh": "绿积木已经固定在最底层，剩下 {n-1} 个位置要把 {n-1} 种颜色的积木排进去：第一个位置有 {n-1} 种选法，第二个有 {n-2} 种，第三个有 {n-3} 种，所以一共 {n-1}×{n-2}×{n-3}＝{(n-1)*(n-2)*(n-3)} 座。",
+        "en": "Green is fixed at the bottom; the remaining {n-1} places take the other {n-1} colours: {n-1}×{n-2}×{n-3}＝{(n-1)*(n-2)*(n-3)} towers."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q28.png"
+      "originalImage": "assets/originals/2022y2m-q28.png",
+      "diagram": {
+        "type": "blockstack",
+        "labels": [
+          "黄",
+          "蓝",
+          "绿",
+          "粉",
+          "紫"
+        ],
+        "fills": [
+          "#f5c518",
+          "#9fd3f0",
+          "#7bc47f",
+          "#f2a6b3",
+          "#b25be0"
+        ],
+        "count": "n",
+        "offset": "off"
+      }
     },
     {
       "id": "icas22y2m-29",
@@ -1754,8 +1965,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q29",
       "stem": {
-        "en": "◆＋▲＋●＝ {A}; ▲＋▲＋●＋●＝ {B}; ◆＋◆＋▲＋●＋●＋●＝ {C}. What number does ● stand for?",
-        "zh": "◆＋▲＋●＝ {A}；▲＋▲＋●＋●＝ {B}；◆＋◆＋▲＋●＋●＋●＝ {C}。● 代表的数是多少？"
+        "zh": "看下图的三道算式（◆、▲、● 各代表一个数）。● 代表的数是多少？",
+        "en": "Look at the three equations below (◆, ▲ and ● each stand for a number). What number does ● stand for?"
       },
       "vars": {
         "c": {
@@ -1798,11 +2009,54 @@
         "min": 1
       },
       "solution": {
-        "en": "Divide the 2nd equation by 2: ▲＋●＝{B/2}. From the 1st, ◆＝{A}−{B/2}＝{d}. Put into the 3rd: ▲＋3●＝{C}−2×{d}＝{C-2*d}; subtract ▲＋●＝{B/2} to get 2●＝{C-2*d-B/2}, so ●＝{c}.",
-        "zh": "第二式两边除以 2：▲＋●＝{B/2}。由第一式：◆＝{A}−{B/2}＝{d}。代入第三式：▲＋3●＝{C}−2×{d}＝{C-2*d}；再减去▲＋●＝{B/2}，得 2●＝{C-2*d-B/2}，所以 ●＝{c}。"
+        "zh": "第二式：▲＋▲＋●＋●＝{B}，所以 ▲＋●＝{B/2}。\n第一式：◆＋▲＋●＝{A}，把 ▲＋● 换成 {B/2}，得 ◆＝{A}−{B/2}＝{A-B/2}。\n第三式：◆＋◆＋▲＋●＋●＋●＝{C} 可以拆成 (◆＋▲＋●)＋◆＋●＋●＝{C}。把 ◆＋▲＋●＝{A}、◆＝{A-B/2} 代进去：{A}＋{A-B/2}＋●＋●＝{C}，所以 ●＋●＝{C-2*A+B/2}，●＝{c}。",
+        "en": "Equation 2 gives ▲+●＝{B/2}. Substituting into equation 1 gives ◆＝{A}−{B/2}＝{A-B/2}. Equation 3 can be regrouped as (◆+▲+●)+◆+●+●＝{C}; with ◆+▲+●＝{A} and ◆＝{A-B/2} this gives ●+●＝{C-2*A+B/2}, so ●＝{c}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
-      "originalImage": "assets/originals/2022y2m-q29.png"
+      "originalImage": "assets/originals/2022y2m-q29.png",
+      "diagram": {
+        "type": "symeq",
+        "rows": [
+          {
+            "terms": [
+              "◆",
+              "+",
+              "▲",
+              "+",
+              "●"
+            ],
+            "rhs": "A"
+          },
+          {
+            "terms": [
+              "▲",
+              "+",
+              "▲",
+              "+",
+              "●",
+              "+",
+              "●"
+            ],
+            "rhs": "B"
+          },
+          {
+            "terms": [
+              "◆",
+              "+",
+              "◆",
+              "+",
+              "▲",
+              "+",
+              "●",
+              "+",
+              "●",
+              "+",
+              "●"
+            ],
+            "rhs": "C"
+          }
+        ]
+      }
     },
     {
       "id": "icas22y2m-30",

@@ -68,7 +68,12 @@ for (const tpl of list) {
 
   // 配图一致性：题干说到"图"就必须有 image 或 diagram；写了 diagram 就必须真能渲染
   let figErr = '';
-  if (refsFigure(tpl) && !tpl.image && !tpl.diagram) figErr = '题干提到图，但既无 image 也无 diagram';
+  // 真题导入的题（有 originalImage）只要原题带图，就必须自己画图；
+  // 确实无图的应用题要显式写 noFigure 说明原因，否则 FAIL —— 防止把图"退化成文字"。
+  if (tpl.originalImage && !tpl.diagram && !tpl.image && !tpl.noFigure) {
+    figErr = '真题模板缺少配图：请加 diagram（简化 SVG），或写 noFigure 说明原题确实无图';
+  }
+  else if (refsFigure(tpl) && !tpl.image && !tpl.diagram) figErr = '题干提到图，但既无 image 也无 diagram';
   else if (tpl.diagram && (!qs.length || !qs.every(q => q.diagramSvg))) figErr = 'diagram 渲染为空';
   else if ((tpl.answer && tpl.answer.optionsSvg) &&
            !qs.every(q => Array.isArray(q.optionsSvg) && q.optionsSvg.length === q.options.length && q.optionsSvg.every(Boolean))) {

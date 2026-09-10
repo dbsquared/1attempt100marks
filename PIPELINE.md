@@ -120,14 +120,29 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 3. **能用 SVG 模板按变量实时画吗？**
    - **凡题干里带变量的图，必须走这条**（静态原题图数值一变必然对不上）。
    - 模板加 `"diagram": { "type": "...", ... }`，参数写变量名（如 `{"type":"stick","parts":"k"}`）。
-   - 现有类型见 `assets/js/diagrams.js`：`stick`(小棍分段) / `numberline`(数轴) / `hexagon`(六边形) /
-     `squareposts`(正方形围栏) / `lanterns`(循环灯笼) / `vase`(花瓶数花) / `house`(房子缺形状) /
-     `clocks`(四个钟面) / `bookshelf`(书架取书) / `seasonwheel`(四季圆盘) / `giftboxes`(四个礼物盒) /
-     `coins`(硬币面值) / `tiling`(方砖缺块) / `board`(棋盘走子) / `pens`(猪圈赶猪)。
-     需要新类型就在 diagrams.js 加一个函数并在本节登记。
+   - 现有 28 种类型见 `assets/js/diagrams.js`（`Diagrams.types` 可列出）：
+
+     | 类别 | 类型 |
+     |---|---|
+     | 计数/数数 | `vase` 花瓶数花、`pictograph` 象形统计图、`tallychart` 划记统计表 |
+     | 平面/立体图形 | `hexagon` 六边形缺边、`house` 房子缺形状、`stickrow` 小棒三角串、`blockstack` 彩色积木塔(3D)、`giftboxes` 四个礼物盒(3D)、`tiling`+`tilepatch` 方砖与补块 |
+     | 位置/方向 | `numberline` 数轴箭头、`board` 棋盘走子、`boardopt` 棋盘候选格、`bookshelf` 书架取书、`building` 楼层剖面、`standcircle` 围圈轮流数 |
+     | 时间/数据 | `clocks` 四个钟面、`datatable` 数据表、`seasonwheel` 四季圆盘、`weathercard` 天气日期卡 |
+     | 规律/代数 | `lanterns` 循环灯笼、`symeq` 图形符号算式、`stick` 小棍分段 |
+     | 度量/钱币 | `coins` 硬币面值、`papers` 按比例的长方形纸、`squareposts` 正方形围栏柱子、`cardrow` 数字卡片 |
+
+     需要新类型就在 diagrams.js 加一个函数，并在本节登记（`Diagrams.types` 会自动包含）。
+   - 需要立体的（礼物盒、积木塔）用 `box3d()` 画三个面，**不要**用平面矩形代替 —— 形状/大小是考点。
 4. **实在画不出来 / 拿不准？** 把该题单独列出来交给用户判断，**不要**默默留空或硬塞一张对不上的图。
 
-> 判定口诀：**变量题禁止引用静态原题图**；固定答案的看图题可以保留静态原题图（`image`）。
+> **硬规矩（用户明确要求）：真题里只要有图，就必须自己画一张简化 SVG。**
+> 「从图里读出规律」本身就是考点，把图改写成文字＝跳过考点。所以：
+> - 导入了 `originalImage` 的模板，**必须**同时有 `diagram`（或 `image`）；
+> - 确实没有图的纯文字应用题，必须写 `"noFigure": "原题为纯文字应用题（……），无图"`
+>   说明原因，否则 `test-bank` 直接 FAIL。
+> - 图里已经给出的数值/关系（谁先谁后、几根、几层），**不要再抄进题干**，
+>   题干只说"看下图"；在 `solution` 里再解释怎么从图上读出来。
+>
 > `node tools/test-bank.js` 会自动校验：题干提到「图」却没有 `image` / `diagram` 会直接 FAIL。
 
 ### 4.5.1 选项是图时：必须用 `answer.optionsSvg`（禁止用文字描述图形）
@@ -152,6 +167,27 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 - `optionsSvg[i]` 与 `options[i]` 一一对应，生成器会**跟着选项一起洗牌**，不需要自己处理顺序。
 - 选项文字用中性编号（甲/乙/丙/丁），不要用会泄题的描述。
 - 目标位置随变量变化时，用 `derived` 算出每个候选的坐标（如 `o0r`/`o0c`），再在 spec 里写变量名。
+- 数字/坐标一律**用表达式算出**，不要手工列 4 个枚举值，否则改一个变量就得改四处。
+
+### 4.5.2 选择题答案随变量变化：`correctIndex` 可以写表达式
+
+不要为了"答案会变"就把图题做成固定答案。`correctIndex` 支持表达式字符串，常用两招：
+
+- **查表/定位**：把"哪个选项是对的"算出来。
+  `"correctIndex": "0*(c0==T) + 1*(c1==T) + 2*(c2==T) + 3*(c3==T)"`
+  （比较运算返回 1/0，四项相加就是命中的下标；配合
+  `constraints: ["((c0==T)+(c1==T)+(c2==T)+(c3==T)) == 1"]` 保证**恰好一个**命中。）
+- **取模定人**：`"correctIndex": "(S - n) % 4"`（轮流数数轮到第几个人）。
+
+同理，图解里要用的中间量（每队球数、每个候选格的坐标）都写进 `derived`，
+spec 里直接写变量名即可，diagrams 会按当前变量重算。
+
+### 4.5.3 唯一解必须自己验算（否则学生会"选错却判对"）
+
+多选题/推理题一定要检查**有没有第二组解**。踩过的坑：Q11「选三张和为 T」，
+约束里漏了 `v2 + v5 != v1 + v3`，于是 `v2+v4+v5` 有时也等于 T，学生选它也会被判对。
+做法：把 10 种三张组合穷举一遍，只允许唯一解，
+写成 `constraints`，并在 `tools/test-figs.js` 里加一条断言。
 
 ### 4.6 变式检查（每道题**必做**）
 
@@ -174,6 +210,9 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 - 运算：`+ - * / % ^`（`^` 为乘方），比较 `== != < <= > >=`，逻辑 `&& || !`
 - 函数：`abs sqrt floor ceil round sign pow exp log min max gcd lcm roundTo(x,n) mod(a,b) fracPart`
 - 常量：`pi` / `PI` / `e`
+- **比较/逻辑运算的结果是 1 或 0**，可以直接参与算术（用来"查表"选下标、做条件取值）：
+  `0*(c0==T)+1*(c1==T)` 就是"命中项的下标"；没有三目运算符 `? :`，条件取值用
+  `cond*x + (1-cond)*y` 这种写法。
 
 ## 6. 高级
 
@@ -188,9 +227,19 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 ## 7. 自检（强制）
 
 ```bash
-node tools/test-bank.js                    # 全库自检
+node tools/test-bank.js                       # 全库自检（生成/判分/配图/变式四道闸门）
 node tools/test-bank.js data/imports/xx.json  # 只检新批次
+node tools/test-figs.js                       # 配图语义的独立交叉验算
+node tools/test-srs.js && node tools/test-sync.js
 ```
+
+**`test-figs.js` 为什么必要**：`test-bank.js` 只检查"图能不能渲染、题干有没有提到图"，
+而**图里画的数对不对、答案和图形是否自洽**它看不出来。`test-figs.js` 用**另一种算法**
+重算一遍答案，并直接数 SVG 里画出来的元素（小棒根数、划记数量、球数、层数、刻度位置、
+箭头朝向、长度比……），对不上就 FAIL。改动任何 `diagram` 或图题模板后都要跑它。
+
+已经抓到过的真实错误：Q3 规律写成 3n（应为共用边的 2n+1）、Q3 共用边重复画导致小棒数
+对不上、Q7 数轴箭头指反、Q11 存在第二组解、Q29 解析里的等式变形不成立。
 
 输出 `✓ 全部模板通过` 才可提交。常见失败：
 

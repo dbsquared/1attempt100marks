@@ -79,7 +79,7 @@
     numberline: function (spec, vars) {
       var E = num(spec.E, vars), n = Math.max(1, Math.min(30, Math.round(num(spec.n, vars))));
       var k = Math.max(1, Math.min(n, Math.round(num(spec.k, vars))));
-      var W = 480, H = 106, x0 = 30, x1 = 450, y = 64, step = (x1 - x0) / n;
+      var W = 460, H = 106, x0 = 28, x1 = 432, y = 64, step = (x1 - x0) / n;
       var s = svgOpen(W, H, 'number line 0 to ' + E);
       s += '<line x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '" stroke="' + INK + '" stroke-width="2"/>';
       for (var i = 0; i <= n; i++) {
@@ -88,9 +88,10 @@
       }
       s += '<text x="' + x0 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">0</text>';
       s += '<text x="' + x1 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + esc(E) + '</text>';
+      // 箭头必须「向下指」到数轴上的那个刻度（原来画成向上指，方向反了）
       var kx = x0 + k * step;
-      s += '<polygon points="' + kx.toFixed(2) + ',' + (y - 34) + ' ' + (kx - 9).toFixed(2) + ',' + (y - 17) + ' ' + (kx + 9).toFixed(2) + ',' + (y - 17) + '" fill="' + BLUE + '"/>';
-      s += '<line x1="' + kx.toFixed(2) + '" y1="' + (y - 17) + '" x2="' + kx.toFixed(2) + '" y2="' + (y - 10) + '" stroke="' + BLUE + '" stroke-width="2.5"/>';
+      s += '<line x1="' + kx.toFixed(2) + '" y1="' + (y - 48) + '" x2="' + kx.toFixed(2) + '" y2="' + (y - 20) + '" stroke="' + RED + '" stroke-width="3"/>';
+      s += '<polygon points="' + kx.toFixed(2) + ',' + (y - 8) + ' ' + (kx - 8).toFixed(2) + ',' + (y - 22) + ' ' + (kx + 8).toFixed(2) + ',' + (y - 22) + '" fill="' + RED + '"/>';
       s += '</svg>';
       return s;
     },
@@ -390,8 +391,8 @@
       var p = [0, 1, 2, 3].map(function (k) {
         return Math.max(0, Math.min(12, Math.round(num(spec['p' + 'ABCD'[k]], vars))));
       });
-      var pw = 124, ph = 156, gap = 42, x0 = 8, y0 = 22, i, j, k;
-      var W = 4 * pw + 3 * gap + 16, H = ph + 62;
+      var pw = 92, ph = 150, gap = 28, x0 = 10, y0 = 22, i, j, k;
+      var W = 4 * pw + 3 * gap + 20, H = ph + 60;
       var s = svgOpen(W, H, 'four pig pens');
       for (k = 0; k < 4; k++) {
         var bx = x0 + k * (pw + gap);
@@ -399,10 +400,10 @@
         s += '<text x="' + (bx + pw / 2) + '" y="' + (y0 + ph + 26) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + 'ABCD'[k] + '</text>';
         for (i = 0; i < p[k]; i++) {
           var col = i % 3, rowi = Math.floor(i / 3);
-          s += pig(bx + 26 + col * 34, y0 + 30 + rowi * 34, 13);
+          s += pig(bx + 24 + col * 27, y0 + 28 + rowi * 30, 11);
         }
         if (k < 3) {
-          var ax = bx + pw + 4;
+          var ax = bx + pw + 3;
           s += '<line x1="' + ax + '" y1="' + (y0 + ph / 2) + '" x2="' + (ax + gap - 12) + '" y2="' + (y0 + ph / 2) + '" stroke="' + INK + '" stroke-width="2.5"/>';
           s += '<polygon points="' + (ax + gap - 12) + ',' + (y0 + ph / 2) + ' ' + (ax + gap - 24) + ',' + (y0 + ph / 2 - 7) + ' ' + (ax + gap - 24) + ',' + (y0 + ph / 2 + 7) + '" fill="' + INK + '"/>';
         }
@@ -413,7 +414,428 @@
     }
   };
 
+  /* 单元格文本：数字/变量名 -> 数字；其它（如 "?"）原样输出 */
+  function cellText(v, vars) {
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'number') return fmt(v);
+    var s = String(v);
+    if (vars && Object.prototype.hasOwnProperty.call(vars, s)) return fmt(vars[s]);
+    if (/^\s*-?[\d.]+\s*$/.test(s)) return fmt(parseFloat(s));
+    return s;
+  }
+
+  /* 颜色明暗（amt>0 变亮，<0 变暗） */
+  function shade(hex, amt) {
+    var n = parseInt(String(hex).slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    function f(c) { var v = amt >= 0 ? c + (255 - c) * amt : c * (1 + amt); return Math.max(0, Math.min(255, Math.round(v))); }
+    return '#' + ((1 << 24) + (f(r) << 16) + (f(g) << 8) + f(b)).toString(16).slice(1);
+  }
+
+  /* 立体盒子：(x,y) 正面左上角，w/h 正面宽高，d 进深（右上方向） */
+  function box3d(x, y, w, h, d, fill) {
+    var dx = d, dy = -d * 0.62, o = '';
+    o += '<polygon points="' + x + ',' + y + ' ' + (x + dx) + ',' + (y + dy) + ' ' + (x + w + dx) + ',' + (y + dy) + ' ' + (x + w) + ',' + y +
+         '" fill="' + shade(fill, 0.3) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+    o += '<polygon points="' + (x + w) + ',' + y + ' ' + (x + w + dx) + ',' + (y + dy) + ' ' + (x + w + dx) + ',' + (y + h + dy) + ' ' + (x + w) + ',' + (y + h) +
+         '" fill="' + shade(fill, -0.2) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+    o += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="1.6"/>';
+    o += '<rect x="' + (x + w / 2 - 6) + '" y="' + y + '" width="12" height="' + h + '" fill="#e5484d" opacity="0.8"/>';
+    o += '<rect x="' + x + '" y="' + (y + h / 2 - 6) + '" width="' + w + '" height="12" fill="#e5484d" opacity="0.8"/>';
+    return o;
+  }
+
+  /* 小球（象形统计图里的一个单位） */
+  function ballIcon(cx, cy, r) {
+    var o = '<circle data-u="ball" cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#ffffff" stroke="' + INK + '" stroke-width="1.6"/>';
+    o += '<polygon points="' + (cx - r * 0.42).toFixed(1) + ',' + (cy - r * 0.28).toFixed(1) + ' ' + (cx + r * 0.42).toFixed(1) + ',' + (cy - r * 0.28).toFixed(1) +
+         ' ' + (cx + r * 0.6).toFixed(1) + ',' + (cy + r * 0.42).toFixed(1) + ' ' + cx + ',' + (cy + r * 0.78).toFixed(1) + ' ' +
+         (cx - r * 0.6).toFixed(1) + ',' + (cy + r * 0.42).toFixed(1) + '" fill="' + INK + '"/>';
+    var angs = [-54, 54, 18, 90, 162];
+    for (var i = 0; i < angs.length; i++) {
+      var a = (angs[i] - 90) * Math.PI / 180;
+      o += '<line x1="' + (cx + r * 0.42 * Math.cos(a) * 1.0).toFixed(1) + '" y1="' + (cy + r * 0.42 * Math.sin(a)).toFixed(1) +
+           '" x2="' + (cx + r * 0.95 * Math.cos(a)).toFixed(1) + '" y2="' + (cy + r * 0.95 * Math.sin(a)).toFixed(1) +
+           '" stroke="' + INK + '" stroke-width="1.2"/>';
+    }
+    return o;
+  }
+
+  /* 划记法：5 个一组（4 竖 + 1 斜） */
+  function tally(cx0, cy, n) {
+    var o = '', i, gx;
+    for (i = 0; i < n; i++) {
+      gx = cx0 + Math.floor(i / 5) * 46 + (i % 5) * 9;
+      if (i % 5 === 4) {
+        o += '<line data-u="tally" x1="' + (gx - 30) + '" y1="' + (cy + 12) + '" x2="' + (gx + 2) + '" y2="' + (cy - 14) + '" stroke="' + INK + '" stroke-width="2.6"/>';
+      } else {
+        o += '<line data-u="tally" x1="' + gx + '" y1="' + (cy - 14) + '" x2="' + gx + '" y2="' + (cy + 14) + '" stroke="' + INK + '" stroke-width="2.6"/>';
+      }
+    }
+    return o;
+  }
+
+  var TYPES3 = {
+    /* 天气卡片：今天几月几日星期几 + 天气（Q2） */
+    weathercard: function (spec, vars) {
+      var d = Math.round(num(spec.day, vars)), mm = Math.round(num(spec.month, vars)) || 6;
+      var sunny = spec.weather !== 'rain';
+      var W = 420, H = 200, s = svgOpen(W, H, 'today weather card');
+      s += '<rect x="8" y="8" width="404" height="184" rx="14" fill="#eaf4ff" stroke="' + INK + '" stroke-width="2"/>';
+      // 太阳 / 云
+      if (sunny) {
+        s += '<circle cx="102" cy="86" r="34" fill="' + YELLOW + '" stroke="' + INK + '" stroke-width="1.6"/>';
+        for (var i = 0; i < 8; i++) {
+          var a = i * Math.PI / 4;
+          s += '<line x1="' + (102 + 42 * Math.cos(a)).toFixed(1) + '" y1="' + (86 + 42 * Math.sin(a)).toFixed(1) +
+               '" x2="' + (102 + 56 * Math.cos(a)).toFixed(1) + '" y2="' + (86 + 56 * Math.sin(a)).toFixed(1) +
+               '" stroke="' + INK + '" stroke-width="3" stroke-linecap="round"/>';
+        }
+        s += '<circle cx="92" cy="80" r="3" fill="' + INK + '"/><circle cx="112" cy="80" r="3" fill="' + INK + '"/>';
+        s += '<path d="M90,96 Q102,108 114,96" fill="none" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>';
+      } else {
+        s += '<ellipse cx="102" cy="92" rx="46" ry="28" fill="#cfd8e3" stroke="' + INK + '" stroke-width="1.6"/>';
+        for (var r = 0; r < 4; r++) s += '<line x1="' + (78 + r * 16) + '" y1="124" x2="' + (72 + r * 16) + '" y2="142" stroke="' + BLUE + '" stroke-width="2.6" stroke-linecap="round"/>';
+      }
+      s += '<rect x="186" y="52" width="204" height="96" rx="12" fill="#ffffff" stroke="' + RED + '" stroke-width="3"/>';
+      s += '<text x="288" y="88" font-size="20" font-weight="700" text-anchor="middle" fill="' + INK + '">Today is</text>';
+      s += '<text x="288" y="122" font-size="21" font-weight="700" text-anchor="middle" fill="' + RED + '">' + mm + ' 月 ' + d + ' 日 · 星期一</text>';
+      s += '<text x="102" y="172" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">' + (sunny ? 'It is sunny. 晴天' : 'It is raining. 下雨') + '</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 小棒搭图形：连成一串、相邻三角形共用一条边（Q3，第 k 个图形用 2k+1 根） */
+    stickrow: function (spec, vars) {
+      var shown = Math.max(1, Math.min(5, Math.round(num(spec.shapes, vars) || 3)));
+      var u = 56, h = u * 0.86, B = 132, T = B - h, pad = 16, gap = 30;
+      var span = function (k) { return (k + 1) * u / 2; };   // 图形 k 的总跨度
+      var W = pad * 2 + gap * (shown - 1), k;
+      for (k = 1; k <= shown; k++) W += span(k);
+      var s = svgOpen(Math.max(320, W), 200, 'stick shapes in a pattern');
+      var x0 = pad, i;
+      for (k = 1; k <= shown; k++) {
+        var seen = {};   // 相邻三角形共用的边只算一根小棒
+        for (i = 0; i < k; i++) {
+          var tri;
+          if (i % 2 === 0) {                       // 尖朝上的三角形
+            var xl = x0 + (i / 2) * u;
+            tri = [[xl, B], [xl + u, B], [xl + u / 2, T]];
+          } else {                                  // 尖朝下、与上一个共用一条边
+            var xb = x0 + ((i + 1) / 2) * u;
+            tri = [[xb, B], [xb - u / 2, T], [xb + u / 2, T]];
+          }
+          for (var e = 0; e < 3; e++) {
+            var p = tri[e], q = tri[(e + 1) % 3];
+            var a1 = p[0].toFixed(1) + ',' + p[1].toFixed(1), b1 = q[0].toFixed(1) + ',' + q[1].toFixed(1);
+            var key = a1 < b1 ? a1 + '|' + b1 : b1 + '|' + a1;
+            if (seen[key]) continue;
+            seen[key] = 1;
+            s += '<line data-u="stick" x1="' + p[0].toFixed(1) + '" y1="' + p[1].toFixed(1) + '" x2="' + q[0].toFixed(1) + '" y2="' + q[1].toFixed(1) +
+                 '" stroke="#a9743f" stroke-width="6" stroke-linecap="round"/>';
+          }
+        }
+        s += '<text x="' + (x0 + span(k) / 2).toFixed(1) + '" y="176" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">shape ' + k + '</text>';
+        x0 += span(k) + gap;
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 数字卡片排（Q5 摆两位数 / Q11 选三张） */
+    cardrow: function (spec, vars) {
+      var cards = spec.cards || [];
+      var slots = Math.max(0, Math.round(num(spec.slots, vars) || 0));
+      var cw = 52, ch = 80, gap = 12, pad = 14;
+      var W = pad * 2 + (cards.length + slots) * cw + (cards.length + slots - 1) * gap;
+      var H = 132, s = svgOpen(W, H, 'number cards'), pal = ['#f4f6c8', '#f7d774', '#f6ccd8', '#bfe3ff', '#dcd8f5'];
+      var x = pad, i;
+      for (i = 0; i < cards.length; i++) {
+        s += '<rect data-u="card" x="' + x + '" y="14" width="' + cw + '" height="' + ch + '" rx="8" fill="' + pal[i % pal.length] + '" stroke="' + INK + '" stroke-width="2.4"/>';
+        s += '<rect x="' + (x + 5) + '" y="19" width="' + (cw - 10) + '" height="' + (ch - 10) + '" rx="5" fill="none" stroke="' + BLUE + '" stroke-width="1.6"/>';
+        s += '<text x="' + (x + cw / 2) + '" y="' + (14 + ch / 2 + 12) + '" font-size="32" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(fmt(num(cards[i], vars))) + '</text>';
+        x += cw + gap;
+      }
+      for (i = 0; i < slots; i++) {
+        s += '<rect x="' + x + '" y="14" width="' + cw + '" height="' + ch + '" rx="8" fill="#ffffff" stroke="' + BLUE + '" stroke-width="2.6" stroke-dasharray="8 6"/>';
+        x += cw + gap;
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四个礼物盒，立体（3D）——大小/形状是解题关键（Q8） */
+    giftboxes: function (spec, vars) {
+      var pick = Math.max(0, Math.min(3, Math.round(num(spec.pick, vars))));
+      var W = 470, H = 232, base = 200, cols = ['#f2a6b3', '#9fd3f0', '#f7d774', '#b7e3a8'];
+      var boxes = [
+        { x: 12, w: 148, h: 36, d: 26, t: 'A' },
+        { x: 192, w: 50, h: 106, d: 22, t: 'B' },
+        { x: 266, w: 46, h: 42, d: 18, t: 'C' },
+        { x: 340, w: 90, h: 66, d: 24, t: 'D' }
+      ];
+      var s = svgOpen(W, H, 'four present boxes in 3D');
+      s += '<line x1="6" y1="' + (base + 2) + '" x2="' + (W - 6) + '" y2="' + (base + 2) + '" stroke="' + INK + '" stroke-width="2"/>';
+      boxes.forEach(function (b, i) {
+        var y = base - b.h;
+        if (i === pick) s += '<rect x="' + (b.x - 10) + '" y="' + (y - b.d * 0.62 - 10) + '" width="' + (b.w + b.d + 20) + '" height="' + (b.h + b.d * 0.62 + 20) +
+          '" fill="none" stroke="' + RED + '" stroke-width="3" stroke-dasharray="9 6" rx="4"/>';
+        s += box3d(b.x, y, b.w, b.h, b.d, cols[i]);
+        s += '<text x="' + (b.x + b.w / 2) + '" y="' + (base + 30) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + (i === pick ? RED : INK) + '">' + b.t + '</text>';
+      });
+      s += '</svg>';
+      return s;
+    },
+
+    /* 象形统计图：每列 label，count 个球，附 KEY（Q9） */
+    pictograph: function (spec, vars) {
+      var labels = spec.labels || [], counts = spec.counts || [];
+      var maxC = 1, i, j;
+      counts.forEach(function (c) { maxC = Math.max(maxC, Math.round(num(c, vars))); });
+      var r = 12, stepY = 26, colW = 72, pad = 18, baseY = 38 + maxC * stepY;
+      var W = pad * 2 + labels.length * colW + 142;
+      var s = svgOpen(W, baseY + 76, 'pictograph of goals');
+      s += '<line x1="' + (pad - 6) + '" y1="' + (baseY + 8) + '" x2="' + (pad + labels.length * colW + 4) + '" y2="' + (baseY + 8) + '" stroke="' + INK + '" stroke-width="2"/>';
+      for (i = 0; i < labels.length; i++) {
+        var cx = pad + i * colW + colW / 2, n = Math.round(num(counts[i], vars));
+        for (j = 0; j < n; j++) s += ballIcon(cx, baseY - 6 - j * stepY, r);
+        s += '<text x="' + cx + '" y="' + (baseY + 32) + '" font-size="16" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(labels[i]) + '</text>';
+      }
+      var kx = pad + labels.length * colW + 14;
+      s += '<rect x="' + kx + '" y="26" width="132" height="86" rx="8" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<text x="' + (kx + 66) + '" y="50" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">KEY 图例</text>';
+      s += ballIcon(kx + 30, 76, 11);
+      s += '<text x="' + (kx + 50) + '" y="82" font-size="13" fill="' + INK + '">= 1 个进球</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 楼层剖面：地面 G，地上 1..up，地下 B1..Bdown（Q13） */
+    building: function (spec, vars) {
+      var up = Math.max(2, Math.min(8, Math.round(num(spec.up, vars) || 6)));
+      var down = Math.max(1, Math.min(6, Math.round(num(spec.down, vars) || 4)));
+      var rowH = 30, w = 132, x = 24, padT = 16;
+      var H = padT * 2 + (up + down) * rowH + 34;
+      var s = svgOpen(w + 48, H, 'building floors');
+      var y = padT, i;
+      for (i = up; i >= 1; i--) {
+        s += '<text x="' + (x - 8) + '" y="' + (y + 20) + '" font-size="14" text-anchor="end" fill="' + INK + '">' + i + '</text>';
+        for (var c = 0; c < 4; c++) s += '<rect x="' + (x + 8 + c * 30) + '" y="' + (y + 3) + '" width="20" height="20" fill="#fdf3c0" stroke="' + INK + '" stroke-width="1.2"/>';
+        s += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1.4"/>';
+        y += rowH;
+      }
+      // 地面层
+      s += '<text x="' + (x - 8) + '" y="' + (y + 20) + '" font-size="15" font-weight="700" text-anchor="end" fill="' + INK + '">G</text>';
+      s += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + rowH + '" fill="#d9f0d4" stroke="' + INK + '" stroke-width="1.4"/>';
+      s += '<text x="' + (x + w / 2) + '" y="' + (y + 20) + '" font-size="14" text-anchor="middle" fill="' + INK + '">地面 Ground</text>';
+      y += rowH;
+      s += '<line x1="' + (x - 34) + '" y1="' + y + '" x2="' + (x + w + 14) + '" y2="' + y + '" stroke="#8a6b45" stroke-width="4"/>';
+      s += '<path d="M' + (x + w + 8) + ',' + y + ' l16,-20 l10,20 z" fill="#4f9a4f"/>';
+      for (i = 1; i <= down; i++) {
+        s += '<text x="' + (x - 8) + '" y="' + (y + 20) + '" font-size="14" text-anchor="end" fill="' + INK + '">B' + i + '</text>';
+        for (var c2 = 0; c2 < 4; c2++) s += '<rect x="' + (x + 8 + c2 * 30) + '" y="' + (y + 3) + '" width="20" height="20" fill="#cfd8e3" stroke="' + INK + '" stroke-width="1.2"/>';
+        s += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + rowH + '" fill="#efe6d6" stroke="' + INK + '" stroke-width="1.4"/>';
+        y += rowH;
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 车辆图标（划记统计表用） */
+    tallychart: function (spec, vars) {
+      var rows = spec.rows || [];
+      var rowH = 58, w = 470, headH = 28;
+      var H = headH + rows.length * rowH + 20;
+      var s = svgOpen(w, H, 'tally chart of vehicles');
+      s += '<rect x="8" y="8" width="' + (w - 16) + '" height="' + (H - 16) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line x1="8" y1="' + (8 + headH) + '" x2="' + (w - 8) + '" y2="' + (8 + headH) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+      s += '<text x="90" y="' + (8 + 21) + '" font-size="14" fill="#666">交通工具</text>';
+      s += '<text x="' + (8 + 180) + '" y="' + (8 + 21) + '" font-size="14" fill="#666">划记（每 5 个一组）</text>';
+      for (var i = 0; i < rows.length; i++) {
+        var r = rows[i], ry = 8 + headH + i * rowH;
+        if (i) s += '<line x1="8" y1="' + ry + '" x2="' + (w - 8) + '" y2="' + ry + '" stroke="' + GREY + '" stroke-width="1"/>';
+        s += vehicleIcon(50, ry + rowH / 2, r.kind || 'car');
+        s += '<text x="90" y="' + (ry + rowH / 2 + 6) + '" font-size="16" font-weight="700" fill="' + INK + '">' + esc(r.label || '') + '</text>';
+        s += tally(206, ry + rowH / 2, Math.round(num(r.count, vars)));
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四个人围成一圈轮流数数（Q18） */
+    standcircle: function (spec, vars) {
+      var S = Math.round(num(spec.start, vars));
+      var boxR = 136, R = 80, arcR = 104;
+      var W = 2 * boxR + 92, cx = W / 2, cy = boxR + 26, H = cy + boxR + 30;
+      var names = ['甲 A', '乙 B', '丙 C', '丁 D'];
+      var s = svgOpen(W, H, 'four friends counting in a circle');
+      for (var i = 0; i < 4; i++) {
+        var a0 = (i * 90 - 90 + 30) * Math.PI / 180, a1 = ((i + 1) * 90 - 90 - 30) * Math.PI / 180;
+        s += '<path d="M' + (cx + arcR * Math.cos(a0)).toFixed(1) + ',' + (cy + arcR * Math.sin(a0)).toFixed(1) +
+             ' A' + arcR + ',' + arcR + ' 0 0 1 ' + (cx + arcR * Math.cos(a1)).toFixed(1) + ',' + (cy + arcR * Math.sin(a1)).toFixed(1) +
+             '" fill="none" stroke="' + BLUE + '" stroke-width="2.5"/>';
+        var am = (i * 90 - 90 + 45) * Math.PI / 180;
+        var mx = cx + arcR * Math.cos(am), my = cy + arcR * Math.sin(am);
+        var t1 = am + Math.PI / 2;
+        s += '<polygon points="' + (mx + 10 * Math.cos(am)).toFixed(1) + ',' + (my + 10 * Math.sin(am)).toFixed(1) + ' ' +
+             (mx - 9 * Math.cos(t1)).toFixed(1) + ',' + (my - 9 * Math.sin(t1)).toFixed(1) + ' ' +
+             (mx + 9 * Math.cos(t1)).toFixed(1) + ',' + (my + 9 * Math.sin(t1)).toFixed(1) + '" fill="' + BLUE + '"/>';
+      }
+      for (var k = 0; k < 4; k++) {
+        var a = (k * 90 - 90) * Math.PI / 180;
+        var px = cx + R * Math.cos(a), py = cy + R * Math.sin(a);
+        var bx = cx + boxR * Math.cos(a), by = cy + boxR * Math.sin(a);
+        s += '<line x1="' + (px + 22 * Math.cos(a)).toFixed(1) + '" y1="' + (py + 22 * Math.sin(a)).toFixed(1) + '" x2="' + (bx - 24 * Math.cos(a)).toFixed(1) + '" y2="' + (by - 24 * Math.sin(a)).toFixed(1) + '" stroke="' + GREY + '" stroke-width="1.6" stroke-dasharray="5 4"/>';
+        s += '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="21" fill="#ffe6c9" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<circle cx="' + (px - 7).toFixed(1) + '" cy="' + (py - 4).toFixed(1) + '" r="2.4" fill="' + INK + '"/><circle cx="' + (px + 7).toFixed(1) + '" cy="' + (py - 4).toFixed(1) + '" r="2.4" fill="' + INK + '"/>';
+        s += '<path d="M' + (px - 7).toFixed(1) + ',' + (py + 8).toFixed(1) + ' Q' + px.toFixed(1) + ',' + (py + 15).toFixed(1) + ' ' + (px + 7).toFixed(1) + ',' + (py + 8).toFixed(1) + '" fill="none" stroke="' + INK + '" stroke-width="1.8"/>';
+        s += '<rect x="' + (bx - 46).toFixed(1) + '" y="' + (by - 16).toFixed(1) + '" width="92" height="32" rx="8" fill="#fdf3a0" stroke="' + INK + '" stroke-width="1.6"/>';
+        s += '<text x="' + bx.toFixed(1) + '" y="' + (by + 5).toFixed(1) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(names[k]) + ' ' + (S - k) + '</text>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 三张长方形纸按面积比例（Q25） */
+    papers: function (spec, vars) {
+      var m = Math.round(num(spec.m, vars)), k = Math.round(num(spec.k, vars));
+      var labelW = 92, pad = 16, h = 50, avail = 336;
+      var unit = Math.min(44, avail / (m * k)), i;
+      var items = [
+        { label: 'blue 蓝', w: unit, fill: '#bfe3ff' },
+        { label: 'red 红', w: unit * k, fill: '#e5484d' },
+        { label: 'yellow 黄', w: unit * k * m, fill: '#f5c518' }
+      ];
+      var W = pad * 2 + labelW + items[2].w, H = pad * 2 + items.length * (h + 20);
+      var s = svgOpen(W, H, 'three sheets of paper');
+      for (i = 0; i < items.length; i++) {
+        var y = pad + i * (h + 20), x = pad + labelW;
+        s += '<text x="' + (pad + labelW - 10) + '" y="' + (y + h / 2 + 6) + '" font-size="16" font-weight="700" text-anchor="end" fill="' + INK + '">' + items[i].label + '</text>';
+        s += '<rect x="' + x + '" y="' + y + '" width="' + items[i].w.toFixed(1) + '" height="' + h + '" fill="' + items[i].fill + '" stroke="' + INK + '" stroke-width="2"/>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 数据表格（Q27） */
+    datatable: function (spec, vars) {
+      var cols = spec.cols || [], rows = spec.rows || [];
+      var colW = 118, rowH = 30, pad = 14, W = pad * 2 + cols.length * colW;
+      var H = pad * 2 + (rows.length + 1) * rowH;
+      var s = svgOpen(W, H, 'data table');
+      s += '<rect x="' + pad + '" y="' + pad + '" width="' + (cols.length * colW) + '" height="' + ((rows.length + 1) * rowH) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      for (var c = 0; c < cols.length; c++) {
+        s += '<rect x="' + (pad + c * colW) + '" y="' + pad + '" width="' + colW + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+        s += '<text x="' + (pad + c * colW + colW / 2) + '" y="' + (pad + rowH - 9) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(cols[c]) + '</text>';
+      }
+      for (var r = 0; r < rows.length; r++) {
+        for (var c2 = 0; c2 < cols.length; c2++) {
+          s += '<rect x="' + (pad + c2 * colW) + '" y="' + (pad + (r + 1) * rowH) + '" width="' + colW + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
+          s += '<text x="' + (pad + c2 * colW + colW / 2) + '" y="' + (pad + (r + 2) * rowH - 9) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(cellText(rows[r][c2], vars)) + '</text>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四色积木塔（3D）（Q28） */
+    blockstack: function (spec, vars) {
+      var labels = spec.labels || ['黄', '蓝', '绿', '粉'];
+      var fills = spec.fills || ['#f5c518', '#9fd3f0', '#7bc47f', '#f2a6b3'];
+      var off = Math.round(num(spec.offset, vars)) || 0;
+      var want = spec.count === undefined ? labels.length : Math.round(num(spec.count, vars));
+      var n = Math.max(2, Math.min(labels.length, want));
+      var bw = 96, bh = 40, d = 24, pad = 26;
+      var W = bw + d + pad * 2 + 110, H = n * bh + d * 0.62 + pad * 2 + 16;
+      var s = svgOpen(W, H, 'tower of coloured blocks');
+      for (var i = 0; i < n; i++) {
+        var idx = (i + off) % n;
+        var y = pad + 8 + (n - 1 - i) * bh;
+        s += box3d(pad + 40, y, bw, bh, d, fills[idx]);
+        s += '<text x="' + (pad + 40 + bw / 2) + '" y="' + (y + bh / 2 + 6) + '" font-size="15" font-weight="700" text-anchor="middle" fill="#1a1a1a">' + esc(labels[idx]) + '</text>';
+        s += '<text data-u="layer" x="' + (pad + 40 + bw + d + 14) + '" y="' + (y + bh / 2 + 6) + '" font-size="13" fill="#666">第 ' + (n - i) + ' 层</text>';
+      }
+      s += '<line x1="' + (pad + 34) + '" y1="' + (pad + 8 + n * bh + 2) + '" x2="' + (pad + 40 + bw + d + 4) + '" y2="' + (pad + 8 + n * bh + 2) + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 图形符号算式：legend 图例 + rows 每行算式（Q10 / Q29） */
+    symeq: function (spec, vars) {
+      var legend = spec.legend || [], rows = spec.rows || [];
+      var rowH = 54, pad = 20, W = 460;
+      var H = pad * 2 + (legend.length ? 54 : 0) + rows.length * rowH;
+      var s = svgOpen(W, H, 'symbol equations');
+      var y = pad + 6;
+      if (legend.length) {
+        var lx = pad + 8;
+        legend.forEach(function (g) {
+          var gv = cellText(g.v, vars);
+          s += '<text x="' + lx + '" y="' + y + '" font-size="30" fill="' + INK + '">' + esc(g.s) + '</text>';
+          lx += 38;
+          s += '<text x="' + lx + '" y="' + y + '" font-size="24" fill="' + INK + '">=</text>';
+          lx += 26;
+          s += '<text x="' + lx + '" y="' + y + '" font-size="26" font-weight="700" fill="' + INK + '">' + esc(gv) + '</text>';
+          lx += 30 + gv.length * 16 + 34;
+        });
+        y += 54;
+      }
+      rows.forEach(function (row, i) {
+        var ry = y + i * rowH + 30;
+        var tx = pad + 10;
+        (row.terms || []).forEach(function (t) {
+          s += '<text x="' + tx + '" y="' + ry + '" font-size="30" fill="' + INK + '">' + esc(t) + '</text>';
+          tx += (t === '+' || t === '-' || t === '=') ? 30 : 42;
+        });
+        if (row.rhs !== undefined && row.rhs !== null && row.rhs !== '') {
+          s += '<text x="' + tx + '" y="' + ry + '" font-size="30" fill="' + INK + '">=</text>';
+          tx += 34;
+          s += '<text x="' + tx + '" y="' + ry + '" font-size="28" font-weight="700" fill="' + INK + '">' + esc(cellText(row.rhs, vars)) + '</text>';
+        }
+      });
+      s += '</svg>';
+      return s;
+    },
+
+    /* 车辆图标 */
+    vehicleIcon: function () { return ''; }
+  };
+
+  /* 车辆简笔图标：cx,cy 中心 */
+  function vehicleIcon(cx, cy, kind) {
+    var o = '';
+    if (kind === 'bike') {
+      o += '<circle cx="' + (cx - 16) + '" cy="' + (cy + 8) + '" r="11" fill="none" stroke="' + INK + '" stroke-width="2.4"/>';
+      o += '<circle cx="' + (cx + 16) + '" cy="' + (cy + 8) + '" r="11" fill="none" stroke="' + INK + '" stroke-width="2.4"/>';
+      o += '<path d="M' + (cx - 16) + ',' + (cy + 8) + ' L' + (cx - 2) + ',' + (cy - 10) + ' L' + (cx + 16) + ',' + (cy - 10) + '" fill="none" stroke="' + RED + '" stroke-width="2.4"/>';
+      o += '<path d="M' + (cx - 16) + ',' + (cy + 8) + ' L' + (cx + 2) + ',' + (cy + 8) + '" fill="none" stroke="' + RED + '" stroke-width="2.4"/>';
+      return o;
+    }
+    if (kind === 'truck') {
+      o += '<rect x="' + (cx - 30) + '" y="' + (cy - 4) + '" width="34" height="22" fill="#cfd8e3" stroke="' + INK + '" stroke-width="2"/>';
+      o += '<path d="M' + (cx + 4) + ',' + (cy - 14) + ' h14 l10,12 v20 h-24 z" fill="#e5484d" stroke="' + INK + '" stroke-width="2"/>';
+      o += '<circle cx="' + (cx - 20) + '" cy="' + (cy + 18) + '" r="6" fill="' + INK + '"/><circle cx="' + (cx + 18) + '" cy="' + (cy + 18) + '" r="6" fill="' + INK + '"/>';
+      return o;
+    }
+    if (kind === 'bus') {
+      o += '<rect x="' + (cx - 34) + '" y="' + (cy - 14) + '" width="68" height="30" rx="7" fill="#1f6feb" stroke="' + INK + '" stroke-width="2"/>';
+      for (var i = 0; i < 4; i++) o += '<rect x="' + (cx - 28 + i * 15) + '" y="' + (cy - 9) + '" width="11" height="11" rx="2" fill="#dff0ff" stroke="' + INK + '" stroke-width="1"/>';
+      o += '<circle cx="' + (cx - 20) + '" cy="' + (cy + 17) + '" r="6" fill="' + INK + '"/><circle cx="' + (cx + 20) + '" cy="' + (cy + 17) + '" r="6" fill="' + INK + '"/>';
+      return o;
+    }
+    // car
+    o += '<path d="M' + (cx - 30) + ',' + (cy + 8) + ' q4,-16 16,-16 h18 q12,0 16,16 z" fill="#7bc47f" stroke="' + INK + '" stroke-width="2"/>';
+    o += '<rect x="' + (cx - 32) + '" y="' + (cy + 6) + '" width="64" height="12" rx="4" fill="#7bc47f" stroke="' + INK + '" stroke-width="2"/>';
+    o += '<circle cx="' + (cx - 18) + '" cy="' + (cy + 19) + '" r="6" fill="' + INK + '"/><circle cx="' + (cx + 18) + '" cy="' + (cy + 19) + '" r="6" fill="' + INK + '"/>';
+    return o;
+  }
+
+  function fmt(v) {
+    if (typeof v !== 'number' || !isFinite(v)) return String(v);
+    return (Math.abs(v - Math.round(v)) < 1e-9) ? String(Math.round(v)) : String(Math.round(v * 100) / 100);
+  }
+
   Object.keys(TYPES2).forEach(function (k) { TYPES[k] = TYPES2[k]; });
+  Object.keys(TYPES3).forEach(function (k) { if (k !== 'vehicleIcon') TYPES[k] = TYPES3[k]; });
 
   function render(spec, vars) {
     if (!spec || !spec.type) return '';

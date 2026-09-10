@@ -24,7 +24,6 @@
     sid: '',            // 学生 ID，多设备共用一个才能同步
     devId: '',          // 本机标识
     autoSync: true,     // 打开页面时自动拉取云端进度
-    agentMail: '',      // WorkBuddy 智能体邮箱地址（用于"发到 WorkBuddy 自动同步"）
     sessionSize: 10,        // 每次测试题量
     newPerSession: 4,       // 每次最多引入的新题型
     masterStreak: 3,        // 连续答对多少次算"掌握"

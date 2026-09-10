@@ -634,20 +634,16 @@
     return lines.join('\n');
   }
 
-  /* 直接把答卷 + 同步码发到 WorkBuddy 的智能体邮箱，由我自动合并 */
+  /* 把答卷 + 同步码发到用户邮箱（dbsquared1311@hotmail.com），用户再粘回 WorkBuddy 合并入库 */
   function mailWB(code) {
     var s = Store.settings();
-    var to = (s.agentMail || '').trim();
-    if (!to) {
-      alert('WorkBuddy 邮箱尚未配置。请先在 WorkBuddy 里开通「我的邮箱」，或改用「发邮件」发到你自己的邮箱再粘给 WorkBuddy。');
-      return;
-    }
+    var to = 'dbsquared1311@hotmail.com';
     var stats = SRS.stats();
     var head = '一次一百分 同步（学生 ' + (s.studentName || s.sid || '?') + '）\n' +
       '已掌握 ' + stats.mastered + ' / 待清错题 ' + stats.wrong + ' / 到期待检测 ' + stats.due + '\n';
     var summary = roundSummaryText(lastResults);
     var body = head + (summary ? (summary + '\n\n') : '') +
-      '── 同步码（WorkBuddy 自动读取合并，无需手动处理）──\n' + code;
+      '── 同步码（把下面这串粘回 WorkBuddy 即可合并入库）──\n' + code;
     var subject = '[1a1m-sync] ' + (s.sid || '');
     window.location.href = 'mailto:' + encodeURIComponent(to) +
       '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);

@@ -416,11 +416,11 @@
             "en": "a pair of shoes"
           }
         ],
-        "correctIndex": "bidx"
+        "correctIndex": "1*(bidx==0) + 3*(bidx==1) + 2*(bidx==2) + 0*(bidx==3)"
       },
       "solution": {
-        "zh": "看盒子的形状：又长又扁的最大盒子装滑板；又高又窄的装篮球；最小的装手表；中等偏大的装鞋子。",
-        "en": "Match the shape: the long flat box holds a skateboard, the tall narrow box a ball, the smallest a watch, the medium box shoes."
+        "zh": "看盒子的「大小和形状」：A 盒又大又方正，只有它装得下又大又圆的篮球；D 盒又长又扁，正好放滑板；C 盒最小，只能装手表；B 盒中等、比 A 小、比 C 大，是鞋盒的样子，装鞋子。",
+        "en": "Match size and shape: box A is the big, bulky one — only it can hold a large round basketball; box D is the long flat slab that suits a skateboard; box C is the smallest, so it holds the watch; box B is the medium shoe-box shape, so it holds the shoes."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q08.png",

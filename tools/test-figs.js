@@ -244,19 +244,47 @@ const REP = 60;
   console.log('Q2  正确答案 = 「下周一 = 6月(d+7)日」✓  图上日期与变量一致 ✓');
 }
 
-/* ---------- Q8：立体盒子的长宽高排序与答案映射 ---------- */
+/* ---------- Q8：立体盒子的尺寸必须真的能装下对应物品 ---------- */
 {
   const t = byId('icas22y2m-08');
+  const BOX2ITEM = { A: 1, B: 3, C: 2, D: 0 };          // A篮球 B鞋子 C手表 D滑板（选项下标）
+  const MIN_BALL = 28;                                    // 球的最小可容纳尺寸阈值
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t);
     const pick = q.vars.bidx;
     const IT = q.lang === 'en' ? ['a skateboard', 'a ball', 'a watch', 'a pair of shoes'] : ['滑板', '篮球', '手表', '鞋子'];
-    chk(q.options[q.correctIndex] === IT[pick], 'Q8 选中「' + q.options[q.correctIndex] + '」应为「' + IT[pick] + '」');
-    // 立体盒子：应有 3 个面（front rect + 2 polygon）
+    chk(q.options[q.correctIndex] === IT[BOX2ITEM['ABCD'[pick]]],
+      'Q8 选中「' + q.options[q.correctIndex] + '」应为「' + IT[BOX2ITEM['ABCD'[pick]]] + '」（盒子 ' + 'ABCD'[pick] + '）');
+    // 立体盒子：每盒 3 个面（1 正面 + 2 侧面）
     const poly = (q.diagramSvg.match(/<polygon/g) || []).length;
     chk(poly === 8, 'Q8 四个盒子应为 8 个多边形（每盒 2 个侧面），实际 ' + poly);
+    // 读出四个盒子的真实尺寸，按“大小/形状”独立推一遍答案
+    const boxes = {};
+    let m;
+    const re = /data-box="([ABCD])" data-w="(\d+)" data-h="(\d+)" data-d="(\d+)"/g;
+    while ((m = re.exec(q.diagramSvg))) boxes[m[1]] = { w: +m[2], h: +m[3], d: +m[4] };
+    chk(Object.keys(boxes).length === 4, 'Q8 图上应标出 4 个盒子，实际 ' + Object.keys(boxes).length);
+    if (Object.keys(boxes).length === 4) {
+      const K = ['A', 'B', 'C', 'D'];
+      const vol = k => boxes[k].w * boxes[k].h * boxes[k].d;
+      const minDim = k => Math.min(boxes[k].w, boxes[k].h, boxes[k].d);
+      // ① 只有「又大又方正」的那个盒子装得下球
+      const fitBall = K.filter(k => minDim(k) >= MIN_BALL);
+      chk(fitBall.length === 1 && fitBall[0] === 'A',
+        'Q8 只有 A 应装得下篮球，实际装得下的有 ' + JSON.stringify(fitBall) + '（' + K.map(k => k + ':' + minDim(k)).join(' ') + '）');
+      // ② 手表盒必须是体积最小的
+      const smallest = K.reduce((a, b) => vol(b) < vol(a) ? b : a);
+      chk(smallest === 'C', 'Q8 体积最小的应是 C（手表），实际 ' + smallest);
+      // ③ 滑板盒必须最长、最扁
+      const longest = K.reduce((a, b) => boxes[b].w > boxes[a].w ? b : a);
+      const flattest = K.reduce((a, b) => boxes[b].h < boxes[a].h ? b : a);
+      chk(longest === 'D' && flattest === 'D', 'Q8 最长最扁的应是 D（滑板），实际 最长=' + longest + ' 最扁=' + flattest);
+      // ④ 剩下的 B 是鞋盒：明显比球盒小、比手表盒大
+      chk(minDim('B') < MIN_BALL, 'Q8 鞋盒（B）不应装得下篮球');
+      chk(vol('B') > vol('C') && vol('B') < vol('A'), 'Q8 鞋盒体积应介于 A 与 C 之间');
+    }
   }
-  console.log('Q8  立体盒子(每盒 3 个面) ✓  盒子↔物品映射一致 ✓');
+  console.log('Q8  盒子尺寸能独立推出答案（球盒唯一/A最小/D最长最扁）✓');
 }
 
 /* ---------- Q7：数轴箭头必须向下指到刻度上 ---------- */

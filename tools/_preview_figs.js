@@ -34,7 +34,7 @@ td.gen{width:auto}
 
 let h = '<!doctype html><meta charset="utf-8"><title>配图核对</title><style>' + CSS + '</style>';
 h += '<h1>ICAS 2022 Year 2 · 简化 SVG 配图核对</h1>';
-h += '<div class="tip">每题给 2 个随机变式。左边是原题截图，右边是学生实际看到的题干 + SVG 配图。' +
+h += '<div class="tip">每题给 2 个随机变式（Q8 给 4 个，逐一标出每个盒子）。左边是原题截图，右边是学生实际看到的题干 + SVG 配图。' +
      '重点看：图对不对、和原题是不是同一件事、选项图能不能分辨。</div>';
 
 const figs = list.filter(t => t.diagram && /^icas22y2m/.test(t.id));
@@ -44,7 +44,9 @@ figs.forEach(t => {
   h += '<td class="orig"><div class="tag">原题</div>' +
        (t.originalImage ? '<img src="../' + t.originalImage + '" alt="原题">' : '<span class="none">（无原题图）</span>') + '</td>';
   h += '<td class="gen">';
-  for (let i = 0; i < 2; i++) {
+  // Q8 有 4 个可被标出的盒子，每种都出一次，方便核对每个盒子的形状比例
+  const times = t.id === 'icas22y2m-08' ? 4 : 2;
+  for (let i = 0; i < times; i++) {
     const q = Generator.instantiate(t);
     if (!q) { h += '<div class="none">生成失败</div>'; continue; }
     h += '<div class="stem">' + (i ? '② ' : '① ') + q.stemHtml + ' <span class="ans">⇒ ' +

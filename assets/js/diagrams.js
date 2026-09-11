@@ -431,14 +431,16 @@
     return '#' + ((1 << 24) + (f(r) << 16) + (f(g) << 8) + f(b)).toString(16).slice(1);
   }
 
-  /* 立体盒子：(x,y) 正面左上角，w/h 正面宽高，d 进深（右上方向） */
-  function box3d(x, y, w, h, d, fill) {
+  /* 立体盒子：(x,y) 正面左上角，w/h 正面宽高，d 进深（右上方向）
+     tag 会写在正面矩形上，方便自检脚本按“大小是否真的能装下某物”做断言 */
+  function box3d(x, y, w, h, d, fill, tag) {
     var dx = d, dy = -d * 0.62, o = '';
     o += '<polygon points="' + x + ',' + y + ' ' + (x + dx) + ',' + (y + dy) + ' ' + (x + w + dx) + ',' + (y + dy) + ' ' + (x + w) + ',' + y +
          '" fill="' + shade(fill, 0.3) + '" stroke="' + INK + '" stroke-width="1.6"/>';
     o += '<polygon points="' + (x + w) + ',' + y + ' ' + (x + w + dx) + ',' + (y + dy) + ' ' + (x + w + dx) + ',' + (y + h + dy) + ' ' + (x + w) + ',' + (y + h) +
          '" fill="' + shade(fill, -0.2) + '" stroke="' + INK + '" stroke-width="1.6"/>';
-    o += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="1.6"/>';
+    o += '<rect' + (tag ? ' data-box="' + tag + '" data-w="' + w + '" data-h="' + h + '" data-d="' + d + '"' : '') +
+         ' x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="1.6"/>';
     o += '<rect x="' + (x + w / 2 - 6) + '" y="' + y + '" width="12" height="' + h + '" fill="#e5484d" opacity="0.8"/>';
     o += '<rect x="' + x + '" y="' + (y + h / 2 - 6) + '" width="' + w + '" height="12" fill="#e5484d" opacity="0.8"/>';
     return o;
@@ -566,21 +568,27 @@
     /* 四个礼物盒，立体（3D）——大小/形状是解题关键（Q8） */
     giftboxes: function (spec, vars) {
       var pick = Math.max(0, Math.min(3, Math.round(num(spec.pick, vars))));
-      var W = 470, H = 232, base = 200, cols = ['#f2a6b3', '#9fd3f0', '#f7d774', '#b7e3a8'];
+      var W = 478, H = 244, base = 202, cols = ['#f2a6b3', '#9fd3f0', '#f7d774', '#b7e3a8'];
+      /* 四个盒子的尺寸必须让「大小/形状」本身就能推出答案：
+         A 又大又方正（最小边 38，唯一装得下球）→ 篮球
+         B 中等、略长略扁（鞋盒比例）            → 鞋子
+         C 最小                                  → 手表
+         D 最长最扁（滑板盒比例）                → 滑板
+         注意 B 的最短边只有 20，明显放不进球；C 是体积最小的。 */
       var boxes = [
-        { x: 12, w: 148, h: 36, d: 26, t: 'A' },
-        { x: 192, w: 50, h: 106, d: 22, t: 'B' },
-        { x: 266, w: 46, h: 42, d: 18, t: 'C' },
-        { x: 340, w: 90, h: 66, d: 24, t: 'D' }
+        { x: 8, w: 96, h: 92, d: 38, t: 'A' },
+        { x: 126, w: 88, h: 44, d: 20, t: 'B' },
+        { x: 240, w: 40, h: 36, d: 16, t: 'C' },
+        { x: 306, w: 136, h: 22, d: 20, t: 'D' }
       ];
       var s = svgOpen(W, H, 'four present boxes in 3D');
-      s += '<line x1="6" y1="' + (base + 2) + '" x2="' + (W - 6) + '" y2="' + (base + 2) + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line x1="6" y1="' + (base + 2) + '" x2="' + (W - 8) + '" y2="' + (base + 2) + '" stroke="' + INK + '" stroke-width="2"/>';
       boxes.forEach(function (b, i) {
         var y = base - b.h;
-        if (i === pick) s += '<rect x="' + (b.x - 10) + '" y="' + (y - b.d * 0.62 - 10) + '" width="' + (b.w + b.d + 20) + '" height="' + (b.h + b.d * 0.62 + 20) +
+        if (i === pick) s += '<rect x="' + (b.x - 8) + '" y="' + (y - b.d * 0.62 - 8) + '" width="' + (b.w + b.d + 16) + '" height="' + (b.h + b.d * 0.62 + 16) +
           '" fill="none" stroke="' + RED + '" stroke-width="3" stroke-dasharray="9 6" rx="4"/>';
-        s += box3d(b.x, y, b.w, b.h, b.d, cols[i]);
-        s += '<text x="' + (b.x + b.w / 2) + '" y="' + (base + 30) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + (i === pick ? RED : INK) + '">' + b.t + '</text>';
+        s += box3d(b.x, y, b.w, b.h, b.d, cols[i], b.t);
+        s += '<text x="' + (b.x + b.w / 2 + b.d / 2) + '" y="' + (base + 32) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + (i === pick ? RED : INK) + '">' + b.t + '</text>';
       });
       s += '</svg>';
       return s;

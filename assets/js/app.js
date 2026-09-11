@@ -250,6 +250,7 @@
         '</div>';
     }).join('') || '<p class="muted">本轮没有作答记录。</p>';
     lastResults = rs;
+    autoMailReport('练习', roundSummaryText(rs));
     session = null;
   }
 
@@ -405,6 +406,7 @@
     paper.graded = true;
     Store.savePaper({ id: paper.id, createdAt: paper.createdAt, size: paper.questions.length, score: 0 });
     renderPaper();
+    autoMailReport('试卷', paperSummaryText(paper));
     toast('已交卷');
     window.scrollTo(0, 0);
   }
@@ -604,34 +606,18 @@
       .then(function (j) {
         if (!j) { if (!quiet) toast('云端还没有这个编号的进度'); return null; }
         var r = Store.applyCloud(j);
-        renderSyncInfo(); renderStart();
+        renderStart();
         if (!quiet) toast('已合并云端：新增 ' + r.pNew + ' 题，更新 ' + r.pUpd + ' 题');
         return r;
       })
       .catch(function (e) { if (!quiet) toast('拉取失败：' + e.message); return null; });
   }
-  function renderSyncInfo() {
-    var s = Store.settings();
-    if ($('#syncSid')) {
-      $('#syncSid').value = s.sid || '';
-      $('#syncMail').value = s.parentEmail || '';
-      $('#syncDev').textContent = '本机：' + (s.devId || '-');
-      var ls = Store.lastSync();
-      $('#syncLast').textContent = ls ? '上次同步 ' + fmtDate(ls) : '尚未同步过';
-      $('#setAutoSync').checked = s.autoSync !== false;
-    }
-  }
-  function showCode(code, where) {
-    var ta = where === 'result' ? $('#sendCode') : $('#syncBox');
+  function showCode(code) {
+    var ta = $('#sendCode');
     ta.value = code;
     ta.classList.remove('hidden');
-    if (where === 'result') {
-      $('#sendBox').classList.remove('hidden');
-      $('#sendInfo').textContent = code.length + ' 字符';
-    } else {
-      $('#syncBoxRow').classList.remove('hidden');
-      $('#syncMsg').innerHTML = '<span class="muted">已生成 ' + code.length + ' 字符，可复制或发邮件。</span>';
-    }
+    $('#sendBox').classList.remove('hidden');
+    $('#sendInfo').textContent = code.length + ' 字符';
     ta.select();
   }
   function copyText(el) {
@@ -648,7 +634,7 @@
     if (!to) {
       to = prompt('家长邮箱（用于接收同步码）', '');
       if (!to) return;
-      s.parentEmail = to.trim(); Store.saveSettings(s); renderSyncInfo();
+      s.parentEmail = to.trim(); Store.saveSettings(s);
     }
     var subject = '一次一百分 同步码 ' + (s.sid || '');
     var body = code + '\n\n—— 把这串码交给 WorkBuddy 合并即可同步进度。';
@@ -688,6 +674,70 @@
       '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
 
+  /* ---------------- 自动发邮件（学生无需任何操作） ----------------
+   * 纯静态站点本身不能发信，这里借第三方表单服务把内容转发到指定邮箱。
+   * 首次使用会给目标邮箱发一封激活确认信，点一次链接即永久生效。 */
+  var AUTO_MAIL_ENDPOINT = 'https://formsubmit.co/dbsquared1311@hotmail.com';
+
+  // 用隐藏 iframe + 表单 POST（官方推荐用法），跨域提交不依赖 CORS，比 fetch 稳
+  function autoSendEmail(subject, body) {
+    try {
+      var ifr = document.createElement('iframe');
+      ifr.name = 'a1m1mail' + Date.now();
+      ifr.style.display = 'none';
+      document.body.appendChild(ifr);
+
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = AUTO_MAIL_ENDPOINT;
+      form.target = ifr.name;
+      form.style.display = 'none';
+
+      var fields = { _subject: subject, message: body, _captcha: 'false', _template: 'table' };
+      Object.keys(fields).forEach(function (k) {
+        var i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = fields[k];
+        form.appendChild(i);
+      });
+      document.body.appendChild(form);
+      form.submit();
+
+      setTimeout(function () {
+        if (form.parentNode) form.parentNode.removeChild(form);
+        if (ifr.parentNode) ifr.parentNode.removeChild(ifr);
+      }, 8000);
+    } catch (e) { /* 静默失败，不打扰学生 */ }
+  }
+
+  /* 试卷的答卷汇总 */
+  function paperSummaryText(p) {
+    if (!p || !p.questions.length) return '';
+    var lines = ['试卷答卷汇总', '──────────────'];
+    p.questions.forEach(function (q, i) {
+      var a = p.answers[q.key] || {};
+      var line = (i + 1) + '. [' + (a.ok ? '✓ 对' : '✗ 错') + '] ' +
+        (q.stemText || '').replace(/\s+/g, ' ').slice(0, 80);
+      if (!a.ok) line += '　你写：' + (a.given || '(空)') + '　正确答案：' + (a.expected || '');
+      lines.push(line);
+    });
+    var ok = p.questions.filter(function (q) { return p.answers[q.key] && p.answers[q.key].ok; }).length;
+    lines.push('');
+    lines.push('共 ' + p.questions.length + ' 题，答对 ' + ok + ' 题（' +
+      Math.round(ok / p.questions.length * 100) + '%）');
+    return lines.join('\n');
+  }
+
+  /* 交卷 / 练完一轮后自动把「答卷汇总 + 同步码」发到家长邮箱 */
+  function autoMailReport(kind, reportText) {
+    var s = Store.settings();
+    var stats = SRS.stats();
+    var head = '一次一百分 自动汇报（学生 ' + (s.studentName || s.sid || '?') + '｜' + kind + '）\n' +
+      '已掌握 ' + stats.mastered + ' / 待清错题 ' + stats.wrong + ' / 到期待检测 ' + stats.due + '\n';
+    var body = head + (reportText ? ('\n' + reportText + '\n\n') : '\n') +
+      '── 同步码（把下面这串粘回 WorkBuddy 即可合并入库）──\n' + syncCode(true);
+    autoSendEmail('[1a1m-sync] ' + (s.sid || '') + ' ' + kind, body);
+  }
+
   /* ---------------- 设置 ---------------- */
   function fillSettings() {
     var s = Store.settings();
@@ -705,7 +755,7 @@
     if (theme) document.documentElement.dataset.theme = theme;
 
     Bank.load().then(function () {
-      renderStart(); fillPaperSelects(); fillSettings(); updateWho(); renderSyncInfo();
+      renderStart(); fillPaperSelects(); fillSettings(); updateWho();
       if (Store.settings().autoSync !== false) pullCloud(true);
     }).catch(function (e) {
       console.error(e);
@@ -742,44 +792,14 @@
     $('#btnBankReload').addEventListener('click', function () { Bank.load().then(function () { renderBank(); toast('已重新加载'); }); });
     $('#bankSrcBox').addEventListener('change', renderBankList);
 
-    /* ---- 多设备同步：结果页 + 题库管理页 ---- */
+    /* ---- 发邮件（结果页，手动兜底） ---- */
     $('#btnSendResult').addEventListener('click', function () {
-      if ($('#sendBox').classList.contains('hidden')) showCode(syncCode(false), 'result');
+      if ($('#sendBox').classList.contains('hidden')) showCode(syncCode(false));
       else { $('#sendBox').classList.add('hidden'); $('#sendCode').classList.add('hidden'); }
     });
     $('#btnCopyCode').addEventListener('click', function () { copyText($('#sendCode')); });
     $('#btnMailCode').addEventListener('click', function () { mailCode($('#sendCode').value); });
-
-    $('#syncSid').addEventListener('input', function () {
-      var s = Store.settings(); s.sid = $('#syncSid').value.trim(); Store.saveSettings(s);
-    });
-    $('#syncMail').addEventListener('input', function () {
-      var s = Store.settings(); s.parentEmail = $('#syncMail').value.trim(); Store.saveSettings(s);
-    });
-    $('#btnPull').addEventListener('click', function () { pullCloud(false); });
-    $('#btnMakeDelta').addEventListener('click', function () { showCode(syncCode(false), 'sync'); });
-    $('#btnMakeFull').addEventListener('click', function () { showCode(syncCode(true), 'sync'); });
-    $('#setAutoSync').addEventListener('change', function () {
-      var s = Store.settings(); s.autoSync = $('#setAutoSync').checked; Store.saveSettings(s);
-    });
-    $('#btnCopySync').addEventListener('click', function () { copyText($('#syncBox')); });
-    $('#btnMailSync').addEventListener('click', function () { mailCode($('#syncBox').value); });
     $('#btnMailWB').addEventListener('click', function () { mailWB(syncCode(true)); });
-    $('#btnMailWBSync').addEventListener('click', function () { mailWB(syncCode(true)); });
-    $('#btnImportSync').addEventListener('click', function () {
-      var text = $('#syncBox').value;
-      if (!text || !text.trim()) { toast('框里还没有同步码'); return; }
-      try {
-        var r = importCode(text);
-        Store.setLastSync(Date.now());
-        renderStart(); renderSyncInfo();
-        $('#syncMsg').innerHTML = '<span style="color:var(--ok)">已导入：新增 ' + r.pNew + ' 题、更新 ' + r.pUpd +
-          ' 题，新增错题 ' + r.wNew + '、更新错题 ' + r.wUpd + (r.wDel ? '、删除错题 ' + r.wDel : '') + '</span>';
-        toast('已导入同步码');
-      } catch (e) {
-        $('#syncMsg').innerHTML = '<span style="color:var(--bad)">导入失败：' + esc(e.message) + '</span>';
-      }
-    });
 
     $('#btnExport').addEventListener('click', function () {
       var box = $('#ioBox'); box.classList.remove('hidden');

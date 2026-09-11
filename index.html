@@ -75,7 +75,7 @@
         <div class="row" style="margin-top:14px" data-page-node-id="PKH21CGBMGe27HvHnRC4Oo">
           <button class="btn primary" id="btnAgain" data-page-node-id="x1VGSkJwtoGjOLZLD0q7ZX">再来一轮</button>
           <button class="btn" id="btnBackHome" data-page-node-id="AVWYMR0Gh2OJfzYH4AQdlI">返回</button>
-          <button class="btn" id="btnSendResult" data-page-node-id="ZbHpJj47FbDXEvD8Q6ZMlA">发送成绩 / 多设备同步</button>
+          <button class="btn" id="btnSendResult" data-page-node-id="ZbHpJj47FbDXEvD8Q6ZMlA">查看同步码（可选）</button>
         </div>
         <div id="sendBox" class="hidden" style="margin-top:14px;border-top:1px dashed var(--border);padding-top:14px" data-page-node-id="vMwMWGsxTKxuBgFIjgANRy">
           <p class="small muted" data-page-node-id="bzjDcFzFrKMrN1yiFETYDN">复制下面这串<b data-page-node-id="Jcw9EKDy8VDRDGngzCnbm4">同步码</b>发给家长，或在家长端粘贴导入即可。它只包含本次之后变动的部分，重复发送不会出错。</p>
@@ -206,41 +206,6 @@
         <button class="btn primary" id="btnDoImportAll" data-page-node-id="XrZHc21VJbaBKzgUFHgKyL">确认导入</button>
         <button class="btn" id="btnCancelImport" data-page-node-id="LTRQAANF9DFWo8DW7mbAFi">取消</button>
       </div>
-    </div>
-
-    <div class="card" data-page-node-id="YXyb6ejG5mMsh2SxpLXvNb">
-      <h2 data-page-node-id="kaDpGKprlItS02rDFIXgVp">多设备同步</h2>
-      <p class="small muted" data-page-node-id="MRlSiGPshfPSwzBkSqafYV">
-        进度存在本机。想让平板、手机、电脑共用一份进度：在每台设备上把<b data-page-node-id="86ICVZpET9ls56uGqiw4IB">学生编号</b>设成同一个，
-        然后「拉取云端」拿到别人的进度，「生成同步码」把本机的进度交出去。
-      </p>
-      <div class="row" style="margin-top:10px" data-page-node-id="kBooA4x9DEoUrYQemvIZvd">
-        <label class="small" data-page-node-id="aXl3lVGa77H5J33WmYjO6B">学生编号
-          <input type="text" id="syncSid" style="max-width:160px" data-page-node-id="GRUh7Tl3vaErIvYEDCbWoj">
-        </label>
-        <label class="small" data-page-node-id="aII3R9vVAZhdKSk5hm53Ls">家长邮箱
-          <input type="text" id="syncMail" placeholder="用于发送同步码" style="max-width:220px" data-page-node-id="Pa7NZDYzmO7Crhms7Vr9Wz">
-        </label>
-        <span class="small muted" id="syncDev" data-page-node-id="6rpYLY8DCYg13sqx6FFvSH"></span>
-        <span class="spacer" data-page-node-id="73A8WY17HOnngsNh1kKney"></span>
-        <span class="small muted" id="syncLast" data-page-node-id="ysZpLblRZ2FrlgTgbPx8r6"></span>
-      </div>
-      <div class="row" style="margin-top:10px" data-page-node-id="I2278f4vI9T0NufXGKfQAh">
-        <button class="btn primary" id="btnPull" data-page-node-id="1lH0RYNfwRwT1j57cKlhTr">拉取云端进度</button>
-        <button class="btn" id="btnMakeDelta" data-page-node-id="46HJRC5fuL7nwVi2gxzWrx">生成增量同步码</button>
-        <button class="btn" id="btnMakeFull" data-page-node-id="6V0XFYlp5IqyrBzD3meBWQ">生成全量同步码</button>
-        <label class="small" style="display:flex;align-items:center;gap:6px" data-page-node-id="yxL2mGjGwz6ldaMhXD9R14">
-          <input type="checkbox" id="setAutoSync" style="width:auto" data-page-node-id="uIx4I7F0IdCEHFIWJ3gl40"> 打开页面时自动拉取
-        </label>
-      </div>
-      <textarea id="syncBox" rows="5" class="hidden" style="margin-top:10px;font-size:12px" placeholder="同步码会出现在这里；也可以把收到的同步码粘进来再点「导入」"></textarea>
-      <div class="row hidden" id="syncBoxRow" style="margin-top:10px" data-page-node-id="tJ22DjFEpL0Q6rfDcDIi3s">
-        <button class="btn primary" id="btnCopySync" data-page-node-id="L0UwYWNzqhhUtiBHkqYzBA">复制</button>
-        <button class="btn" id="btnMailSync" data-page-node-id="OJ9uXhuTVAbv1GmveAHgFa">发邮件</button>
-        <button class="btn" id="btnMailWBSync">发到邮箱同步（粘回 WorkBuddy 合并）</button>
-        <button class="btn" id="btnImportSync" data-page-node-id="QVWrm8N5BCnz7R1RJvYefF">导入框里的同步码</button>
-      </div>
-      <div id="syncMsg" class="small" style="margin-top:8px" data-page-node-id="6mvTnk74L2kkuMsHRKazmG"></div>
     </div>
 
     <div class="card" data-page-node-id="cqANOBCdCVIOeaz0MJAGOS">

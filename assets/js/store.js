@@ -6,6 +6,7 @@
   'use strict';
 
   var PREFIX = 'a1p100:v1:';
+  var FIXED_SID = 'a1m1';   // 统一学生编号：各设备共用 data/state/a1m1.json
 
   function read(key, def) {
     try {
@@ -42,8 +43,9 @@
       Object.keys(DEFAULT_SETTINGS).forEach(function (k) {
         if (s[k] === undefined) { s[k] = DEFAULT_SETTINGS[k]; changed = true; }
       });
-      if (!s.sid || !s.devId) {
-        s.sid = s.sid || ('s' + global.Sync.randomId(5));
+      // 多设备同步的 UI 已移除，所有设备统一用同一个学生编号，才能共用一份云端进度
+      if (s.sid !== FIXED_SID || !s.devId) {
+        s.sid = FIXED_SID;
         s.devId = s.devId || global.Sync.randomId(4).toUpperCase();
         changed = true;
       }

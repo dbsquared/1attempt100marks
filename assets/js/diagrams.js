@@ -57,6 +57,9 @@
   /* 悉尼四季：月份 -> 季节下标（0春 1夏 2秋 3冬），与模板 derived 保持同一公式 */
   function seasonOf(mm) { return Math.floor((((mm + 3) % 12)) / 3); }
   var SEASON_COLORS = ['#2ea043', '#e5484d', '#d97706', '#1f6feb'];
+  /* 月份名（图里一律用原试卷的英文，不写中文） */
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
 
   var TYPES = {
     /* 小棍：平均分成 parts 小段，红白相间（Q17） */
@@ -160,7 +163,7 @@
         s += '<text x="' + cx.toFixed(1) + '" y="92" font-size="13" text-anchor="middle" fill="' + INK + '">' + (i + 1) + '</text>';
       }
       s += '<text x="' + (pad + step * count + 2).toFixed(1) + '" y="62" font-size="26" fill="' + INK + '">…</text>';
-      s += '<text x="' + (pad + step * count / 2).toFixed(1) + '" y="' + (H - 4) + '" font-size="12" text-anchor="middle" fill="' + INK + '">按同样的顺序一直挂下去</text>';
+      s += '<text x="' + (pad + step * count / 2).toFixed(1) + '" y="' + (H - 4) + '" font-size="12" text-anchor="middle" fill="' + INK + '">and so on, in the same order</text>';
       s += '</svg>';
       return s;
     },
@@ -253,7 +256,9 @@
         s += '<text x="' + (cx + R * 0.72 * Math.cos(cm)).toFixed(1) + '" y="' + (cy + R * 0.72 * Math.sin(cm) + 5).toFixed(1) +
              '" font-size="14" text-anchor="middle" fill="#ffffff" font-weight="700">' + (i + 1) + '</text>';
       }
-      var names = ['春 9-11月', '夏 12-2月', '秋 3-5月', '冬 6-8月'];
+      /* 图里出现的一切文字都用**原试卷的语言**（ICAS 是英文卷），不要翻成中文。
+         标签尽量照抄原卷：spring/summer/autumn/winter。 */
+      var names = ['spring Sep-Nov', 'summer Dec-Feb', 'autumn Mar-May', 'winter Jun-Aug'];
       for (var k = 0; k < 4; k++) {
         s += '<rect x="' + (38 + k * 76) + '" y="288" width="14" height="14" rx="3" fill="' + SEASON_COLORS[k] + '" stroke="' + INK + '" stroke-width="1"/>';
         s += '<text x="' + (38 + k * 76) + '" y="316" font-size="12" fill="' + INK + '">' + names[k] + '</text>';
@@ -280,30 +285,7 @@
   function checker(r, c) { return ((r + c) % 2 === 0) ? BLUE : YELLOW; }
 
   var TYPES2 = {
-    /* 四个礼物盒 A(长扁) B(高) C(最小) D(中等)，pick 高亮其中一个（Q8） */
-    giftboxes: function (spec, vars) {
-      var pick = Math.max(0, Math.min(3, Math.round(num(spec.pick, vars))));
-      var W = 500, H = 268, base = 214;
-      var boxes = [
-        { x: 18, w: 176, h: 46, t: 'A' },
-        { x: 210, w: 64, h: 124, t: 'B' },
-        { x: 290, w: 56, h: 56, t: 'C' },
-        { x: 362, w: 112, h: 88, t: 'D' }
-      ];
-      var cols = ['#f2a6b3', '#9fd3f0', '#f7d774', '#b7e3a8'];
-      var s = svgOpen(W, H, 'four present boxes');
-      s += '<line x1="8" y1="' + (base + 1) + '" x2="492" y2="' + (base + 1) + '" stroke="' + INK + '" stroke-width="2"/>';
-      boxes.forEach(function (b, i) {
-        var y = base - b.h, fill = cols[i];
-        if (i === pick) s += '<rect x="' + (b.x - 8) + '" y="' + (y - 8) + '" width="' + (b.w + 16) + '" height="' + (b.h + 16) + '" fill="none" stroke="' + RED + '" stroke-width="3" stroke-dasharray="8 6"/>';
-        s += '<rect x="' + b.x + '" y="' + y + '" width="' + b.w + '" height="' + b.h + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="2"/>';
-        s += '<rect x="' + (b.x + b.w / 2 - 7) + '" y="' + y + '" width="14" height="' + b.h + '" fill="#e5484d" opacity="0.75"/>';
-        s += '<rect x="' + b.x + '" y="' + (y + b.h / 2 - 7) + '" width="' + b.w + '" height="14" fill="#e5484d" opacity="0.75"/>';
-        s += '<text x="' + (b.x + b.w / 2) + '" y="' + (base + 26) + '" font-size="19" font-weight="700" text-anchor="middle" fill="' + (i === pick ? RED : INK) + '">' + b.t + '</text>';
-      });
-      s += '</svg>';
-      return s;
-    },
+    /* （原来的平面礼物盒已删除：TYPES2 里同名 key 会静默覆盖，只保留下面那个 3D 版） */
 
     /* 钱包里可用的硬币面值（Q23） */
     coins: function (spec, vars) {
@@ -311,7 +293,7 @@
       var W = 440, H = 150, s = svgOpen(W, H, 'coins 5 10 20 50');
       s += '<path d="M22,78 Q22,44 78,44 Q134,44 134,78 Q134,116 78,116 Q22,116 22,78 Z" fill="#e0c9a6" stroke="' + INK + '" stroke-width="2"/>';
       s += '<path d="M46,46 Q78,20 110,46" fill="none" stroke="' + INK + '" stroke-width="3"/>';
-      s += '<text x="78" y="86" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">钱包</text>';
+      s += '<text x="78" y="86" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">purse</text>';
       for (var i = 0; i < 4; i++) {
         var cx = 200 + r[i] + i * 2 + (i ? r[i - 1] : 0) + i * 12, cy = 76;
         s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r[i] + '" fill="#f5d67b" stroke="' + INK + '" stroke-width="2"/>';
@@ -367,13 +349,13 @@
          所以"她自己的左边"是画面的右边。方位必须画出来，否则题目没法定向。 */
       var cell = 52, top = 34, W = cols * cell + 20, H = rows * cell + top + 46, i, j;
       var s = svgOpen(W, H, 'checker board with Sita above and Mark below');
-      s += '<text x="' + (W / 2) + '" y="22" font-size="18" font-weight="700" text-anchor="middle" fill="' + BLUE + '">↑ 西塔 Sita ↑</text>';
+      s += '<text x="' + (W / 2) + '" y="22" font-size="18" font-weight="700" text-anchor="middle" fill="' + BLUE + '">↑ Sita ↑</text>';
       for (i = 0; i < rows; i++) for (j = 0; j < cols; j++) {
         s += '<rect x="' + (10 + j * cell) + '" y="' + (top + i * cell) + '" width="' + cell + '" height="' + cell +
              '" fill="' + (((i + j) % 2 === 0) ? '#3a3f45' : '#f2f2f2') + '" stroke="' + INK + '" stroke-width="1.5"/>';
       }
       s += '<circle cx="' + (10 + sc * cell + cell / 2) + '" cy="' + (top + sr * cell + cell / 2) + '" r="17" fill="' + BLUE + '" stroke="#ffffff" stroke-width="3"/>';
-      s += '<text x="' + (W / 2) + '" y="' + (top + rows * cell + 30) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">↓ 马克 Mark ↓</text>';
+      s += '<text x="' + (W / 2) + '" y="' + (top + rows * cell + 30) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">↓ Mark ↓</text>';
       s += '</svg>';
       return s;
     },
@@ -418,7 +400,7 @@
           s += '<polygon points="' + (ax + gap - 12) + ',' + (y0 + ph / 2) + ' ' + (ax + gap - 24) + ',' + (y0 + ph / 2 - 7) + ' ' + (ax + gap - 24) + ',' + (y0 + ph / 2 + 7) + '" fill="' + INK + '"/>';
         }
       }
-      s += '<text x="' + (W / 2) + '" y="' + (y0 + ph + 52) + '" font-size="14" text-anchor="middle" fill="#666">猪只能按箭头方向穿过门</text>';
+      s += '<text x="' + (W / 2) + '" y="' + (y0 + ph + 52) + '" font-size="14" text-anchor="middle" fill="#666">pigs move only in the direction of the arrows</text>';
       s += '</svg>';
       return s;
     }
@@ -509,9 +491,9 @@
         for (var r = 0; r < 4; r++) s += '<line x1="' + (78 + r * 16) + '" y1="124" x2="' + (72 + r * 16) + '" y2="142" stroke="' + BLUE + '" stroke-width="2.6" stroke-linecap="round"/>';
       }
       s += '<rect x="186" y="52" width="204" height="96" rx="12" fill="#ffffff" stroke="' + RED + '" stroke-width="3"/>';
-      s += '<text x="288" y="88" font-size="20" font-weight="700" text-anchor="middle" fill="' + INK + '">Today is</text>';
-      s += '<text x="288" y="122" font-size="21" font-weight="700" text-anchor="middle" fill="' + RED + '">' + mm + ' 月 ' + d + ' 日 · 星期一</text>';
-      s += '<text x="102" y="172" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">' + (sunny ? 'It is sunny. 晴天' : 'It is raining. 下雨') + '</text>';
+      s += '<text x="288" y="80" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">Today is Monday</text>';
+      s += '<text x="288" y="112" font-size="20" font-weight="700" text-anchor="middle" fill="' + RED + '">' + d + ' ' + MONTHS[(mm - 1) % 12] + '</text>';
+      s += '<text x="102" y="172" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">' + (sunny ? 'It is sunny.' : 'It is raining.') + '</text>';
       s += '</svg>';
       return s;
     },
@@ -620,9 +602,9 @@
       }
       var kx = pad + labels.length * colW + 14;
       s += '<rect x="' + kx + '" y="26" width="132" height="86" rx="8" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
-      s += '<text x="' + (kx + 66) + '" y="50" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">KEY 图例</text>';
+      s += '<text x="' + (kx + 66) + '" y="50" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">KEY</text>';
       s += ballIcon(kx + 30, 76, 11);
-      s += '<text x="' + (kx + 50) + '" y="82" font-size="13" fill="' + INK + '">= 1 个进球</text>';
+      s += '<text x="' + (kx + 50) + '" y="82" font-size="13" fill="' + INK + '">= 1 ' + esc(spec.unit || 'goal') + '</text>';
       s += '</svg>';
       return s;
     },
@@ -644,7 +626,7 @@
       // 地面层
       s += '<text x="' + (x - 8) + '" y="' + (y + 20) + '" font-size="15" font-weight="700" text-anchor="end" fill="' + INK + '">G</text>';
       s += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + rowH + '" fill="#d9f0d4" stroke="' + INK + '" stroke-width="1.4"/>';
-      s += '<text x="' + (x + w / 2) + '" y="' + (y + 20) + '" font-size="14" text-anchor="middle" fill="' + INK + '">地面 Ground</text>';
+      s += '<text x="' + (x + w / 2) + '" y="' + (y + 20) + '" font-size="14" text-anchor="middle" fill="' + INK + '">Ground</text>';
       y += rowH;
       s += '<line x1="' + (x - 34) + '" y1="' + y + '" x2="' + (x + w + 14) + '" y2="' + y + '" stroke="#8a6b45" stroke-width="4"/>';
       s += '<path d="M' + (x + w + 8) + ',' + y + ' l16,-20 l10,20 z" fill="#4f9a4f"/>';
@@ -658,16 +640,14 @@
       return s;
     },
 
-    /* 车辆图标（划记统计表用） */
+    /* 车辆划记统计表（Q14）。原卷这张表**没有**表头，
+       只有「车辆图 + 名称 + 划记」，所以这里也不写表头。 */
     tallychart: function (spec, vars) {
       var rows = spec.rows || [];
-      var rowH = 58, w = 470, headH = 28;
+      var rowH = 58, w = 470, headH = 8;
       var H = headH + rows.length * rowH + 20;
       var s = svgOpen(w, H, 'tally chart of vehicles');
       s += '<rect x="8" y="8" width="' + (w - 16) + '" height="' + (H - 16) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
-      s += '<line x1="8" y1="' + (8 + headH) + '" x2="' + (w - 8) + '" y2="' + (8 + headH) + '" stroke="' + INK + '" stroke-width="1.6"/>';
-      s += '<text x="90" y="' + (8 + 21) + '" font-size="14" fill="#666">交通工具</text>';
-      s += '<text x="' + (8 + 180) + '" y="' + (8 + 21) + '" font-size="14" fill="#666">划记（每 5 个一组）</text>';
       for (var i = 0; i < rows.length; i++) {
         var r = rows[i], ry = 8 + headH + i * rowH;
         if (i) s += '<line x1="8" y1="' + ry + '" x2="' + (w - 8) + '" y2="' + ry + '" stroke="' + GREY + '" stroke-width="1"/>';
@@ -684,7 +664,8 @@
       var S = Math.round(num(spec.start, vars));
       var boxR = 136, R = 80, arcR = 104;
       var W = 2 * boxR + 92, cx = W / 2, cy = boxR + 26, H = cy + boxR + 30;
-      var names = ['甲 A', '乙 B', '丙 C', '丁 D'];
+      /* 图里一律用原卷的英文名（ICAS Q18：Sue / Jim / Dave / Kate），不写"甲乙丙丁" */
+      var names = ['Sue', 'Jim', 'Dave', 'Kate'];
       var s = svgOpen(W, H, 'four friends counting in a circle');
       for (var i = 0; i < 4; i++) {
         var a0 = (i * 90 - 90 + 30) * Math.PI / 180, a1 = ((i + 1) * 90 - 90 - 30) * Math.PI / 180;
@@ -719,9 +700,9 @@
       var labelW = 92, pad = 16, h = 50, avail = 336;
       var unit = Math.min(44, avail / (m * k)), i;
       var items = [
-        { label: 'blue 蓝', w: unit, fill: '#bfe3ff' },
-        { label: 'red 红', w: unit * k, fill: '#e5484d' },
-        { label: 'yellow 黄', w: unit * k * m, fill: '#f5c518' }
+        { label: 'blue', w: unit, fill: '#bfe3ff' },
+        { label: 'red', w: unit * k, fill: '#e5484d' },
+        { label: 'yellow', w: unit * k * m, fill: '#f5c518' }
       ];
       var W = pad * 2 + labelW + items[2].w, H = pad * 2 + items.length * (h + 20);
       var s = svgOpen(W, H, 'three sheets of paper');
@@ -734,30 +715,63 @@
       return s;
     },
 
-    /* 数据表格（Q27） */
+    /* 数据表格（Q27）。支持原卷那种两级表头：
+       cols    每列的（第二级）表头文字
+       widths  每列宽度（可选，默认 118）
+       groups  跨列表头 [{ label, from, to }]，画在最上面一行（可选） */
     datatable: function (spec, vars) {
       var cols = spec.cols || [], rows = spec.rows || [];
-      var colW = 118, rowH = 30, pad = 14, W = pad * 2 + cols.length * colW;
-      var H = pad * 2 + (rows.length + 1) * rowH;
+      var widths = spec.widths || cols.map(function () { return 118; });
+      var groups = spec.groups || [];
+      var rowH = 30, pad = 14, headRows = 1 + (groups.length ? 1 : 0);
+      var total = widths.reduce(function (a, b) { return a + b; }, 0);
+      var xOf = function (c) { var x = pad; for (var i = 0; i < c; i++) x += widths[i]; return x; };
+      var W = pad * 2 + total;
+      var H = pad * 2 + (rows.length + headRows) * rowH;
       var s = svgOpen(W, H, 'data table');
-      s += '<rect x="' + pad + '" y="' + pad + '" width="' + (cols.length * colW) + '" height="' + ((rows.length + 1) * rowH) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
-      for (var c = 0; c < cols.length; c++) {
-        s += '<rect x="' + (pad + c * colW) + '" y="' + pad + '" width="' + colW + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
-        s += '<text x="' + (pad + c * colW + colW / 2) + '" y="' + (pad + rowH - 9) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(cols[c]) + '</text>';
+      s += '<rect x="' + pad + '" y="' + pad + '" width="' + total + '" height="' + ((rows.length + headRows) * rowH) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      var hy = pad, c, g;
+      if (groups.length) {                       // 第一行：跨列表头
+        for (g = 0; g < groups.length; g++) {
+          var gr = groups[g], gx = xOf(gr.from), gw = 0;
+          for (c = gr.from; c <= gr.to; c++) gw += widths[c];
+          s += '<rect x="' + gx + '" y="' + hy + '" width="' + gw + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<text x="' + (gx + gw / 2) + '" y="' + (hy + rowH - 9) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(gr.label) + '</text>';
+        }
+        /* 没被 groups 覆盖的列，标题写在第一行（相当于跨满两行） */
+        var covered = {};
+        groups.forEach(function (gg) { for (var q = gg.from; q <= gg.to; q++) covered[q] = 1; });
+        for (c = 0; c < cols.length; c++) {
+          if (covered[c]) continue;
+          s += '<rect x="' + xOf(c) + '" y="' + hy + '" width="' + widths[c] + '" height="' + (rowH * 2) + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<text x="' + (xOf(c) + widths[c] / 2) + '" y="' + (hy + rowH + 6) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(cols[c]) + '</text>';
+        }
+        hy += rowH;
+      }
+      for (c = 0; c < cols.length; c++) {        // 最后一行表头：各列自己的标题
+        if (groups.length) {
+          var inGroup = false;
+          groups.forEach(function (gg) { if (c >= gg.from && c <= gg.to) inGroup = true; });
+          if (!inGroup) continue;                // 已在跨列表头那一行画过（占两行）
+        }
+        s += '<rect x="' + xOf(c) + '" y="' + hy + '" width="' + widths[c] + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+        s += '<text x="' + (xOf(c) + widths[c] / 2) + '" y="' + (hy + rowH - 9) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(cols[c]) + '</text>';
       }
       for (var r = 0; r < rows.length; r++) {
         for (var c2 = 0; c2 < cols.length; c2++) {
-          s += '<rect x="' + (pad + c2 * colW) + '" y="' + (pad + (r + 1) * rowH) + '" width="' + colW + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
-          s += '<text x="' + (pad + c2 * colW + colW / 2) + '" y="' + (pad + (r + 2) * rowH - 9) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(cellText(rows[r][c2], vars)) + '</text>';
+          s += '<rect x="' + xOf(c2) + '" y="' + (pad + (r + headRows) * rowH) + '" width="' + widths[c2] + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
+          s += '<text x="' + (xOf(c2) + widths[c2] / 2) + '" y="' + (pad + (r + headRows + 1) * rowH - 9) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(cellText(rows[r][c2], vars)) + '</text>';
         }
       }
       s += '</svg>';
       return s;
     },
 
-    /* 四色积木塔（3D）（Q28） */
+    /* 四色积木塔（3D）（Q28）。原卷把颜色名写在积木上（yellow/blue/green/pink），
+       没有"第几层"这种标注，所以这里也不写；`data-u="layer"` 挂在颜色标签上，
+       自检脚本靠它数层数（每层正好一块）。 */
     blockstack: function (spec, vars) {
-      var labels = spec.labels || ['黄', '蓝', '绿', '粉'];
+      var labels = spec.labels || ['yellow', 'blue', 'green', 'pink'];
       var fills = spec.fills || ['#f5c518', '#9fd3f0', '#7bc47f', '#f2a6b3'];
       var off = Math.round(num(spec.offset, vars)) || 0;
       var want = spec.count === undefined ? labels.length : Math.round(num(spec.count, vars));
@@ -769,8 +783,7 @@
         var idx = (i + off) % n;
         var y = pad + 8 + (n - 1 - i) * bh;
         s += box3d(pad + 40, y, bw, bh, d, fills[idx]);
-        s += '<text x="' + (pad + 40 + bw / 2) + '" y="' + (y + bh / 2 + 6) + '" font-size="15" font-weight="700" text-anchor="middle" fill="#1a1a1a">' + esc(labels[idx]) + '</text>';
-        s += '<text data-u="layer" x="' + (pad + 40 + bw + d + 14) + '" y="' + (y + bh / 2 + 6) + '" font-size="13" fill="#666">第 ' + (n - i) + ' 层</text>';
+        s += '<text data-u="layer" x="' + (pad + 40 + bw / 2) + '" y="' + (y + bh / 2 + 6) + '" font-size="15" font-weight="700" text-anchor="middle" fill="#1a1a1a">' + esc(labels[idx]) + '</text>';
       }
       s += '<line x1="' + (pad + 34) + '" y1="' + (pad + 8 + n * bh + 2) + '" x2="' + (pad + 40 + bw + d + 4) + '" y2="' + (pad + 8 + n * bh + 2) + '" stroke="' + INK + '" stroke-width="2"/>';
       s += '</svg>';

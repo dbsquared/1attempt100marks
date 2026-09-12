@@ -148,6 +148,17 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 > 还有一条同样重要：**设问参数必须和图协同设计**（不要问图上已经画出来的位置、
 > 方位要说清是谁的视角、画布不能裁掉文字），见 §4.5.4。
 
+> **图里的文字一律用「原试卷的语言」。** ICAS 是英文卷，所以图里写 `Cars / Bikes /
+> Trucks / Buses`、`Arrive / Fly Away`、`yellow / blue / green / pink`、`Sue / Jim /
+> Dave / Kate`、`purse`、`KEY = 1 goal`……**不要翻成中文**。
+> 理由：ICAS 本来就是英文考试，读英文图是考试的一部分；翻一遍等于多加一道无意义的转换，
+> 还容易和原题图对不上（比如把 `Tigers` 译成「老虎队」，选项和图上标签就对不起来了）。
+> 连带要求：**选项/题干里指代图上标签时，要用图上的原词**（如 `Hawks（鹰队）`、
+> `绿色（green）积木`），否则中文模式的学生没法把文字对上图。
+> `test-bank.js` 有闸门：英文卷模板（带 `{zh,en}` 双语字段）的 `diagram` / `optionsSvg`
+> 只要出现中文就 FAIL；确实出自中文卷、图里就该写中文的，模板写 `"figureLang": "zh"`。
+> 图形核对页：`node tools/_preview_figs.js <输出路径> --only=27,14 --times=3`。
+
 ### 4.5.1 选项是图时：必须用 `answer.optionsSvg`（禁止用文字描述图形）
 
 如果正确答案"是某个图形/某个格子"，**不能**把图形翻译成文字写进 `options`

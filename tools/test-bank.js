@@ -17,6 +17,17 @@ function refsFigure(tpl) {
   return /原题图|如下图|图中|下图中|看图|见.{0,4}图/.test(txt) ||
          /original picture|see the (diagram|picture|figure)|diagram below|shown below/i.test(txt);
 }
+/* 模板「原题语言」（口径与 app.js 的 origLangOf() 一致）：
+   带 {zh,en} 双语字段的模板来自英文卷，其余来自中文卷。
+   配图里的文字必须用原题语言，模板可用 "figureLang" 覆盖。 */
+function figureLangOf(tpl) {
+  if (tpl.figureLang === 'zh' || tpl.figureLang === 'en') return tpl.figureLang;
+  const f = [tpl.stem, tpl.solution, tpl.hint];
+  for (const x of f) {
+    if (x && typeof x === 'object' && !Array.isArray(x) && typeof x.en !== 'undefined') return 'en';
+  }
+  return 'zh';
+}
 const bankPath = process.argv[2] || path.join(root, 'data/question-bank.json');
 const bank = JSON.parse(fs.readFileSync(bankPath, 'utf8'));
 const list = Array.isArray(bank) ? bank : bank.templates;
@@ -84,6 +95,25 @@ for (const tpl of list) {
     console.log(' 缺配图 ' + tpl.id + '：' + figErr);
   }
 
+  /* 配图语言闸门：图里出现的文字必须是**原试卷的语言**（ICAS 是英文卷），
+     不许把图里的词翻成中文 —— 翻译会多一道无意义的转换，也会和原题图对不上。
+     口径与 app.js 的 origLangOf() 一致：带 {zh,en} 双语字段的模板原题是英文；
+     确实出自中文卷、图里就该写中文的，模板上写 "figureLang": "zh" 显式声明。 */
+  let langErr = '';
+  if (figureLangOf(tpl) === 'en') {
+    const CJK = /[\u4e00-\u9fff]/;
+    const hit = qs.find(q => CJK.test(q.diagramSvg || '') ||
+      (q.optionsSvg || []).some(s => CJK.test(s || '')));
+    if (hit) {
+      const where = CJK.test(hit.diagramSvg || '') ? 'diagram' : 'optionsSvg';
+      const txt = (String(where === 'diagram' ? hit.diagramSvg : (hit.optionsSvg || []).join('')).match(/>[^<]*[\u4e00-\u9fff][^<]*</g) || []).join(' ');
+      langErr = '配图里有中文（' + where + '）：' + txt +
+        '　→ 图要用原试卷的语言（英文卷就写英文），或写 "figureLang":"zh" 显式声明';
+      fail++;
+    }
+  }
+  if (langErr) console.log(' 配图语言 ' + tpl.id + '：' + langErr);
+
   /* 变式检查：一份模板必须能生成 ≥2 种不同数值/形式的题，否则就是"死题"。
      确实无法参数化（图依赖、题面固定）的，必须显式写 todo/figureTodo，否则 FAIL。 */
   const uniq = new Set(qs.map(q => q.sig)).size;
@@ -93,7 +123,7 @@ for (const tpl of list) {
     fail++;
   }
 
-  console.log(((ok && !leftover.length && !figErr && !varErr) ? '  OK  ' : ' FAIL ') + tpl.id.padEnd(22) +
+  console.log(((ok && !leftover.length && !figErr && !varErr && !langErr) ? '  OK  ' : ' FAIL ') + tpl.id.padEnd(22) +
     '生成 ' + String(qs.length).padStart(3) + '/300  不同数值 ' + String(uniq).padStart(3) +
     '  判分错 ' + gradeErr + (nullCount ? '  生成失败 ' + nullCount : ''));
   if (varErr) console.log(' ! 变式 ' + tpl.id + '：' + varErr);

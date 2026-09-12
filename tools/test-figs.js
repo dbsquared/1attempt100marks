@@ -52,16 +52,19 @@ const REP = 60;
     const q = Generator.instantiate(t);
     const c = [q.vars.c0, q.vars.c1, q.vars.c2, q.vars.c3];
     const shouldIdx = c.findIndex(x => x === c[2] + 2);
-    const NAMES = q.lang === 'en' ? ['Tigers', 'Eels', 'Hawks', 'Bees'] : ['老虎队', '鳗鱼队', '鹰队', '蜜蜂队'];
-    chk(shouldIdx >= 0, 'Q9 应存在比鹰队多 2 球的队');
+    // 图里用的就是原卷队名（英文），中英两种模式都一样
+    const NAMES = ['Tigers', 'Eels', 'Hawks', 'Bees'];
+    chk(shouldIdx >= 0, 'Q9 应存在比 Hawks 多 2 球的队');
     chk(q.options[q.correctIndex] === NAMES[shouldIdx], 'Q9 选中「' + q.options[q.correctIndex] + '」应为「' + NAMES[shouldIdx] + '」');
-    // 图上画的球总数
-    // 图上球 = 四队小球之和，另加 KEY 图例里那 1 颗
+    // 图上球 = 四队小球之和，另加 KEY 里那 1 颗
     const balls = (q.diagramSvg.match(/data-u="ball"/g) || []).length;
     const sum = c[0] + c[1] + c[2] + c[3];
     chk(balls === sum + 1, 'Q9 图里球数 ' + balls + ' 应为 ' + (sum + 1) + '（' + sum + ' + KEY 1）');
+    // 图里的队名 / KEY 说明都用原卷英文
+    chk(NAMES.every(n2 => q.diagramSvg.indexOf(n2) >= 0), 'Q9 图上应出现全部英文队名');
+    chk(/KEY/.test(q.diagramSvg) && /= 1 goal/.test(q.diagramSvg), 'Q9 图上 KEY 应写 "= 1 goal"');
   }
-  console.log('Q9  correctIndex 指向的队 = 鹰队+2 ✓  图上球数与数值一致 ✓');
+  console.log('Q9  correctIndex 指向的队 = Hawks+2 ✓  图上球数与数值一致 ✓  队名/KEY 为原卷英文 ✓');
 }
 
 /* ---------- Q11：选项里恰有一组三张和为 T ---------- */
@@ -129,19 +132,20 @@ const REP = 60;
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t);
     const v = q.vars;
-    // 独立算法：甲 S, 乙 S-1, 丙 S-2, 丁 S-3，之后每 4 个循环一次
+    // 独立算法：Sue S, Jim S-1, Dave S-2, Kate S-3，之后每 4 个循环一次
     let who = -1;
     for (let x = v.S, k = 0; x >= v.n; x--, k++) if (x === v.n) who = k % 4;
     chk(who >= 0, 'Q18 数不到 ' + v.n);
-    const NM = q.lang === 'en' ? ['A', 'B', 'C', 'D'] : ['甲', '乙', '丙', '丁'];
+    // 图里用的是原卷人名，选项也是同一批名字（中英一致），顺序 = 图上的轮转顺序
+    const NM = ['Sue', 'Jim', 'Dave', 'Kate'];
     chk(q.options[q.correctIndex] === NM[who], 'Q18 选中「' + q.options[q.correctIndex] + '」应为「' + NM[who] + '」(S=' + v.S + ',n=' + v.n + ')');
     // 图上应标出前 4 个数：S, S-1, S-2, S-3
     let shown = 0;
     for (let k = 0; k < 4; k++) if (q.diagramSvg.indexOf(' ' + (v.S - k) + '</text>') >= 0) shown++;
     chk(shown === 4, 'Q18 图上应标出 ' + [v.S, v.S - 1, v.S - 2, v.S - 3].join('/') + '，实际命中 ' + shown);
-    chk(/甲 A/.test(q.diagramSvg) && /丁 D/.test(q.diagramSvg), 'Q18 图上人名缺失');
+    chk(NM.every(n2 => q.diagramSvg.indexOf(n2) >= 0), 'Q18 图上人名缺失（应为原卷的 Sue/Jim/Dave/Kate）');
   }
-  console.log('Q18 报数人独立验算 ✓  图上标出前 4 个数 ✓');
+  console.log('Q18 报数人独立验算 ✓  图上标出前 4 个数 ✓  人名为原卷英文 ✓');
 }
 
 /* ---------- Q25：图上长度比 = 面积比 ---------- */
@@ -247,8 +251,9 @@ const REP = 60;
     chk(/Thursday|星期四/.test(others), 'Q2 干扰项里应有「明天是星期四」');
     chk(/sunny|晴天/.test(others), 'Q2 干扰项里应有「明天也是晴天」');
     chk(q.options.length === 3, 'Q2 应为三选一，实际 ' + q.options.length);
-    chk(/It is sunny|晴天/.test(q.diagramSvg), 'Q2 图上缺天气文字');
-    chk(new RegExp('>.*' + d + '.*星期').test(q.diagramSvg) || q.diagramSvg.indexOf(d + ' 月') >= 0, 'Q2 图上缺日期');
+    chk(/It is sunny/.test(q.diagramSvg), 'Q2 图上缺天气文字');
+    // 原卷卡片上写的是「Today is Monday 6 June」，所以图上要有当天的 "d June"
+    chk(q.diagramSvg.indexOf(d + ' June') >= 0, 'Q2 图上应出现「' + d + ' June」，实际没有');
   }
   console.log('Q2  正确答案 = 「下周一 = 6月(d+7)日」✓  图上日期与变量一致 ✓');
 }
@@ -363,8 +368,8 @@ const REP = 60;
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t);
     const v = q.vars;
-    // ① 主图必须把西塔（上）和马克（下）标出来，否则题目没法定向
-    chk(/西塔 Sita/.test(q.diagramSvg) && /马克 Mark/.test(q.diagramSvg), 'Q26 图上缺少西塔/马克的方位标注');
+    // ① 主图必须把 Sita（上）和 Mark（下）标出来，否则题目没法定向
+    chk(/Sita/.test(q.diagramSvg) && /Mark/.test(q.diagramSvg), 'Q26 图上缺少 Sita / Mark 的方位标注');
     // ② 蓝点（棋子）应画在 (行 sr, 列 sc)：主图 cell=52 留白 10
     const dot = (q.diagramSvg.match(/<circle cx="([\d.]+)" cy="([\d.]+)" r="17"/) || []);
     chk(dot.length === 3, 'Q26 图上找不到棋子');
@@ -393,6 +398,49 @@ const REP = 60;
     chk(new Set(cells).size === 4, 'Q26 四个选项应是不同格子，实际 ' + cells.join(' | '));
   }
   console.log('Q26 棋子位置与变量一致 ✓  正确落点 = 她的左边(画面右)+朝马克 ✓  干扰项含"画面左"误解 ✓');
+}
+
+/* ---------- 配图文字一律用原试卷的语言（ICAS = 英文），不许翻成中文 ---------- */
+{
+  /* 逐题抽查关键文字是否与原卷一致（全量"无中文"由 test-bank.js 的闸门兜底） */
+  const CASES = [
+    ['icas22y2m-02', ['Today is Monday', 'It is sunny.', 'June']],
+    ['icas22y2m-09', ['Tigers', 'Eels', 'Hawks', 'Bees', 'KEY', '= 1 goal']],
+    ['icas22y2m-14', ['Cars', 'Bikes', 'Trucks', 'Buses']],
+    ['icas22y2m-18', ['Sue', 'Jim', 'Dave', 'Kate']],
+    ['icas22y2m-21', ['and so on']],
+    ['icas22y2m-22', ['spring', 'summer', 'autumn', 'winter']],
+    ['icas22y2m-23', ['purse']],
+    ['icas22y2m-25', ['blue', 'red', 'yellow']],
+    ['icas22y2m-26', ['Sita', 'Mark']],
+    ['icas22y2m-27', ['Minutes after Tina starts counting', 'Number of birds', 'Arrive', 'Fly away']],
+    ['icas22y2m-28', ['yellow', 'blue', 'green', 'pink']],
+    ['icas22y2m-13a', ['Ground']],
+    ['icas22y2m-30', ['arrows']]
+  ];
+  CASES.forEach(([id, words]) => {
+    const t = byId(id);
+    for (let i = 0; i < 12; i++) {
+      const q = Generator.instantiate(t);
+      chk(!/[\u4e00-\u9fff]/.test(q.diagramSvg || ''), id + ' 配图里出现了中文');
+      words.forEach(w => chk(q.diagramSvg.indexOf(w) >= 0, id + ' 图里应出现「' + w + '」'));
+    }
+  });
+  console.log('配图文字 = 原卷英文 ✓（Q2/9/13/14/18/21/22/23/25/26/27/28/30 抽查）');
+}
+
+/* ---------- 图形类型表不能有重复 key（重复时后者静默覆盖，改前面那个等于白改） ---------- */
+{
+  const src = fs.readFileSync(path.join(root, 'assets/js/diagrams.js'), 'utf8');
+  const seen = {}, dup = [];
+  let m;
+  const re = /^\s{4}([a-zA-Z][\w]*): function \(spec, vars\)/gm;
+  while ((m = re.exec(src))) {
+    if (seen[m[1]]) dup.push(m[1]);
+    seen[m[1]] = 1;
+  }
+  chk(dup.length === 0, 'diagrams.js 里有重复定义的图形类型（前面的会被静默覆盖）：' + dup.join(', '));
+  console.log('diagrams.js 图形类型 ' + Object.keys(seen).length + ' 个，无重复定义 ✓');
 }
 
 console.log(bad ? '\n✗ 共 ' + bad + ' 项不符' : '\n✓ 全部交叉验算通过');

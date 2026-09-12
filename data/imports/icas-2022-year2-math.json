@@ -453,7 +453,7 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q9",
       "stem": {
-        "zh": "下图是四支球队上一场比赛进球数的象形统计图（每个球代表 1 个进球）。哪一支队进的球正好比鹰队多 2 个？",
+        "zh": "下图是四支球队上一场比赛进球数的象形统计图（每个球代表 1 个进球）。哪一支队进的球正好比 Hawks（鹰队）多 2 个？",
         "en": "The pictograph below shows the goals four teams scored in their last game (each ball = 1 goal). Which team scored exactly 2 more goals than the Hawks?"
       },
       "vars": {
@@ -489,26 +489,26 @@
         "type": "choice",
         "options": [
           {
-            "zh": "老虎队",
+            "zh": "Tigers",
             "en": "Tigers"
           },
           {
-            "zh": "鳗鱼队",
+            "zh": "Eels",
             "en": "Eels"
           },
           {
-            "zh": "鹰队",
+            "zh": "Hawks",
             "en": "Hawks"
           },
           {
-            "zh": "蜜蜂队",
+            "zh": "Bees",
             "en": "Bees"
           }
         ],
         "correctIndex": "ci"
       },
       "solution": {
-        "zh": "先从图上数出鹰队是 {c2} 个球。比 {c2} 多 2 就是 {T} 个，再到图上找进球数是 {T} 的那一队，就是答案。",
+        "zh": "先从图上数出 Hawks 是 {c2} 个球。比 {c2} 多 2 就是 {T} 个，再到图上找进球数是 {T} 的那一支，就是答案。",
         "en": "Read the Hawks from the graph: {c2} goals. Two more than {c2} is {T}; find the column with {T} balls in the graph."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
@@ -516,10 +516,10 @@
       "diagram": {
         "type": "pictograph",
         "labels": [
-          "Tigers 虎",
-          "Eels 鳗",
-          "Hawks 鹰",
-          "Bees 蜂"
+          "Tigers",
+          "Eels",
+          "Hawks",
+          "Bees"
         ],
         "counts": [
           "c0",
@@ -527,7 +527,7 @@
           "c2",
           "c3"
         ],
-        "unit": "个进球"
+        "unit": "goal"
       }
     },
     {
@@ -980,22 +980,22 @@
         "rows": [
           {
             "kind": "car",
-            "label": "小汽车 Cars",
+            "label": "Cars",
             "count": "a"
           },
           {
             "kind": "bike",
-            "label": "自行车 Bikes",
+            "label": "Bikes",
             "count": "b"
           },
           {
             "kind": "truck",
-            "label": "卡车 Trucks",
+            "label": "Trucks",
             "count": "c"
           },
           {
             "kind": "bus",
-            "label": "公交车 Buses",
+            "label": "Buses",
             "count": "dd"
           }
         ]
@@ -1169,8 +1169,8 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q18",
       "stem": {
-        "zh": "四个小伙伴围成一圈轮流往下倒数，数数的顺序和头几个数如下图。照这样数下去，「{n}」会轮到谁说？",
-        "en": "Four friends take turns counting backwards around a circle; the order and the first few numbers are shown below. Who will say \"{n}\"?"
+        "zh": "四个小伙伴（Sue、Jim、Dave、Kate）围成一圈轮流往下倒数，数数的顺序和头几个数如下图。照这样数下去，「{n}」会轮到谁说？",
+        "en": "Four friends (Sue, Jim, Dave and Kate) take turns counting backwards around a circle; the order and the first few numbers are shown below. Who will say \"{n}\"?"
       },
       "vars": {
         "S": {
@@ -1195,27 +1195,27 @@
         "type": "choice",
         "options": [
           {
-            "zh": "甲",
-            "en": "A"
+            "zh": "Sue",
+            "en": "Sue"
           },
           {
-            "zh": "乙",
-            "en": "B"
+            "zh": "Jim",
+            "en": "Jim"
           },
           {
-            "zh": "丙",
-            "en": "C"
+            "zh": "Dave",
+            "en": "Dave"
           },
           {
-            "zh": "丁",
-            "en": "D"
+            "zh": "Kate",
+            "en": "Kate"
           }
         ],
         "correctIndex": "(S - n) % 4"
       },
       "solution": {
-        "zh": "从图上看，甲、乙、丙、丁依次报一个数，四个人轮一圈。从 {S} 数到 {n} 一共报了 {S}−{n}＝{S-n} 个数，{S-n}÷4 的余数是 {(S-n)%4}，所以是第 {(S-n)%4+1} 个人报的，也就是答案。",
-        "en": "From the picture the turn order is a four-person cycle. From {S} down to {n} is {S}−{n}＝{S-n} numbers; the remainder of {S-n}÷4 is {(S-n)%4}, so it is the {(S-n)%4+1}th person in the cycle."
+        "zh": "从图上看，四个人的顺序是 Sue → Jim → Dave → Kate（Sue 是第 1 个），依次报一个数，轮一圈。\n从 {S} 数到 {n} 一共报了 {S}−{n}＝{S-n} 个数，{S-n}÷4 的余数是 {(S-n)%4}，所以要数到顺序里的第 {(S-n)%4+1} 个人（第 1 个是 Sue）。",
+        "en": "From the picture the order is Sue → Jim → Dave → Kate (Sue is 1st) and the four repeat round the circle.\nCounting from {S} down to {n} takes {S}−{n}＝{S-n} numbers; {S-n}÷4 leaves remainder {(S-n)%4}, so it is number {(S-n)%4+1} in that order (number 1 is Sue)."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q18.png",
@@ -1407,33 +1407,33 @@
       "source": "ICAS 2022 Year 2 Mathematics Q22",
       "stem": {
         "en": "The wheel shows the seasons in Sydney. Which season is it in Sydney in month {m}?",
-        "zh": "圆盘上是悉尼的四季。悉尼 {m} 月是什么季节？"
+        "zh": "圆盘上标出了悉尼每个月属于哪个季节（图上写着 spring / summer / autumn / winter）。悉尼 {m} 月是什么季节？"
       },
       "answer": {
         "type": "choice",
         "options": [
           {
-            "en": "spring",
-            "zh": "春天"
+            "zh": "spring",
+            "en": "spring"
           },
           {
-            "en": "summer",
-            "zh": "夏天"
+            "zh": "summer",
+            "en": "summer"
           },
           {
-            "en": "autumn",
-            "zh": "秋天"
+            "zh": "autumn",
+            "en": "autumn"
           },
           {
-            "en": "winter",
-            "zh": "冬天"
+            "zh": "winter",
+            "en": "winter"
           }
         ],
         "correctIndex": "si"
       },
       "solution": {
         "en": "In Sydney: spring is Sep–Nov, summer Dec–Feb, autumn Mar–May, winter Jun–Aug. Month {m} belongs to the matching season.",
-        "zh": "悉尼的四季：春天 9–11 月，夏天 12–2 月，秋天 3–5 月，冬天 6–8 月。{m} 月就属于对应的那个季节。"
+        "zh": "看图上的圆盘：spring 9–11 月、summer 12–2 月、autumn 3–5 月、winter 6–8 月。{m} 月落在标着对应季节名的那一段上。"
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q22.png",
@@ -1614,7 +1614,7 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q25",
       "stem": {
-        "zh": "鲍比有三张长方形纸，下图按实际大小画出了它们（同样宽，长度不同）。黄纸的大小是红纸的 {m} 倍，红纸是蓝纸的 {k} 倍。一张黄纸能正好铺满多少张蓝纸？",
+        "zh": "鲍比有三张长方形纸，下图按实际大小画出了它们（同样宽，长度不同）。黄色（yellow）纸的大小是红色（red）纸的 {m} 倍，红色纸是蓝色（blue）纸的 {k} 倍。一张黄色纸能正好铺满多少张蓝色纸？",
         "en": "Bobby has three rectangular sheets, drawn to scale below (same width, different lengths). The yellow sheet is {m} times the size of the red sheet, and the red sheet is {k} times the size of the blue sheet. How many blue sheets exactly cover one yellow sheet?"
       },
       "vars": {
@@ -1871,9 +1871,9 @@
       "diagram": {
         "type": "datatable",
         "cols": [
-          "分钟 min",
-          "飞来 Arrive",
-          "飞走 Fly away"
+          "Minutes after Tina starts counting",
+          "Arrive",
+          "Fly away"
         ],
         "rows": [
           [
@@ -1896,6 +1896,18 @@
             "a4",
             "f4"
           ]
+        ],
+        "widths": [
+          232,
+          92,
+          92
+        ],
+        "groups": [
+          {
+            "label": "Number of birds",
+            "from": 1,
+            "to": 2
+          }
         ]
       }
     },
@@ -1912,7 +1924,7 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q28",
       "stem": {
-        "zh": "吉娜有 {n} 块颜色不同的积木（见下图，每块颜色都不一样）。她想搭一座 {n} 层的高塔，其中绿积木必须在最底层。她能搭出多少座不一样的塔？",
+        "zh": "吉娜有 {n} 块颜色不同的积木（见下图，每块颜色都不一样，颜色名写在积木上）。她想搭一座 {n} 层的高塔，其中绿色（green）积木必须在最底层。她能搭出多少座不一样的塔？",
         "en": "Gina has {n} blocks, all different colours (see the picture). She builds towers {n} blocks high, and the green block must be at the bottom. How many different towers can she build?"
       },
       "vars": {
@@ -1942,7 +1954,7 @@
         "integer": true
       },
       "solution": {
-        "zh": "绿积木已经固定在最底层，剩下 {n-1} 个位置要把 {n-1} 种颜色的积木排进去：第一个位置有 {n-1} 种选法，第二个有 {n-2} 种，第三个有 {n-3} 种，所以一共 {n-1}×{n-2}×{n-3}＝{(n-1)*(n-2)*(n-3)} 座。",
+        "zh": "绿色（green）积木已经固定在最底层，剩下 {n-1} 个位置要把 {n-1} 种颜色的积木排进去：第一个位置有 {n-1} 种选法，第二个有 {n-2} 种，第三个有 {n-3} 种，所以一共 {n-1}×{n-2}×{n-3}＝{(n-1)*(n-2)*(n-3)} 座。",
         "en": "Green is fixed at the bottom; the remaining {n-1} places take the other {n-1} colours: {n-1}×{n-2}×{n-3}＝{(n-1)*(n-2)*(n-3)} towers."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
@@ -1950,11 +1962,11 @@
       "diagram": {
         "type": "blockstack",
         "labels": [
-          "黄",
-          "蓝",
-          "绿",
-          "粉",
-          "紫"
+          "yellow",
+          "blue",
+          "green",
+          "pink",
+          "purple"
         ],
         "fills": [
           "#f5c518",

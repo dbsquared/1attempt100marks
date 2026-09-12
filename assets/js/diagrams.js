@@ -140,20 +140,27 @@
       return s;
     },
 
-    /* 灯笼串：红黄蓝绿循环，下标从 1 开始（Q21） */
+    /* 灯笼串：红黄蓝绿循环，下标从 1 开始（Q21）。
+       末尾画「…」表示按同样顺序继续挂下去 —— 题目问的是图里没有画出来的那一个，
+       规律必须从图里读出来，不能把「红黄蓝绿」写进题干。 */
     lanterns: function (spec, vars) {
-      var count = Math.max(4, Math.min(24, Math.round(num(spec.count, vars) || 12)));
+      var count = Math.max(4, Math.min(20, Math.round(num(spec.count, vars) || 12)));
       var palette = [RED, YELLOW, BLUE, GREEN];
-      var W = 40 + count * 34, H = 108, pad = 20;
-      var cw = (W - pad * 2) / count;
-      var s = svgOpen(W, H, 'lantern pattern');
+      var pad = 20, tail = 30, step = 34, H = 112;
+      if (pad * 2 + count * step + tail > 478) {
+        step = Math.max(20, Math.floor((478 - pad * 2 - tail) / count));   // 太宽就压缩间距，别超过 480
+      }
+      var s = svgOpen(pad * 2 + count * step + tail, H, 'lantern pattern: red yellow blue green repeating');
       for (var i = 0; i < count; i++) {
-        var cx = pad + cw * (i + 0.5), col = palette[i % palette.length];
+        var cx = pad + step * (i + 0.5), col = palette[i % palette.length];
         s += '<line x1="' + cx.toFixed(1) + '" y1="10" x2="' + cx.toFixed(1) + '" y2="26" stroke="' + INK + '" stroke-width="1.5"/>';
         s += '<rect x="' + (cx - 2).toFixed(1) + '" y="26" width="4" height="6" fill="' + INK + '"/>';
-        s += '<ellipse cx="' + cx.toFixed(1) + '" cy="52" rx="' + Math.min(15, cw * 0.36).toFixed(1) + '" ry="19" fill="' + col + '" stroke="' + INK + '" stroke-width="1"/>';
+        s += '<ellipse data-u="lantern" cx="' + cx.toFixed(1) + '" cy="52" rx="' + Math.min(15, step * 0.36).toFixed(1) +
+             '" ry="19" fill="' + col + '" stroke="' + INK + '" stroke-width="1"/>';
         s += '<text x="' + cx.toFixed(1) + '" y="92" font-size="13" text-anchor="middle" fill="' + INK + '">' + (i + 1) + '</text>';
       }
+      s += '<text x="' + (pad + step * count + 2).toFixed(1) + '" y="62" font-size="26" fill="' + INK + '">…</text>';
+      s += '<text x="' + (pad + step * count / 2).toFixed(1) + '" y="' + (H - 4) + '" font-size="12" text-anchor="middle" fill="' + INK + '">按同样的顺序一直挂下去</text>';
       s += '</svg>';
       return s;
     },
@@ -798,9 +805,9 @@
       rows.forEach(function (r) { widest = Math.max(widest, rowW(r.terms, r.rhs)); });
       var avail = MAXW - pad * 2;
       var k = widest > avail ? avail / widest : 1;         // 过长时整幅等比缩小
-      var W = pad * 2 + widest * k + 4;
+      var W = Math.round(pad * 2 + widest * k + 4);
       var rowH = Math.max(44, 56 * k);
-      var H = pad * 2 + (legend.length ? rowH : 0) + rows.length * rowH + 4;
+      var H = Math.round(pad * 2 + (legend.length ? rowH : 0) + rows.length * rowH + 4);
       var s = svgOpen(W, H, 'symbol equations');
       var y = pad + rowH * 0.7;
       var fs = function (v) { return (v * k).toFixed(1); };
@@ -829,7 +836,7 @@
         if (rt) {
           s += '<text x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(FS_OP + 4) + '" fill="' + INK + '">=</text>';
           tx += A_EQ * k;
-          s += '<text x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(FS_NUM) + '" font-weight="700" fill="' + INK + '">' + esc(rt) + '</text>';
+          s += '<text data-u="rhs" x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(FS_NUM) + '" font-weight="700" fill="' + INK + '">' + esc(rt) + '</text>';
         }
       });
       s += '</svg>';

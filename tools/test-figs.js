@@ -202,10 +202,19 @@ const REP = 60;
     const c = C / 2 - A + Bb / 4;                  // 解方程得 ● = C/2 − A + B/4
     chk(Math.abs(c - v.c) < 1e-9, 'Q29 方程组解 ● 应为 ' + v.c + '，独立解得 ' + c);
     chk(q.value === v.c, 'Q29 答案应为 ' + v.c);
-    // 图上算式右侧的数字
-    const rhs = (q.diagramSvg.match(/font-size="28"[^>]*>(\d+)</g) || []).map(s => +s.match(/>(\d+)</)[1]);
-    chk(rhs.length === 3 && rhs[0] === A && rhs[1] === Bb && rhs[2] === C,
-      'Q29 图上算式右端 ' + JSON.stringify(rhs) + ' 应为 ' + [A, Bb, C]);
+    // 图上算式右侧的数字（data-u="rhs" 标记）
+    const rhs = [...q.diagramSvg.matchAll(/data-u="rhs" x="([\d.]+)" y="[\d.]+" font-size="([\d.]+)" font-weight="700"[^>]*>(\d+)</g)]
+      .map(s2 => ({ x: +s2[1], fs: +s2[2], v: +s2[3] }));
+    chk(rhs.length === 3 && rhs[0].v === A && rhs[1].v === Bb && rhs[2].v === C,
+      'Q29 图上算式右端 ' + JSON.stringify(rhs.map(r => r.v)) + ' 应为 ' + [A, Bb, C]);
+    // 等号右边的数字不能超出 viewBox —— 之前第三式最长的「= 115」被裁掉过
+    const W = +q.diagramSvg.match(/viewBox="0 0 ([\d.]+)/)[1];
+    rhs.forEach(r => {
+      const est = String(r.v).length * r.fs * 0.62;   // 粗体数字的估算宽度
+      chk(r.x + est <= W - 2,
+        'Q29 右端 ' + r.v + ' 被裁掉了（x=' + r.x.toFixed(1) + ' + 宽' + est.toFixed(1) + ' > viewBox 宽 ' + W + '）');
+    });
+    chk(rhs.every(r => r.fs >= 15), 'Q29 右端数字字号过小（' + rhs.map(r => r.fs).join(',') + '），说明整幅被压得太厉害');
   }
   console.log('Q29 方程组独立求解 = 模板答案 ✓  图上算式数值正确 ✓');
 }
@@ -311,6 +320,79 @@ const REP = 60;
     chk(Math.abs(near - ticks[v.k]) < 1.5, 'Q7 箭头应指在第 ' + v.k + ' 个刻度上');
   }
   console.log('Q7  箭头向下指 ✓  箭头落在第 k 个刻度上 ✓');
+}
+
+/* ---------- Q21：问的必须是图里没画出来的位置，颜色由周期推出来 ---------- */
+{
+  const t = byId('icas22y2m-21');
+  const PAL = ['#e5484d', '#f5c518', '#1f6feb', '#2ea043'];   // 红 黄 蓝 绿
+  const NAMES = { zh: ['红色', '黄色', '蓝色', '绿色'], en: ['red', 'yellow', 'blue', 'green'] };
+  const SHOWN = 12;
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const n = q.vars.n;
+    // ① 画出来的灯笼颜色必须严格按 红黄蓝绿 循环
+    const fills = (q.diagramSvg.match(/data-u="lantern"[^>]*fill="(#[0-9a-f]{6})"/g) || [])
+      .map(s => s.match(/fill="(#[0-9a-f]{6})"/)[1]);
+    chk(fills.length === SHOWN, 'Q21 图上应画 ' + SHOWN + ' 个灯笼，实际 ' + fills.length);
+    chk(fills.every((c, k) => c === PAL[k % 4]),
+      'Q21 图上灯笼颜色不是 红黄蓝绿 循环：' + fills.join(','));
+    // ② 图上标了序号 1..12，学生才能数出「4 个一组」
+    let nums = 0;
+    for (let k = 1; k <= SHOWN; k++) if (q.diagramSvg.indexOf('>' + k + '</text>') >= 0) nums++;
+    chk(nums === SHOWN, 'Q21 图上应标出序号 1..' + SHOWN + '，实际 ' + nums + ' 个');
+    // ③ 图里有「…」表示继续挂
+    chk(/…/.test(q.diagramSvg), 'Q21 图上应有「…」表示按同样顺序继续挂下去');
+    // ④ 问的位置必须超出图上画的范围（否则是数图，不是找规律）
+    chk(n > SHOWN, 'Q21 问的第 ' + n + ' 个应该超出图上画出的 ' + SHOWN + ' 个');
+    // ⑤ 独立算颜色
+    const want = NAMES[q.lang === 'en' ? 'en' : 'zh'][(n - 1) % 4];
+    chk(q.options[q.correctIndex] === want,
+      'Q21 n=' + n + ' 选中「' + q.options[q.correctIndex] + '」应为「' + want + '」');
+    // ⑥ 每组第几个 与 完整组数 自洽
+    chk(q.vars.q === ((n - 1) % 4) + 1, 'Q21 每组第几个应为 ' + (((n - 1) % 4) + 1) + '，实际 ' + q.vars.q);
+    chk(q.vars.g * 4 + q.vars.q === n, 'Q21 ' + q.vars.g + '×4+' + q.vars.q + ' 应等于 ' + n);
+  }
+  console.log('Q21 灯笼颜色严格 红黄蓝绿 循环 ✓  问的位置在 12 个之外 ✓  答案随 n 变化 ✓');
+}
+
+/* ---------- Q26：她的「左边」= 画面右边（西塔在上方、面朝下方的马克） ---------- */
+{
+  const t = byId('icas22y2m-26');
+  const CELL = 34, OFF = 8;              // boardopt 的格子大小与左上留白
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const v = q.vars;
+    // ① 主图必须把西塔（上）和马克（下）标出来，否则题目没法定向
+    chk(/西塔 Sita/.test(q.diagramSvg) && /马克 Mark/.test(q.diagramSvg), 'Q26 图上缺少西塔/马克的方位标注');
+    // ② 蓝点（棋子）应画在 (行 sr, 列 sc)：主图 cell=52 留白 10
+    const dot = (q.diagramSvg.match(/<circle cx="([\d.]+)" cy="([\d.]+)" r="17"/) || []);
+    chk(dot.length === 3, 'Q26 图上找不到棋子');
+    if (dot.length === 3) {
+      const dc = Math.round((+dot[1] - 10 - 26) / 52), dr = Math.round((+dot[2] - 34 - 26) / 52);
+      chk(dr === v.sr && dc === v.sc, 'Q26 棋子应画在 (' + v.sr + ',' + v.sc + ')，实际 (' + dr + ',' + dc + ')');
+    }
+    // ③ 正确选项图里的红圈必须落在 (sr+2, sc+1) —— 她的左边是画面右边
+    const okSvg = q.optionsSvg[q.correctIndex];
+    const ring = (okSvg.match(/<circle cx="([\d.]+)" cy="([\d.]+)"/) || []);
+    chk(ring.length === 3, 'Q26 正确选项图里找不到标记圈');
+    if (ring.length === 3) {
+      const hc = Math.round((+ring[1] - OFF - CELL / 2) / CELL);
+      const hr = Math.round((+ring[2] - OFF - CELL / 2) / CELL);
+      chk(hr === v.sr + 2 && hc === v.sc + 1,
+        'Q26 正确落点应为 (' + (v.sr + 2) + ',' + (v.sc + 1) + ')（她自己的左边 = 画面右边），实际 (' + hr + ',' + hc + ')');
+      // ④ 按画面左边走是错的 —— 那个位置只能作为干扰项出现
+      chk(!(hr === v.sr + 2 && hc === v.sc - 1), 'Q26 正确答案不能是按画面左边算出来的那一格');
+      chk(hr >= 0 && hr < v.rows && hc >= 0 && hc < v.cols, 'Q26 落点跑到棋盘外了');
+    }
+    // ⑤ 四个选项必须是四个不同的格子
+    const cells = q.optionsSvg.map(s2 => {
+      const m2 = s2.match(/<circle cx="([\d.]+)" cy="([\d.]+)"/);
+      return m2 ? Math.round((+m2[1] - OFF - CELL / 2) / CELL) + ',' + Math.round((+m2[2] - OFF - CELL / 2) / CELL) : 'x';
+    });
+    chk(new Set(cells).size === 4, 'Q26 四个选项应是不同格子，实际 ' + cells.join(' | '));
+  }
+  console.log('Q26 棋子位置与变量一致 ✓  正确落点 = 她的左边(画面右)+朝马克 ✓  干扰项含"画面左"误解 ✓');
 }
 
 console.log(bad ? '\n✗ 共 ' + bad + ' 项不符' : '\n✓ 全部交叉验算通过');

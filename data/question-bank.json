@@ -2189,25 +2189,39 @@
       "title": "灯笼按顺序重复",
       "tags": [
         "找规律",
-        "周期"
+        "周期",
+        "推理"
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q21",
       "stem": {
-        "en": "Jamie hangs lanterns in the repeating order red, yellow, blue, green. What colour is the {n}th lantern?",
-        "zh": "杰米挂灯笼，按「红、黄、蓝、绿」的顺序不断重复。第 {n} 个灯笼是什么颜色？"
+        "zh": "杰米按同一个顺序不停重复地挂灯笼（如下图）。第 {n} 个灯笼是什么颜色？",
+        "en": "Jamie hangs lanterns, repeating the same order over and over (see the diagram below). What colour is the {n}th lantern?"
       },
       "vars": {
         "n": {
           "type": "pick",
           "from": [
-            5,
-            9,
-            13,
+            14,
+            15,
+            16,
             17,
-            21,
-            25
+            22,
+            23,
+            25,
+            28,
+            33,
+            34,
+            35,
+            40,
+            41,
+            46,
+            47
           ]
         }
+      },
+      "derived": {
+        "q": "((n - 1) % 4) + 1",
+        "g": "(n - ((n - 1) % 4) - 1) / 4"
       },
       "answer": {
         "type": "choice",
@@ -2229,18 +2243,18 @@
             "zh": "绿色"
           }
         ],
-        "correctIndex": 0
+        "correctIndex": "(n - 1) % 4"
       },
       "solution": {
-        "en": "4 lanterns make one group. {n}÷4＝{n/4} groups with remainder 1; remainder 1 is the first in each group — red.",
-        "zh": "4 个灯笼为一组。{n}÷4＝{n/4} 组余 1，余 1 就是每组里的第 1 个——红色。"
+        "zh": "看图中的灯笼串：颜色 4 个一组不停重复（第 1 个红、第 2 个黄、第 3 个蓝、第 4 个绿，第 5 个又回到红）。\n第 {n} 个灯笼，前面已经有 {g} 个完整的 4 个一组（{g}×4＝{g*4} 个），所以它是下一组里的第 {q} 个。\n对照顺序：每组第 1 个红、第 2 个黄、第 3 个蓝、第 4 个绿 —— 第 {q} 个对应的颜色就是答案。",
+        "en": "In the picture the colours repeat in a group of 4 (1st red, 2nd yellow, 3rd blue, 4th green; the 5th is red again).\nBefore the {n}th lantern there are {g} complete groups of 4 ({g}×4＝{g*4}), so it is number {q} in the next group.\nIn each group: 1st red, 2nd yellow, 3rd blue, 4th green — read off the colour for position {q}."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
+      "originalImage": "assets/originals/2022y2m-q21.png",
       "diagram": {
         "type": "lanterns",
         "count": 12
-      },
-      "originalImage": "assets/originals/2022y2m-q21.png"
+      }
     },
     {
       "id": "icas22y2m-22",
@@ -2520,9 +2534,52 @@
       ],
       "source": "ICAS 2022 Year 2 Mathematics Q26",
       "stem": {
-        "zh": "西塔的棋子（蓝点）在黑白棋盘上，马克站在棋盘的下方（如下图）。她把棋子往左移 1 格，又朝马克的方向前移 2 格。棋子最后停在哪一格？",
-        "en": "Sita's counter (blue dot) is on a black-and-white board and Mark stands below the board (diagram below). She moves it 1 square left and then 2 squares forward toward Mark. On which square does it land?"
+        "zh": "西塔的棋子（蓝点）在黑白棋盘上，西塔站在棋盘的上方、马克站在下方（如下图）。她把棋子往「自己的」左边移 1 格，再朝马克的方向前移 2 格。棋子最后停在哪一格？",
+        "en": "Sita's counter (blue dot) is on the black-and-white board. Sita stands above the board and Mark stands below it (see the diagram). She moves the counter 1 square to her own left, then 2 squares forward toward Mark. On which square does it land?"
       },
+      "vars": {
+        "rows": {
+          "type": "pick",
+          "from": [
+            5,
+            6
+          ]
+        },
+        "cols": {
+          "type": "pick",
+          "from": [
+            5,
+            6
+          ]
+        },
+        "sr": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        },
+        "sc": {
+          "type": "int",
+          "min": 1,
+          "max": 4
+        }
+      },
+      "derived": {
+        "o0r": "sr + 2",
+        "o0c": "sc + 1",
+        "o1r": "sr + 2",
+        "o1c": "sc - 1",
+        "o2r": "sr + 2",
+        "o2c": "sc",
+        "o3r": "sr + 1",
+        "o3c": "sc + 1",
+        "ar": "sr + 2",
+        "ac": "sc + 1"
+      },
+      "constraints": [
+        "sr + 2 <= rows - 1",
+        "sc + 1 <= cols - 1",
+        "sc - 1 >= 0"
+      ],
       "answer": {
         "type": "choice",
         "options": [
@@ -2576,53 +2633,11 @@
         "correctIndex": 0
       },
       "solution": {
-        "zh": "从棋子出发，先往左 1 格，再朝马克（向下）2 格，落在第 {ar} 行第 {ac} 列（从上往下、从左往右数）。",
-        "en": "From the counter, 1 left then 2 toward Mark (downwards) lands on row {ar}, column {ac} (counting from the top-left)."
+        "zh": "西塔站在棋盘上方、面朝下方的马克，所以她自己的「左边」就是画面的右边。\n从蓝点出发：先向右（她的左边）1 格，再向下（朝马克的方向）2 格 —— 落到从上数第 {ar} 行、从左数第 {ac} 列。",
+        "en": "Sita stands above the board facing Mark below, so her own left is the right-hand side of the picture.\nFrom the blue dot: 1 square to the right (her left), then 2 squares down (toward Mark) — landing on row {ar}, column {ac} counting down and from the left."
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q26.png",
-      "vars": {
-        "rows": {
-          "type": "pick",
-          "from": [
-            5,
-            6
-          ]
-        },
-        "cols": {
-          "type": "pick",
-          "from": [
-            5,
-            6
-          ]
-        },
-        "sr": {
-          "type": "int",
-          "min": 0,
-          "max": 3
-        },
-        "sc": {
-          "type": "int",
-          "min": 1,
-          "max": 5
-        }
-      },
-      "constraints": [
-        "sr + 3 <= rows",
-        "sc <= cols - 1"
-      ],
-      "derived": {
-        "o0r": "sr + 2",
-        "o0c": "sc - 1",
-        "o1r": "sr + 2",
-        "o1c": "sc",
-        "o2r": "sr + 1",
-        "o2c": "sc - 1",
-        "o3r": "sr",
-        "o3c": "sc - 1",
-        "ar": "sr + 3",
-        "ac": "sc"
-      },
       "diagram": {
         "type": "board",
         "rows": "rows",

@@ -311,8 +311,25 @@
     if (v > 0) { var el = $('#ppSize'); if (el) el.value = Math.max(1, Math.min(60, v)); }
   }
 
+  /* 模板的「原题语言」：带 {zh,en} 双语字段的（ICAS 真题）原题是英文，其余为中文原版 */
+  function origLangOf(tpl) {
+    var f = [tpl.stem, tpl.solution, tpl.hint];
+    for (var i = 0; i < f.length; i++) {
+      var x = f[i];
+      if (x && typeof x === 'object' && !Array.isArray(x) && typeof x.en !== 'undefined') return 'en';
+    }
+    return 'zh';
+  }
+  /* 组卷语言：orig=跟随每道题的原题语言；zh/en=强制；random=每次随机 */
+  function paperLangFor(tpl, mode) {
+    if (mode === 'zh' || mode === 'en') return mode;
+    if (mode === 'random') return null;
+    return origLangOf(tpl);
+  }
+
   function genPaper() {
     var size = Math.max(1, Math.min(60, +$('#ppSize').value || 10));
+    var langMode = ($('#ppLang') && $('#ppLang').value) || 'orig';
     var scope = $('#ppScope').value, sub = $('#ppSubject').value, topic = $('#ppTopic').value;
     var all = Bank.all().filter(function (t) { return !sub || (t.subject || '') === sub; });
     var ids = all.map(function (t) { return t.id; });
@@ -333,12 +350,14 @@
     for (var i = 0; i < size * 3 && picked.length < size; i++) {
       var id = ids[i % ids.length];
       var tpl = Bank.byId(id); if (!tpl) continue;
+      Generator.preferLang = paperLangFor(tpl, langMode);
       var q = Generator.instantiate(tpl, { count: sigs });
       if (!q) continue;
       if (picked.some(function (x) { return x.sig === q.sig; })) continue;
       sigs[q.sig] = 1;
       picked.push(q);
     }
+    Generator.preferLang = null;   // 复位，避免影响练习模式的随机语言
     if (!picked.length) { toast('生成失败，请检查题库模板'); return; }
 
     paper = { questions: picked, answers: {}, marks: {}, graded: false, createdAt: Date.now(), id: 'P' + Date.now() };

@@ -374,9 +374,9 @@
           if (paper.graded) {
             var ci = q.correctIndex;
             var isC = Array.isArray(ci) ? ci.indexOf(k) >= 0 : ci === k;
-            var isS = a && a.picked && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k);
+            var isS = a && a.picked !== null && a.picked !== undefined && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k);
             if (isC) cls += ' correct'; else if (isS) cls += ' wrongsel';
-          } else if (a && a.picked && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k)) cls += ' sel';
+          } else if (a && a.picked !== null && a.picked !== undefined && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k)) cls += ' sel';
           var g = (q.optionsSvg && q.optionsSvg[k]) ? '<span class="opt-svg">' + q.optionsSvg[k] + '</span>' : '';
           return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span><span>' + o + '</span>' + g + '</div>';
         }).join('') + '</div>';

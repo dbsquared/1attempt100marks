@@ -13,6 +13,7 @@
   var locked = false;
   var paper = null;       // {questions:[], answers:{}, graded:false}
   var lastResults = null; // 最近一轮的作答结果（用于生成可读答卷汇总邮件）
+  var ppSizeTouched = false; // 用户是否手动改过组卷题量（手动改后不再被来源联动覆盖）
 
   /* ---------------- 基础工具 ---------------- */
   function toast(msg) {
@@ -282,12 +283,32 @@
     box.innerHTML = list.map(function (s) {
       return '<label class="srcitem"><input type="checkbox" value="' + esc(s) + '"> ' + esc(s) + '</label>';
     }).join('');
+    box.addEventListener('change', syncPaperSizeDefault);   // 勾选/取消来源 → 联动默认题量
     if (countId) $(countId).textContent = list.length + ' 个来源';
-    if (allId) $(allId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = true; }); };
-    if (noneId) $(noneId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = false; }); };
+    if (allId) $(allId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = true; }); syncPaperSizeDefault(); };
+    if (noneId) $(noneId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = false; }); syncPaperSizeDefault(); };
   }
   function checkedSources(boxId) {
     return Array.prototype.slice.call($$(boxId + ' input:checked')).map(function (c) { return c.value; });
+  }
+
+  /* 所选「卷子」（试题来源）里，一份卷子平均有多少题 —— 用作组卷默认题量 */
+  function avgQuestionsOfSources(srcs) {
+    var all = Bank.all();
+    var counts = {};
+    all.forEach(function (t) { var s = sourceSetOf(t); counts[s] = (counts[s] || 0) + 1; });
+    var sets = (srcs && srcs.length) ? srcs : Object.keys(counts);
+    var total = 0, n = 0;
+    sets.forEach(function (s) { if (counts[s]) { total += counts[s]; n++; } });
+    return n ? Math.round(total / n) : 0;
+  }
+  /* 勾选来源时把题量默认成所选卷子的平均题数（用户手动改过后不再覆盖） */
+  function syncPaperSizeDefault() {
+    if (ppSizeTouched) return;
+    var srcs = checkedSources('#ppSources');
+    if (!srcs.length) return;            // 没选具体卷子时不动默认值
+    var v = avgQuestionsOfSources(srcs);
+    if (v > 0) { var el = $('#ppSize'); if (el) el.value = Math.max(1, Math.min(60, v)); }
   }
 
   function genPaper() {
@@ -320,7 +341,7 @@
     }
     if (!picked.length) { toast('生成失败，请检查题库模板'); return; }
 
-    paper = { questions: picked, answers: {}, graded: false, createdAt: Date.now(), id: 'P' + Date.now() };
+    paper = { questions: picked, answers: {}, marks: {}, graded: false, createdAt: Date.now(), id: 'P' + Date.now() };
     renderPaper();
     $('#btnPrintPaper').classList.remove('hidden');
     $('#btnSubmitPaper').classList.remove('hidden');
@@ -338,10 +359,13 @@
 
     paper.questions.forEach(function (q, i) {
       var a = paper.answers[q.key];
-      h += '<div class="paper-q"><div><span class="no">' + (i + 1) + '.</span>' +
+      var marked = paper.marks[q.key];
+      h += '<div class="paper-q' + (marked ? ' marked' : '') + '" data-key="' + q.key + '"><div><span class="no">' + (i + 1) + '.</span>' +
         q.stemHtml +
         (q.unit ? ' <span class="unit">（' + esc(q.unit) + '）</span>' : '') +
-        '<span class="print-only"> ______________________</span></div>' +
+        '<span class="print-only"> ______________________</span>' +
+        (paper.graded ? '' : '<button type="button" class="markbtn' + (marked ? ' on' : '') + '" data-q="' + q.key + '">' + (marked ? '🔖 已标记' : '🔖 标记') + '</button>') +
+        '</div>' +
         (q.diagramSvg ? '<div class="diagram-wrap">' + q.diagramSvg + '</div>' : '') +
         (q.tpl.image ? '<div class="paper-img"><img src="' + esc(q.tpl.image) + '" alt="原题图"></div>' : '');
       if (q.type === 'choice') {
@@ -391,10 +415,56 @@
         paper.answers[key].raw = el.value;
       });
     });
+    $$('#paperArea .markbtn').forEach(function (el) {
+      el.addEventListener('click', function () {
+        if (paper.graded) return;
+        var key = el.dataset.q;
+        paper.marks[key] = !paper.marks[key];
+        var qDiv = el.closest('.paper-q');
+        if (qDiv) qDiv.classList.toggle('marked', paper.marks[key]);
+        el.classList.toggle('on', paper.marks[key]);
+        el.textContent = paper.marks[key] ? '🔖 已标记' : '🔖 标记';
+        updateMarkCount();
+      });
+    });
+    updateMarkCount();
+  }
+
+  function updateMarkCount() {
+    var n = paper && paper.marks ? Object.keys(paper.marks).filter(function (k) { return paper.marks[k]; }).length : 0;
+    var el = $('#paperMarkInfo');
+    if (el) el.textContent = n ? ('🔖 已标记 ' + n + ' 题') : '';
   }
 
   function submitPaper() {
     if (!paper || paper.graded) return;
+    // 有被标记的题目时，先提示并允许跳回查看，避免漏做
+    var markedKeys = Object.keys(paper.marks || {}).filter(function (k) { return paper.marks[k]; });
+    if (markedKeys.length) {
+      var idxByKey = {};
+      paper.questions.forEach(function (q, i) { idxByKey[q.key] = i + 1; });
+      var nums = markedKeys.map(function (k) { return idxByKey[k]; }).sort(function (a, b) { return a - b; });
+      var unanswered = paper.questions.filter(function (q) {
+        if (!paper.marks[q.key]) return false;
+        var a = paper.answers[q.key];
+        if (q.type === 'choice') return !(a && a.picked !== null && a.picked !== undefined);
+        return !(a && a.raw !== undefined && String(a.raw).trim() !== '');
+      }).map(function (q) { return idxByKey[q.key]; }).sort(function (a, b) { return a - b; });
+      var msg = '你标记了 ' + markedKeys.length + ' 道题（第 ' + nums.join('、') + ' 题）';
+      if (unanswered.length) msg += '，其中 ' + unanswered.length + ' 道还没作答（第 ' + unanswered.join('、') + ' 题）';
+      msg += '。\n\n确定交卷吗？\n（点「取消」可跳转到第一道标记题先查看）';
+      if (!confirm(msg)) {
+        var firstIdx = Math.min.apply(null, markedKeys.map(function (k) { return idxByKey[k] - 1; }));
+        var firstQ = paper.questions[firstIdx];
+        var elq = document.querySelector('.paper-q[data-key="' + firstQ.key + '"]');
+        if (elq) {
+          elq.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          elq.classList.add('flash');
+          setTimeout(function () { elq.classList.remove('flash'); }, 1200);
+        }
+        return; // 不交卷，先去查看标记题
+      }
+    }
     paper.questions.forEach(function (q) {
       var a = paper.answers[q.key];
       var input = q.type === 'choice' ? (a ? a.picked : null) : (a ? a.raw : '');
@@ -776,6 +846,7 @@
     $('#btnBackHome').addEventListener('click', function () { $('#pResult').classList.add('hidden'); $('#pStart').classList.remove('hidden'); renderStart(); });
 
     $('#ppSubject').addEventListener('change', refreshTopics);
+    $('#ppSize').addEventListener('input', function () { ppSizeTouched = true; });
     $('#btnGenPaper').addEventListener('click', genPaper);
     $('#btnPrintPaper').addEventListener('click', function () { window.print(); });
     $('#btnSubmitPaper').addEventListener('click', submitPaper);

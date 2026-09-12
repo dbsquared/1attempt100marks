@@ -183,6 +183,12 @@ table.tbl tr:last-child td { border-bottom: none; }
 .paper-q { border-top: 1px dashed var(--border); padding: 14px 0; }
 .paper-q:first-child { border-top: none; }
 .paper-q .no { font-weight: 700; color: var(--brand); margin-right: 6px; }
+.paper-q.marked { border-left: 4px solid var(--warn); padding-left: 12px; background: var(--warn-soft); border-radius: 0 10px 10px 0; }
+.paper-q.flash { animation: a1mFlash 1.2s ease; }
+@keyframes a1mFlash { 0%,100% { background: var(--warn-soft); } 30% { background: var(--warn); } }
+.markbtn { margin-left: 10px; font-size: 12px; padding: 2px 10px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 999px; cursor: pointer; vertical-align: middle; }
+.markbtn:hover { border-color: var(--warn); }
+.markbtn.on { background: var(--warn); border-color: var(--warn); color: #1f1300; font-weight: 600; }
 .paper-img { margin: 8px 0 12px; }
 .paper-img img { max-width: 100%; border: 1px solid var(--border); border-radius: 10px; }
 .diagram-wrap { margin: 10px 0 16px; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; }

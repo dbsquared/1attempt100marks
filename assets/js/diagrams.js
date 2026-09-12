@@ -356,14 +356,17 @@
       var cols = Math.max(3, Math.min(7, Math.round(num(spec.cols, vars)) || 6));
       var sr = Math.max(0, Math.min(rows - 1, Math.round(num(spec.sr, vars))));
       var sc = Math.max(0, Math.min(cols - 1, Math.round(num(spec.sc, vars))));
-      var cell = 52, W = cols * cell + 20, H = rows * cell + 56, i, j;
-      var s = svgOpen(W, H, 'checker board');
+      /* 西塔在棋盘上方、马克在下方 —— 西塔面朝马克（画面下方），
+         所以"她自己的左边"是画面的右边。方位必须画出来，否则题目没法定向。 */
+      var cell = 52, top = 34, W = cols * cell + 20, H = rows * cell + top + 46, i, j;
+      var s = svgOpen(W, H, 'checker board with Sita above and Mark below');
+      s += '<text x="' + (W / 2) + '" y="22" font-size="18" font-weight="700" text-anchor="middle" fill="' + BLUE + '">↑ 西塔 Sita ↑</text>';
       for (i = 0; i < rows; i++) for (j = 0; j < cols; j++) {
-        s += '<rect x="' + (10 + j * cell) + '" y="' + (10 + i * cell) + '" width="' + cell + '" height="' + cell +
+        s += '<rect x="' + (10 + j * cell) + '" y="' + (top + i * cell) + '" width="' + cell + '" height="' + cell +
              '" fill="' + (((i + j) % 2 === 0) ? '#3a3f45' : '#f2f2f2') + '" stroke="' + INK + '" stroke-width="1.5"/>';
       }
-      s += '<circle cx="' + (10 + sc * cell + cell / 2) + '" cy="' + (10 + sr * cell + cell / 2) + '" r="17" fill="' + BLUE + '" stroke="#ffffff" stroke-width="3"/>';
-      s += '<text x="' + (W / 2) + '" y="' + (rows * cell + 34) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">↓ 马克 Mark ↓</text>';
+      s += '<circle cx="' + (10 + sc * cell + cell / 2) + '" cy="' + (top + sr * cell + cell / 2) + '" r="17" fill="' + BLUE + '" stroke="#ffffff" stroke-width="3"/>';
+      s += '<text x="' + (W / 2) + '" y="' + (top + rows * cell + 30) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">↓ 马克 Mark ↓</text>';
       s += '</svg>';
       return s;
     },
@@ -768,36 +771,65 @@
     },
 
     /* 图形符号算式：legend 图例 + rows 每行算式（Q10 / Q29） */
+    /* 图形符号算式：legend 图例 + rows 每行算式（Q10 / Q29）
+       先量出最宽一行再定 viewBox 宽度并整幅居中 —— 否则长式子（如 Q29 第三式）
+       的等号右边会被裁掉。 */
     symeq: function (spec, vars) {
       var legend = spec.legend || [], rows = spec.rows || [];
-      var rowH = 54, pad = 20, W = 460;
-      var H = pad * 2 + (legend.length ? 54 : 0) + rows.length * rowH;
-      var s = svgOpen(W, H, 'symbol equations');
-      var y = pad + 6;
-      if (legend.length) {
-        var lx = pad + 8;
-        legend.forEach(function (g) {
-          var gv = cellText(g.v, vars);
-          s += '<text x="' + lx + '" y="' + y + '" font-size="30" fill="' + INK + '">' + esc(g.s) + '</text>';
-          lx += 38;
-          s += '<text x="' + lx + '" y="' + y + '" font-size="24" fill="' + INK + '">=</text>';
-          lx += 26;
-          s += '<text x="' + lx + '" y="' + y + '" font-size="26" font-weight="700" fill="' + INK + '">' + esc(gv) + '</text>';
-          lx += 30 + gv.length * 16 + 34;
-        });
-        y += 54;
+      var MAXW = 470, pad = 18;
+      var FS_SYM = 30, FS_OP = 23, FS_NUM = 28, A_SYM = 44, A_OP = 30, A_EQ = 34;
+      function rhsOf(v) {
+        return (v === undefined || v === null || v === '') ? '' : cellText(v, vars);
       }
-      rows.forEach(function (row, i) {
-        var ry = y + i * rowH + 30;
-        var tx = pad + 10;
-        (row.terms || []).forEach(function (t) {
-          s += '<text x="' + tx + '" y="' + ry + '" font-size="30" fill="' + INK + '">' + esc(t) + '</text>';
-          tx += (t === '+' || t === '-' || t === '=') ? 30 : 42;
+      function rowW(terms, rhs) {
+        var w = 0;
+        (terms || []).forEach(function (t) { w += (t === '+' || t === '-' || t === '=') ? A_OP : A_SYM; });
+        var rt = rhsOf(rhs);
+        if (rt) w += A_EQ + rt.length * 17;
+        return w;
+      }
+      var legendTxt = [], legendW = 0;
+      legend.forEach(function (g) {
+        var t = cellText(g.v, vars);
+        legendTxt.push(t);
+        legendW += 38 + 26 + 30 + t.length * 16 + 34;
+      });
+      var widest = legendW;
+      rows.forEach(function (r) { widest = Math.max(widest, rowW(r.terms, r.rhs)); });
+      var avail = MAXW - pad * 2;
+      var k = widest > avail ? avail / widest : 1;         // 过长时整幅等比缩小
+      var W = pad * 2 + widest * k + 4;
+      var rowH = Math.max(44, 56 * k);
+      var H = pad * 2 + (legend.length ? rowH : 0) + rows.length * rowH + 4;
+      var s = svgOpen(W, H, 'symbol equations');
+      var y = pad + rowH * 0.7;
+      var fs = function (v) { return (v * k).toFixed(1); };
+      if (legend.length) {
+        var lx = (W - legendW * k) / 2;
+        legend.forEach(function (g, idx) {
+          var t = legendTxt[idx];
+          s += '<text x="' + lx.toFixed(1) + '" y="' + y.toFixed(1) + '" font-size="' + fs(FS_SYM) + '" fill="' + INK + '">' + esc(g.s) + '</text>';
+          lx += 38 * k;
+          s += '<text x="' + lx.toFixed(1) + '" y="' + y.toFixed(1) + '" font-size="' + fs(FS_OP + 4) + '" fill="' + INK + '">=</text>';
+          lx += 26 * k;
+          s += '<text x="' + lx.toFixed(1) + '" y="' + y.toFixed(1) + '" font-size="' + fs(FS_NUM) + '" font-weight="700" fill="' + INK + '">' + esc(t) + '</text>';
+          lx += (30 + t.length * 16 + 34) * k;
         });
-        if (row.rhs !== undefined && row.rhs !== null && row.rhs !== '') {
-          s += '<text x="' + tx + '" y="' + ry + '" font-size="30" fill="' + INK + '">=</text>';
-          tx += 34;
-          s += '<text x="' + tx + '" y="' + ry + '" font-size="28" font-weight="700" fill="' + INK + '">' + esc(cellText(row.rhs, vars)) + '</text>';
+        y += rowH;
+      }
+      rows.forEach(function (row, idx) {
+        var base = y + idx * rowH;
+        var tx = (W - rowW(row.terms, row.rhs) * k) / 2;
+        (row.terms || []).forEach(function (t) {
+          var isOp = (t === '+' || t === '-' || t === '=');
+          s += '<text x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(isOp ? FS_OP : FS_SYM) + '" fill="' + INK + '">' + esc(t) + '</text>';
+          tx += (isOp ? A_OP : A_SYM) * k;
+        });
+        var rt = rhsOf(row.rhs);
+        if (rt) {
+          s += '<text x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(FS_OP + 4) + '" fill="' + INK + '">=</text>';
+          tx += A_EQ * k;
+          s += '<text x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(FS_NUM) + '" font-weight="700" fill="' + INK + '">' + esc(rt) + '</text>';
         }
       });
       s += '</svg>';

@@ -3854,54 +3854,82 @@
         "h2 * 2 + m2 / 30 != h3 * 2 + m3 / 30"
       ],
       "answer": {
-        "type": "choice",
-        "options": [
-          "",
-          "",
-          "",
-          ""
-        ],
-        "optionsSvg": [
+        "type": "match",
+        "left": [
           {
-            "type": "digitalclock",
-            "h": "h0",
-            "m": "m0"
+            "svg": {
+              "type": "clock",
+              "h": "h0",
+              "m": "m0"
+            },
+            "key": "h0*60+m0"
           },
           {
-            "type": "digitalclock",
-            "h": "h1",
-            "m": "m1"
+            "svg": {
+              "type": "clock",
+              "h": "h1",
+              "m": "m1"
+            },
+            "key": "h1*60+m1"
           },
           {
-            "type": "digitalclock",
-            "h": "h2",
-            "m": "m2"
+            "svg": {
+              "type": "clock",
+              "h": "h2",
+              "m": "m2"
+            },
+            "key": "h2*60+m2"
           },
           {
-            "type": "digitalclock",
-            "h": "h3",
-            "m": "m3"
+            "svg": {
+              "type": "clock",
+              "h": "h3",
+              "m": "m3"
+            },
+            "key": "h3*60+m3"
           }
         ],
-        "correctIndex": 0
+        "right": [
+          {
+            "svg": {
+              "type": "digitalclock",
+              "h": "h0",
+              "m": "m0"
+            },
+            "key": "h0*60+m0"
+          },
+          {
+            "svg": {
+              "type": "digitalclock",
+              "h": "h1",
+              "m": "m1"
+            },
+            "key": "h1*60+m1"
+          },
+          {
+            "svg": {
+              "type": "digitalclock",
+              "h": "h2",
+              "m": "m2"
+            },
+            "key": "h2*60+m2"
+          },
+          {
+            "svg": {
+              "type": "digitalclock",
+              "h": "h3",
+              "m": "m3"
+            },
+            "key": "h3*60+m3"
+          }
+        ]
       },
       "solution": {
-        "en": "On a clock face the short hand shows the hour and the long hand shows the minutes. If the long hand points at 12 it is exactly o'clock; if it points at 6 it is half past. Read clock 1 that way and write it in digits — that is the matching digital clock.",
-        "zh": "钟面上短针指小时，长针指分钟。长针指 12 就是整点；指 6 就是半点。照这样读出 1 号钟面，再用数字写出来，就能找出一样的那个电子钟。"
+        "en": "On an analog clock the short hand shows the hour and the long hand shows the minutes. Read each clock, then join it to the digital clock with the same hours and minutes.",
+        "zh": "模拟钟面上短针指小时，长针指分钟；长针指 12 是整点，指 6 是半点。照这样读出每个钟面的时刻，再连到右边数字相同的电子钟。"
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
-      "originalImage": "assets/originals/2021y2m-q12.png",
-      "diagram": {
-        "type": "clocksmatch",
-        "h0": "h0",
-        "h1": "h1",
-        "h2": "h2",
-        "h3": "h3",
-        "m0": "m0",
-        "m1": "m1",
-        "m2": "m2",
-        "m3": "m3"
-      }
+      "originalImage": "assets/originals/2021y2m-q12.png"
     },
     {
       "id": "icas21y2m-13",
@@ -4134,36 +4162,59 @@
         "zh": "这个立体图形是用同样大的小方块搭成的。一共用了多少个小方块？"
       },
       "vars": {
-        "w": {
-          "type": "int",
-          "min": 2,
-          "max": 4
+        "ni": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
         },
         "h": {
           "type": "int",
-          "min": 2,
+          "min": 3,
           "max": 4
         }
       },
+      "derived": {
+        "f0": "sel(ni, h, h, h-1, h-1)",
+        "f1": "sel(ni, h, h, h, h-1)",
+        "f2": "sel(ni, h, h-1, h, h-1)",
+        "f3": "sel(ni, h, h-1, h-1, h)",
+        "b0": "sel(ni, h, h, h-1, h)",
+        "b1": "sel(ni, h, h, h, h-1)",
+        "b2": "sel(ni, h, h, h, h-1)",
+        "b3": "sel(ni, h, h, h-1, h-1)"
+      },
       "answer": {
         "type": "integer",
-        "expr": "2 * w * h"
+        "expr": "f0 + f1 + f2 + f3 + b0 + b1 + b2 + b3"
       },
       "sanity": {
         "integer": true,
         "positive": true
       },
       "solution": {
-        "en": "Look at the front: it is {w} cubes wide and {h} cubes tall, so the front layer has {w} × {h} = {w * h} cubes. The solid is 2 cubes deep, and the back layer is the same: {w * h} × 2 = {2 * w * h}.",
-        "zh": "看正面：宽 {w} 个、高 {h} 个，所以前面一层有 {w} × {h} = {w * h} 个。图形前后有两层，后面一层和前面一样，所以一共 {w * h} × 2 = {2 * w * h} 个。"
+        "en": "Count column by column. The front layer is {f0} + {f1} + {f2} + {f3} = {f0 + f1 + f2 + f3} cubes, and the back layer is {b0} + {b1} + {b2} + {b3} = {b0 + b1 + b2 + b3} cubes. Altogether {f0 + f1 + f2 + f3} + {b0 + b1 + b2 + b3} = {f0 + f1 + f2 + f3 + b0 + b1 + b2 + b3}.",
+        "zh": "一列一列地数：前面一层有 {f0} + {f1} + {f2} + {f3} = {f0 + f1 + f2 + f3} 个，后面一层有 {b0} + {b1} + {b2} + {b3} = {b0 + b1 + b2 + b3} 个。一共 {f0 + f1 + f2 + f3} + {b0 + b1 + b2 + b3} = {f0 + f1 + f2 + f3 + b0 + b1 + b2 + b3} 个。"
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q16.png",
       "diagram": {
         "type": "solidcubes",
-        "w": "w",
-        "hFront": "h",
-        "hBack": "h"
+        "hF": [
+          "f0",
+          "f1",
+          "f2",
+          "f3"
+        ],
+        "hB": [
+          "b0",
+          "b1",
+          "b2",
+          "b3"
+        ]
       }
     },
     {
@@ -4945,6 +4996,11 @@
           "c"
         ],
         "icon": "car",
+        "fills": [
+          "#d0342c",
+          "#2f9e44",
+          "#1c7ed6"
+        ],
         "keyN": "ka",
         "unit": "cars"
       }

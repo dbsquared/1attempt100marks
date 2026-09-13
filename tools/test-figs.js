@@ -8,7 +8,7 @@ const ctx = { console, Math, JSON, Object, Array, Number, String, isFinite, pars
 ctx.window = ctx; ctx.globalThis = ctx; vm.createContext(ctx);
 ['assets/js/expr.js', 'assets/js/diagrams.js', 'assets/js/generator.js', 'assets/js/grader.js']
   .forEach(f => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f }));
-const { Generator } = ctx;
+const { Generator, Grader } = ctx;
 const B = JSON.parse(fs.readFileSync(path.join(root, 'data/question-bank.json'), 'utf8'));
 const bank = B.templates || B;
 const byId = id => bank.find(t => t.id === id);
@@ -617,7 +617,7 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q11 图上蔬菜数 = 6r ✓ 答案 = 总数 − t ✓');
 }
 
-/* ---------- 21Q12：表针的角度自己算一遍，看钟面和数字时间是否一致 ---------- */
+/* ---------- 21Q12：连线配对题 —— 左列 4 钟面表针角度独立验算，右列 4 数字钟，key(h*60+m) 一一对应 ---------- */
 {
   const t = byId('icas21y2m-12');
   const pad2 = x => (x < 10 ? '0' + x : String(x));
@@ -625,34 +625,53 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   const circ = (a, b) => { const d = Math.abs(a - b); return Math.min(d, 12 - d); };
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
-    const grp = mAll(q.diagramSvg, /<g data-u="clock" data-h="(\d+)" data-m="(\d+)">([\s\S]*?)<\/g>/g);
-    chk(grp.length === 4, '21Q12 图上应有 4 个钟面，实际 ' + grp.length);
+    const L = q.leftItems || [], R = q.rightItems || [];
+    chk(L.length === 4 && R.length === 4, '21Q12 左右两列应各 4 项，实际 L=' + L.length + ' R=' + R.length);
+    chk(L.every(x => x.svg && /data-u="clock" /.test(x.svg)), '21Q12 左列每项应是模拟钟面 SVG');
+    chk(R.every(x => x.svg && /data-text="\d{1,2}:\d{2}"/.test(x.svg)), '21Q12 右列每项应是数字钟 SVG');
+    /* 表针角度自己算一遍（cx=80, cy=80, r=70） */
     const FACE = [];
-    grp.forEach((m, j) => {
-      const h = +m[1], mm = +m[2], cy = 78 + j * 116, cx = 146;
+    L.forEach((it, j) => {
+      const m = String(it.svg).match(/<g data-u="clock" data-h="(\d+)" data-m="(\d+)">([\s\S]*?)<\/g>/);
+      if (!m) { chk(false, '21Q12 左列第 ' + (j + 1) + ' 项缺钟面标签'); return; }
+      const h = +m[1], mm = +m[2], cx = 80, cy = 80;
       const hands = mAll(m[3], /<line x1="[\d.]+" y1="[\d.]+" x2="([\d.]+)" y2="([\d.]+)" stroke="[^"]+" stroke-width="(\d+)" stroke-linecap="round"\/>/g)
         .map(x => ({ x: +x[1], y: +x[2], w: +x[3] }));
       const hh = hands.filter(x => x.w === 4), mmH = hands.filter(x => x.w === 3);
-      chk(hh.length === 1 && mmH.length === 1, '21Q12 第 ' + (j + 1) + ' 个钟面应各有一根时针/分针');
+      chk(hh.length === 1 && mmH.length === 1, '21Q12 左列第 ' + (j + 1) + ' 钟面应各有一根时针/分针');
       const deg = x => norm(Math.atan2(x.x - cx, -(x.y - cy)) * 180 / Math.PI);
       if (hh.length === 1 && mmH.length === 1) {
         const mDeg = deg(mmH[0]);
-        chk(Math.abs(mDeg / 6 - mm) < 1.6, '21Q12 第 ' + (j + 1) + ' 个钟面分针指向 ' + (mDeg / 6).toFixed(1) + ' 分，标注 ' + mm + ' 分');
+        chk(Math.abs(mDeg / 6 - mm) < 1.6, '21Q12 左列第 ' + (j + 1) + ' 分针指向 ' + (mDeg / 6).toFixed(1) + ' 分，标注 ' + mm + ' 分');
         const hVal = deg(hh[0]) / 30, want = (h % 12) + mm / 60;
-        chk(circ(hVal, want) < 0.15, '21Q12 第 ' + (j + 1) + ' 个钟面时针指向 ' + hVal.toFixed(2) + ' 点，标注 ' + h + ':' + pad2(mm));
+        chk(circ(hVal, want) < 0.15, '21Q12 左列第 ' + (j + 1) + ' 时针指向 ' + hVal.toFixed(2) + ' 点，标注 ' + h + ':' + pad2(mm));
         FACE.push(pad2(h) + ':' + pad2(mm));
       }
     });
-    /* 正确选项的电子钟文字 = 1 号钟面 */
-    const txt = (q.optionsSvg || []).map(s => (s.match(/data-text="([^"]+)"/) || [])[1]);
-    chk(txt.every(Boolean), '21Q12 电子钟选项缺少时间文字：' + JSON.stringify(txt));
-    chk(new Set(txt).size === 4, '21Q12 四个电子钟应互不相同：' + txt.join(','));
-    const want1 = grp.length ? pad2(+grp[0][1]) + ':' + pad2(+grp[0][2]) : '';
-    chk(txt[q.correctIndex] === want1,
-      '21Q12 选中「' + txt[q.correctIndex] + '」应为 1 号钟面的 ' + want1);
-    chk(FACE[0] === want1, '21Q12 1 号钟面画的是 ' + FACE[0] + '，应是 ' + want1);
+    /* key 一一对应：左右各 4 个互不相同、且两列时刻集合一致 */
+    const lk = L.map(x => String(x.key)), rk = R.map(x => String(x.key));
+    chk(new Set(lk).size === 4, '21Q12 左列 4 个时刻应互不相同：' + lk.join(','));
+    chk(new Set(rk).size === 4, '21Q12 右列 4 个时刻应互不相同：' + rk.join(','));
+    chk(lk.slice().sort().join(',') === rk.slice().sort().join(','), '21Q12 左右两列时刻集合应一致：' + lk.join(',') + ' vs ' + rk.join(','));
+    /* 数字钟文字 = 对应 key 的时刻 */
+    R.forEach((it, j) => {
+      const txt = (String(it.svg).match(/data-text="([^"]+)"/) || [])[1];
+      const mins = +it.key, h = Math.floor(mins / 60), mm = mins % 60;
+      chk(txt === pad2(h) + ':' + pad2(mm), '21Q12 右列第 ' + (j + 1) + ' 电子钟显示 ' + txt + '，key 应为 ' + pad2(h) + ':' + pad2(mm));
+    });
+    /* 独立判分：正确配对判对；错连一条判错 */
+    const correct = L.map((it, i2) => {
+      let ri = -1;
+      for (let j = 0; j < R.length; j++) if (String(R[j].key) === String(it.key)) { ri = j; break; }
+      return [i2, ri];
+    });
+    const wrong = correct.map(x => x.slice());
+    if (wrong.length) wrong[0][1] = (wrong[0][1] + 1) % R.length;
+    chk(Grader.grade(q, correct).ok, '21Q12 正确配对应判对');
+    chk(!Grader.grade(q, wrong).ok, '21Q12 错连一条应判错');
+    chk(!Grader.grade(q, correct.slice(0, 3)).ok, '21Q12 少连一条应判错');
   }
-  console.log('21Q12 表针角度独立算出 = 标注时间 ✓ 正确选项 = 1 号钟面 ✓ 四个电子钟互不相同 ✓');
+  console.log('21Q12 左右 4+4 配对 ✓ 表针角度=标注 ✓ key 一一对应 ✓ 判分（对/错连/少连）✓');
 }
 
 /* ---------- 21Q13：数轴按「平均分」独立算每格（考点是等分，不是每格数 1） ---------- */
@@ -726,22 +745,42 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q15 车辆数 = n ✓ 答案 = 5n + 2(n−1) ✓');
 }
 
-/* ---------- 21Q16：立体图形的小方块 —— 按行/列/层自己数一遍 ---------- */
+/* ---------- 21Q16：立体方块 —— 按 ni 复刻四种排布，逐列高度与图上一致，总数独立用 8h−2ni 验算 ---------- */
 {
   const t = byId('icas21y2m-16');
+  /* 与模板 derived 同一张排布表：P0 长方体 / P1 前层缺口 / P2 双层凹口 / P3 前后错位阶梯。
+     偏移量是相对 h 的差值 —— 图上每列画几个必须和这张表一致。 */
+  const OFF = [
+    { F: [0, 0, 0, 0],   B: [0, 0, 0, 0] },
+    { F: [0, 0, -1, -1], B: [0, 0, 0, 0] },
+    { F: [-1, 0, 0, -1], B: [-1, 0, 0, -1] },
+    { F: [-1, -1, -1, 0], B: [0, -1, -1, -1] }
+  ];
+  let sawIrregular = 0;
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
-    const v = q.vars;
+    const v = q.vars, h = v.h, ni = v.ni;
     const cubes = mAll(q.diagramSvg, /<rect data-u="cube" x="([\d.]+)" y="([\d.]+)"/g).map(m => ({ x: +m[1], y: +m[2] }));
     chk(cubes.length === q.value, '21Q16 答案 ' + q.value + ' 应等于图上画的小方块数 ' + cubes.length);
+    chk(q.value === 8 * h - 2 * ni, '21Q16 答案 ' + q.value + ' 应为 8×' + h + ' − 2×' + ni + ' = ' + (8 * h - 2 * ni));
+    /* 画法常量：s0=40，dx=20（后排比前排同列右移 20）。前后排 x 交错排列，
+       用 (x−minX)%40 区分：=0 是前排，=20 是后排。 */
     const xs = [...new Set(cubes.map(c => c.x))];
-    chk(xs.length === 2 * v.w, '21Q16 前后两层共应有 ' + (2 * v.w) + ' 列，实际 ' + xs.length);
+    chk(xs.length === 8, '21Q16 前后两层共应有 8 列，实际 ' + xs.length);
     const perCol = {};
     cubes.forEach(c => { perCol[c.x] = (perCol[c.x] || 0) + 1; });
-    Object.keys(perCol).forEach(x => chk(perCol[x] === v.h, '21Q16 x=' + x + ' 这列有 ' + perCol[x] + ' 块，前/后层高都应为 ' + v.h));
-    chk(cubes.length === 2 * v.w * v.h, '21Q16 总数应为 2×' + v.w + '×' + v.h);
+    const minX = Math.min.apply(null, xs);
+    const frontX = xs.filter(x => (x - minX) % 40 === 0).sort((a, b) => a - b);
+    const backX = xs.filter(x => (x - minX) % 40 === 20).sort((a, b) => a - b);
+    chk(frontX.length === 4 && backX.length === 4, '21Q16 前/后层各应 4 列，实际 前 ' + frontX.length + ' 后 ' + backX.length);
+    const exp = OFF[ni];
+    frontX.forEach((x, c) => chk(perCol[x] === h + exp.F[c], '21Q16 前层第 ' + (c + 1) + ' 列画了 ' + perCol[x] + ' 块，应为 ' + (h + exp.F[c])));
+    backX.forEach((x, c) => chk(perCol[x] === h + exp.B[c], '21Q16 后层第 ' + (c + 1) + ' 列画了 ' + perCol[x] + ' 块，应为 ' + (h + exp.B[c])));
+    if (ni !== 0) sawIrregular++;
   }
-  console.log('21Q16 从图里数出的方块数 = 答案 ✓ 每列高度 = h、列数 = 2w ✓');
+  /* 不规则排布要真的出现：40 次抽样里 P0 之外的出现次数必须过半（均匀四选一，纯长方体占 1/4） */
+  chk(sawIrregular > REP21 / 2, '21Q16 不规则排布出现 ' + sawIrregular + '/' + REP21 + ' 次，应过半（长方体只占 1/4）');
+  console.log('21Q16 四种排布（含不规则体）逐列高度 = 排布表 ✓ 总数 = 8h−2ni ✓ 图上块数 = 答案 ✓');
 }
 
 /* ---------- 21Q17：只画了前两组，第三组要自己推 ---------- */
@@ -935,8 +974,18 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
     chk(new RegExp('<text[^>]*>' + top + '</text>').test(q.diagramSvg), '21Q25 图上没把最高分 ' + top + ' 写出来');
     const v = q.vars;
     chk(q.value === v.k * top + v.b - v.m, '21Q25 答案 ' + q.value + ' 应为 ' + v.k + '×' + top + ' + ' + v.b + ' − ' + v.m);
+    /* 原卷一致性：外环红、红白相间、靶心红里白 5、1-4 黑字齐全 */
+    const fillOf = {};
+    mAll(q.diagramSvg, /<circle data-u="ring" data-i="(\d+)"[^>]*fill="(#[0-9a-f]{6})"/g).forEach(m => { fillOf[m[1]] = m[2]; });
+    chk(fillOf[1] === '#d0342c', '21Q25 外环（1 分）应为红色 #d0342c，实际 ' + fillOf[1]);
+    chk(fillOf[2] === '#ffffff' && fillOf[3] === '#d0342c' && fillOf[4] === '#ffffff' && fillOf[5] === '#d0342c',
+      '21Q25 环带应红白相间，实际 ' + JSON.stringify(fillOf));
+    const nums = mAll(q.diagramSvg, /<text [^>]*>(\d)<\/text>/g).map(m => m[1]);
+    chk(nums.join('') === '12345', '21Q25 图上应依次写 1-5，实际 ' + nums.join(','));
+    const t5 = mAll(q.diagramSvg, /<text [^>]*fill="#ffffff"[^>]*>5<\/text>/g);
+    chk(t5.length === 1, '21Q25 靶心里的 5 应用白字，实际出现 ' + t5.length + ' 次');
   }
-  console.log('21Q25 环半径随分数递减 ✓ 最高分从图上读出 = 5 ✓ 算式独立算 ✓');
+  console.log('21Q25 环半径随分数递减 ✓ 最高分从图上读出 = 5 ✓ 红白配色/数字照原卷 ✓ 算式独立算 ✓');
 }
 
 /* ---------- 21Q26：象形统计图 —— 数图形个数 × KEY ---------- */
@@ -952,8 +1001,20 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
     chk((q.diagramSvg.match(/data-u="keyunit"/g) || []).length === 1, '21Q26 KEY 框里应只有一个示例图形');
     chk(q.value === units * per, '21Q26 答案 ' + q.value + ' 应为 ' + units + ' × ' + per + '（图上个数 × KEY）');
     chk(key[0][2] === 'cars', '21Q26 KEY 文字应为英文 cars，实际 ' + key[0][2]);
+    /* 车色必须跟行标签一致（Red 行红车 / Green 行绿车 / Blue 行蓝车）：
+       单元按列序出现（先第 1 列全部、再第 2 列…），逐个核对 fill。 */
+    const fills = t.diagram.fills;
+    chk(Array.isArray(fills) && fills.length === 3, '21Q26 模板应给 3 个 fills');
+    const unitGroups = mAll(q.diagramSvg, /<g data-u="unit">([\s\S]*?)<\/g>/g);
+    const colOf = k => (k < q.vars.a ? 0 : (k < q.vars.a + q.vars.b ? 1 : 2));
+    unitGroups.forEach((m, k) => {
+      const fill = (m[1].match(/fill="(#[0-9a-f]{6})"/) || [])[1];
+      chk(fill === fills[colOf(k)], '21Q26 第 ' + (k + 1) + ' 辆小车颜色 ' + fill + ' 应为所在行的 ' + fills[colOf(k)]);
+    });
+    const kf = (mAll(q.diagramSvg, /<g data-u="keyunit">([\s\S]*?)<\/g>/g)[0] || [''])[0].match(/fill="(#[0-9a-f]{6})"/);
+    chk(kf && !fills.includes(kf[1]), '21Q26 KEY 示例车 ' + (kf && kf[1]) + ' 不应与任何行同色（避免像第 4 行）');
   }
-  console.log('21Q26 数图上小汽车个数 ✓ 读 KEY 的倍数 ✓ 相乘得答案 ✓');
+  console.log('21Q26 数图上小汽车个数 ✓ 读 KEY 的倍数 ✓ 车色=行标签 ✓ 相乘得答案 ✓');
 }
 
 /* ---------- 21Q27：蜂巢密铺 —— 用「中心距 = √3·R」独立重建邻接关系，数只接 3 个的块 ---------- */

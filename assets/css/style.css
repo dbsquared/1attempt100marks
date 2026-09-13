@@ -204,6 +204,22 @@ table.tbl tr:last-child td { border-bottom: none; }
 .diagram { display: block; width: 100%; max-width: 480px; height: auto; margin: 0 auto; }
 .opt .opt-svg { display: block; margin: 8px 0 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; }
 .opt .opt-svg .diagram { max-width: 260px; }
+
+/* ---------- 连线配对题（match） ---------- */
+.match-wrap { position: relative; display: flex; gap: 56px; align-items: stretch; justify-content: center; margin: 12px 0 16px; padding: 8px 0; }
+.match-col { display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+.match-col.match-L { align-items: flex-end; }
+.match-col.match-R { align-items: flex-start; }
+.mitem {
+  border: 1px solid var(--border); background: var(--surface-2); border-radius: 12px;
+  padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, background .15s, box-shadow .15s; min-width: 120px;
+}
+.mitem .diagram { max-width: 160px; margin: 0; }
+.mitem:hover { border-color: var(--brand); }
+.mitem.pend { border-color: var(--brand); background: var(--brand-soft); box-shadow: 0 0 0 3px var(--brand-soft); }
+.mitem.conn { border-color: var(--ok); background: var(--ok-soft); }
+.match-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .cmp-opts { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
 .cmp-opt { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px; text-align: center; }
 .cmp-opt b { display: block; font-size: 12px; color: var(--muted); }

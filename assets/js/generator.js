@@ -25,6 +25,14 @@
     var p = Math.pow(10, digits || 1);
     return randInt(Math.round(min * p), Math.round(max * p), 1) / p;
   }
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    return arr;
+  }
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    return arr;
+  }
 
   /* ---------- 数值格式化 ---------- */
   function fmtNum(v, digits) {
@@ -179,6 +187,21 @@
       return out;
     }
 
+    if (out.type === 'match') {
+      // 连线配对题：left/right 各渲染一组 SVG，key 由表达式求出；正确配对 = key 相同
+      function buildItems(arr) {
+        return (arr || []).map(function (it) {
+          var svg = (global.Diagrams && it.svg) ? (global.Diagrams.render(it.svg, vars) || '') : '';
+          var key;
+          try { key = Expr.eval(it.key, vars); } catch (e) { key = String(it.key); }
+          return { svg: svg, key: key };
+        });
+      }
+      out.leftItems = shuffle(buildItems(a.left));
+      out.rightItems = shuffle(buildItems(a.right));
+      return out;
+    }
+
     if (out.type === 'text') {
       out.value = renderText(resolveField(a.expr, lang), vars);
       out.display = out.value;
@@ -207,6 +230,7 @@
   function checkSanity(tpl, ans) {
     var s = tpl.sanity || {};
     if (ans.type === 'choice') return true; // choice 的 value 是选项下标（多选为数组），不做数值检查
+    if (ans.type === 'match') return true;  // 配对题答案由 key 决定，数值检查不适用
     var v = ans.display === undefined ? ans.value : ans.value;
     if (typeof v === 'string') return true;
     if (!isFinite(v)) return false;
@@ -266,6 +290,10 @@
         options: ans.options,
         optionsSvg: ans.optionsSvg,
         correctIndex: ans.correctIndex,
+        leftItems: ans.leftItems,
+        rightItems: ans.rightItems,
+        leftItems: ans.leftItems,
+        rightItems: ans.rightItems,
         num: ans.num, den: ans.den,
         tolerance: ans.tolerance,
         digits: ans.digits,

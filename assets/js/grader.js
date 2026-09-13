@@ -83,6 +83,26 @@
       return { ok: ok, given: given || '（未作答）', expected: expected, comment: comment };
     }
 
+    if (q.type === 'match') {
+      var links = input || [];
+      var L = q.leftItems || [], R = q.rightItems || [];
+      var connL = {}, connR = {}, allOk = true;
+      links.forEach(function (lk) {
+        var l = lk[0], r = lk[1];
+        connL[l] = 1; connR[r] = 1;
+        if (!L[l] || !R[r] || String(L[l].key) !== String(R[r].key)) allOk = false;
+      });
+      var allConnected = L.length > 0;
+      for (var li = 0; li < L.length; li++) if (!connL[li]) allConnected = false;
+      given = links.map(function (lk) { return '左' + (lk[0] + 1) + '→右' + (lk[1] + 1); }).join('；');
+      expected = L.map(function (it, i) {
+        var ri = -1;
+        for (var j = 0; j < R.length; j++) if (String(R[j].key) === String(it.key)) { ri = j; break; }
+        return '左' + (i + 1) + '→右' + (ri + 1);
+      }).join('；');
+      return { ok: allOk && allConnected, given: given || '（未作答）', expected: expected, comment: (allOk && !allConnected) ? '有钟面没有连线' : '' };
+    }
+
     if (q.type === 'text') {
       var g = normText(input);
       var alts = [q.value].concat(q.alternatives || []);

@@ -10,6 +10,7 @@
   var session = null;     // {mode, queue:[{id,reason}], idx, results:[], sigCount:{}}
   var curQ = null;        // 当前题目实例
   var curChoice = null;   // 选择题当前选项
+  var matchLinks = [];    // 连线配对题当前的连接（[[左下标,右下标], ...]）
   var locked = false;
   var paper = null;       // {questions:[], answers:{}, graded:false}
   var lastResults = null; // 最近一轮的作答结果（用于生成可读答卷汇总邮件）
@@ -171,8 +172,14 @@
         var b = $('#btnSubmit'); if (b) b.disabled = false;
       });
     });
+    var mw = $('#qcard .match-wrap');
+    if (mw && q.type === 'match') {
+      setupMatch(mw, q, function () { return matchLinks; }, function (l) {
+        matchLinks = l; var b = $('#btnSubmit'); if (b) b.disabled = false;
+      }, { locked: false });
+    }
     var bs = $('#btnSubmit');
-    if (bs && q.type === 'choice') bs.disabled = true;
+    if (bs && (q.type === 'choice' || q.type === 'match')) bs.disabled = true;
     if (bs) bs.addEventListener('click', submitAnswer);
     var inp = $('#ansInput');
     if (inp) {
@@ -213,6 +220,10 @@
     }
 
     renderFeedback(res, curQ);
+    if (curQ.type === 'match') {
+      var mw2 = $('#qcard .match-wrap');
+      if (mw2) setupMatch(mw2, curQ, function () { return matchLinks; }, function () {}, { locked: true, correctLinks: computeCorrectLinks(curQ) });
+    }
   }
 
   function renderFeedback(res, q) {
@@ -455,6 +466,15 @@
         updateMarkCount();
       });
     });
+    $$('#paperArea .match-wrap').forEach(function (mw) {
+      var key = mw.dataset.qkey;
+      var q = paper.questions.filter(function (x) { return x.key === key; })[0];
+      if (!q) return;
+      setupMatch(mw, q,
+        function () { return (paper.answers[key] || {}).links || []; },
+        function (l) { paper.answers[key] = paper.answers[key] || {}; paper.answers[key].links = l; },
+        { locked: paper.graded, correctLinks: paper.graded ? computeCorrectLinks(q) : null });
+    });
     updateMarkCount();
   }
 
@@ -511,9 +531,9 @@
     }
     paper.questions.forEach(function (q) {
       var a = paper.answers[q.key];
-      var input = q.type === 'choice' ? (a ? a.picked : null) : (a ? a.raw : '');
+      var input = q.type === 'match' ? (a ? a.links : []) : (q.type === 'choice' ? (a ? a.picked : null) : (a ? a.raw : ''));
       var res = Grader.grade(q, input);
-      paper.answers[q.key] = { picked: a ? a.picked : null, raw: a ? a.raw : '', ok: res.ok, given: res.given, expected: res.expected };
+      paper.answers[q.key] = { picked: a ? a.picked : null, raw: a ? a.raw : '', links: a ? a.links : [], ok: res.ok, given: res.given, expected: res.expected };
       SRS.record(q.tplId, res.ok, { given: res.given, expected: res.expected, stem: q.stemText });
       Store.pushHistory({ ts: Date.now(), tid: q.tplId, ok: res.ok, given: res.given, expected: res.expected, stem: q.stemText, topic: q.tpl.topic || '', mode: 'paper' });
     });
@@ -876,7 +896,9 @@
       '题目ID：' + (tplId || '?'),
       '类型：' + (q.type || '?'),
       '题干：' + (q.stemText || '')];
-    if (q.type === 'choice') {
+    if (q.type === 'match') {
+      lines.push('配对（左→右）：' + computeCorrectLinks(q).map(function (lk) { return '左' + (lk[0] + 1) + '→右' + (lk[1] + 1); }).join('  '));
+    } else if (q.type === 'choice') {
       lines.push('选项：' + (q.options || []).map(function (o, k) { return 'ABCDEFGH'[k] + '. ' + o; }).join('  '));
       var ci = q.correctIndex;
       lines.push('正确答案：' + (Array.isArray(ci) ? ci.map(function (i) { return 'ABCDEFGH'[i]; }).join('+') : 'ABCDEFGH'[ci]));

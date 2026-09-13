@@ -611,7 +611,7 @@
         var kx = pad + labels.length * colW + 14;
         s += '<rect x="' + kx + '" y="26" width="132" height="86" rx="8" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
         s += '<text x="' + (kx + 66) + '" y="50" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">KEY</text>';
-        if (useCar) s += '<g data-u="keyunit">' + carIcon(kx + 34, 66, 44, '#7bc47f') + '</g>';
+        if (useCar) s += '<g data-u="keyunit">' + carIcon(kx + 34, 66, 44, '#b9bec7') + '</g>';
         else s += ballIcon(kx + 30, 76, 11);
         s += '<text data-u="keytext" x="' + (kx + (useCar ? 62 : 50)) + '" y="' + (useCar ? 72 : 82) + '" font-size="13" fill="' + INK + '">= ' + keyN + ' ' + esc(spec.unit || 'goal') + '</text>';
       }
@@ -1227,6 +1227,17 @@
       return s;
     },
 
+    /* 单个模拟钟面（Q12 match 题型左列用）：h/m 为小时分钟，内部画出时针/分针 */
+    clock: function (spec, vars) {
+      var h = Math.round(num(spec.h, vars)), m = Math.round(num(spec.m, vars));
+      if (h <= 0) h = 12; if (h > 12) h = ((h - 1) % 12) + 1;
+      var r = 70, cx = 80, cy = 80, W = 160, H = 160;
+      var s = svgOpen(W, H, 'analog clock ' + h + ' ' + m);
+      s += '<g data-u="clock" data-h="' + h + '" data-m="' + m + '">' + clockFace(cx, cy, r, h % 12, m) + '</g>';
+      s += '</svg>';
+      return s;
+    },
+
     /* 数轴：从 B 到 E 分成 n 格，箭头向下指第 k 格（Q13） */
     numline: function (spec, vars) {
       var B = num(spec.B, vars), E = num(spec.E, vars);
@@ -1314,17 +1325,28 @@
     },
 
     /* 单位小立方体堆成的立体图形（Q16）：前 hFront 层、后 hBack 层的 w 宽墙 */
+    /* 立体方块（Q16）：小方块搭成的立体。
+       hF/hB 传标量 = 前后两层各自等高（规整长方体）；
+       传**数组**（逐列高度表达式/变量名）= 不规则体 —— 原题正是不规则堆叠，
+       不能只会画长方体。答案 = 图上 data-u="cube" 总数，test-figs 独立数一遍。 */
     solidcubes: function (spec, vars) {
-      var w = Math.max(1, Math.min(5, Math.round(num(spec.w, vars))));
-      var hF = Math.max(1, Math.min(4, Math.round(num(spec.hFront, vars))));
-      var hB = Math.max(1, Math.min(4, Math.round(num(spec.hBack, vars))));
+      function colHeights(v, fallback) {
+        var arr = Array.isArray(v) ? v : [v === undefined || v === null ? fallback : v];
+        return arr.map(function (e) { return Math.max(1, Math.min(4, Math.round(num(e, vars)))); });
+      }
+      var hF = colHeights(spec.hF, spec.hFront);
+      var hB = colHeights(spec.hB, spec.hBack);
+      var w = Math.max(1, Math.min(5, Math.max(hF.length, hB.length)));
+      while (hF.length < w) hF.push(hF[hF.length - 1]);
+      while (hB.length < w) hB.push(hB[hB.length - 1]);
       var s0 = 40, dx = s0 * 0.5, dy = s0 * 0.34, pad = 34;
-      var W = pad * 2 + w * s0 + dx, H = pad * 2 + Math.max(hF, hB) * s0 + dy + 10;
+      var maxH = Math.max.apply(null, hF.concat(hB));
+      var W = pad * 2 + w * s0 + dx, H = pad * 2 + maxH * s0 + dy + 10;
       var baseY = H - pad, s = svgOpen(W, H, 'solid made of stacked cubes'), row, lev, col;
       for (row = 1; row >= 0; row--) {
-        var hh = row === 0 ? hF : hB;
-        for (lev = 0; lev < hh; lev++) {
-          for (col = 0; col < w; col++) {
+        var hs = row === 0 ? hF : hB;
+        for (col = 0; col < w; col++) {
+          for (lev = 0; lev < hs[col]; lev++) {
             var x = pad + col * s0 + row * dx, yy = baseY - (lev + 1) * s0 - row * dy;
             s += '<polygon points="' + x + ',' + yy + ' ' + (x + dx) + ',' + (yy - dy) + ' ' + (x + s0 + dx) + ',' + (yy - dy) + ' ' + (x + s0) + ',' + yy +
                  '" fill="#3f9d4a" stroke="' + INK + '" stroke-width="1.6"/>';
@@ -1538,18 +1560,22 @@
     },
 
     /* 靶盘：1 环在最外面、5 环在中心（Q25） */
+    /* 靶盘（Q25）：照原卷画 —— 从外到内红白相间（外环红）、环带较厚，
+       数字 1-4 黑色放在**环带中线**（原先挤在顶部边缘、且外环画成白色，和原卷相反），
+       5 在红色靶心内用白字。半径比例取自原卷：外环最厚、靶心略大。 */
     targetboard: function (spec, vars) {
-      var W = 300, H = 300, cx = 150, cy = 150, R = 124, s = svgOpen(W, H, 'target board'), i;
-      for (i = 5; i >= 1; i--) {
-        var r = R * (6 - i) / 5;
-        s += '<circle data-u="ring" data-i="' + i + '" cx="' + cx + '" cy="' + cy + '" r="' + r.toFixed(1) +
-             '" fill="' + (i % 2 ? '#ffffff' : '#c62828') + '" stroke="' + INK + '" stroke-width="2"/>';
+      var W = 300, H = 304, cx = 150, cy = 152, R = 126;
+      var rs = [1, 0.79, 0.585, 0.40, 0.235].map(function (k) { return R * k; });
+      var s = svgOpen(W, H, 'target board 1 to 5 points'), i;
+      for (i = 0; i < 5; i++) {
+        s += '<circle data-u="ring" data-i="' + (i + 1) + '" cx="' + cx + '" cy="' + cy + '" r="' + rs[i].toFixed(1) +
+             '" fill="' + (i % 2 ? '#ffffff' : '#d0342c') + '" stroke="' + INK + '" stroke-width="' + (i === 0 ? 3 : 2) + '"/>';
       }
-      for (i = 1; i <= 5; i++) {
-        var rr = R * (6 - i) / 5;
-        s += '<text x="' + cx + '" y="' + (cy - rr + 22) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' +
-             (i % 2 ? '#c62828' : '#ffffff') + '">' + i + '</text>';
+      for (i = 0; i < 4; i++) {
+        var mid = (rs[i] + rs[i + 1]) / 2;
+        s += '<text x="' + cx + '" y="' + (cy - mid + 6).toFixed(1) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + (i + 1) + '</text>';
       }
+      s += '<text x="' + cx + '" y="' + (cy - rs[4] / 2 + 6).toFixed(1) + '" font-size="17" font-weight="700" text-anchor="middle" fill="#ffffff">5</text>';
       s += '</svg>';
       return s;
     },

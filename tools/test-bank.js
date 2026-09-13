@@ -44,6 +44,12 @@ for (const tpl of list) {
   }
   const bad = qs.filter(q => {
     if (q.type === 'choice') return q.correctIndex === undefined || q.correctIndex < 0 || q.options.length < 2;
+    if (q.type === 'match') {
+      const L = q.leftItems || [], R = q.rightItems || [];
+      return !(L.length >= 2 && R.length === L.length &&
+        L.every(x => x && x.svg && x.key !== undefined && x.key !== null) &&
+        R.every(x => x && x.svg && x.key !== undefined && x.key !== null));
+    }
     if (q.type === 'text') return !q.value;
     if (q.type === 'fraction') return !isFinite(q.value) || q.den === 0;
     return !isFinite(q.value);
@@ -56,6 +62,15 @@ for (const tpl of list) {
       correctInput = q.correctIndex;
       wrongInput = (Array.isArray(q.correctIndex) ? [] : [(q.correctIndex + 1) % q.options.length])[0];
       if (Array.isArray(q.correctIndex)) return;
+    } else if (q.type === 'match') {
+      const L = q.leftItems || [], R = q.rightItems || [];
+      correctInput = L.map((it, i) => {
+        let ri = -1;
+        for (let j = 0; j < R.length; j++) if (String(R[j].key) === String(it.key)) { ri = j; break; }
+        return [i, ri];
+      });
+      wrongInput = correctInput.map(x => x.slice());
+      if (wrongInput.length) wrongInput[0][1] = (wrongInput[0][1] + 1) % R.length;  // 错连一条
     } else if (q.type === 'fraction') {
       correctInput = q.den === 1 ? String(q.num) : (q.num + '/' + q.den);
       wrongInput = correctInput === '1' ? '2' : '1';
@@ -81,10 +96,11 @@ for (const tpl of list) {
   let figErr = '';
   // 真题导入的题（有 originalImage）只要原题带图，就必须自己画图；
   // 确实无图的应用题要显式写 noFigure 说明原因，否则 FAIL —— 防止把图"退化成文字"。
-  if (tpl.originalImage && !tpl.diagram && !tpl.image && !tpl.noFigure) {
+  const hasFig = tpl.diagram || tpl.image || (tpl.answer && tpl.answer.type === 'match');
+  if (tpl.originalImage && !hasFig && !tpl.noFigure) {
     figErr = '真题模板缺少配图：请加 diagram（简化 SVG），或写 noFigure 说明原题确实无图';
   }
-  else if (refsFigure(tpl) && !tpl.image && !tpl.diagram) figErr = '题干提到图，但既无 image 也无 diagram';
+  else if (refsFigure(tpl) && !tpl.image && !tpl.diagram && !(tpl.answer && tpl.answer.type === 'match')) figErr = '题干提到图，但既无 image 也无 diagram';
   else if (tpl.diagram && (!qs.length || !qs.every(q => q.diagramSvg))) figErr = 'diagram 渲染为空';
   else if ((tpl.answer && tpl.answer.optionsSvg) &&
            !qs.every(q => Array.isArray(q.optionsSvg) && q.optionsSvg.length === q.options.length && q.optionsSvg.every(Boolean))) {

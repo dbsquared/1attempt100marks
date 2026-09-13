@@ -276,5 +276,16 @@
 <script src="assets/js/store.js?v=21"></script>
 <script src="assets/js/srs.js?v=21"></script>
 <script src="assets/js/app.js?v=21"></script>
+
+<!-- 页脚版本徽标：自动读取 app.js 的 ?v= 参数，方便确认浏览器实际运行的代码版本 -->
+<div id="verBadge" style="position:fixed;right:10px;bottom:8px;font-size:11px;color:#b9bec7;pointer-events:none;z-index:9"></div>
+<script>
+(function () {
+  var s = document.querySelector('script[src*="app.js?v="]');
+  var m = s && s.src.match(/v=(\d+)/);
+  var el = document.getElementById('verBadge');
+  if (el) el.textContent = 'v' + (m ? m[1] : '?');
+})();
+</script>
 </body>
 </html>

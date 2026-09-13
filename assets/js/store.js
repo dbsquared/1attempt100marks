@@ -123,9 +123,16 @@
     return prof;
   }
   function renameProfile(id, name) {
-    var changed = false;
-    profiles().forEach(function (p) { if (p.id === id && name) { p.name = (name + '').trim() || p.name; changed = true; } });
-    if (changed) saveProfiles(profiles());
+    // 注意：必须只读一次 profiles()，在同一份数组上改名再写回；
+    // 若第二次再调 profiles() 会重新 JSON.parse 出旧数据，改名等于没改。
+    var list = profiles(), changed = false;
+    list.forEach(function (p) {
+      if (p.id !== id) return;
+      var t = (name == null ? '' : (name + '')).trim();
+      if (!t || t === p.name) return;
+      p.name = t; changed = true;
+    });
+    if (changed) saveProfiles(list);
   }
   function removeProfile(id) {
     var list = profiles();

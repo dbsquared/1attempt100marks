@@ -77,6 +77,32 @@ const EXPECT = {
   'icas21y2m-28': '39',
   'icas21y2m-29': 'Sita, Ben, Lin, Pete',          // 从左到右
   'icas21y2m-30': '5',
+  // ---- SEAMO 2025 Paper A ----
+  'seamo25a-q01': '31',
+  'seamo25a-q02': { svg: ['data-u="shape" data-n="4"'], note: '正方形（4 条边）＝原卷答案 B' },
+  'seamo25a-q03': '163',
+  'seamo25a-q04': '135',
+  'seamo25a-q05': '12',
+  'seamo25a-q06': '28',
+  'seamo25a-q07': '23',
+  'seamo25a-q08': '10',
+  'seamo25a-q09': '1',                             // 原卷第 1 个圆圈 = 1（选项就是 1~5）
+  'seamo25a-q10': { svg: ['data-u="disc" data-start="3" data-count="3"'], note: '3 个阴影扇形，从 3 点钟起（原卷答案 C）' },
+  'seamo25a-q11': '3h 15 min',
+  'seamo25a-q12': '$63',
+  'seamo25a-q13': '18',
+  'seamo25a-q14': 'Tuesday',
+  'seamo25a-q15': '22',
+  'seamo25a-q16': '420',
+  'seamo25a-q17': '21',
+  'seamo25a-q18': '20',
+  'seamo25a-q19': { svg: ['data-segs="00-20;20-22;22-02;02-00;00-22;20-02"'], note: '正方形＋两条对角线（原卷答案 D）' },
+  'seamo25a-q20': '24',
+  'seamo25a-q21': '5',
+  'seamo25a-q22': '5:00 PM',
+  'seamo25a-q23': '121',
+  'seamo25a-q24': '9',
+  'seamo25a-q25': '19',
 };
 
 const bank = JSON.parse(fs.readFileSync(path.join(root, 'data/question-bank.json'), 'utf8'));

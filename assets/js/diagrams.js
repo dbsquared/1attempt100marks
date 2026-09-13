@@ -850,6 +850,8 @@
       rows.forEach(function (row, idx) {
         var base = y + idx * rowH;
         var tx = (W - rowW(row.terms, row.rhs) * k) / 2;
+        /* data-terms/data-rhs 供 test-figs.js 独立重算（不依赖模板公式；符号与数字都要**求值**） */
+        s += '<g data-u="srow" data-r="' + idx + '" data-terms="' + esc((row.terms || []).map(function (t) { return cellText(t, vars); }).join('')) + '" data-rhs="' + esc(rhsOf(row.rhs)) + '">';
         (row.terms || []).forEach(function (t) {
           var isOp = (t === '+' || t === '-' || t === '=');
           s += '<text x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(isOp ? FS_OP : FS_SYM) + '" fill="' + INK + '">' + esc(t) + '</text>';
@@ -861,6 +863,7 @@
           tx += A_EQ * k;
           s += '<text data-u="rhs" x="' + tx.toFixed(1) + '" y="' + base.toFixed(1) + '" font-size="' + fs(FS_NUM) + '" font-weight="700" fill="' + INK + '">' + esc(rt) + '</text>';
         }
+        s += '</g>';
       });
       s += '</svg>';
       return s;
@@ -1925,9 +1928,569 @@
     return (Math.abs(v - Math.round(v)) < 1e-9) ? String(Math.round(v)) : String(Math.round(v * 100) / 100);
   }
 
+  /* ==================================================================
+     第三批（2025 SEAMO Paper A）用到的图元与图形类型。
+     原则同上：图上文字一律用原卷语言（英文卷 → 英文）；凡是"能数出来/能量出来"的
+     元素都挂 data-u 与 data-* ，test-figs.js 靠它照图独立重算一遍答案。
+     ================================================================== */
+
+  /* 由恰好 n 条直线段组成的图形（n=0 画一个圆）。
+     Q2 的规律就是"线段条数依次加 1"，所以图形必须真的能数出线段数。 */
+  function segShapeSvg(n, cx, cy, s, fill) {
+    var i, p = [], ang;
+    if (n <= 0) {
+      return '<circle data-u="shape" data-n="0" cx="' + cx + '" cy="' + cy + '" r="' + (s * 0.8).toFixed(1) + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="2.2"/>';
+    }
+    if (n === 1) {
+      return '<line data-u="shape" data-n="1" x1="' + cx + '" y1="' + (cy - s).toFixed(1) + '" x2="' + cx + '" y2="' + (cy + s).toFixed(1) + '" stroke="' + INK + '" stroke-width="2.6"/>';
+    }
+    if (n === 2) {
+      return '<polyline data-u="shape" data-n="2" points="' + cx + ',' + (cy - s).toFixed(1) + ' ' + cx + ',' + cy + ' ' + (cx + s).toFixed(1) + ',' + cy +
+             '" fill="none" stroke="' + INK + '" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>';
+    }
+    for (i = 0; i < n; i++) {                       /* n≥3：正 n 边形正好有 n 条边 */
+      ang = -Math.PI / 2 + i * 2 * Math.PI / n;
+      p.push((cx + s * Math.cos(ang)).toFixed(1) + ',' + (cy + s * Math.sin(ang)).toFixed(1));
+    }
+    return '<polygon data-u="shape" data-n="' + n + '" points="' + p.join(' ') + '" fill="' + fill + '" stroke="' + INK + '" stroke-width="2.2"/>';
+  }
+
+  /* 12 等分圆盘：从 start 点钟方向起连续涂 count 格（Q10）。
+     阴影格本身由 start/count 决定 —— 图与答案同源，不能各写各的。 */
+  function discSvg(cx, cy, r, start, count) {
+    var o = '', k, a0, a1, a, rr;
+    start = ((Math.round(start) % 12) + 12) % 12;
+    count = Math.max(0, Math.min(12, Math.round(count)));
+    for (k = 0; k < 12; k++) {
+      a0 = (k * 30 - 90) * Math.PI / 180;
+      a1 = ((k + 1) * 30 - 90) * Math.PI / 180;
+      o += '<path d="M' + cx + ',' + cy +
+           ' L' + (cx + r * Math.cos(a0)).toFixed(1) + ',' + (cy + r * Math.sin(a0)).toFixed(1) +
+           ' A' + r + ',' + r + ' 0 0 1 ' + (cx + r * Math.cos(a1)).toFixed(1) + ',' + (cy + r * Math.sin(a1)).toFixed(1) +
+           ' Z" fill="' + (((k - start + 12) % 12) < count ? '#6cbf72' : '#ffffff') + '" stroke="' + INK + '" stroke-width="1"/>';
+    }
+    o += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + INK + '" stroke-width="2"/>';
+    for (k = 1; k <= 12; k++) {                     /* 钟点数字（1..12），图上不写中文 */
+      a = (k * 30 - 90) * Math.PI / 180;
+      rr = r * 0.74;
+      o += '<text x="' + (cx + rr * Math.cos(a)).toFixed(1) + '" y="' + (cy + rr * Math.sin(a) + 3.2).toFixed(1) +
+           '" font-size="' + Math.max(7, r * 0.29).toFixed(1) + '" text-anchor="middle" fill="' + INK + '">' + k + '</text>';
+    }
+    return o;
+  }
+
+  /* 带 1..12 数字的钟面（clockFace 只有刻度，读数题需要数字） */
+  function faceN(cx, cy, r, hh, mm) {
+    var s = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>', t, a, rr = r - 12;
+    for (t = 0; t < 12; t++) {
+      a = t * Math.PI / 6;
+      s += '<line x1="' + (cx + rr * Math.sin(a)).toFixed(1) + '" y1="' + (cy - rr * Math.cos(a)).toFixed(1) +
+           '" x2="' + (cx + (rr + 7) * Math.sin(a)).toFixed(1) + '" y2="' + (cy - (rr + 7) * Math.cos(a)).toFixed(1) +
+           '" stroke="' + INK + '" stroke-width="2"/>';
+    }
+    for (t = 1; t <= 12; t++) {
+      a = (t * 30 - 90) * Math.PI / 180;
+      s += '<text x="' + (cx + (r - 24) * Math.cos(a)).toFixed(1) + '" y="' + (cy + (r - 24) * Math.sin(a) + 3.6).toFixed(1) +
+           '" font-size="11" text-anchor="middle" fill="' + INK + '">' + t + '</text>';
+    }
+    var ha = ((hh % 12) + mm / 60) * Math.PI / 6, ma = (mm % 60) * Math.PI / 30;
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + r * 0.46 * Math.sin(ha)).toFixed(1) + '" y2="' + (cy - r * 0.46 * Math.cos(ha)).toFixed(1) + '" stroke="' + INK + '" stroke-width="4" stroke-linecap="round"/>';
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + r * 0.74 * Math.sin(ma)).toFixed(1) + '" y2="' + (cy - r * 0.74 * Math.cos(ma)).toFixed(1) + '" stroke="' + BLUE + '" stroke-width="3" stroke-linecap="round"/>';
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="3" fill="' + INK + '"/>';
+    return s;
+  }
+
+  /* 分钟数(0..1439) -> "h:mm" 12 小时制 + PM（图注用；答案侧由模板的约束保证分钟两位） */
+  function ampmLabel(mins) {
+    var h = Math.floor(mins / 60), m = mins % 60, h12 = ((h + 11) % 12) + 1;
+    return h12 + ':' + (m < 10 ? '0' + m : String(m)) + ' PM';
+  }
+
+  /* 水果 / 砝码小图标（Q16 天平用） */
+  function grapeIcon(cx, cy, s) {
+    var pts = [[-0.52, -0.18], [0.52, -0.18], [0, -0.58], [-0.30, 0.20], [0.30, 0.20], [0, 0.52]], i, o = '';
+    for (i = 0; i < pts.length; i++) {
+      o += '<circle cx="' + (cx + pts[i][0] * s).toFixed(1) + '" cy="' + (cy + pts[i][1] * s).toFixed(1) + '" r="' + (s * 0.31).toFixed(1) + '" fill="#8b5cf6" stroke="' + INK + '" stroke-width="0.9"/>';
+    }
+    o += '<line x1="' + cx + '" y1="' + (cy - s * 0.78).toFixed(1) + '" x2="' + cx + '" y2="' + (cy - s * 1.02).toFixed(1) + '" stroke="#5a3d1e" stroke-width="1.8"/>';
+    return o;
+  }
+  function bananaIcon(cx, cy, s) {
+    return '<path d="M' + (cx - s * 0.62).toFixed(1) + ',' + (cy - s * 0.5).toFixed(1) +
+           ' Q' + cx + ',' + (cy + s * 0.98).toFixed(1) + ' ' + (cx + s * 0.62).toFixed(1) + ',' + (cy - s * 0.42).toFixed(1) +
+           '" fill="none" stroke="#e8b400" stroke-width="' + (s * 0.40).toFixed(1) + '" stroke-linecap="round"/>' +
+           '<path d="M' + (cx - s * 0.62).toFixed(1) + ',' + (cy - s * 0.5).toFixed(1) +
+           ' Q' + cx + ',' + (cy + s * 0.98).toFixed(1) + ' ' + (cx + s * 0.62).toFixed(1) + ',' + (cy - s * 0.42).toFixed(1) +
+           '" fill="none" stroke="' + INK + '" stroke-width="0.9" stroke-linecap="round"/>';
+  }
+  function appleIcon(cx, cy, s) {
+    return '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s * 0.52).toFixed(1) + '" fill="#e5484d" stroke="' + INK + '" stroke-width="1.1"/>' +
+           '<line x1="' + cx + '" y1="' + (cy - s * 0.5).toFixed(1) + '" x2="' + cx + '" y2="' + (cy - s * 0.80).toFixed(1) + '" stroke="#5a3d1e" stroke-width="1.8"/>' +
+           '<ellipse cx="' + (cx + s * 0.30).toFixed(1) + '" cy="' + (cy - s * 0.74).toFixed(1) + '" rx="' + (s * 0.26).toFixed(1) + '" ry="' + (s * 0.13).toFixed(1) + '" fill="#2ea043" stroke="' + INK + '" stroke-width="0.7"/>';
+  }
+  function weightIcon(cx, cy, s, label) {
+    return '<rect x="' + (cx - s * 0.52).toFixed(1) + '" y="' + (cy - s * 0.40).toFixed(1) + '" width="' + (s * 1.04).toFixed(1) + '" height="' + (s * 0.80).toFixed(1) + '" rx="3" fill="#6b7280" stroke="' + INK + '" stroke-width="1.3"/>' +
+           '<path d="M' + (cx - s * 0.22).toFixed(1) + ',' + (cy - s * 0.40).toFixed(1) + ' q' + (s * 0.22).toFixed(1) + ',-' + (s * 0.46).toFixed(1) + ' ' + (s * 0.44).toFixed(1) + ',0" fill="none" stroke="' + INK + '" stroke-width="1.5"/>' +
+           '<text x="' + cx + '" y="' + (cy + s * 0.16).toFixed(1) + '" font-size="' + (s * 0.34).toFixed(1) + '" text-anchor="middle" fill="#ffffff">' + esc(label) + '</text>';
+  }
+  function itemIcon(kind, cx, cy, s, label) {
+    if (kind === 'grape') return grapeIcon(cx, cy, s);
+    if (kind === 'banana') return bananaIcon(cx, cy, s);
+    if (kind === 'apple') return appleIcon(cx, cy, s);
+    if (kind === 'weight') return weightIcon(cx, cy, s, label || '');
+    return '<rect x="' + (cx - s * 0.4).toFixed(1) + '" y="' + (cy - s * 0.4).toFixed(1) + '" width="' + (s * 0.8).toFixed(1) + '" height="' + (s * 0.8).toFixed(1) + '" fill="' + GREY + '" stroke="' + INK + '" stroke-width="1.2"/>';
+  }
+  /* 一行小图标：items = [[kind,count],…]；weight 的标签用 labelOf */
+  function itemRow(cx, baseY, items, vars, labelOf) {
+    var list = [], i, o = '';
+    (items || []).forEach(function (it) {
+      var cnt = Math.round(num(it[1], vars));
+      for (i = 0; i < cnt; i++) list.push(it[0]);
+    });
+    var slot = 34, x0 = cx - (list.length - 1) * slot / 2;
+    for (i = 0; i < list.length; i++) o += itemIcon(list[i], x0 + i * slot, baseY - 20, 22, labelOf ? labelOf(list[i]) : '');
+    return o;
+  }
+  /* 一段折线集合（Q19 叠加规律）：segs = ["00-20", …]，坐标在 3×3 点阵上，y 向上 */
+  function segFigInner(segs, ox, oy, u) {
+    var o = '';
+    (Array.isArray(segs) ? segs : String(segs).split(';')).forEach(function (code) {
+      var p = String(code).split('-');
+      if (p.length !== 2) return;
+      var a = p[0].split(','), b = p[1].split(',');
+      if (a.length !== 2 || b.length !== 2) return;
+      o += '<line data-u="line" data-a="' + a[0] + ',' + a[1] + '" data-b="' + b[0] + ',' + b[1] +
+           '" x1="' + (ox + (+a[0]) * u).toFixed(1) + '" y1="' + (oy + (2 - (+a[1])) * u).toFixed(1) +
+           '" x2="' + (ox + (+b[0]) * u).toFixed(1) + '" y2="' + (oy + (2 - (+b[1])) * u).toFixed(1) +
+           '" stroke="' + INK + '" stroke-width="2.6" stroke-linecap="round"/>';
+    });
+    return o;
+  }
+
+  /* Q19「叠加规律」用的四组图形：每组 a、b 两条线段集合满足 u = a ∪ b（且有公共线段，
+     这样「叠加」和「异或」能区分开）；um = u 去掉一条线段（干扰项）。
+     连线一律画在同一条线上（3×3 点阵，坐标 x,y ∈ 0..2，y 向上）。 */
+  var SEGTRIPLES = [
+    {   /* 0：缺上边的正方形＋对角线  ⊕  缺下边的正方形＋另一条对角线  =  正方形＋两条对角线 */
+      a: ['00-20', '20-22', '02-00', '00-22'],
+      b: ['20-22', '22-02', '02-00', '20-02'],
+      u: ['00-20', '20-22', '22-02', '02-00', '00-22', '20-02'],
+      um: ['00-20', '20-22', '22-02', '02-00', '00-22']
+    },
+    {   /* 1：三边  ⊕  左边＋中线  =  三边＋中线 */
+      a: ['00-20', '20-22', '02-00'],
+      b: ['02-00', '01-21'],
+      u: ['00-20', '20-22', '02-00', '01-21'],
+      um: ['00-20', '20-22', '01-21']
+    },
+    {   /* 2：左边＋下边  ⊕  右边＋上边＋左边  =  下边＋右边＋上边＋左边 */
+      a: ['02-00', '00-20'],
+      b: ['20-22', '22-02', '02-00'],
+      u: ['02-00', '00-20', '20-22', '22-02'],
+      um: ['02-00', '00-20', '20-22']
+    },
+    {   /* 3：下边＋竖中线  ⊕  正方形＋对角线  =  正方形＋对角线＋竖中线 */
+      a: ['10-12', '00-20'],
+      b: ['00-20', '20-22', '22-02', '02-00', '00-22'],
+      u: ['10-12', '00-20', '20-22', '22-02', '02-00', '00-22'],
+      um: ['10-12', '00-20', '20-22', '22-02', '02-00']
+    }
+  ];
+  /* 取下标：spec 里给的是变量名或数字，统一折算成 0..n-1 */
+  function modIdx(v, vars, n) {
+    var i = Math.round(num(v, vars));
+    if (!isFinite(i)) i = 0;
+    return ((i % n) + n) % n;
+  }
+  /* segfig 的线段来源：直接给 segs，或给 tbl + i 从 SEGTRIPLES 里取 */
+  function segsOf(spec, vars) {
+    if (spec.segs) return Array.isArray(spec.segs) ? spec.segs : String(spec.segs).split(';');
+    var t = SEGTRIPLES[modIdx(spec.i, vars, SEGTRIPLES.length)] || SEGTRIPLES[0];
+    var key = String(spec.tbl || 'U').toLowerCase();
+    return t[key === 'a' ? 'a' : (key === 'b' ? 'b' : (key === 'um' ? 'um' : 'u'))];
+  }
+
+  var TYPES5 = {
+    /* 数字拼图「小房子」（Q1）：屋顶的数 = 下面左右两格之积 − 1。
+       最后一座屋顶画成「?」；图片里的数字都挂 data-* 供自检脚本独立验算。 */
+    puzzlehouse: function (spec, vars) {
+      var pairs = spec.pairs || [], roofs = spec.roofs || [];
+      var n = Math.max(1, pairs.length), cw = 92, pad = 14, i;
+      var W = Math.round(Math.min(480, pad * 2 + n * cw)), H = 146;
+      var s = svgOpen(W, H, 'number puzzle houses');
+      for (i = 0; i < n; i++) {
+        var x = pad + i * cw, cx = x + cw / 2;
+        var a = cellText((pairs[i] || [])[0], vars), b = cellText((pairs[i] || [])[1], vars);
+        var rv = (i < roofs.length && roofs[i] !== null && roofs[i] !== undefined && roofs[i] !== '') ? cellText(roofs[i], vars) : '?';
+        s += '<polygon points="' + (x + 8) + ',70 ' + cx + ',24 ' + (x + cw - 8) + ',70" fill="#bfe3ff" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<text data-u="roof" data-v="' + esc(rv) + '" x="' + cx + '" y="62" font-size="21" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(rv) + '</text>';
+        s += '<rect x="' + (x + 8) + '" y="70" width="' + ((cw - 16) / 2) + '" height="46" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<rect x="' + (x + 8 + (cw - 16) / 2) + '" y="70" width="' + ((cw - 16) / 2) + '" height="46" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<text data-u="cell" data-side="l" data-v="' + esc(a) + '" x="' + (x + 8 + (cw - 16) / 4) + '" y="101" font-size="21" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(a) + '</text>';
+        s += '<text data-u="cell" data-side="r" data-v="' + esc(b) + '" x="' + (x + 8 + (cw - 16) * 3 / 4) + '" y="101" font-size="21" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(b) + '</text>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 单个「由 n 条线段组成」的图形（Q2 选项用）：n=0 圆、1 直线、2 直角折线、n≥3 正 n 边形 */
+    segshape: function (spec, vars) {
+      var n = Math.max(0, Math.min(8, Math.round(num(spec.n, vars))));
+      var W = 96, H = 84, s = svgOpen(W, H, 'shape with ' + n + ' sides');
+      s += segShapeSvg(n, W / 2, H / 2, 26, '#cfe6ff');
+      s += '</svg>';
+      return s;
+    },
+
+    /* 线段数递增的图形序列，末尾一个「?」（Q2 主图） */
+    segseq: function (spec, vars) {
+      var s0 = Math.max(0, Math.round(num(spec.s, vars)));
+      var len = Math.max(2, Math.min(5, Math.round(num(spec.len, vars) || 3)));
+      var cw = 74, pad = 16, i;
+      var W = Math.round(pad * 2 + (len + 1) * cw), H = 120;
+      var s = svgOpen(W, H, 'sequence of shapes with increasing number of sides');
+      for (i = 0; i <= len; i++) {
+        var cx = pad + (i + 0.5) * cw, cy = 62;
+        if (i === len) {
+          s += '<rect x="' + (cx - 26) + '" y="' + (cy - 30) + '" width="52" height="60" rx="4" fill="#e5484d" stroke="' + INK + '" stroke-width="2"/>';
+          s += '<text x="' + cx + '" y="' + (cy + 11) + '" font-size="30" font-weight="700" text-anchor="middle" fill="#ffffff">?</text>';
+        } else {
+          s += '<g data-u="step" data-n="' + (s0 + i) + '">' + segShapeSvg(s0 + i, cx, cy, 25, '#cfe6ff') + '</g>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 两点之间的距离示意图（Q5）：左边 Cindy，右边房子，中间箭头标注距离 */
+    distline: function (spec, vars) {
+      var d = cellText(spec.d, vars), i;
+      var W = 450, H = 178, s = svgOpen(W, H, 'distance ' + d + ' m');
+      s += '<circle cx="58" cy="48" r="15" fill="#f7d774" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line x1="58" y1="63" x2="58" y2="94" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<line x1="58" y1="74" x2="40" y2="86" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<line x1="58" y1="74" x2="76" y2="86" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<line x1="58" y1="94" x2="46" y2="114" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<line x1="58" y1="94" x2="70" y2="114" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<text x="58" y="134" font-size="14" text-anchor="middle" fill="' + INK + '">Cindy</text>';
+      s += houseIcon(368, 120, 92, 58, '#f7d774', '#d97706');
+      s += '<text x="368" y="140" font-size="13" text-anchor="middle" fill="' + INK + '">Granny\u2019s house</text>';
+      s += '<line x1="96" y1="70" x2="304" y2="70" stroke="' + BLUE + '" stroke-width="3"/>';
+      s += '<polygon points="316,70 300,62 300,78" fill="' + BLUE + '"/>';
+      /* 距离标注（下方双箭头 + 数字） */
+      s += '<line x1="58" y1="152" x2="368" y2="152" stroke="' + INK + '" stroke-width="1.6"/>';
+      for (i = 0; i < 2; i++) {
+        var ex = i ? 368 : 58, dir = i ? 1 : -1;
+        s += '<line x1="' + ex + '" y1="146" x2="' + ex + '" y2="158" stroke="' + INK + '" stroke-width="1.6"/>';
+        s += '<polygon points="' + (ex + dir * 9) + ',152 ' + ex + ',148 ' + ex + ',156" fill="' + INK + '"/>';
+      }
+      s += '<text data-u="dist" data-v="' + esc(d) + '" x="213" y="170" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(d) + ' m</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 三角形数字阵（Q6）：画出前 rows 行，下面用「...」表示继续 */
+    numtri: function (spec, vars) {
+      var rows = Math.max(2, Math.min(6, Math.round(num(spec.rows, vars) || 4)));
+      var rowH = 30, cw = 34, pad = 16, r, c, v = 1;
+      var W = Math.round(pad * 2 + rows * cw + 24);
+      if (W > 480) { cw = (480 - pad * 2 - 24) / rows; W = 480; }
+      var H = Math.round(pad * 2 + rows * rowH + 26);
+      var s = svgOpen(W, H, 'number triangle');
+      for (r = 1; r <= rows; r++) {
+        var y = pad + r * rowH - 6, x0 = (W - r * cw) / 2;
+        for (c = 0; c < r; c++) {
+          s += '<text data-u="num" data-v="' + v + '" x="' + (x0 + (c + 0.5) * cw).toFixed(1) + '" y="' + y + '" font-size="18" text-anchor="middle" fill="' + INK + '">' + v + '</text>';
+          v++;
+        }
+      }
+      s += '<text x="' + (W / 2) + '" y="' + (pad + rows * rowH + 20) + '" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">...</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 逆推圆圈链（Q9）：? →(+3)→ ○ →(×3)→ ○ →(−3)→ ○ →(÷3)→ 3 */
+    opchain: function (spec, vars) {
+      var ops = spec.ops || [], finalV = cellText(spec.final, vars);
+      var n = ops.length + 1, r = 20, gap = 58, pad = 12, j;
+      var W = Math.round(pad * 2 + n * 2 * r + ops.length * gap), H = 96;
+      var s = svgOpen(W, H, 'reverse operations chain');
+      for (j = 0; j < n; j++) {
+        var cx = pad + r + j * (2 * r + gap);
+        var txt = j === 0 ? '?' : (j === n - 1 ? finalV : '');
+        s += '<circle data-u="node" data-i="' + j + '" data-v="' + esc(txt) + '" cx="' + cx + '" cy="48" r="' + r + '" fill="' +
+             ((j === 0 || j === n - 1) ? '#ffe9a8' : '#ffffff') + '" stroke="' + INK + '" stroke-width="2"/>';
+        if (txt) s += '<text x="' + cx + '" y="' + (txt.length > 2 ? 54 : 57) + '" font-size="' + (txt.length > 2 ? 14 : 20) + '" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(txt) + '</text>';
+      }
+      for (j = 0; j < ops.length; j++) {
+        var x1 = pad + r + j * (2 * r + gap) + r + 4, x2 = pad + r + (j + 1) * (2 * r + gap) - r - 4;
+        s += '<line x1="' + x1 + '" y1="48" x2="' + x2 + '" y2="48" stroke="' + INK + '" stroke-width="2"/>';
+        s += '<polygon points="' + (x2 + 6) + ',48 ' + x2 + ',43 ' + x2 + ',53" fill="' + INK + '"/>';
+        var v = cellText(ops[j][1], vars);
+        s += '<text data-u="op" data-sym="' + esc(ops[j][0]) + '" data-v="' + esc(v) + '" x="' + ((x1 + x2) / 2).toFixed(1) +
+             '" y="36" font-size="16" font-weight="700" text-anchor="middle" fill="' + BLUE + '">' + esc(ops[j][0] + v) + '</text>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 3×3 圆盘阵（Q10）：第 i 行涂 j+1 格、起始钟点每行顺时针推进 1 格；缺的那格画成「?」 */
+    discgrid: function (spec, vars) {
+      var rows = Math.max(1, Math.min(4, Math.round(num(spec.rows, vars) || 3)));
+      var cols = Math.max(1, Math.min(4, Math.round(num(spec.cols, vars) || 3)));
+      var start = Math.round(num(spec.start, vars) || 1);
+      var mr = Math.round(num(spec.mr, vars)), mc = Math.round(num(spec.mc, vars));
+      var r = 30, cell = 2 * r + 12, pad = 14, i, j;
+      var W = Math.round(pad * 2 + cols * cell), H = Math.round(pad * 2 + rows * cell);
+      var s = svgOpen(W, H, 'grid of twelve-sector discs');
+      for (i = 0; i < rows; i++) {
+        for (j = 0; j < cols; j++) {
+          var cx = pad + (j + 0.5) * cell, cy = pad + (i + 0.5) * cell;
+          if (i === mr && j === mc) {
+            s += '<rect data-u="blank" data-r="' + i + '" data-c="' + j + '" x="' + (cx - r) + '" y="' + (cy - r) + '" width="' + (2 * r) + '" height="' + (2 * r) + '" rx="4" fill="#6cbf72" stroke="' + INK + '" stroke-width="2"/>';
+            s += '<text x="' + cx + '" y="' + (cy + 11) + '" font-size="30" font-weight="700" text-anchor="middle" fill="#ffffff">?</text>';
+          } else {
+            s += '<g data-u="disc" data-r="' + i + '" data-c="' + j + '" data-start="' + (((start + i) % 12) + 12) % 12 + '" data-count="' + (j + 1) + '">' + discSvg(cx, cy, r, start + i, j + 1) + '</g>';
+          }
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 单个十二等分圆盘（Q10 选项）：start 点钟起涂 count 格 */
+    disc: function (spec, vars) {
+      var start = Math.round(num(spec.start, vars)), count = Math.round(num(spec.count, vars));
+      var W = 96, H = 96, s = svgOpen(W, H, 'disc');
+      s += '<g data-u="disc" data-start="' + start + '" data-count="' + count + '">' + discSvg(W / 2, H / 2, 42, start, count) + '</g>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 两个钟面 + 箭头（Q11）：h1..m2 直接用变量（24 小时制的 h） */
+    clockpair: function (spec, vars) {
+      var h1 = Math.round(num(spec.h1, vars)), m1 = Math.round(num(spec.m1, vars));
+      var h2 = Math.round(num(spec.h2, vars)), m2 = Math.round(num(spec.m2, vars));
+      var W = 400, H = 176, s = svgOpen(W, H, 'two clocks');
+      s += '<g data-u="clock" data-h="' + h1 + '" data-m="' + m1 + '">' + faceN(100, 88, 70, h1 % 12, m1) + '</g>';
+      s += '<g data-u="clock" data-h="' + h2 + '" data-m="' + m2 + '">' + faceN(300, 88, 70, h2 % 12, m2) + '</g>';
+      s += '<line x1="182" y1="88" x2="212" y2="88" stroke="' + INK + '" stroke-width="3"/>';
+      s += '<polygon points="224,88 208,80 208,96" fill="' + INK + '"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四个钟面排成一行，前三个标出时刻、第 4 个画「?」（Q22）。
+       c1..c3 传「当天第几分钟」；时刻标签由图形自己排版（图上文字一律英文）。 */
+    clockseq: function (spec, vars) {
+      var cs = [spec.c1, spec.c2, spec.c3].map(function (v) { return Math.round(num(v, vars)); });
+      var r = 44, gap = 116, pad = 14, i, cy = 84;
+      var W = Math.round(pad * 2 + 3 * gap + 2 * r), H = 176;
+      var s = svgOpen(W, H, 'four clocks in a row');
+      for (i = 0; i < 3; i++) {
+        var cx = pad + r + i * gap, h = Math.floor(cs[i] / 60), m = cs[i] % 60, lbl = ampmLabel(cs[i]);
+        s += '<g data-u="clock" data-h="' + h + '" data-m="' + m + '">' + faceN(cx, cy, r, h % 12, m) + '</g>';
+        s += '<text data-u="clabel" data-t="' + esc(lbl) + '" x="' + cx + '" y="' + (cy + r + 26) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(lbl) + '</text>';
+      }
+      var bx = pad + r + 3 * gap;
+      s += '<circle data-u="blank" cx="' + bx + '" cy="' + cy + '" r="' + r + '" fill="#e9f7ea" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<text x="' + bx + '" y="' + (cy + 12) + '" font-size="34" font-weight="700" text-anchor="middle" fill="#2ea043">?</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 空白周历表（Q14）：表头 Sun..Sat，下面留空若干行供推算 */
+    calgrid: function (spec, vars) {
+      var rows = Math.max(2, Math.min(6, Math.round(num(spec.rows, vars) || 4)));
+      var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      var cols = ['#e5484d', '#2ea043', '#1f6feb', '#8b5cf6', '#d97706', '#ec4899', '#b08900'];
+      var cw = 62, ch = 34, pad = 14, i, j;
+      var W = Math.round(pad * 2 + 7 * cw), H = Math.round(pad * 2 + ch + rows * ch);
+      var s = svgOpen(W, H, 'blank week calendar');
+      for (i = 0; i < 7; i++) {
+        var x = pad + i * cw;
+        s += '<rect x="' + x + '" y="' + pad + '" width="' + (cw - 4) + '" height="' + ch + '" fill="#ffffff" stroke="' + cols[i] + '" stroke-width="2"/>';
+        s += '<text data-u="dow" data-d="' + days[i] + '" x="' + (x + (cw - 4) / 2) + '" y="' + (pad + ch - 10) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + cols[i] + '">' + days[i] + '</text>';
+      }
+      for (i = 0; i < rows; i++) {
+        for (j = 0; j < 7; j++) {
+          s += '<rect x="' + (pad + j * cw) + '" y="' + (pad + ch + i * ch) + '" width="' + (cw - 4) + '" height="' + ch + '" fill="#ffffff" stroke="' + GREY + '" stroke-width="1.4"/>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 3×3 数字方阵（Q15）：第 (i,j) 格 = base + (i+j)*step，一格画「?」 */
+    numgrid: function (spec, vars) {
+      var step = Math.round(num(spec.step, vars)), base = Math.round(num(spec.base, vars));
+      var mr = Math.round(num(spec.mr, vars)), mc = Math.round(num(spec.mc, vars));
+      var cw = 68, ch = 54, pad = 14, i, j;
+      var W = pad * 2 + 3 * cw, H = pad * 2 + 3 * ch;
+      var s = svgOpen(W, H, 'number grid');
+      for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+          var x = pad + j * cw, y = pad + i * ch, v = base + (i + j) * step;
+          var isM = (i === mr && j === mc);
+          s += '<rect x="' + x + '" y="' + y + '" width="' + cw + '" height="' + ch + '" fill="' + (isM ? '#ffe9a8' : '#ffffff') + '" stroke="' + INK + '" stroke-width="2"/>';
+          s += '<text' + (isM ? '' : ' data-u="cell" data-r="' + i + '" data-c="' + j + '" data-v="' + v + '"') +
+               ' x="' + (x + cw / 2) + '" y="' + (y + ch / 2 + 9) + '" font-size="24" font-weight="700" text-anchor="middle" fill="' + INK + '">' +
+               (isM ? '?' : v) + '</text>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 天平（Q16）：balances = [{l:[[kind,count]…], r:[[kind,count]…], weight:"140 g"}…]，全部平衡 */
+    balance: function (spec, vars) {
+      var bs = spec.balances || [], bw = 150, bh = 186, pad = 8, i;
+      var W = Math.round(pad * 2 + Math.max(1, bs.length) * bw), H = Math.round(pad * 2 + bh);
+      var s = svgOpen(W, H, 'balance scales');
+      for (i = 0; i < bs.length; i++) {
+        var ox = pad + i * bw, cx = ox + bw / 2, beamY = 96, baseY = 168, arm = 62;
+        var label = bs[i].weight ? (cellText(bs[i].weight, vars) + ' g') : '';
+        s += '<rect x="' + (cx - 26) + '" y="' + baseY + '" width="52" height="8" rx="3" fill="#9aa3af" stroke="' + INK + '" stroke-width="1.4"/>';
+        s += '<rect x="' + (cx - 4) + '" y="' + beamY + '" width="8" height="' + (baseY - beamY) + '" fill="#9aa3af" stroke="' + INK + '" stroke-width="1.4"/>';
+        s += '<g data-u="balance" data-arm="' + arm + '" data-side-l="' + itemsKey(bs[i].l, vars) + '" data-side-r="' + itemsKey(bs[i].r, vars) +
+             '" data-w="' + esc(bs[i].weight ? cellText(bs[i].weight, vars) : '') + '">';
+        s += '<line x1="' + (cx - arm) + '" y1="' + beamY + '" x2="' + (cx + arm) + '" y2="' + beamY + '" stroke="' + INK + '" stroke-width="4" stroke-linecap="round"/>';
+        s += '<circle cx="' + cx + '" cy="' + beamY + '" r="4" fill="' + INK + '"/>';
+        for (var k = 0; k < 2; k++) {
+          var px = cx + (k ? arm : -arm);
+          s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px - 22) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px + 22) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<path d="M' + (px - 26) + ',' + (beamY + 26) + ' L' + (px + 26) + ',' + (beamY + 26) + ' L' + (px + 17) + ',' + (beamY + 36) + ' L' + (px - 17) + ',' + (beamY + 36) + ' Z" fill="#c9d3e0" stroke="' + INK + '" stroke-width="1.6"/>';
+          s += itemRow(px, beamY + 26, k ? bs[i].r : bs[i].l, vars, function () { return label; });
+        }
+        s += '</g>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 台阶形格线（Q17）：n 级，每级 2 格宽、逐级向右错 1 格；A 左下、B 右上。
+       格线由"每级两个小方格的四条边"推出来 —— test-figs.js 从 data-* 重建格点图再 BFS。 */
+    gridpath: function (spec, vars) {
+      var n = Math.max(1, Math.min(6, Math.round(num(spec.n, vars) || 3)));
+      var u = n <= 3 ? 46 : (n === 4 ? 40 : (n === 5 ? 34 : 29));
+      var pad = 26, padTop = 34, i, c;
+      var W = Math.round(pad * 2 + (n + 1) * u + 16), H = Math.round(padTop + n * u + pad + 12);
+      var seen = {}, lines = [];
+      function edge(x1, y1, x2, y2) {
+        var k1 = x1 + ',' + y1 + ',' + x2 + ',' + y2, k2 = x2 + ',' + y2 + ',' + x1 + ',' + y1;
+        if (seen[k1] || seen[k2]) return;
+        seen[k1] = 1;
+        lines.push([x1, y1, x2, y2]);
+      }
+      for (i = 0; i < n; i++) {
+        for (c = 0; c < 2; c++) {
+          var x0 = i + c, y0 = i;
+          edge(x0, y0, x0 + 1, y0);
+          edge(x0, y0 + 1, x0 + 1, y0 + 1);
+          edge(x0, y0, x0, y0 + 1);
+          edge(x0 + 1, y0, x0 + 1, y0 + 1);
+        }
+      }
+      var s = svgOpen(W, H, 'staircase grid of ' + n + ' levels');
+      s += '<g data-u="grid" data-n="' + n + '">';
+      lines.forEach(function (L) {
+        s += '<line data-u="edge" data-x1="' + L[0] + '" data-y1="' + L[1] + '" data-x2="' + L[2] + '" data-y2="' + L[3] +
+             '" x1="' + (pad + L[0] * u) + '" y1="' + (padTop + (n - L[1]) * u) + '" x2="' + (pad + L[2] * u) + '" y2="' + (padTop + (n - L[3]) * u) +
+             '" stroke="' + INK + '" stroke-width="2"/>';
+      });
+      s += '</g>';
+      s += '<text data-u="pt" data-name="A" data-x="0" data-y="0" x="' + (pad - 16) + '" y="' + (padTop + n * u + 6) + '" font-size="18" font-weight="700" fill="' + RED + '">A</text>';
+      s += '<text data-u="pt" data-name="B" data-x="' + (n + 1) + '" data-y="' + n + '" x="' + (pad + (n + 1) * u + 8) + '" y="' + (padTop - 12) + '" font-size="18" font-weight="700" fill="' + BLUE + '">B</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 单个「线段图」（Q19 选项）：
+       写法一 segs: ["00-20", …] 直接给线段；
+       写法二 tbl: "U"|"A"|"B"|"UM" + i: 下标，从下面的三连表里取 —— 保证选项和主图同源。 */
+    segfig: function (spec, vars) {
+      var segs = segsOf(spec, vars);
+      var u = Math.round(num(spec.u, vars) || 24), pad = 8;
+      var W = Math.round(pad * 2 + 2 * u), H = Math.round(pad * 2 + 2 * u);
+      var s = svgOpen(W, H, 'figure made of line segments');
+      s += '<g data-u="fig" data-segs="' + esc(segs.join(';')) + '">' + segFigInner(segs, pad, pad, u) + '</g>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 3×3 线段图阵（Q19 主图）：
+       写法一 rows: [[fig,fig,fig]…]，fig 为 "00-20;…" 或 null（画「?」）；
+       写法二 p0/p1/p2: 三个下标，行 = [A(i), B(i), U(i)]，第三行第三格留空（画「?」）。 */
+    figgrid: function (spec, vars) {
+      var rows = spec.rows;
+      if (!rows) {
+        rows = [];
+        [spec.p0, spec.p1, spec.p2].forEach(function (p, ri) {
+          var t = SEGTRIPLES[modIdx(p, vars, SEGTRIPLES.length)];
+          rows.push(ri < 2 ? [t.a, t.b, t.u] : [t.a, t.b, null]);
+        });
+      }
+      var u = Math.round(num(spec.u, vars) || 24), edge = 2 * u, gap = 16, pad = 12;
+      var nr = rows.length, nc = 3, i, j;
+      var W = Math.round(pad * 2 + nc * edge + (nc - 1) * gap);
+      var H = Math.round(pad * 2 + nr * edge + (nr - 1) * gap);
+      var s = svgOpen(W, H, 'grid of figures built from line segments');
+      for (i = 0; i < nr; i++) {
+        for (j = 0; j < nc; j++) {
+          var ox = pad + j * (edge + gap), oy = pad + i * (edge + gap);
+          var f = (rows[i] || [])[j];
+          s += '<rect x="' + (ox - 4) + '" y="' + (oy - 4) + '" width="' + (edge + 8) + '" height="' + (edge + 8) + '" fill="none" stroke="' + GREY + '" stroke-width="1.2"/>';
+          if (f) {
+            s += '<g data-u="fig" data-r="' + i + '" data-c="' + j + '" data-segs="' + esc(Array.isArray(f) ? f.join(';') : String(f)) + '">' + segFigInner(f, ox, oy, u) + '</g>';
+          } else {
+            s += '<text data-u="blank" data-r="' + i + '" data-c="' + j + '" x="' + (ox + edge / 2) + '" y="' + (oy + edge / 2 + 11) + '" font-size="30" font-weight="700" text-anchor="middle" fill="#6cbf72">?</text>';
+          }
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 数三角形（Q20）：A(0,1) 左下、B(0.5,0) 顶、C(1,1) 右下；
+       从 A 向对边 BC 引 j 条分割线（把 BC 等分成 j+1 段），extra=1 时再从 AB 中点连到 C。 */
+    trilines: function (spec, vars) {
+      var j = Math.max(1, Math.min(6, Math.round(num(spec.j, vars) || 3)));
+      var extra = Math.round(num(spec.extra, vars));
+      var W = 480, H = 300, padX = 40, padY = 18, i;
+      function SX(x) { return (padX + x * (W - padX * 2)).toFixed(2); }
+      function SY(y) { return (padY + (1 - y) * (H - padY * 2)).toFixed(2); }
+      var A = [0, 1], B = [0.5, 0], C = [1, 1];
+      var s = svgOpen(W, H, 'triangle with internal lines');
+      s += '<g data-u="tri" data-j="' + j + '" data-extra="' + extra + '">';
+      function seg(p, q, kind) {
+        s += '<line data-u="line" data-kind="' + kind + '" data-x1="' + p[0] + '" data-y1="' + p[1] + '" data-x2="' + q[0] + '" data-y2="' + q[1] +
+             '" x1="' + SX(p[0]) + '" y1="' + SY(p[1]) + '" x2="' + SX(q[0]) + '" y2="' + SY(q[1]) + '" stroke="' + INK + '" stroke-width="2.2"/>';
+      }
+      seg(A, B, 'side');
+      seg(B, C, 'side');
+      seg(C, A, 'side');
+      for (i = 1; i <= j; i++) {
+        var t = i / (j + 1);
+        seg(A, [B[0] + t * (C[0] - B[0]), B[1] + t * (C[1] - B[1])], 'div');
+      }
+      if (extra) seg([(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], C, 'extra');
+      s += '</g>';
+      s += '</svg>';
+      return s;
+    }
+  };
+
+  /* 天平一边的内容签名（自检脚本据此独立核对"两边是否等价"；数量要**求值**，
+     否则 data-side 里留下的是变量名，脚本没法独立重算） */
+  function itemsKey(items, vars) {
+    return (items || []).map(function (it) { return it[0] + ':' + Math.round(num(it[1], vars)); }).join('+');
+  }
+
   Object.keys(TYPES2).forEach(function (k) { TYPES[k] = TYPES2[k]; });
   Object.keys(TYPES3).forEach(function (k) { if (k !== 'vehicleIcon') TYPES[k] = TYPES3[k]; });
   Object.keys(TYPES4).forEach(function (k) { TYPES[k] = TYPES4[k]; });
+  Object.keys(TYPES5).forEach(function (k) { TYPES[k] = TYPES5[k]; });
 
   function render(spec, vars) {
     if (!spec || !spec.type) return '';

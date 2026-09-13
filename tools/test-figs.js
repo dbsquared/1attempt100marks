@@ -1179,10 +1179,627 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q30 表里是等差数列（公差 d）✓ 逐天累加恰好第 n 天取空 ✓ 金币不被当条件 ✓');
 }
 
+/* =====================================================================
+   SEAMO 2025 Paper A（seamo25a-q01 … q25）
+   全部从图上挂的 data-* 重新读一遍，用「另一种算法」算答案（不引用模板公式）。
+   ===================================================================== */
+const SE = id => byId('seamo25a-' + id);
+const ansText = q => (q.type === 'choice' && Array.isArray(q.options)) ? String(q.options[q.correctIndex]) : String(q.display);
+const ansNum = q => { const m = String(ansText(q)).match(/-?\d+(?:\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
+const UNIQ = a => Array.from(new Set(a));
+const SETEQ = (a, b) => a.length === b.length && a.every(x => b.indexOf(x) >= 0);
+
+/* 表针角度：0 = 12 点方向，顺时针为正（strokeWidth 4 = 时针、3 = 分针） */
+const angDiff = (a, b) => { let d = a - b; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; return Math.abs(d); };
+function handAngle(svg, cx, cy, strokeW) {
+  const m = mAll(svg, new RegExp('x1="' + cx + '" y1="' + cy + '" x2="([\\d.]+)" y2="([\\d.]+)" stroke="[^"]+" stroke-width="' + strokeW + '"', 'g'))[0];
+  return m ? Math.atan2(+m[1] - cx, -(+m[2] - cy)) : null;
+}
+function clockOk(svg, cx, cy, h, m, tag) {
+  const ah = handAngle(svg, cx, cy, 4), am = handAngle(svg, cx, cy, 3);
+  const wantH = (((h % 12) + m / 60) * Math.PI / 6), wantM = (m % 60) * Math.PI / 30;
+  chk(ah !== null && angDiff(ah, wantH) < 0.02, tag + ' 时针角度与 ' + h + ':' + m + ' 不符');
+  chk(am !== null && angDiff(am, wantM) < 0.02, tag + ' 分针角度与 ' + h + ':' + m + ' 不符');
+}
+
+/* ---------- SEAMO Q1：前 3 座屋顶独立验算，末座画「?」 ---------- */
+{
+  const t = SE('q01');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const roofs = mAll(svg, /data-u="roof" data-v="([^"]*)"/g).map(m => m[1]);
+    const L = mAll(svg, /data-u="cell" data-side="l" data-v="(-?\d+)"/g).map(m => +m[1]);
+    const R = mAll(svg, /data-u="cell" data-side="r" data-v="(-?\d+)"/g).map(m => +m[1]);
+    chk(roofs.length === 4 && L.length === 4 && R.length === 4, 'SEAMO Q1 图上应有 4 座小房子');
+    if (roofs.length === 4 && L.length === 4 && R.length === 4) {
+      for (let k = 0; k < 3; k++) {
+        chk(+roofs[k] === L[k] * R[k] - 1, 'SEAMO Q1 第 ' + (k + 1) + ' 座屋顶 ' + roofs[k] + ' ≠ ' + L[k] + '×' + R[k] + '−1');
+      }
+      chk(roofs[3] === '?', 'SEAMO Q1 最后一座屋顶该画「?」，实际「' + roofs[3] + '」');
+      chk(ansNum(q) === L[3] * R[3] - 1, 'SEAMO Q1 答案 ' + ansText(q) + ' 应等于图上第 4 座算出的 ' + (L[3] * R[3] - 1));
+    }
+  }
+  console.log('SEAMO Q1  前 3 座屋顶 = 左×右−1 ✓  末座画「?」✓  答案 = 图上算式 ✓');
+}
+
+/* ---------- SEAMO Q2：图上线段数逐格 +1，正确选项 = 下一项 ---------- */
+{
+  const t = SE('q02');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const ns = mAll(q.diagramSvg, /<g data-u="step" data-n="(\d+)">/g).map(m => +m[1]);
+    chk(ns.length >= 2, 'SEAMO Q2 图上至少要画 2 个图形');
+    chk(ns.every((v, k) => k === 0 || v === ns[k - 1] + 1), 'SEAMO Q2 图上线段数应每次 +1，实际 ' + JSON.stringify(ns));
+    chk(/>\?<\/text>/.test(q.diagramSvg), 'SEAMO Q2 图末应画「?」');
+    const want = ns[ns.length - 1] + 1;                  // 由图上的递增规律推下一个
+    const optN = (q.optionsSvg || []).map(s => +((s.match(/data-n="(\d+)"/) || [])[1]));
+    chk(UNIQ(optN).length === optN.length, 'SEAMO Q2 选项图形线段数有重复：' + JSON.stringify(optN));
+    chk(optN.indexOf(want) >= 0, 'SEAMO Q2 选项里没有 ' + want + ' 条线的图形');
+    chk(optN[q.correctIndex] === want, 'SEAMO Q2 正确选项是 ' + optN[q.correctIndex] + ' 条线，应由图上规律推出 ' + want + ' 条');
+  }
+  console.log('SEAMO Q2  图上线段数逐格 +1 ✓  正确选项 = 图上规律的下一项 ✓');
+}
+
+/* ---------- SEAMO Q3：逐页拼出 1..N 再数位数 ---------- */
+{
+  const t = SE('q03');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), N = q.vars.N;
+    let pages = '';
+    for (let k = 1; k <= N; k++) pages += k;
+    chk(ansNum(q) === pages.length, 'SEAMO Q3 页码 1..' + N + ' 共 ' + pages.length + ' 个数字，答案却是 ' + ansText(q));
+  }
+  console.log('SEAMO Q3  逐页拼出 1..N 数位数 ✓');
+}
+
+/* ---------- SEAMO Q4：9 个连续整数逐项相加 ---------- */
+{
+  const t = SE('q04');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), a = q.vars.a;
+    let s = 0; for (let k = 0; k < 9; k++) s += a + k;
+    chk(ansNum(q) === s, 'SEAMO Q4 ' + a + '…' + (a + 8) + ' 之和应为 ' + s + '，答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q4  9 个连续整数逐项相加 ✓');
+}
+
+/* ---------- SEAMO Q5：图上标出的距离 ÷ 题干里的速度 ---------- */
+{
+  const t = SE('q05');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), v = q.vars.v, k = q.vars.k;
+    const d = +(mAll(q.diagramSvg, /data-u="dist" data-v="(\d+)"/g)[0] || [])[1];
+    chk(d === v * k, 'SEAMO Q5 图上标的距离 ' + d + ' 应 = 速度×时间 ' + v + '×' + k);
+    chk(q.stemText.indexOf(String(v)) >= 0, 'SEAMO Q5 题干里应出现速度 ' + v);
+    chk(ansNum(q) === d / v, 'SEAMO Q5 答案应为 ' + (d / v) + ' 分钟，实际 ' + ansText(q));
+    chk(d > 0 && String(d).length >= 3, 'SEAMO Q5 距离 ' + d + ' 太小，不像「家离奶奶家」的距离');
+  }
+  console.log('SEAMO Q5  图上距离 ÷ 题干速度 = 答案 ✓');
+}
+
+/* ---------- SEAMO Q6：图上只画前 k 行，答案必须超出去 ---------- */
+{
+  const t = SE('q06');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), k = q.vars.k, e = q.vars.e;
+    const drawn = mAll(q.diagramSvg, /data-u="num" data-v="(\d+)"/g).map(m => +m[1]);
+    chk(drawn.length === k * (k + 1) / 2, 'SEAMO Q6 图上应画 ' + k + ' 行共 ' + (k * (k + 1) / 2) + ' 个数，实际 ' + drawn.length);
+    chk(drawn.every((v, idx) => v === idx + 1), 'SEAMO Q6 图上数字应是 1 开始的连续整数');
+    const n = k + e, T = n * (n + 1) / 2;
+    chk(ansNum(q) === T, 'SEAMO Q6 第 ' + n + ' 行末位应为 ' + T);
+    chk(T > drawn.length, 'SEAMO Q6 答案必须超出图上画出的范围（否则等于把答案画出来了）');
+  }
+  console.log('SEAMO Q6  图上只画前 k 行 ✓  答案 = 第 n 行末位（超出图外）✓');
+}
+
+/* ---------- SEAMO Q7：两种分法解出孩子数，再算糖数 ---------- */
+{
+  const t = SE('q07');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), p = q.vars.p, r = q.vars.r, s = q.vars.s;
+    const c = r + s;                                      // 两次相差 r+s 颗 = 每个孩子多 1 颗 → 孩子数
+    chk(p * c + r === (p + 1) * c - s, 'SEAMO Q7 盈亏关系不成立：' + p + '×' + c + '+' + r + ' vs ' + (p + 1) + '×' + c + '−' + s);
+    chk(ansNum(q) === p * c + r, 'SEAMO Q7 糖数应为 ' + (p * c + r) + '，答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q7  两种分法数量相等解出孩子数 → 糖数 ✓');
+}
+
+/* ---------- SEAMO Q8：鸡兔同笼，腿数独立验算 ---------- */
+{
+  const t = SE('q08');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), A = q.vars.A, R = q.vars.R;
+    chk(2 * (A - R) + 4 * R === 2 * A + 2 * R, 'SEAMO Q8 腿数对不上');
+    chk(ansNum(q) === R, 'SEAMO Q8 兔子应为 ' + R + ' 只，答案 ' + ansText(q));
+    chk(q.stemText.indexOf(String(2 * A + 2 * R)) >= 0, 'SEAMO Q8 题干里应出现总腿数 ' + (2 * A + 2 * R));
+    chk(R > 0 && R < A, 'SEAMO Q8 兔子数 ' + R + ' 不合理（应 0 < R < ' + A + '）');
+  }
+  console.log('SEAMO Q8  腿数 2(A−R)+4R ✓  题干含总腿数 ✓');
+}
+/* ---------- SEAMO Q9：按图上圆圈与箭头倒推（再从答案正向复核一遍） ---------- */
+{
+  const t = SE('q09');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const nodes = mAll(svg, /data-u="node" data-i="(\d+)" data-v="([^"]*)"/g);
+    const ops = mAll(svg, /data-u="op" data-sym="([^"]*)" data-v="(\d+)"/g).map(m => [m[1], +m[2]]);
+    chk(nodes.length === ops.length + 1, 'SEAMO Q9 圆圈数应比运算数多 1');
+    chk(ops.length === 4, 'SEAMO Q9 图上应有 4 个运算，实际 ' + ops.length);
+    chk(nodes[0] && nodes[0][2] === '?', 'SEAMO Q9 第 1 个圆圈该画「?」');
+    const final = +nodes[nodes.length - 1][2];
+    chk(Number.isInteger(final), 'SEAMO Q9 图末圆圈里应是整数，实际「' + nodes[nodes.length - 1][2] + '」');
+    let x = final, ok = true;
+    for (let k = ops.length - 1; k >= 0; k--) {
+      const sym = ops[k][0], v = ops[k][1];
+      x = sym === '+' ? x - v : sym === '×' ? x / v : sym === '−' ? x + v : sym === '÷' ? x * v : NaN;
+      if (!Number.isInteger(x)) ok = false;
+    }
+    chk(ok, 'SEAMO Q9 倒推过程中出现除不尽/非整数：' + JSON.stringify(ops));
+    chk(x === ansNum(q), 'SEAMO Q9 从图末 ' + final + ' 倒推应得 ' + x + '，答案 ' + ansText(q));
+    let y = ansNum(q);
+    for (let k = 0; k < ops.length; k++) {
+      const sym = ops[k][0], v = ops[k][1];
+      y = sym === '+' ? y + v : sym === '×' ? y * v : sym === '−' ? y - v : y / v;
+    }
+    chk(y === final, 'SEAMO Q9 正向走一遍得 ' + y + '，图上写的是 ' + final);
+    chk(ansText(q) !== nodes[0][2], 'SEAMO Q9 选项里等于「?」');
+  }
+  console.log('SEAMO Q9  按图上圆圈/箭头倒推 ✓ 正向复核回到图末的数 ✓ 首圈画「?」✓');
+}
+
+/* ---------- SEAMO Q10：从圆盘阵还原「每行 1/2/3 格、逐行顺时针挪 1 格」 ---------- */
+{
+  const t = SE('q10');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const cells = mAll(svg, /data-u="disc" data-r="(\d+)" data-c="(\d+)" data-start="(\d+)" data-count="(\d+)"/g)
+      .map(m => ({ r: +m[1], c: +m[2], start: +m[3], count: +m[4], greens: 0 }));
+    const blank = mAll(svg, /data-u="blank" data-r="(\d+)" data-c="(\d+)"/g).map(m => [+m[1], +m[2]]);
+    chk(cells.length === 8 && blank.length === 1, 'SEAMO Q10 应是 3×3 盘面缺一格，实际 ' + cells.length + ' 盘 + ' + blank.length + ' 空格');
+    chk(blank[0] && blank[0][0] === 2 && blank[0][1] === 2, 'SEAMO Q10 缺的应是第 3 行第 3 格');
+    const base = (cells.find(c => c.r === 0 && c.c === 0) || {}).start;
+    chk(base >= 1, 'SEAMO Q10 读不出盘阵的起始钟点');
+    cells.forEach(c => {
+      chk(c.count === c.c + 1, 'SEAMO Q10 第 ' + (c.r + 1) + ' 行第 ' + (c.c + 1) + ' 格阴影数应是 ' + (c.c + 1) + '，图上 ' + c.count);
+      chk(c.start === ((base + c.r - 1) % 12) + 1, 'SEAMO Q10 ' + (c.r + 1) + '行' + (c.c + 1) + '格起点应是 ' + (((base + c.r - 1) % 12) + 1) + ' 点，图上 ' + c.start);
+    });
+    /* 阴影格真的涂了对应扇数（直接数绿色扇形；缺格那个绿底方块也占 1 次） */
+    const greenAll = (svg.match(/fill="#6cbf72"/g) || []).length;
+    const wantGreen = cells.reduce((s, c) => s + c.count, 0) + blank.length;
+    chk(greenAll === wantGreen, 'SEAMO Q10 图上绿色扇区应有 ' + wantGreen + ' 个，实际 ' + greenAll);
+    const wantStart = ((base + 2 - 1) % 12) + 1;
+    const opt = q.optionsSvg[q.correctIndex] || '';
+    const om = opt.match(/data-u="disc" data-start="(-?\d+)" data-count="(\d+)"/) || [];
+    chk(+om[1] === wantStart && +om[2] === 3, 'SEAMO Q10 正确选项应是「从 ' + wantStart + ' 点起涂 3 格」，实际 ' + om[1] + ' 点 / ' + om[2] + ' 格');
+    chk((opt.match(/fill="#6cbf72"/g) || []).length === 3, 'SEAMO Q10 正确选项的圆盘没涂够 3 个扇形');
+    const pairs = UNIQ((q.optionsSvg || []).map(s => {
+      const m = s.match(/data-start="(-?\d+)" data-count="(\d+)"/) || [];
+      return m[1] + '/' + m[2];
+    }));
+    chk(pairs.length === 5, 'SEAMO Q10 选项圆盘里有重复：' + JSON.stringify(pairs));
+  }
+  console.log('SEAMO Q10  阴影数按列递增、起点逐行顺时针挪 1 ✓  绿色扇区逐格数过 ✓  正确选项 = 缺格的起点/格数 ✓');
+}
+
+/* ---------- SEAMO Q11：两个钟面独立读数（表针角度 = 标注），差 = 答案 ---------- */
+{
+  const t = SE('q11');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const cl = mAll(svg, /data-u="clock" data-h="(\d+)" data-m="(\d+)"/g).map(m => [+m[1], +m[2]]);
+    chk(cl.length === 2, 'SEAMO Q11 应有两个钟面，实际 ' + cl.length);
+    clockOk(svg, 100, 88, cl[0][0], cl[0][1], 'SEAMO Q11 左钟');
+    clockOk(svg, 300, 88, cl[1][0], cl[1][1], 'SEAMO Q11 右钟');
+    const diff = (cl[1][0] * 60 + cl[1][1]) - (cl[0][0] * 60 + cl[0][1]);
+    chk(diff > 0, 'SEAMO Q11 右钟应晚于左钟');
+    const txt = Math.floor(diff / 60) + 'h ' + (diff % 60) + ' min';
+    chk(ansText(q) === txt, 'SEAMO Q11 两钟面独立算得「' + txt + '」，答案却是「' + ansText(q) + '」');
+    chk(UNIQ(q.options).length === q.options.length, 'SEAMO Q11 选项有重复：' + JSON.stringify(q.options));
+  }
+  console.log('SEAMO Q11  表针角度 = 钟面标注 ✓  右钟−左钟 = 答案 ✓');
+}
+
+/* ---------- SEAMO Q12：倍数与一半，直接照题意算 ---------- */
+{
+  const t = SE('q12');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), y = q.vars.y, x = 2 * y;
+    chk(q.stemText.indexOf(String(x)) >= 0, 'SEAMO Q12 题干里应出现 Adeline 的钱数 ' + x);
+    chk(ansNum(q) === x + 2 * x + y, 'SEAMO Q12 三人合计应为 ' + (x + 2 * x + y) + '，答案 ' + ansText(q));
+    chk(ansText(q).indexOf('$') >= 0, 'SEAMO Q12 答案应带 $ 符号，实际「' + ansText(q) + '」');
+  }
+  console.log('SEAMO Q12  题干钱数 → ×2 / ÷2 → 三人合计 ✓  答案带 $ ✓');
+}
+
+/* ---------- SEAMO Q13：直接从题干算式逐项求和（不套公式） ---------- */
+{
+  const t = SE('q13');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const toks = q.stemText.match(/\d+|[+\u2212-]/g) || [];
+    chk(toks.length >= 7, 'SEAMO Q13 题干算式解析失败：' + q.stemText);
+    let sum = +toks[0];
+    for (let k = 1; k + 1 < toks.length; k += 2) sum += (toks[k] === '+' ? 1 : -1) * (+toks[k + 1]);
+    chk(ansNum(q) === sum, 'SEAMO Q13 照题干逐项算得 ' + sum + '，答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q13  从题干算式逐项求和 ✓');
+}
+
+/* ---------- SEAMO Q14：从题干读出「2 月 1 日星期几 / 2 月几天」，照周历表推 ---------- */
+{
+  const t = SE('q14');
+  const AB = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const ZH = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const dow = mAll(q.diagramSvg, /data-u="dow" data-d="([^"]+)"/g).map(m => m[1]);
+    chk(dow.join(',') === AB.join(','), 'SEAMO Q14 表头应是 Sun..Sat，实际 ' + JSON.stringify(dow));
+    chk(q.options.length === 7, 'SEAMO Q14 选项应是完整的一周 7 天，实际 ' + q.options.length + ' 个');
+    const mD = q.stemText.match(/(\d+)\s*days in February/) || q.stemText.match(/2\s*月有\s*(\d+)\s*天/);
+    const mN = q.stemText.match(/fell on an?\s+([A-Z][a-z]+day)/) || q.stemText.match(/2\s*月\s*1\s*日是\s*([A-Za-z]+day|星期[一二三四五六日])/);
+    chk(!!mD && !!mN, 'SEAMO Q14 题干里读不出「2 月有几天 / 2 月 1 日星期几」：' + q.stemText);
+    if (!mD || !mN) continue;
+    const D = +mD[1];
+    let w = EN.indexOf(mN[1]);
+    if (w < 0) w = ZH.indexOf(mN[1]);
+    chk(w >= 0, 'SEAMO Q14 认不出星期名「' + mN[1] + '」');
+    chk(D === 28 || D === 29 || D === 30 || D === 31, 'SEAMO Q14 2 月天数不合理：' + D);
+    const idx = (w + D) % 7;                             // 3 月 1 日 = 2 月 1 日往后 D 天
+    const want = q.lang === 'en' ? EN[idx] : ZH[idx];
+    chk(ansText(q) === want, 'SEAMO Q14 从题干独立推出 3 月 1 日是 ' + want + '，答案却是「' + ansText(q) + '」');
+    chk(q.solutionText.indexOf(q.lang === 'en' ? EN[w] : ZH[w]) >= 0, 'SEAMO Q14 解析里应提到 2 月 1 日的星期名');
+  }
+  console.log('SEAMO Q14  题干 → 2/1 星期 + 2 月天数 → 3/1 星期 ✓  表头 Sun..Sat ✓  选项 = 完整一周 ✓');
+}
+
+/* ---------- SEAMO Q15：从图上解出 base/step，再按缺格的几何位置补数 ---------- */
+{
+  const t = SE('q15');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const cells = mAll(svg, /data-u="cell" data-r="(\d+)" data-c="(\d+)" data-v="(-?\d+)" x="([\d.]+)" y="([\d.]+)"/g)
+      .map(m => ({ r: +m[1], c: +m[2], v: +m[3], x: +m[4], y: +m[5] }));
+    chk(cells.length === 8, 'SEAMO Q15 应画出 8 个数字（缺 1 格），实际 ' + cells.length);
+    /* 先用两个格子解出「每右一格/下一格加多少」 */
+    const a = cells.reduce((m, x) => (x.r + x.c < m.r + m.c ? x : m), cells[0]);
+    const b = cells.filter(x => x.r + x.c > a.r + a.c)[0];
+    const steps = (b.v - a.v) / ((b.r + b.c) - (a.r + a.c));
+    const base = a.v - (a.r + a.c) * steps;
+    chk(Number.isInteger(steps) && steps > 0, 'SEAMO Q15 从图上读出的公差不对：' + steps);
+    chk(cells.every(x => x.v === base + (x.r + x.c) * steps), 'SEAMO Q15 图上的数不是等差：' + JSON.stringify(cells.map(x => x.v)));
+    /* 缺的那格：用格子中心坐标反推行列（不读变量） */
+    const x0 = cells.find(x => x.r === 0 && x.c === 0).x, x1 = cells.find(x => x.r === 0 && x.c === 1).x;
+    const y0 = cells.find(x => x.r === 0 && x.c === 0).y, y1 = cells.find(x => x.r === 1 && x.c === 0).y;
+    const cw = x1 - x0, ch = y1 - y0, padx = x0 - cw / 2, pady = y0 - ch / 2 - 9;
+    const bm = svg.match(/<rect x="([\d.]+)" y="([\d.]+)" width="\d+" height="\d+" fill="#ffe9a8"/);
+    chk(!!bm, 'SEAMO Q15 图上找不到缺的那一格');
+    if (!bm) continue;
+    const mc = Math.round((+bm[1] - padx) / cw), mr = Math.round((+bm[2] - pady) / ch);
+    chk(mr >= 0 && mr < 3 && mc >= 0 && mc < 3, 'SEAMO Q15 缺格位置反推失败 r=' + mr + ' c=' + mc);
+    const T = base + (mr + mc) * steps;
+    chk(ansNum(q) === T, 'SEAMO Q15 按图上规律补出的数应是 ' + T + '（缺 ' + mr + '行' + mc + '列），答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q15  图上解出公差 + 缺格几何位置 → 补数 ✓');
+}
+
+/* ---------- SEAMO Q16：三架天平逐级代换，独立算出葡萄质量 ---------- */
+{
+  const t = SE('q16');
+  const cnt = s => { const o = {}; String(s).split('+').filter(Boolean).forEach(p => { const a = p.split(':'); o[a[0]] = +a[1]; }); return o; };
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const bs = mAll(q.diagramSvg, /data-u="balance" data-arm="\d+" data-side-l="([^"]*)" data-side-r="([^"]*)" data-w="([^"]*)"/g)
+      .map(m => ({ l: cnt(m[1]), r: cnt(m[2]), w: m[3] }));
+    chk(bs.length === 3, 'SEAMO Q16 应画三架天平，实际 ' + bs.length);
+    if (bs.length !== 3) continue;
+    const b0 = bs[0], b1 = bs[1], b2 = bs.find(x => x.w);
+    chk(!!b2 && b2.w !== '' && b2.r.weight === 1, 'SEAMO Q16 带砝码的那架天平读数缺失');
+    const grapes = b0.l.grape, bananas = b0.r.banana;
+    const nb = b1.r.apple, na = b2.l.apple, W = +b2.w;
+    chk(grapes === 1 && b1.l.banana === 1, 'SEAMO Q16 三架天平应能逐级代换');
+    chk(W % na === 0, 'SEAMO Q16 ' + W + ' g 没法均分成 ' + na + ' 个苹果');
+    const apple = W / na, banana = nb * apple, grape = bananas * banana;
+    chk(ansNum(q) === grape, 'SEAMO Q16 独立代换得葡萄 ' + bananas + ' 根香蕉 × ' + banana + ' g = ' + grape + ' g，答案 ' + ansText(q));
+    chk(UNIQ(q.options).length === q.options.length, 'SEAMO Q16 选项有重复');
+  }
+  console.log('SEAMO Q16  苹果←砝码、香蕉←苹果、葡萄←香蕉 逐级代换 ✓');
+}
+/* ---------- 几何枚举三角形（Q20 用）：只认图上画出的线段，不套模板公式 ---------- */
+function triGeoCount(lines) {
+  const K = p => Math.round(p[0] * 1e6) + ',' + Math.round(p[1] * 1e6);
+  const EPS = 1e-9;
+  const cross = (a, b) => a[0] * b[1] - a[1] * b[0];
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
+  const inter = (p1, p2, p3, p4) => {
+    const d = cross(sub(p2, p1), sub(p4, p3));
+    if (Math.abs(d) < EPS) return null;
+    const w = sub(p3, p1);
+    const t = cross(w, sub(p4, p3)) / d, u = cross(w, sub(p2, p1)) / d;
+    if (t < -EPS || t > 1 + EPS || u < -EPS || u > 1 + EPS) return null;
+    return [p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])];
+  };
+  const nodes = [];
+  const addNode = p => { if (!nodes.some(q => K(q) === K(p))) nodes.push(p); };
+  lines.forEach(L => { addNode(L[0]); addNode(L[1]); });
+  for (let a = 0; a < lines.length; a++) for (let b = a + 1; b < lines.length; b++) {
+    const x = inter(lines[a][0], lines[a][1], lines[b][0], lines[b][1]);
+    if (x) addNode(x);
+  }
+  /* 候选边 = 同一条画出的线段上任意两个交点之间的部分（三角形的一条边可以跨多个交点） */
+  const cand = [];
+  lines.forEach(L => {
+    const d = sub(L[1], L[0]), len2 = d[0] * d[0] + d[1] * d[1];
+    const on = nodes.filter(n => {
+      if (K(n) === K(L[0]) || K(n) === K(L[1])) return true;
+      if (Math.abs(cross(d, sub(n, L[0]))) > 1e-9) return false;
+      const pr = (n[0] - L[0][0]) * d[0] + (n[1] - L[0][1]) * d[1];
+      return pr > -1e-9 && pr < len2 + 1e-9;
+    });
+    for (let i = 0; i < on.length; i++) for (let k = i + 1; k < on.length; k++) cand.push([on[i], on[k]]);
+  });
+  const found = new Set();
+  for (let i = 0; i < cand.length; i++) for (let k = i + 1; k < cand.length; k++) {
+    const v = inter(cand[i][0], cand[i][1], cand[k][0], cand[k][1]);
+    if (!v) continue;
+    for (let m = k + 1; m < cand.length; m++) {
+      const v2 = inter(cand[i][0], cand[i][1], cand[m][0], cand[m][1]);
+      const v3 = inter(cand[k][0], cand[k][1], cand[m][0], cand[m][1]);
+      if (!v2 || !v3) continue;
+      const ks = [K(v), K(v2), K(v3)];
+      if (ks[0] === ks[1] || ks[1] === ks[2] || ks[0] === ks[2]) continue;
+      found.add(ks.slice().sort().join('|'));
+    }
+  }
+  return found.size;
+}
+
+/* ---------- SEAMO Q17：从图上的格线重建格点图，DP 重算最短路条数 ---------- */
+{
+  const t = SE('q17');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const n = +((svg.match(/data-u="grid" data-n="(\d+)"/) || [])[1]);
+    const edges = new Set();
+    mAll(svg, /data-u="edge" data-x1="(-?\d+)" data-y1="(-?\d+)" data-x2="(-?\d+)" data-y2="(-?\d+)"/g).forEach(m => {
+      edges.add(m[1] + ',' + m[2] + '|' + m[3] + ',' + m[4]);
+      edges.add(m[3] + ',' + m[4] + '|' + m[1] + ',' + m[2]);
+    });
+    const A = mAll(svg, /data-u="pt" data-name="A" data-x="(-?\d+)" data-y="(-?\d+)"/g)[0];
+    const B = mAll(svg, /data-u="pt" data-name="B" data-x="(-?\d+)" data-y="(-?\d+)"/g)[0];
+    chk(!!A && !!B, 'SEAMO Q17 图上应标出 A、B 两点');
+    if (!A || !B) continue;
+    const ax = +A[1], ay = +A[2], bx = +B[1], by = +B[2];
+    const memo = {};
+    const P = (x, y) => {
+      if (x === ax && y === ay) return 1;
+      const key = x + ',' + y;
+      if (key in memo) return memo[key];
+      let v = 0;
+      if (x > ax && edges.has((x - 1) + ',' + y + '|' + x + ',' + y)) v += P(x - 1, y);
+      if (y > ay && edges.has(x + ',' + (y - 1) + '|' + x + ',' + y)) v += P(x, y - 1);
+      return (memo[key] = v);
+    };
+    const cnt = P(bx, by);
+    chk(n === q.vars.n, 'SEAMO Q17 图上台阶级数 ' + n + ' 与题干 ' + q.vars.n + ' 不一致');
+    let squares = 0;
+    for (let x = 0; x <= n + 1; x++) for (let y = 0; y <= n; y++) {
+      if (edges.has(x + ',' + y + '|' + (x + 1) + ',' + y) && edges.has(x + ',' + (y + 1) + '|' + (x + 1) + ',' + (y + 1)) &&
+          edges.has(x + ',' + y + '|' + x + ',' + (y + 1)) && edges.has((x + 1) + ',' + y + '|' + (x + 1) + ',' + (y + 1))) squares++;
+    }
+    chk(squares === 2 * n, 'SEAMO Q17 台阶应由 ' + (2 * n) + ' 个小方格拼成，实际 ' + squares);
+    chk(cnt === ansNum(q), 'SEAMO Q17 从图上格线独立数得 ' + cnt + ' 条最短路，答案 ' + ansText(q));
+    chk(squares === 2 * n && cnt > 0, 'SEAMO Q17 图形或路径计数异常');
+  }
+  console.log('SEAMO Q17  从图上格线重建 + DP 重算最短路 ✓（并核对 2n 个小方格）');
+}
+
+/* ---------- SEAMO Q18：从图上 3 行示范独立找出规律，再算第 4 行 ---------- */
+{
+  const t = SE('q18');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const rows = mAll(svg, /data-u="srow" data-r="(\d+)" data-terms="([^"]*)" data-rhs="([^"]*)"/g)
+      .map(m => ({ terms: m[2], rhs: m[3] }));
+    chk(rows.length === 4, 'SEAMO Q18 应有 4 行（3 行示范 + 1 行提问），实际 ' + rows.length);
+    if (rows.length !== 4) continue;
+    const parse = s => { const m = s.match(/^(\d+)\D+(\d+)$/); return m ? [+m[1], +m[2]] : null; };
+    for (let k = 0; k < 3; k++) {
+      const ab = parse(rows[k].terms);
+      chk(!!ab, 'SEAMO Q18 第 ' + (k + 1) + ' 行读不出「a⊗b」：' + rows[k].terms);
+      if (!ab) continue;
+      chk(+rows[k].rhs === ab[1] * (ab[0] + 1), 'SEAMO Q18 第 ' + (k + 1) + ' 行 ' + ab[0] + '⊗' + ab[1] + '=' + rows[k].rhs + ' 不符合 b×(a+1)');
+    }
+    const last = parse(rows[3].terms);
+    chk(rows[3].rhs === '?', 'SEAMO Q18 第 4 行右边该画「?」，实际「' + rows[3].rhs + '」');
+    chk(!!last, 'SEAMO Q18 第 4 行读不出「a⊗b」');
+    if (last) chk(ansNum(q) === last[1] * (last[0] + 1), 'SEAMO Q18 按图上规律应得 ' + (last[1] * (last[0] + 1)) + '，答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q18  3 行示范独立验出 a⊗b = b×(a+1) ✓ 第 4 行画「?」✓ 答案按规律算出 ✓');
+}
+
+/* ---------- SEAMO Q19：逐行验「第 3 格 = 前两格线段并集」，缺格 = 最后一行并集 ---------- */
+{
+  const t = SE('q19');
+  const SEG = s => String(s || '').split(';').filter(Boolean).sort();
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const cells = {};
+    mAll(svg, /data-u="fig" data-r="(\d+)" data-c="(\d+)" data-segs="([^"]*)"/g).forEach(m => { cells[m[1] + ',' + m[2]] = SEG(m[3]); });
+    const blank = mAll(svg, /data-u="blank" data-r="(\d+)" data-c="(\d+)"/g).map(m => m[1] + ',' + m[2]);
+    chk(blank.length === 1 && blank[0] === '2,2', 'SEAMO Q19 缺的应是第 3 行第 3 格，实际 ' + JSON.stringify(blank));
+    const uni = (a, b) => UNIQ(a.concat(b)).sort();
+    for (let r = 0; r < 3; r++) {
+      const c0 = cells[r + ',0'], c1 = cells[r + ',1'], c2 = cells[r + ',2'];
+      chk(!!c0 && !!c1 && c0.length > 0 && c1.length > 0, 'SEAMO Q19 第 ' + (r + 1) + ' 行前两格没画出线段');
+      if (!c0 || !c1) continue;
+      chk(c0.filter(x => c1.indexOf(x) >= 0).length > 0, 'SEAMO Q19 第 ' + (r + 1) + ' 行两图没有公共线段（叠加/异或分不清）');
+      if (c2) chk(SETEQ(c2, uni(c0, c1)), 'SEAMO Q19 第 ' + (r + 1) + ' 行第 3 格不是前两格的线段并集');
+    }
+    const want = uni(cells['2,0'] || [], cells['2,1'] || []);
+    const opt = (q.optionsSvg || []).map(s => SEG((s.match(/data-segs="([^"]*)"/) || [])[1]));
+    chk(opt.every(o => o.length > 0), 'SEAMO Q19 有选项没画出线段');
+    chk(SETEQ(opt[q.correctIndex], want), 'SEAMO Q19 正确选项不是第 3 行前两格的并集');
+    chk(UNIQ(opt.map(o => o.join(';'))).length === opt.length, 'SEAMO Q19 选项图形有重复（等于两个正确答案）');
+  }
+  console.log('SEAMO Q19  逐行验「第 3 格 = 前两格并集」✓ 缺格 = 最后一行并集 ✓ 选项互不相同 ✓');
+}
+
+/* ---------- SEAMO Q20：按图上线段做几何枚举，重数一遍三角形 ---------- */
+{
+  const t = SE('q20');
+  const memo = {};
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const tm = svg.match(/data-u="tri" data-j="(\d+)" data-extra="(\d+)"/) || [];
+    const j = +tm[1], ex = +tm[2];
+    chk(j === q.vars.j, 'SEAMO Q20 图上引线数 ' + j + ' 与题干 ' + q.vars.j + ' 不一致');
+    chk(ex === 1, 'SEAMO Q20 原卷那条额外斜线必须在图上（extra=' + ex + '）');
+    const kinds = mAll(svg, /data-u="line" data-kind="(\w+)"/g).map(m => m[1]);
+    chk(kinds.filter(k => k === 'side').length === 3, 'SEAMO Q20 三角形应有 3 条边');
+    chk(kinds.filter(k => k === 'div').length === j, 'SEAMO Q20 应有 ' + j + ' 条分割线，实际 ' + kinds.filter(k => k === 'div').length);
+    chk(kinds.filter(k => k === 'extra').length === 1, 'SEAMO Q20 应有 1 条额外斜线');
+    const key = kinds.join(',');
+    if (!memo[key]) {
+      const lines = mAll(svg, /data-u="line" data-kind="\w+" data-x1="([\d.]+)" data-y1="([\d.]+)" data-x2="([\d.]+)" data-y2="([\d.]+)"/g)
+        .map(m => [[+m[1], +m[2]], [+m[3], +m[4]]]);
+      memo[key] = triGeoCount(lines);
+    }
+    chk(memo[key] === ansNum(q), 'SEAMO Q20 按图上线段几何枚举得 ' + memo[key] + ' 个三角形，答案 ' + ansText(q));
+    chk(memo[key] === (j + 1) * (j + 3), 'SEAMO Q20 几何枚举 ' + memo[key] + ' ≠ (j+1)(j+3) = ' + ((j + 1) * (j + 3)));
+  }
+  console.log('SEAMO Q20  按图上线段几何枚举（三条边两两相交成三顶点）✓ 与答案一致 ✓');
+}
+/* ---------- SEAMO Q21：楼梯走法递推（1 级或 2 级） ---------- */
+{
+  const t = SE('q21');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), n = q.vars.n;
+    const f = [0, 1, 2];
+    for (let k = 3; k <= n; k++) f[k] = f[k - 1] + f[k - 2];
+    chk(ansNum(q) === f[n], 'SEAMO Q21 上 ' + n + ' 级有 ' + f[n] + ' 种走法，答案 ' + ansText(q));
+    chk(f[n] === f[n - 1] + f[n - 2], 'SEAMO Q21 递推关系不成立');
+  }
+  console.log('SEAMO Q21  递推 f(k)=f(k−1)+f(k−2) 独立算一遍 ✓');
+}
+
+/* ---------- SEAMO Q22：三个钟面读数 + 标注，间隔每次多 10 分钟，推第 4 个钟 ---------- */
+{
+  const t = SE('q22');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const cl = mAll(svg, /data-u="clock" data-h="(\d+)" data-m="(\d+)"/g).map(m => [+m[1], +m[2]]);
+    const labels = mAll(svg, /data-u="clabel" data-t="([^"]*)"/g).map(m => m[1]);
+    chk(cl.length === 3 && labels.length === 3, 'SEAMO Q22 应画出前三个钟面 + 标注，实际 ' + cl.length + '/' + labels.length);
+    chk(/data-u="blank"/.test(svg), 'SEAMO Q22 第 4 个钟应画成「?」');
+    if (cl.length !== 3) continue;
+    for (let k = 0; k < 3; k++) {
+      clockOk(svg, 14 + 44 + k * 116, 84, cl[k][0], cl[k][1], 'SEAMO Q22 第 ' + (k + 1) + ' 个钟');
+      const h12 = ((cl[k][0] + 11) % 12) + 1, m2 = cl[k][1] < 10 ? '0' + cl[k][1] : String(cl[k][1]);
+      chk(labels[k] === h12 + ':' + m2 + ' PM', 'SEAMO Q22 第 ' + (k + 1) + ' 个钟标注「' + labels[k] + '」与钟面 ' + cl[k][0] + ':' + cl[k][1] + ' 不符');
+    }
+    const mins = cl.map(c => c[0] * 60 + c[1]);
+    const g1 = mins[1] - mins[0], g2 = mins[2] - mins[1];
+    chk(g1 > 0 && g2 > 0, 'SEAMO Q22 钟面时刻应递增');
+    chk(g2 - g1 === 10, 'SEAMO Q22 图上间隔应每次多 10 分钟：' + g1 + ' / ' + g2);
+    const t4 = mins[2] + g2 + 10;
+    const h12 = ((Math.floor(t4 / 60) + 11) % 12) + 1, mm = t4 % 60;
+    const txt = h12 + ':' + (mm < 10 ? '0' + mm : mm) + ' PM';
+    chk(ansText(q) === txt, 'SEAMO Q22 按图上规律推出第 4 个钟是 ' + txt + '，答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q22  钟面读数 = 标注 ✓ 间隔每次多 10 分钟 ✓ 第 4 个钟 = 答案 ✓');
+}
+
+/* ---------- SEAMO Q23：从题干数列独立找规律（平方数） ---------- */
+{
+  const t = SE('q23');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    const seq = (q.stemText.match(/\d+/g) || []).map(Number);
+    chk(seq.length >= 10, 'SEAMO Q23 题干里应列出至少 10 个数：' + q.stemText);
+    if (seq.length < 10) continue;
+    const ten = seq.slice(0, 10);
+    const roots = ten.map(v => Math.round(Math.sqrt(v)));
+    chk(roots.every((r, k) => r * r === ten[k]), 'SEAMO Q23 题干里的数不都是平方数：' + JSON.stringify(ten));
+    chk(roots.every((r, k) => k === 0 || r === roots[k - 1] + 1), 'SEAMO Q23 题干里的平方数底数不连续：' + JSON.stringify(roots));
+    const nxt = (roots[9] + 1) * (roots[9] + 1);
+    chk(ansNum(q) === nxt, 'SEAMO Q23 下一项应是 ' + nxt + '，答案 ' + ansText(q));
+  }
+  console.log('SEAMO Q23  题干数列逐项开平方验连续 ✓ 下一项 = 下一个平方数 ✓');
+}
+
+/* ---------- SEAMO Q24：抽屉原理「最不利情况 + 1」 ---------- */
+{
+  const t = SE('q24');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), v = q.vars;
+    const cs = [v.c1, v.c2, v.c3, v.c4], n = v.n;
+    const worst = cs.reduce((s, c) => s + Math.min(c, n - 1), 0);
+    chk(Math.max.apply(null, cs) >= n, 'SEAMO Q24 没有任何颜色够 ' + n + ' 个，题目无解');
+    chk(worst + 1 <= cs.reduce((a, b) => a + b, 0), 'SEAMO Q24 需要的球数超过袋里总数');
+    chk(ansNum(q) === worst + 1, 'SEAMO Q24 最坏情况取 ' + worst + ' 个还不够，再 +1 = ' + (worst + 1) + '，答案 ' + ansText(q));
+    chk(q.stemText.indexOf(String(cs[0])) >= 0, 'SEAMO Q24 题干里应出现第一种颜色的个数 ' + cs[0]);
+  }
+  console.log('SEAMO Q24  最不利原则 Σmin(c,n−1)+1 ✓（并验题目有解）');
+}
+
+/* ---------- SEAMO Q25：三式相加独立解出每个符号（问哪个比哪个） ---------- */
+{
+  const t = SE('q25');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t), svg = q.diagramSvg;
+    const rows = mAll(svg, /data-u="srow" data-r="(\d+)" data-terms="([^"]*)" data-rhs="([^"]*)"/g)
+      .map(m => ({ terms: m[2], rhs: +m[3] }));
+    chk(rows.length === 3, 'SEAMO Q25 应有三行等式，实际 ' + rows.length);
+    if (rows.length !== 3) continue;
+    const syms = UNIQ(rows.map(r => r.terms).join('').split('').filter(c => '+\u2212-='.indexOf(c) < 0));
+    chk(syms.length === 3, 'SEAMO Q25 应出现 3 个符号，实际 ' + JSON.stringify(syms));
+    const sumAll = rows.reduce((s, r) => s + r.rhs, 0);
+    chk(sumAll % 2 === 0, 'SEAMO Q25 三式之和应为偶数（每个符号出现 2 次），实际 ' + sumAll);
+    const tot = sumAll / 2;
+    const val = {};
+    syms.forEach(s => {
+      chk(rows.filter(r => r.terms.indexOf(s) >= 0).length === 2, 'SEAMO Q25 符号 ' + s + ' 应在 2 式里出现');
+      const without = rows.filter(r => r.terms.indexOf(s) < 0);
+      chk(without.length === 1, 'SEAMO Q25 符号 ' + s + ' 应恰好缺席 1 式');
+      val[s] = without.length === 1 ? tot - without[0].rhs : NaN;
+      chk(Number.isInteger(val[s]) && val[s] > 0, 'SEAMO Q25 符号 ' + s + ' 解出 ' + val[s] + '，不合理');
+    });
+    chk(UNIQ(syms.map(s => val[s])).length === 3, 'SEAMO Q25 三个符号的值应互不相同：' + JSON.stringify(val));
+    const asked = (q.stemText.match(/value of\s*(\S)/) || q.stemText.match(/求\s*(\S)\s*的值/) || [])[1];
+    chk(!!asked && val[asked] !== undefined, 'SEAMO Q25 认不出题干问的是哪个符号：' + q.stemText);
+    if (asked && val[asked] !== undefined) {
+      chk(ansNum(q) === val[asked], 'SEAMO Q25 题干问「' + asked + '」，独立解出 ' + val[asked] + '，答案 ' + ansText(q));
+    }
+  }
+  console.log('SEAMO Q25  三式相加独立解出每个符号 ✓ 答案 = 题干所问符号的值 ✓');
+}
+
+/* ---------- SEAMO 配图文字一律用原卷英文（英文卷不许出现中文） ---------- */
+{
+  const CASES = [
+    ['q01', []], ['q02', []], ['q05', ['Cindy', 'Granny']], ['q06', []],
+    ['q09', []], ['q10', []], ['q11', []],
+    ['q14', ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']],
+    ['q15', []], ['q16', []], ['q17', ['A', 'B']], ['q18', []], ['q19', []],
+    ['q20', []], ['q22', ['PM']], ['q25', []]
+  ];
+  CASES.forEach(function (cs) {
+    const t = SE(cs[0]);
+    for (let i = 0; i < 10; i++) {
+      const q = Generator.instantiate(t);
+      const svg = (q.diagramSvg || '') + (q.optionsSvg || []).join('');
+      chk(!/[\u4e00-\u9fff]/.test(svg), 'SEAMO ' + cs[0] + ' 配图里出现了中文');
+      cs[1].forEach(w => chk(svg.indexOf(w) >= 0, 'SEAMO ' + cs[0] + ' 图里应出现「' + w + '」'));
+    }
+  });
+  console.log('SEAMO 配图文字 = 原卷英文 ✓（16 道带图题抽查）');
+}
 /* ---------- 选项图形两两不同（否则等于有两个正确答案）---------- */
 {
   let n = 0;
-  ['icas21y2m-02', 'icas21y2m-09', 'icas21y2m-12', 'icas21y2m-14', 'icas21y2m-17', 'icas21y2m-20', 'icas21y2m-21', 'icas21y2m-22']
+  ['icas21y2m-02', 'icas21y2m-09', 'icas21y2m-12', 'icas21y2m-14', 'icas21y2m-17', 'icas21y2m-20', 'icas21y2m-21', 'icas21y2m-22',
+   'seamo25a-q02', 'seamo25a-q10', 'seamo25a-q19']
     .forEach(id => {
       const t = byId(id);
       for (let i = 0; i < 25; i++) {

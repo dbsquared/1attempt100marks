@@ -5615,6 +5615,2227 @@
         "d": 2,
         "n": 5
       }
+    },
+    {
+      "id": "seamo25a-q01",
+      "subject": "数学",
+      "topic": "找规律",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "小房子屋顶的数（下面两格相乘再减 1）",
+      "tags": [
+        "找规律",
+        "数与运算"
+      ],
+      "source": "SEAMO 2025 Paper A Q1",
+      "stem": {
+        "en": "Find the missing number in the number puzzle below.",
+        "zh": "求下面数字拼图中缺失的数。"
+      },
+      "vars": {
+        "a1": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "b1": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "a2": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "b2": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "a3": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "b3": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "a4": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "b4": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        }
+      },
+      "derived": {
+        "r1": "a1*b1-1",
+        "r2": "a2*b2-1",
+        "r3": "a3*b3-1",
+        "T": "a4*b4-1",
+        "o0": "T-3",
+        "o1": "T-1",
+        "o2": "T",
+        "o3": "T+1",
+        "o4": "T+3"
+      },
+      "constraints": [
+        "r1 != a1+b1",
+        "r2 != a2+b2",
+        "r3 != a3+b3",
+        "r1 != a1*b1+1",
+        "r2 != a2*b2+1",
+        "r3 != a3*b3+1",
+        "r1 != a1+b1-1",
+        "r2 != a2+b2-1",
+        "r3 != a3+b3-1",
+        "T >= 12"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "In every house the number in the roof is the two numbers below multiplied together, minus 1: {a1}×{b1}−1={r1}, {a2}×{b2}−1={r2}, {a3}×{b3}−1={r3} (all three agree). So the missing roof is {a4}×{b4}−1={T}.",
+        "zh": "每座小房子屋顶的数 = 下面左右两格相乘再减 1：{a1}×{b1}−1={r1}，{a2}×{b2}−1={r2}，{a3}×{b3}−1={r3}（三座都合得上）。所以缺的屋顶是 {a4}×{b4}−1={T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q01.png",
+      "diagram": {
+        "type": "puzzlehouse",
+        "pairs": [
+          [
+            "a1",
+            "b1"
+          ],
+          [
+            "a2",
+            "b2"
+          ],
+          [
+            "a3",
+            "b3"
+          ],
+          [
+            "a4",
+            "b4"
+          ]
+        ],
+        "roofs": [
+          "r1",
+          "r2",
+          "r3",
+          ""
+        ]
+      },
+      "original": {
+        "a1": 3,
+        "b1": 4,
+        "a2": 5,
+        "b2": 6,
+        "a3": 3,
+        "b3": 5,
+        "a4": 4,
+        "b4": 8
+      }
+    },
+    {
+      "id": "seamo25a-q02",
+      "subject": "数学",
+      "topic": "图形规律",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "线段数依次多 1，下一个图形是哪个",
+      "tags": [
+        "找规律",
+        "图形",
+        "线段"
+      ],
+      "source": "SEAMO 2025 Paper A Q2",
+      "stem": {
+        "en": "The figures below follow a pattern. Which diagram comes next?",
+        "zh": "下面的图形按规律排列，下一个图形是哪一个？"
+      },
+      "vars": {
+        "s": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "derived": {
+        "T": "s+3",
+        "o0": "T-3",
+        "o1": "T-2",
+        "o2": "T-1",
+        "o3": "T",
+        "o4": "T+1"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "A",
+            "zh": "甲"
+          },
+          {
+            "en": "B",
+            "zh": "乙"
+          },
+          {
+            "en": "C",
+            "zh": "丙"
+          },
+          {
+            "en": "D",
+            "zh": "丁"
+          },
+          {
+            "en": "E",
+            "zh": "戊"
+          }
+        ],
+        "optionsSvg": [
+          {
+            "type": "segshape",
+            "n": "o0"
+          },
+          {
+            "type": "segshape",
+            "n": "o1"
+          },
+          {
+            "type": "segshape",
+            "n": "o2"
+          },
+          {
+            "type": "segshape",
+            "n": "o3"
+          },
+          {
+            "type": "segshape",
+            "n": "o4"
+          }
+        ],
+        "correctIndex": 3
+      },
+      "solution": {
+        "en": "Count the straight line segments in each figure: the first has {s}, the second {s+1}, the third {s+2}. The number of segments goes up by 1 each time, so the next figure must be made of {T} straight segments — that is the {T}-sided one.",
+        "zh": "数一数每个图形里的直线段：第 1 个 {s} 条，第 2 个 {s+1} 条，第 3 个 {s+2} 条，每次多 1 条。所以下一个图形要用 {T} 条线段，也就是边数最多的那一个。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q02.png",
+      "diagram": {
+        "type": "segseq",
+        "s": "s",
+        "len": 3
+      },
+      "original": {
+        "s": 1
+      }
+    },
+    {
+      "id": "seamo25a-q03",
+      "subject": "数学",
+      "topic": "数位与计数",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "给整本书编页码一共用了多少个数字",
+      "tags": [
+        "计数",
+        "数位"
+      ],
+      "source": "SEAMO 2025 Paper A Q3",
+      "stem": {
+        "en": "A comic book has {N} pages. How many digits in total are used to number all the pages?",
+        "zh": "一本漫画书有 {N} 页，给全部页码编号一共要用多少个数字？"
+      },
+      "vars": {
+        "N": {
+          "type": "int",
+          "min": 10,
+          "max": 99
+        }
+      },
+      "derived": {
+        "T": "2*N-9",
+        "o0": "T-10",
+        "o1": "T-2",
+        "o2": "T",
+        "o3": "T+4",
+        "o4": "T+10"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Pages 1 to 9 use one digit each: 9 digits. The rest are two-digit page numbers. There are {N} − 9 = {N-9} of them, using {N-9} × 2 = {2*(N-9)} digits. Altogether 9 + {2*(N-9)} = {T} digits.",
+        "zh": "第 1–9 页每页 1 个数字，共 9 个；剩下的都是两位数页码，共 {N}−9 = {N-9} 页，每页 2 个数字，共 {2*(N-9)} 个。合计 9+{2*(N-9)} = {T} 个。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q03.png",
+      "noFigure": "原题为纯文字应用题（只给一个页码总数），无图",
+      "original": {
+        "N": 86
+      }
+    },
+    {
+      "id": "seamo25a-q04",
+      "subject": "数学",
+      "topic": "等差数列",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "9 个连续自然数相加（首尾配对）",
+      "tags": [
+        "巧算",
+        "数列"
+      ],
+      "source": "SEAMO 2025 Paper A Q4",
+      "stem": {
+        "en": "Find the value of {a} + {a+1} + {a+2} + {a+3} + {a+4} + {a+5} + {a+6} + {a+7} + {a+8}",
+        "zh": "求 {a}+{a+1}+{a+2}+{a+3}+{a+4}+{a+5}+{a+6}+{a+7}+{a+8} 的值。"
+      },
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 4,
+          "max": 40
+        }
+      },
+      "derived": {
+        "T": "9*a+36",
+        "o0": "T-4",
+        "o1": "T-2",
+        "o2": "T",
+        "o3": "T+2",
+        "o4": "T+6"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Pair the numbers from the two ends: {a}+{a+8} = {2*a+8}, and there are 4 such pairs, with {a+4} left in the middle. So the total is 4 × {2*a+8} + {a+4} = {T}. (Same as ({a}+{a+8}) × 9 ÷ 2.)",
+        "zh": "首尾配对：{a}+{a+8} = {2*a+8}，一共有 4 对，中间剩下 {a+4}。所以总和 = 4×{2*a+8} + {a+4} = {T}。（用公式算也一样：({a}+{a+8})×9÷2。）"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q04.png",
+      "noFigure": "原题为纯文字算式题（题干里就是一串加法），无图",
+      "original": {
+        "a": 11
+      }
+    },
+    {
+      "id": "seamo25a-q05",
+      "subject": "数学",
+      "topic": "行程问题",
+      "grade": "五年级",
+      "difficulty": 1,
+      "title": "每分钟走 40 米，走完全程要几分钟",
+      "tags": [
+        "除法",
+        "行程"
+      ],
+      "source": "SEAMO 2025 Paper A Q5",
+      "stem": {
+        "en": "Granny's house is {d} metres away from Cindy's house. Cindy walks {v} metres every minute. How many minutes will it take Cindy to reach Granny's house?",
+        "zh": "奶奶家离 Cindy 家 {d} 米。Cindy 每分钟走 {v} 米，她要多少分钟才能到奶奶家？"
+      },
+      "vars": {
+        "v": {
+          "type": "pick",
+          "from": [
+            20,
+            30,
+            40,
+            50,
+            60,
+            80
+          ]
+        },
+        "k": {
+          "type": "int",
+          "min": 8,
+          "max": 25
+        }
+      },
+      "derived": {
+        "d": "v*k",
+        "o0": "k-4",
+        "o1": "k-2",
+        "o2": "k",
+        "o3": "k+1",
+        "o4": "k+3"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Time = distance ÷ speed = {d} ÷ {v} = {k} minutes.",
+        "zh": "时间 = 路程 ÷ 速度 = {d} ÷ {v} = {k}（分钟）。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q05.png",
+      "diagram": {
+        "type": "distline",
+        "d": "d"
+      },
+      "original": {
+        "v": 40,
+        "k": 12
+      }
+    },
+    {
+      "id": "seamo25a-q06",
+      "subject": "数学",
+      "topic": "数列规律",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "三角形数字阵第 n 行最后一个数",
+      "tags": [
+        "数列",
+        "找规律"
+      ],
+      "source": "SEAMO 2025 Paper A Q6",
+      "stem": {
+        "en": "In the number pattern below, what is the last number in the {n}th row?",
+        "zh": "下图的数字排列中，第 {n} 行的最后一个数是多少？"
+      },
+      "vars": {
+        "k": {
+          "type": "int",
+          "min": 3,
+          "max": 5
+        },
+        "e": {
+          "type": "int",
+          "min": 1,
+          "max": 3
+        }
+      },
+      "derived": {
+        "n": "k+e",
+        "T": "n*(n+1)/2",
+        "o0": "T-3",
+        "o1": "T-1",
+        "o2": "T",
+        "o3": "T+1",
+        "o4": "T+2"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Row 1 holds 1 number, row 2 holds 2, row 3 holds 3, and so on. The first {n} rows together hold 1 + 2 + … + {n} = {T} numbers, and the numbers are written in order 1, 2, 3, … So the last number in row {n} is {T}.",
+        "zh": "第 1 行 1 个数，第 2 行 2 个数，第 3 行 3 个数……前 {n} 行一共 1+2+…+{n} = {T} 个数，数字又是从 1 开始连续写下来的，所以第 {n} 行最后一个数就是 {T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q06.png",
+      "diagram": {
+        "type": "numtri",
+        "rows": "k"
+      },
+      "original": {
+        "k": 5,
+        "e": 2
+      }
+    },
+    {
+      "id": "seamo25a-q07",
+      "subject": "数学",
+      "topic": "盈亏问题",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "每人多给 1 颗就差一点：一共几颗糖",
+      "tags": [
+        "盈亏",
+        "方程"
+      ],
+      "source": "SEAMO 2025 Paper A Q7",
+      "stem": {
+        "en": "Lily has some sweets. If she gives each child {p} sweets, she has {r} sweets left. If she gives each child {p+1} sweets, she is short by {s}. How many sweets does Lily have?",
+        "zh": "Lily 有一些糖。如果给每个孩子 {p} 颗，还剩 {r} 颗；如果给每个孩子 {p+1} 颗，还差 {s} 颗。Lily 一共有多少颗糖？"
+      },
+      "vars": {
+        "p": {
+          "type": "int",
+          "min": 3,
+          "max": 7
+        },
+        "r": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "s": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        }
+      },
+      "derived": {
+        "c": "r+s",
+        "T": "p*(r+s)+r",
+        "o0": "T-3",
+        "o1": "T-1",
+        "o2": "T",
+        "o3": "T+1",
+        "o4": "T+3"
+      },
+      "constraints": [
+        "T <= 200",
+        "c >= 2"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "From the first plan to the second, each child gets 1 sweet more, so the sweets total would have to grow by one per child. Going from {r} left over to {s} short means the total needed changed by {r}+{s} = {c}, so there are {c} children. Then the sweets are {p} × {c} + {r} = {T}. (Check: {p+1} × {c} = {(p+1)*c}, which is {T} + {s}.)",
+        "zh": "从第一种分法到第二种，每个孩子多拿 1 颗。糖数从「剩 {r} 颗」变成「差 {s} 颗」，中间相差 {r}+{s} = {c} 颗，也就是差在每个孩子多拿的 1 颗上，所以孩子有 {c} 个。糖数 = {p}×{c}+{r} = {T}。（验算：{p+1}×{c} = {(p+1)*c}，正好比 {T} 多 {s} 颗。）"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q07.png",
+      "noFigure": "原题为纯文字应用题（分糖情境），无图",
+      "original": {
+        "p": 5,
+        "r": 3,
+        "s": 1
+      }
+    },
+    {
+      "id": "seamo25a-q08",
+      "subject": "数学",
+      "topic": "鸡兔同笼",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "一共几只兔（头数与腿数已知）",
+      "tags": [
+        "鸡兔同笼",
+        "假设法"
+      ],
+      "source": "SEAMO 2025 Paper A Q8",
+      "stem": {
+        "en": "The farmer has {A} chickens and rabbits. He counted that there are {L} legs altogether. How many rabbits does the farmer have?",
+        "zh": "农夫养了 {A} 只鸡和兔子，一共数出 {L} 条腿。兔子有多少只？"
+      },
+      "vars": {
+        "A": {
+          "type": "int",
+          "min": 12,
+          "max": 30
+        },
+        "R": {
+          "type": "int",
+          "min": 3,
+          "max": 15
+        }
+      },
+      "derived": {
+        "L": "2*A+2*R",
+        "o0": "R-2",
+        "o1": "R-1",
+        "o2": "R",
+        "o3": "R+1",
+        "o4": "R+2"
+      },
+      "constraints": [
+        "R <= A-3"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Pretend all {A} animals were chickens: that is 2 × {A} = {2*A} legs. The real count is {L}, which is {L-2*A} more legs. Every rabbit adds 2 legs more than a chicken, so the number of rabbits is {L-2*A} ÷ 2 = {R}.",
+        "zh": "假设 {A} 只全是鸡，那么腿是 2×{A} = {2*A} 条；实际有 {L} 条，多出 {L-2*A} 条。每把一只鸡换成兔子就多 2 条腿，所以兔子有 {L-2*A}÷2 = {R} 只。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q08.png",
+      "noFigure": "原题为纯文字应用题（鸡兔同笼），无图",
+      "original": {
+        "A": 18,
+        "R": 10
+      }
+    },
+    {
+      "id": "seamo25a-q09",
+      "subject": "数学",
+      "topic": "逆推",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "按箭头逆推第 1 个圆圈里的数",
+      "tags": [
+        "逆推",
+        "四则运算"
+      ],
+      "source": "SEAMO 2025 Paper A Q9",
+      "stem": {
+        "en": "In the diagram below, which number belongs in the 1st circle?",
+        "zh": "下图中，第 1 个圆圈里应该填哪个数？"
+      },
+      "vars": {
+        "p": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "q": {
+          "type": "int",
+          "min": 2,
+          "max": 5
+        },
+        "s": {
+          "type": "int",
+          "min": 1,
+          "max": 6
+        },
+        "a": {
+          "type": "int",
+          "min": 1,
+          "max": 20
+        }
+      },
+      "derived": {
+        "r": "q*s",
+        "F": "a+p-s",
+        "o0": "a",
+        "o1": "a+1",
+        "o2": "a+2",
+        "o3": "a+3",
+        "o4": "a+4"
+      },
+      "constraints": [
+        "F >= 1",
+        "F <= 40"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Work backwards from the number you can see, {F}, undoing each arrow: {F} × {q} = {F*q}; {F*q} + {r} = {F*q+r}; {F*q+r} ÷ {q} = {F+s}; {F+s} − {p} = {a}. So the 1st circle holds {a}. (Forward check: {a} + {p} = {a+p}, × {q} = {(a+p)*q}, − {r} = {(a+p)*q-r}, ÷ {q} = {F}.)",
+        "zh": "从图上能看到的最后一个数 {F} 出发，一步一步倒回去：{F}×{q} = {F*q}；{F*q}+{r} = {F*q+r}；{F*q+r}÷{q} = {F+s}；{F+s}−{p} = {a}。所以第 1 个圆圈填 {a}。（正向验算：{a}+{p} = {a+p}，×{q} = {(a+p)*q}，−{r} = {(a+p)*q-r}，÷{q} = {F}。）"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q09.png",
+      "diagram": {
+        "type": "opchain",
+        "ops": [
+          [
+            "+",
+            "p"
+          ],
+          [
+            "×",
+            "q"
+          ],
+          [
+            "−",
+            "r"
+          ],
+          [
+            "÷",
+            "q"
+          ]
+        ],
+        "final": "F"
+      },
+      "original": {
+        "p": 3,
+        "q": 3,
+        "s": 1,
+        "a": 1
+      }
+    },
+    {
+      "id": "seamo25a-q10",
+      "subject": "数学",
+      "topic": "图形规律",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "十二等分圆盘：阴影个数与起始位置都在变",
+      "tags": [
+        "找规律",
+        "图形",
+        "旋转"
+      ],
+      "source": "SEAMO 2025 Paper A Q10",
+      "stem": {
+        "en": "Find the missing diagram in the pattern below.",
+        "zh": "找出下面图形规律中缺失的那个图。"
+      },
+      "vars": {
+        "s0": {
+          "type": "int",
+          "min": 1,
+          "max": 6
+        }
+      },
+      "derived": {
+        "ms": "s0+2",
+        "mm1": "s0+1",
+        "mp1": "s0+3"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "A",
+            "zh": "甲"
+          },
+          {
+            "en": "B",
+            "zh": "乙"
+          },
+          {
+            "en": "C",
+            "zh": "丙"
+          },
+          {
+            "en": "D",
+            "zh": "丁"
+          },
+          {
+            "en": "E",
+            "zh": "戊"
+          }
+        ],
+        "optionsSvg": [
+          {
+            "type": "disc",
+            "start": "ms",
+            "count": 3
+          },
+          {
+            "type": "disc",
+            "start": "mm1",
+            "count": 3
+          },
+          {
+            "type": "disc",
+            "start": "mp1",
+            "count": 3
+          },
+          {
+            "type": "disc",
+            "start": "ms",
+            "count": 2
+          },
+          {
+            "type": "disc",
+            "start": "ms",
+            "count": 4
+          }
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Read the discs row by row. In every row the shaded sectors go 1, 2, 3, and the first shaded sector moves on by 1 o'clock each row down. So the missing disc (3rd row, 3rd column) must have 3 shaded sectors, starting at {ms} o'clock and running to {ms+3} o'clock.",
+        "zh": "一行一行地看：每一行的阴影扇形都是 1 个、2 个、3 个；而且每往下一行，阴影的起点就顺时针挪 1 个小时。所以缺的那个（第 3 行第 3 个）要涂 3 个扇形，从 {ms} 点钟方向起、连着涂到 {ms+3} 点钟。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q10.png",
+      "diagram": {
+        "type": "discgrid",
+        "rows": 3,
+        "cols": 3,
+        "start": "s0",
+        "mr": 2,
+        "mc": 2
+      },
+      "original": {
+        "s0": 1
+      }
+    },
+    {
+      "id": "seamo25a-q11",
+      "subject": "数学",
+      "topic": "时间",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "两个钟面之间经过了多长时间",
+      "tags": [
+        "时间",
+        "钟面"
+      ],
+      "source": "SEAMO 2025 Paper A Q11",
+      "stem": {
+        "en": "Observe the two clocks below. How much time has passed?",
+        "zh": "观察下面两个钟面，经过了多长时间？"
+      },
+      "vars": {
+        "h1": {
+          "type": "int",
+          "min": 1,
+          "max": 6
+        },
+        "m1": {
+          "type": "pick",
+          "from": [
+            5,
+            10,
+            15,
+            20,
+            25,
+            35,
+            40,
+            45,
+            50,
+            55
+          ]
+        },
+        "dh": {
+          "type": "int",
+          "min": 1,
+          "max": 3
+        },
+        "dm": {
+          "type": "pick",
+          "from": [
+            5,
+            15,
+            20,
+            30,
+            40,
+            45,
+            55
+          ]
+        }
+      },
+      "derived": {
+        "t2": "h1*60+m1+dh*60+dm",
+        "h2": "floor((h1*60+m1+dh*60+dm)/60)",
+        "m2": "mod(h1*60+m1+dh*60+dm,60)",
+        "v0": "dh*60+dm-25",
+        "v1": "dh*60+dm-10",
+        "v3": "dh*60+dm+10",
+        "v4": "dh*60+dm+25",
+        "hh0": "floor((dh*60+dm-25)/60)",
+        "mm0": "mod(dh*60+dm-25,60)",
+        "hh1": "floor((dh*60+dm-10)/60)",
+        "mm1": "mod(dh*60+dm-10,60)",
+        "hh2": "floor((dh*60+dm)/60)",
+        "mm2": "mod(dh*60+dm,60)",
+        "hh3": "floor((dh*60+dm+10)/60)",
+        "mm3": "mod(dh*60+dm+10,60)",
+        "hh4": "floor((dh*60+dm+25)/60)",
+        "mm4": "mod(dh*60+dm+25,60)"
+      },
+      "constraints": [
+        "h2 >= 1",
+        "t2 <= 715"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{hh0}h {mm0} min",
+          "{hh1}h {mm1} min",
+          "{hh2}h {mm2} min",
+          "{hh3}h {mm3} min",
+          "{hh4}h {mm4} min"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Read each clock: the left one shows {h1}:{m1} (short hand just past {h1}, long hand on {m1} minutes). The right one shows {h2}:{m2}. From {h1}:{m1} to {h2}:{m2} is {dh} h {dm} min — count the whole hours first, then the extra minutes.",
+        "zh": "先分别读出两个钟面：左钟是 {h1}:{m1}（时针刚过 {h1}，分针指着 {m1} 分）；右钟是 {h2}:{m2}。从 {h1}:{m1} 到 {h2}:{m2} 经过了 {dh} 小时 {dm} 分。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q11.png",
+      "diagram": {
+        "type": "clockpair",
+        "h1": "h1",
+        "m1": "m1",
+        "h2": "h2",
+        "m2": "m2"
+      },
+      "original": {
+        "h1": 1,
+        "m1": 30,
+        "dh": 3,
+        "dm": 15
+      }
+    },
+    {
+      "id": "seamo25a-q12",
+      "subject": "数学",
+      "topic": "倍数与分数",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "2 倍与一半：三个人一共有多少钱",
+      "tags": [
+        "倍数",
+        "一半"
+      ],
+      "source": "SEAMO 2025 Paper A Q12",
+      "stem": {
+        "en": "Adeline has ${x}. Ben has 2 times the amount of money that Adeline has. Charles has half the amount of money that Adeline has. How much money do they have altogether?",
+        "zh": "Adeline 有 {x} 元。Ben 的钱是 Adeline 的 2 倍，Charles 的钱是 Adeline 的一半。三人一共有多少钱？"
+      },
+      "vars": {
+        "y": {
+          "type": "int",
+          "min": 3,
+          "max": 15
+        }
+      },
+      "derived": {
+        "x": "2*y",
+        "T": "7*y",
+        "o0": "T-9",
+        "o1": "T-3",
+        "o2": "T",
+        "o3": "T+6",
+        "o4": "T+9"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "${o0}",
+          "${o1}",
+          "${o2}",
+          "${o3}",
+          "${o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Ben has 2 × {x} = {2*x}. Charles has {x} ÷ 2 = {y}. Altogether {x} + {2*x} + {y} = {T}.",
+        "zh": "Ben 有 {x}×2 = {2*x}；Charles 有 {x}÷2 = {y}。三人合计 {x}+{2*x}+{y} = {T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q12.png",
+      "noFigure": "原题为纯文字应用题（三个人的钱数关系），无图",
+      "original": {
+        "y": 9
+      }
+    },
+    {
+      "id": "seamo25a-q13",
+      "subject": "数学",
+      "topic": "巧算",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "加减交替的算式：三个一组求和",
+      "tags": [
+        "巧算",
+        "分组"
+      ],
+      "source": "SEAMO 2025 Paper A Q13",
+      "stem": {
+        "en": "Find the value of {s} + {s+1} − {s+2} + {s+3} + {s+4} − {s+5} + {s+6} + {s+7} − {s+8} + {s+9} + {s+10} − {s+11}",
+        "zh": "求 {s}+{s+1}−{s+2}+{s+3}+{s+4}−{s+5}+{s+6}+{s+7}−{s+8}+{s+9}+{s+10}−{s+11} 的值。"
+      },
+      "vars": {
+        "s": {
+          "type": "int",
+          "min": 1,
+          "max": 20
+        }
+      },
+      "derived": {
+        "T": "4*s+14",
+        "o0": "T-6",
+        "o1": "T-2",
+        "o2": "T",
+        "o3": "T+3",
+        "o4": "T+6"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Take the numbers three at a time: ({s}+{s+1}−{s+2}) = {s-1}, ({s+3}+{s+4}−{s+5}) = {s+2}, ({s+6}+{s+7}−{s+8}) = {s+5}, ({s+9}+{s+10}−{s+11}) = {s+8}. Adding the four group answers: {s-1}+{s+2}+{s+5}+{s+8} = {T}.",
+        "zh": "把数字三个一组：({s}+{s+1}−{s+2}) = {s-1}，({s+3}+{s+4}−{s+5}) = {s+2}，({s+6}+{s+7}−{s+8}) = {s+5}，({s+9}+{s+10}−{s+11}) = {s+8}。四组答案是 {s-1}、{s+2}、{s+5}、{s+8}，相加得 {T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q13.png",
+      "noFigure": "原题为纯文字算式题（题干里就是一串加减），无图",
+      "original": {
+        "s": 1
+      }
+    },
+    {
+      "id": "seamo25a-q14",
+      "subject": "数学",
+      "topic": "日期与星期",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "2 月 1 日是星期几，3 月 1 日又是星期几",
+      "tags": [
+        "日期",
+        "星期",
+        "周期"
+      ],
+      "source": "SEAMO 2025 Paper A Q14",
+      "stem": {
+        "en": "The 1st of February fell on a {sd} some years ago. On which day of the week was the 1st of March in that same year? There are {D} days in February that year. You may use the table to assist you.",
+        "zh": "若干年前，2 月 1 日是{zd}。那一年 3 月 1 日是星期几？（那一年 2 月有 {D} 天。可以借助表格推算。）"
+      },
+      "vars": {
+        "D": {
+          "type": "pick",
+          "from": [
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        "w": {
+          "type": "int",
+          "min": 0,
+          "max": 6
+        },
+        "d0": {
+          "type": "pick",
+          "from": [
+            "Sunday"
+          ]
+        },
+        "d1": {
+          "type": "pick",
+          "from": [
+            "Monday"
+          ]
+        },
+        "d2": {
+          "type": "pick",
+          "from": [
+            "Tuesday"
+          ]
+        },
+        "d3": {
+          "type": "pick",
+          "from": [
+            "Wednesday"
+          ]
+        },
+        "d4": {
+          "type": "pick",
+          "from": [
+            "Thursday"
+          ]
+        },
+        "d5": {
+          "type": "pick",
+          "from": [
+            "Friday"
+          ]
+        },
+        "d6": {
+          "type": "pick",
+          "from": [
+            "Saturday"
+          ]
+        },
+        "z0": {
+          "type": "pick",
+          "from": [
+            "星期日"
+          ]
+        },
+        "z1": {
+          "type": "pick",
+          "from": [
+            "星期一"
+          ]
+        },
+        "z2": {
+          "type": "pick",
+          "from": [
+            "星期二"
+          ]
+        },
+        "z3": {
+          "type": "pick",
+          "from": [
+            "星期三"
+          ]
+        },
+        "z4": {
+          "type": "pick",
+          "from": [
+            "星期四"
+          ]
+        },
+        "z5": {
+          "type": "pick",
+          "from": [
+            "星期五"
+          ]
+        },
+        "z6": {
+          "type": "pick",
+          "from": [
+            "星期六"
+          ]
+        }
+      },
+      "derived": {
+        "sd": "sel(w, d0, d1, d2, d3, d4, d5, d6)",
+        "zd": "sel(w, z0, z1, z2, z3, z4, z5, z6)",
+        "sy": "sel(mod(w+D,7), d0, d1, d2, d3, d4, d5, d6)",
+        "zy": "sel(mod(w+D,7), z0, z1, z2, z3, z4, z5, z6)"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "Sunday",
+            "zh": "星期日"
+          },
+          {
+            "en": "Monday",
+            "zh": "星期一"
+          },
+          {
+            "en": "Tuesday",
+            "zh": "星期二"
+          },
+          {
+            "en": "Wednesday",
+            "zh": "星期三"
+          },
+          {
+            "en": "Thursday",
+            "zh": "星期四"
+          },
+          {
+            "en": "Friday",
+            "zh": "星期五"
+          },
+          {
+            "en": "Saturday",
+            "zh": "星期六"
+          }
+        ],
+        "correctIndex": "mod(w+D,7)"
+      },
+      "solution": {
+        "en": "February has {D} days. {D} ÷ 7 = {floor(D/7)} week(s) with {mod(D,7)} day(s) left over, so the weekday moves on by {mod(D,7)} from the 1st of February to the 1st of March. Starting from {sd} and moving on {mod(D,7)} day(s) gives {sy}.",
+        "zh": "2 月有 {D} 天。{D}÷7 = {floor(D/7)} 周余 {mod(D,7)} 天，所以从 2 月 1 日到 3 月 1 日，星期往后推 {mod(D,7)} 天。从{zd}往后数 {mod(D,7)} 天，得到{zy}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q14.png",
+      "diagram": {
+        "type": "calgrid",
+        "rows": 4
+      },
+      "original": {
+        "D": 28,
+        "w": 2,
+        "d0": "Sunday",
+        "d1": "Monday",
+        "d2": "Tuesday",
+        "d3": "Wednesday",
+        "d4": "Thursday",
+        "d5": "Friday",
+        "d6": "Saturday",
+        "z0": "星期日",
+        "z1": "星期一",
+        "z2": "星期二",
+        "z3": "星期三",
+        "z4": "星期四",
+        "z5": "星期五",
+        "z6": "星期六"
+      }
+    },
+    {
+      "id": "seamo25a-q15",
+      "subject": "数学",
+      "topic": "数字方阵",
+      "grade": "五年级",
+      "difficulty": 2,
+      "title": "3×3 方阵里每行每列都加同一个数",
+      "tags": [
+        "数列",
+        "找规律"
+      ],
+      "source": "SEAMO 2025 Paper A Q15",
+      "stem": {
+        "en": "Find the missing number in the number puzzle below.",
+        "zh": "求下面数字方阵中缺失的数。"
+      },
+      "vars": {
+        "base": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        },
+        "step": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "mr": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        },
+        "mc": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "T": "base+(mr+mc)*step",
+        "o0": "base+(mr+mc)*step-2*step",
+        "o1": "base+(mr+mc)*step-step",
+        "o2": "base+(mr+mc)*step",
+        "o3": "base+(mr+mc)*step+step",
+        "o4": "base+(mr+mc)*step+2*step"
+      },
+      "constraints": [
+        "mr+mc >= 2"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Going one square to the right, or one square down, the number goes up by {step}. The top-left square is {base}. To reach the missing square you move {mr} step(s) down and {mc} step(s) right, so the number is {base} + ({mr}+{mc}) × {step} = {T}.",
+        "zh": "每向右一格、或向下一格，数都增加 {step}。左上角是 {base}。缺的那格在左上角往下 {mr} 格、往右 {mc} 格，所以是 {base}+({mr}+{mc})×{step} = {T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q15.png",
+      "diagram": {
+        "type": "numgrid",
+        "base": "base",
+        "step": "step",
+        "mr": "mr",
+        "mc": "mc"
+      },
+      "original": {
+        "base": 2,
+        "step": 5,
+        "mr": 2,
+        "mc": 2
+      }
+    },
+    {
+      "id": "seamo25a-q16",
+      "subject": "数学",
+      "topic": "等量代换",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "三架天平：一串葡萄有多重",
+      "tags": [
+        "等量代换",
+        "天平"
+      ],
+      "source": "SEAMO 2025 Paper A Q16",
+      "stem": {
+        "en": "The three balances below are all in balance. What is the mass, in grams, of a bunch of grapes?",
+        "zh": "下面三架天平都是平衡的。一串葡萄的质量是多少克？"
+      },
+      "vars": {
+        "A": {
+          "type": "pick",
+          "from": [
+            10,
+            20,
+            30,
+            40,
+            50,
+            60,
+            70,
+            80
+          ]
+        },
+        "na": {
+          "type": "int",
+          "min": 2,
+          "max": 3
+        },
+        "nb": {
+          "type": "int",
+          "min": 2,
+          "max": 4
+        },
+        "nc": {
+          "type": "int",
+          "min": 2,
+          "max": 4
+        }
+      },
+      "derived": {
+        "W": "na*A",
+        "B": "nb*A",
+        "T": "nc*nb*A",
+        "o0": "A",
+        "o1": "na*A",
+        "o2": "nb*A",
+        "o3": "nc*nb*A",
+        "o4": "nc*nb*A+A"
+      },
+      "constraints": [
+        "nb > na"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 3
+      },
+      "solution": {
+        "en": "Start with the balance that has the weights: {na} apples = {W} g, so 1 apple = {W} ÷ {na} = {A} g. Next, 1 banana = {nb} apples = {nb} × {A} = {B} g. Finally, 1 bunch of grapes = {nc} bananas = {nc} × {B} = {T} g.",
+        "zh": "先从有砝码的那架天平入手：{na} 个苹果 = {W} g，所以 1 个苹果 = {W}÷{na} = {A} g。接着 1 根香蕉 = {nb} 个苹果 = {nb}×{A} = {B} g。最后一串葡萄 = {nc} 根香蕉 = {nc}×{B} = {T} g。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q16.png",
+      "diagram": {
+        "type": "balance",
+        "balances": [
+          {
+            "l": [
+              [
+                "grape",
+                1
+              ]
+            ],
+            "r": [
+              [
+                "banana",
+                "nc"
+              ]
+            ]
+          },
+          {
+            "l": [
+              [
+                "banana",
+                1
+              ]
+            ],
+            "r": [
+              [
+                "apple",
+                "nb"
+              ]
+            ]
+          },
+          {
+            "l": [
+              [
+                "apple",
+                "na"
+              ]
+            ],
+            "r": [
+              [
+                "weight",
+                1
+              ]
+            ],
+            "weight": "W"
+          }
+        ]
+      },
+      "original": {
+        "A": 70,
+        "na": 2,
+        "nb": 3,
+        "nc": 2
+      }
+    },
+    {
+      "id": "seamo25a-q17",
+      "subject": "数学",
+      "topic": "路径计数",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "台阶形格线：从 A 到 B 的最短路径有多少条",
+      "tags": [
+        "路径计数",
+        "格点",
+        "递推"
+      ],
+      "source": "SEAMO 2025 Paper A Q17",
+      "stem": {
+        "en": "Find the number of shortest paths from A to B using the gridlines shown below.",
+        "zh": "沿着下图中的格线，从 A 到 B 的最短路径有多少条？"
+      },
+      "vars": {
+        "n": {
+          "type": "int",
+          "min": 2,
+          "max": 5
+        }
+      },
+      "derived": {
+        "T": "sel(n-2, 8, 21, 55, 144)",
+        "o0": "sel(n-2, 8, 21, 55, 144)-3",
+        "o1": "sel(n-2, 8, 21, 55, 144)-1",
+        "o2": "sel(n-2, 8, 21, 55, 144)",
+        "o3": "sel(n-2, 8, 21, 55, 144)+1",
+        "o4": "sel(n-2, 8, 21, 55, 144)+3"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "A shortest path only ever goes right or up. Write on each grid point how many ways there are to reach it: the start A gets 1, and every other point gets the sum of the point on its left and the point below it (a point with no such neighbour gets 0). Doing this along the whole staircase, B gets {T}. So there are {T} shortest paths.",
+        "zh": "最短路径只会向右或向上走。在每个格点上写下「走到这里的方法数」：起点 A 记 1；其余每个格点 = 它左边格点 + 它下面格点（某个方向没有格线可走就记 0）。把整个台阶形格线标完，B 点是 {T}，所以一共有 {T} 条最短路径。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q17.png",
+      "diagram": {
+        "type": "gridpath",
+        "n": "n"
+      },
+      "original": {
+        "n": 3
+      }
+    },
+    {
+      "id": "seamo25a-q18",
+      "subject": "数学",
+      "topic": "自定义运算",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "圈乘号 ⊗ 是按什么规则算的",
+      "tags": [
+        "找规律",
+        "自定义运算"
+      ],
+      "source": "SEAMO 2025 Paper A Q18",
+      "stem": {
+        "en": "The diagram below uses a special rule for ⊗. Find the value of {a4} ⊗ {b4}.",
+        "zh": "下图的 ⊗ 是一种自定义运算。求 {a4} ⊗ {b4} 的值。"
+      },
+      "vars": {
+        "a1": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "b1": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "a2": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "b2": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "a3": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "b3": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "a4": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "b4": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        }
+      },
+      "derived": {
+        "r1": "b1*(a1+1)",
+        "r2": "b2*(a2+1)",
+        "r3": "b3*(a3+1)",
+        "T": "b4*(a4+1)",
+        "o0": "b4*(a4+1)-4",
+        "o1": "b4*(a4+1)-2",
+        "o2": "b4*(a4+1)",
+        "o3": "b4*(a4+1)+2",
+        "o4": "b4*(a4+1)+4"
+      },
+      "constraints": [
+        "!(b1==2 && b2==2 && b3==2)",
+        "!(b1==a1 && b2==a2 && b3==a3)",
+        "!(a1==a2 && a2==a3)"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Try {a1} ⊗ {b1} = {r1}: the second number {b1} times (the first number + 1) gives {b1} × {a1+1} = {r1}. Check with the next two: {b2} × {a2+1} = {r2} and {b3} × {a3+1} = {r3}. Both work, so the rule is a ⊗ b = b × (a+1). Therefore {a4} ⊗ {b4} = {b4} × {a4+1} = {T}.",
+        "zh": "试 {a1}⊗{b1} = {r1}：第二个数 {b1} 乘「第一个数加 1」，即 {b1}×{a1+1} = {r1}。再用后面两式检验：{b2}×{a2+1} = {r2}，{b3}×{a3+1} = {r3}，都对。所以规则是 a⊗b = b×(a+1)。于是 {a4}⊗{b4} = {b4}×{a4+1} = {T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q18.png",
+      "diagram": {
+        "type": "symeq",
+        "rows": [
+          {
+            "terms": [
+              "a1",
+              "⊗",
+              "b1"
+            ],
+            "rhs": "r1"
+          },
+          {
+            "terms": [
+              "a2",
+              "⊗",
+              "b2"
+            ],
+            "rhs": "r2"
+          },
+          {
+            "terms": [
+              "a3",
+              "⊗",
+              "b3"
+            ],
+            "rhs": "r3"
+          },
+          {
+            "terms": [
+              "a4",
+              "⊗",
+              "b4"
+            ],
+            "rhs": "?"
+          }
+        ]
+      },
+      "original": {
+        "a1": 2,
+        "b1": 2,
+        "a2": 3,
+        "b2": 4,
+        "a3": 2,
+        "b3": 4,
+        "a4": 3,
+        "b4": 5
+      }
+    },
+    {
+      "id": "seamo25a-q19",
+      "subject": "数学",
+      "topic": "图形叠加",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "每行第三个图形＝前两个图形的线段叠加",
+      "tags": [
+        "找规律",
+        "图形",
+        "叠加"
+      ],
+      "source": "SEAMO 2025 Paper A Q19",
+      "stem": {
+        "en": "Find the missing figure in the diagram below.",
+        "zh": "找出下图中缺失的那个图形。"
+      },
+      "vars": {
+        "p0": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "p1": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "p2": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "derived": {
+        "q": "mod(p2+1,4)"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "A",
+            "zh": "甲"
+          },
+          {
+            "en": "B",
+            "zh": "乙"
+          },
+          {
+            "en": "C",
+            "zh": "丙"
+          },
+          {
+            "en": "D",
+            "zh": "丁"
+          },
+          {
+            "en": "E",
+            "zh": "戊"
+          }
+        ],
+        "optionsSvg": [
+          {
+            "type": "segfig",
+            "tbl": "U",
+            "i": "p2"
+          },
+          {
+            "type": "segfig",
+            "tbl": "A",
+            "i": "p2"
+          },
+          {
+            "type": "segfig",
+            "tbl": "B",
+            "i": "p2"
+          },
+          {
+            "type": "segfig",
+            "tbl": "UM",
+            "i": "p2"
+          },
+          {
+            "type": "segfig",
+            "tbl": "U",
+            "i": "q"
+          }
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Look at the first two rows. In each row, draw all the line segments of the 1st figure and all the line segments of the 2nd figure on top of each other — that is exactly the 3rd figure (segments that appear in both are still only drawn once). So the missing figure is the 1st and 2nd figures of the last row put together.",
+        "zh": "先看前两行：每一行把第 1 个图形的所有线段和第 2 个图形的所有线段画在一起（重叠的线段只画一次），得到的正好是第 3 个图形。所以缺的那个，就是把最后一行第 1、2 个图形的线段合在一起。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q19.png",
+      "diagram": {
+        "type": "figgrid",
+        "p0": "p0",
+        "p1": "p1",
+        "p2": "p2"
+      },
+      "original": {
+        "p0": 1,
+        "p1": 2,
+        "p2": 0
+      }
+    },
+    {
+      "id": "seamo25a-q20",
+      "subject": "数学",
+      "topic": "数图形",
+      "grade": "五年级",
+      "difficulty": 5,
+      "title": "大三角形里一共能数出多少个三角形",
+      "tags": [
+        "数图形",
+        "三角形",
+        "计数"
+      ],
+      "source": "SEAMO 2025 Paper A Q20",
+      "stem": {
+        "en": "How many triangles are there in the figure below?",
+        "zh": "下图中共有多少个三角形？"
+      },
+      "vars": {
+        "j": {
+          "type": "int",
+          "min": 2,
+          "max": 4
+        }
+      },
+      "derived": {
+        "partA": "(j+2)*(j+1)/2",
+        "T": "(j+1)*(j+3)",
+        "o0": "(j+1)*(j+3)-3",
+        "o1": "(j+1)*(j+3)-1",
+        "o2": "(j+1)*(j+3)",
+        "o3": "(j+1)*(j+3)+1",
+        "o4": "(j+1)*(j+3)+2"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{o0}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 2
+      },
+      "solution": {
+        "en": "Don't count one by one — split the triangles into two groups. (1) Those that do NOT use the extra slant line: pick any 2 of the {j+2} lines fanning out from A (the bottom-left corner) and they cut off a triangle with part of BC — {j+2}×{j+1}÷2 = {partA} triangles. (2) Those that DO use the extra slant line: that line carries {j+2} points (the midpoint of AB, its {j} crossings with the lines from A, and the bottom-right corner); choosing any 2 of them together with A gives another {partA} triangles, and {j+1} more have their corners taken from the two ends of the slant line and the two other corners (so A is not a vertex). (3) Total: {partA} + {partA} + {j+1} = {T}.",
+        "zh": "数三角形不能一个一个数，要分类数。① **不用**中间那条斜线的：A（左下角）出发的 {j+2} 条线里任取 2 条，就和 BC 边上的一段围成三角形，共 {j+2}×{j+1}÷2 = {partA} 个。② **用**中间那条斜线的：这条斜线上有 {j+2} 个点（A 边中点、它和 {j} 条线的交点、右下角顶点），任取 2 个点再和 A 又能围出 {partA} 个；另外斜线两端和另外两个顶点还能围出 {j+1} 个（这些不以 A 为顶点）。③ 一共 {partA}+{partA}+{j+1} = {T} 个。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q20.png",
+      "diagram": {
+        "type": "trilines",
+        "j": "j",
+        "extra": 1
+      },
+      "original": {
+        "j": 3
+      }
+    },
+    {
+      "id": "seamo25a-q21",
+      "subject": "数学",
+      "topic": "递推计数",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "一次上 1 级或 2 级，上楼梯有几种走法",
+      "tags": [
+        "递推",
+        "计数"
+      ],
+      "source": "SEAMO 2025 Paper A Q21",
+      "stem": {
+        "en": "There are {n} steps in a flight of stairs. Cindy can go up by either taking 1 step or 2 steps at a time. How many ways are there for her to climb the staircase?",
+        "zh": "一段楼梯有 {n} 级。Cindy 每次可以上 1 级或 2 级，她一共有多少种上楼梯的方法？"
+      },
+      "vars": {
+        "n": {
+          "type": "int",
+          "min": 3,
+          "max": 10
+        }
+      },
+      "derived": {
+        "T": "sel(n-1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89)"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "sel(n-1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89)"
+      },
+      "sanity": {
+        "integer": true,
+        "positive": true,
+        "max": 100
+      },
+      "solution": {
+        "en": "Let f(k) be the number of ways to climb k steps. The last move is either 1 step (leaving k−1 steps) or 2 steps (leaving k−2 steps), so f(k) = f(k−1) + f(k−2). With f(1) = 1 and f(2) = 2, we get f(3)=3, f(4)=5, f(5)=8, f(6)=13, f(7)=21, f(8)=34, f(9)=55, f(10)=89. So for {n} steps there are {T} ways.",
+        "zh": "设上 k 级有 f(k) 种走法。最后一步只能是上 1 级（前面剩 k−1 级）或上 2 级（前面剩 k−2 级），所以 f(k) = f(k−1) + f(k−2)。已知 f(1)=1、f(2)=2，往后算：f(3)=3、f(4)=5、f(5)=8、f(6)=13、f(7)=21、f(8)=34、f(9)=55、f(10)=89。所以 {n} 级楼梯共有 {T} 种走法。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q21.png",
+      "noFigure": "原题为纯文字应用题（数楼梯走法），无图",
+      "original": {
+        "n": 4
+      }
+    },
+    {
+      "id": "seamo25a-q22",
+      "subject": "数学",
+      "topic": "时间规律",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "四个钟面：间隔一次比一次多 10 分钟",
+      "tags": [
+        "时间",
+        "钟面",
+        "找规律"
+      ],
+      "source": "SEAMO 2025 Paper A Q22",
+      "stem": {
+        "en": "What is the time shown on the last clock?",
+        "zh": "最后一个钟面上显示的是几点？"
+      },
+      "vars": {
+        "H0": {
+          "type": "int",
+          "min": 12,
+          "max": 17
+        },
+        "M0": {
+          "type": "pick",
+          "from": [
+            5,
+            10,
+            15,
+            20,
+            25,
+            30,
+            40,
+            45,
+            50,
+            55
+          ]
+        },
+        "G": {
+          "type": "int",
+          "min": 25,
+          "max": 55,
+          "step": 5
+        },
+        "mm00": {
+          "type": "pick",
+          "from": [
+            "00"
+          ]
+        },
+        "mm05": {
+          "type": "pick",
+          "from": [
+            "05"
+          ]
+        },
+        "mm10": {
+          "type": "pick",
+          "from": [
+            "10"
+          ]
+        },
+        "mm15": {
+          "type": "pick",
+          "from": [
+            "15"
+          ]
+        },
+        "mm20": {
+          "type": "pick",
+          "from": [
+            "20"
+          ]
+        },
+        "mm25": {
+          "type": "pick",
+          "from": [
+            "25"
+          ]
+        },
+        "mm30": {
+          "type": "pick",
+          "from": [
+            "30"
+          ]
+        },
+        "mm35": {
+          "type": "pick",
+          "from": [
+            "35"
+          ]
+        },
+        "mm40": {
+          "type": "pick",
+          "from": [
+            "40"
+          ]
+        },
+        "mm45": {
+          "type": "pick",
+          "from": [
+            "45"
+          ]
+        },
+        "mm50": {
+          "type": "pick",
+          "from": [
+            "50"
+          ]
+        },
+        "mm55": {
+          "type": "pick",
+          "from": [
+            "55"
+          ]
+        }
+      },
+      "derived": {
+        "c1": "H0*60+M0",
+        "c2": "H0*60+M0+G",
+        "c3": "H0*60+M0+2*G+10",
+        "T": "H0*60+M0+3*G+30",
+        "h1": "mod(floor((H0*60+M0)/60)-1,12)+1",
+        "p1": "sel(mod(H0*60+M0,60)/5, mm00, mm05, mm10, mm15, mm20, mm25, mm30, mm35, mm40, mm45, mm50, mm55)",
+        "h2": "mod(floor((H0*60+M0+G)/60)-1,12)+1",
+        "p2": "sel(mod(H0*60+M0+G,60)/5, mm00, mm05, mm10, mm15, mm20, mm25, mm30, mm35, mm40, mm45, mm50, mm55)",
+        "h3x": "mod(floor((H0*60+M0+2*G+10)/60)-1,12)+1",
+        "p3": "sel(mod(H0*60+M0+2*G+10,60)/5, mm00, mm05, mm10, mm15, mm20, mm25, mm30, mm35, mm40, mm45, mm50, mm55)",
+        "h3": "mod(floor((H0*60+M0+3*G+30)/60)-1,12)+1",
+        "ms": "sel(mod(H0*60+M0+3*G+30,60)/5, mm00, mm05, mm10, mm15, mm20, mm25, mm30, mm35, mm40, mm45, mm50, mm55)"
+      },
+      "constraints": [
+        "floor((H0*60+M0+3*G+30)/60) <= 22"
+      ],
+      "answer": {
+        "type": "text",
+        "expr": "{h3}:{ms} PM",
+        "alternatives": [
+          "{h3}:{ms} pm",
+          "{h3}:{ms}PM",
+          "{h3}:{ms}pm",
+          "{h3}:{ms} P.M."
+        ]
+      },
+      "solution": {
+        "en": "Read the three times given: {h1}:{p1} PM, {h2}:{p2} PM and {h3x}:{p3} PM. Compare them in pairs: the 1st to the 2nd is {G} minutes, the 2nd to the 3rd is {G+10} minutes — the gap grows by 10 minutes each time. So the next gap is {G+20} minutes, and the last clock shows {T} minutes after the 3rd one, which is {h3}:{ms} PM. (The last clock has no hands — you work it out from the pattern.)",
+        "zh": "先读出图上给的前三个时刻：{h1}:{p1} PM、{h2}:{p2} PM、{h3x}:{p3} PM。两两比较：第 1 个到第 2 个相隔 {G} 分钟，第 2 个到第 3 个相隔 {G+10} 分钟——间隔每次多 10 分钟。所以下一次间隔 {G+20} 分钟，最后一个钟面 = 第 3 个钟面往后 {G+20} 分钟 = {h3}:{ms} PM。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q22.png",
+      "diagram": {
+        "type": "clockseq",
+        "c1": "c1",
+        "c2": "c2",
+        "c3": "c3"
+      },
+      "original": {
+        "H0": 14,
+        "M0": 45,
+        "G": 35,
+        "mm00": "00",
+        "mm05": "05",
+        "mm10": "10",
+        "mm15": "15",
+        "mm20": "20",
+        "mm25": "25",
+        "mm30": "30",
+        "mm35": "35",
+        "mm40": "40",
+        "mm45": "45",
+        "mm50": "50",
+        "mm55": "55"
+      }
+    },
+    {
+      "id": "seamo25a-q23",
+      "subject": "数学",
+      "topic": "数列",
+      "grade": "五年级",
+      "difficulty": 3,
+      "title": "平方数列接下去是哪个数",
+      "tags": [
+        "数列",
+        "平方数"
+      ],
+      "source": "SEAMO 2025 Paper A Q23",
+      "stem": {
+        "en": "What number comes next in the sequence below? {m*m}, {(m+1)*(m+1)}, {(m+2)*(m+2)}, {(m+3)*(m+3)}, {(m+4)*(m+4)}, {(m+5)*(m+5)}, {(m+6)*(m+6)}, {(m+7)*(m+7)}, {(m+8)*(m+8)}, {(m+9)*(m+9)}, …",
+        "zh": "下面的数列接下去是哪个数？{m*m}, {(m+1)*(m+1)}, {(m+2)*(m+2)}, {(m+3)*(m+3)}, {(m+4)*(m+4)}, {(m+5)*(m+5)}, {(m+6)*(m+6)}, {(m+7)*(m+7)}, {(m+8)*(m+8)}, {(m+9)*(m+9)}, ……"
+      },
+      "vars": {
+        "m": {
+          "type": "int",
+          "min": 1,
+          "max": 8
+        }
+      },
+      "derived": {
+        "T": "(m+10)*(m+10)"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "(m+10)*(m+10)"
+      },
+      "sanity": {
+        "integer": true,
+        "positive": true,
+        "max": 400
+      },
+      "solution": {
+        "en": "Every number in the list is a square: {m}², {m+1}², {m+2}², … {m+9}². The next one is {m+10}² = {T}.",
+        "zh": "数列里每个数都是平方数：{m}²、{m+1}²、{m+2}²……一直到 {m+9}²。下一项就是 {m+10}² = {T}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q23.png",
+      "noFigure": "原题为纯文字题（数列直接写在题干里），无图",
+      "original": {
+        "m": 1
+      }
+    },
+    {
+      "id": "seamo25a-q24",
+      "subject": "数学",
+      "topic": "抽屉原理",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "至少摸出几个球才能保证有 n 个同色",
+      "tags": [
+        "抽屉原理",
+        "最不利原则"
+      ],
+      "source": "SEAMO 2025 Paper A Q24",
+      "stem": {
+        "en": "There are {c1} green, {c2} white, {c3} red and {c4} orange balls in a bag. Shawn is blind-folded. He was asked to select balls from the bag. At least how many balls must he select to ensure that he will have {n} balls of the same colour?",
+        "zh": "袋子里有 {c1} 个绿球、{c2} 个白球、{c3} 个红球和 {c4} 个橙球。Shawn 蒙着眼睛摸球，至少要摸出多少个球，才能保证其中有 {n} 个同色？"
+      },
+      "vars": {
+        "n": {
+          "type": "int",
+          "min": 3,
+          "max": 5
+        },
+        "c1": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        },
+        "c2": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        },
+        "c3": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        },
+        "c4": {
+          "type": "int",
+          "min": 2,
+          "max": 8
+        }
+      },
+      "derived": {
+        "T": "min(c1,n-1)+min(c2,n-1)+min(c3,n-1)+min(c4,n-1)+1"
+      },
+      "constraints": [
+        "max(max(c1,c2),max(c3,c4)) >= n"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "min(c1,n-1)+min(c2,n-1)+min(c3,n-1)+min(c4,n-1)+1"
+      },
+      "sanity": {
+        "integer": true,
+        "positive": true,
+        "max": 25
+      },
+      "solution": {
+        "en": "Think of the worst luck: he keeps taking colours that stop one short of {n}. He can take at most {min(c1,n-1)} green, {min(c2,n-1)} white, {min(c3,n-1)} red and {min(c4,n-1)} orange — that is {min(c1,n-1)}+{min(c2,n-1)}+{min(c3,n-1)}+{min(c4,n-1)} balls with no {n} of a colour. One more ball must then complete a colour, so the answer is {min(c1,n-1)+min(c2,n-1)+min(c3,n-1)+min(c4,n-1)} + 1 = {T}.",
+        "zh": "考虑最不走运的情况：每次摸到的颜色都差 1 个才凑够 {n} 个。这时绿球最多摸 {min(c1,n-1)} 个、白球最多 {min(c2,n-1)} 个、红球最多 {min(c3,n-1)} 个、橙球最多 {min(c4,n-1)} 个，共 {min(c1,n-1)}+{min(c2,n-1)}+{min(c3,n-1)}+{min(c4,n-1)} 个，还没有 {n} 个同色。再多摸 1 个，无论什么颜色都必然凑够 {n} 个同色。所以至少 {min(c1,n-1)+min(c2,n-1)+min(c3,n-1)+min(c4,n-1)} + 1 = {T} 个。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q24.png",
+      "noFigure": "原题为纯文字应用题（摸球问题），无图",
+      "original": {
+        "n": 3,
+        "c1": 5,
+        "c2": 4,
+        "c3": 3,
+        "c4": 2
+      }
+    },
+    {
+      "id": "seamo25a-q25",
+      "subject": "数学",
+      "topic": "图形符号代数",
+      "grade": "五年级",
+      "difficulty": 4,
+      "title": "三个符号两两相加，求其中一个",
+      "tags": [
+        "方程",
+        "符号运算"
+      ],
+      "source": "SEAMO 2025 Paper A Q25",
+      "stem": {
+        "en": "The three equations below use the symbols ◆, ▲ and ○. Find the value of ○.",
+        "zh": "下面的三个等式里用了 ◆、▲、○ 三种符号。求 ○ 的值。"
+      },
+      "vars": {
+        "x": {
+          "type": "int",
+          "min": 5,
+          "max": 30
+        },
+        "y": {
+          "type": "int",
+          "min": 5,
+          "max": 30
+        },
+        "z": {
+          "type": "int",
+          "min": 5,
+          "max": 30
+        }
+      },
+      "derived": {
+        "P": "x+y",
+        "Q": "z+x",
+        "R": "z+y"
+      },
+      "constraints": [
+        "!(x==y)",
+        "!(y==z)",
+        "!(x==z)"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "y"
+      },
+      "sanity": {
+        "integer": true,
+        "positive": true,
+        "max": 40
+      },
+      "solution": {
+        "en": "Add the three equations together: (◆+○) + (▲+◆) + (▲+○) = {P} + {Q} + {R} = {P+Q+R}. On the left, every symbol appears exactly twice, so that is 2 × (▲+◆+○). Hence ▲+◆+○ = {P+Q+R} ÷ 2 = {(P+Q+R)/2}. The 2nd equation tells us ▲+◆ = {Q}, so ○ = {(P+Q+R)/2} − {Q} = {y}.",
+        "zh": "把三个等式加起来：(◆+○)+(▲+◆)+(▲+○) = {P}+{Q}+{R} = {P+Q+R}。左边每种符号都正好出现两次，也就是 2×(▲+◆+○)。所以 ▲+◆+○ = {P+Q+R}÷2 = {(P+Q+R)/2}。第二个等式给出 ▲+◆ = {Q}，于是一个 ○ = {(P+Q+R)/2}−{Q} = {y}。"
+      },
+      "sourceSet": "SEAMO 2025 Paper A",
+      "originalImage": "assets/originals/2025seamoA-q25.png",
+      "diagram": {
+        "type": "symeq",
+        "rows": [
+          {
+            "terms": [
+              "◆",
+              "+",
+              "○"
+            ],
+            "rhs": "P"
+          },
+          {
+            "terms": [
+              "▲",
+              "+",
+              "◆"
+            ],
+            "rhs": "Q"
+          },
+          {
+            "terms": [
+              "▲",
+              "+",
+              "○"
+            ],
+            "rhs": "R"
+          }
+        ]
+      },
+      "original": {
+        "x": 17,
+        "y": 19,
+        "z": 23
+      }
     }
   ]
 }

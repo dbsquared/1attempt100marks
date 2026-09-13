@@ -41,6 +41,17 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
    若同一情境下多问（如"①求面积 ②求周长"），用同一个 `id` 前缀 `xxx-q1` / `xxx-q2`，并加 `"group":"xxx"`
    让变量一致（见 §6 高级）。
 
+> **整卷 PDF 的走法（2021 批次实测）**：ICAS 的 Past Paper 是**扫描图 PDF，没有文字层**
+> （`fitz` 抽文字得到空），本环境的 Read 又读不了 PNG。可用的替代路径：
+> 1. `python -c "import fitz; ..."` 一页一题地渲染成 `assets/originals/2021y2m-qNN.png`（自动裁白边）；
+> 2. 用 **Answer Sheet 文字版**（`Correct Answer` + `Descriptor` + `Reporting Strand`）定住
+>    每题**考什么、答案长什么样**（如 Q9 "Compare the number of dots on domino tiles"、Q27
+>    "Determine the number of regular hexagons sharing … edges in a tessellation"）；
+> 3. 按 descriptor 重建题目场景与图形，把**数字全部参数化**；
+> 4. 重建的题干/图形与原卷可能有措辞、布局差异 → **入库后要跟用户说清楚哪些题是重建的**，
+>    请对方抽查；拿不准的图先用 `figureTodo` 挂起来（`test-bank` 结尾会集中打印）。
+> `assets/originals/2021-…-Paper.pdf` / `-Answers.pdf` 一并存档，方便日后核对。
+
 ## 3. 模板字段
 
 ```jsonc
@@ -120,18 +131,22 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 3. **能用 SVG 模板按变量实时画吗？**
    - **凡题干里带变量的图，必须走这条**（静态原题图数值一变必然对不上）。
    - 模板加 `"diagram": { "type": "...", ... }`，参数写变量名（如 `{"type":"stick","parts":"k"}`）。
-   - 现有 28 种类型见 `assets/js/diagrams.js`（`Diagrams.types` 可列出）：
+   - 现有 **58** 种类型见 `assets/js/diagrams.js`（`Diagrams.types` 可列出全部名字）：
 
      | 类别 | 类型 |
      |---|---|
-     | 计数/数数 | `vase` 花瓶数花、`pictograph` 象形统计图、`tallychart` 划记统计表 |
-     | 平面/立体图形 | `hexagon` 六边形缺边、`house` 房子缺形状、`stickrow` 小棒三角串、`blockstack` 彩色积木塔(3D)、`giftboxes` 四个礼物盒(3D)、`tiling`+`tilepatch` 方砖与补块 |
-     | 位置/方向 | `numberline` 数轴箭头、`board` 棋盘走子、`boardopt` 棋盘候选格、`bookshelf` 书架取书、`building` 楼层剖面、`standcircle` 围圈轮流数 |
-     | 时间/数据 | `clocks` 四个钟面、`datatable` 数据表、`seasonwheel` 四季圆盘、`weathercard` 天气日期卡 |
-     | 规律/代数 | `lanterns` 循环灯笼、`symeq` 图形符号算式、`stick` 小棍分段 |
-     | 度量/钱币 | `coins` 硬币面值、`papers` 按比例的长方形纸、`squareposts` 正方形围栏柱子、`cardrow` 数字卡片 |
+     | 计数 / 数数 | `vase` 花瓶、`pens` 笔、`faces` 笑脸、`veggies` 蔬菜阵列、`cardrow` 数字卡片、`domino` 单张骨牌、`dominorow` 骨牌选项、`chest` 存钱罐硬币、`targetboard` 靶盘、`pictograph` 象形统计图 |
+     | 平面 / 立体图形 | `hexagon` 六边形缺边、`house` 房子缺形状、`stickrow` 小棒三角串、`tiling` 方砖、`tilepatch` 补块、`sameshapes` 四个形状找全等、`twoboxes` 两个盒子、`hextile` 六边形密铺、`blockstack` 积木塔(3D)、`giftboxes` 礼物盒(3D)、`solidcubes` 单位小方块(3D) |
+     | 位置 / 方向 | `numberline`、`numline` 数轴箭头（`numline` 只标两端，答案不会印在图上）、`board` 棋盘走子、`boardopt` 棋盘候选格、`bookshelf` 书架取书、`building` 楼层剖面、`standcircle` 围圈轮流数、`housepots` 房子＋花盆＋脚印（按箭头走）、`houses` 一排房子＋树（等距）、`dotfig` 编号点 |
+     | 时间 / 数据 | `clocks`、`clocksmatch` 钟面列、`digitalclock` 电子钟选项、`weekstrip` 一周七天（Today）、`seasonwheel` 四季圆盘、`weathercard` 天气日期卡、`tallychart`、`tallytable` 划记表、`datatable` 数据表、`barchart` 柱状图 |
+     | 规律 / 代数 | `lanterns` 循环灯笼、`patternrow` 形状循环＋问号、`symeq` 图形符号算式、`stick` 小棍分段、`teddyseries` 每组多 2 只、`trianglepuz` 三角形里外数 |
+     | 度量 / 钱币 | `papers` 按比例的长方形纸、`squareposts` 围栏柱子、`coins` 硬币面值、`carrow` 一排汽车（长＋间隔）、`areagrid` 方格纸面积、`bottle` 水瓶凹纹（半瓶） |
+     | 选项专用小图 | `glyph` 单个形状、`shapepair` 一对图形、`teddygrid` 几行几列、`areashape` 单个面积图形、`dotjoin` 点连图、`dominorow` 骨牌 |
 
-     需要新类型就在 diagrams.js 加一个函数，并在本节登记（`Diagrams.types` 会自动包含）。
+     需要新类型就在 diagrams.js 加一个函数，并在本节登记（`Diagrams.types` 会自动包含）；
+     图元里凡是「可以数出来」的元素（小棒、灯笼、划记、卡片、脚印、方块、硬币…）
+     都加 `data-u="xxx"`，并把关键数值写成 `data-*`（如 `data-kind` / `data-v` / `data-m`），
+     `test-figs.js` 就是靠这些标记**照图重算一遍答案**的。
    - 需要立体的（礼物盒、积木塔）用 `box3d()` 画三个面，**不要**用平面矩形代替 —— 形状/大小是考点。
 4. **实在画不出来 / 拿不准？** 把该题单独列出来交给用户判断，**不要**默默留空或硬塞一张对不上的图。
 
@@ -179,9 +194,36 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 ```
 
 - `optionsSvg[i]` 与 `options[i]` 一一对应，生成器会**跟着选项一起洗牌**，不需要自己处理顺序。
+  ⚠️ 正因如此，`test-figs.js` 里比对选项时要认「洗牌后的下标」：点数/柱高最多（或唯一命中）的那一项
+  必须落在 `q.correctIndex` 上，而不能假定它还是原来的第 0 项。
 - 选项文字用中性编号（甲/乙/丙/丁），不要用会泄题的描述。
 - 目标位置随变量变化时，用 `derived` 算出每个候选的坐标（如 `o0r`/`o0c`），再在 spec 里写变量名。
 - 数字/坐标一律**用表达式算出**，不要手工列 4 个枚举值，否则改一个变量就得改四处。
+- **四个选项画出来必须两两不同**（否则图上一模一样的两项，学生选哪个都对）。
+  踩过的坑：Q22 点连图的 `ord` 取值里有一个 `142536`，它按编号连出来正好等于干扰项
+  `0,2,4,1,3,5` 的图形 —— 等于白送一个正确答案。凡是「选项由变量生成」的题，
+  都要在 `test-figs.js` 里加一条「四个选项 SVG 互不相同」的断言（现已有通用检查兜底）。
+
+### 4.5.1.1 主图不能和某个选项画得一模一样（否则等于把答案摆在眼前）
+
+原卷里「四张骨牌 / 四张柱状图 / 四个钟面」这种**选项本身是图**的题，四个图就是选项，
+题干里**不应该**再单独画一张。踩过的坑：
+
+- Q9「哪张骨牌点数最多」：主图原来画了一张骨牌 `a|b`，而它正好就是点数最多的那张（＝正确选项），
+  学生不用数就能配对。
+- Q20「哪张柱状图对」：主图原来就是正确的那张柱状图。
+
+**正确做法**（二选一，按哪个更贴近原卷）：
+
+1. **四张图都放进 `optionsSvg`**，题干写 `"noFigure": "四张……就是四个选项本身（已逐张画在选项里）"`。
+   Q9 / Q20 / Q21 都是这么处理的 —— 这个 `noFigure` 理由是**成立**的，不是偷懒。
+2. 或者把四张图连 A/B/C/D 标签一起画进主图，选项用中性编号（像 Q5「哪两个图形一样」那样）。
+   **但绝不能**只在主图画一张，尤其是正确的那一张。
+
+配套的两条小规矩：
+- 选项里不要出现「空白牌」这种看着像没画出来的图形（Q9 干扰项早期会取到 `0|0` → 改成每一半至少 1 个点）。
+- 图里不要画**没有标注的空方框**（Q10 花盆下面原来有四个空的蓝框 —— 那是原卷 A/B/C/D 选项格，
+  我们选项是颜色词，空框只会让人以为要选框，已删掉）。
 
 ### 4.5.2 选择题答案随变量变化：`correctIndex` 可以写表达式
 
@@ -203,6 +245,16 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
 做法：把 10 种三张组合穷举一遍，只允许唯一解，
 写成 `constraints`，并在 `tools/test-figs.js` 里加一条断言。
 
+同一个坑还有两种**不靠 constraints 表达**的形态，必须用断言兜：
+
+- **选项图形重复**（Q22 的 `ord`）：只能靠「四个选项 SVG 互不相同」的断言发现，
+  发现后从取值表里删掉那个值。
+- **最小值/最大值并列**（Q18 面积题）：要求「最小面积唯一」就够，**不要求三者两两不同**
+  —— 约束 `(a0<a1 && a0<a2) || (a1<a0 && a1<a2) || (a2<a0 && a2<a1)` 已经保证了唯一最小，
+  别再写更严的 `a0 != a1 != a2`（会白白砍掉大量合法变式）。
+- **答案本身就是图上可以数出来的东西**（Q27 六边形邻居数、Q16 小方块数、Q4 划记数、
+  Q17 泰迪数）：这类题的「唯一解」＝「图上真的画了那么多」，用几何/标记独立数一遍即可。
+
 ### 4.5.4 设问参数必须和图「协同设计」（不要问图里已经画出来的东西）
 
 配图和设问是一件事的两半，**不能各写各的**。三条硬规矩：
@@ -222,6 +274,24 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
    所有图形 `viewBox` 宽 ≤ 480。踩过的坑：Q29 第三式 `◆+◆+▲+●+●+● = 115` 的 `= 115`
    被切掉了。`test-figs.js` 现在会读 `data-u="rhs"` 的 x / font-size / 视框宽，
    估算"右边有没有超出画布"，超了就 FAIL。
+4. **图上画出来的数量必须和题干给的数字一致。**
+   踩过的坑：Q30 存钱罐题，题干说"他已经有 {a} 枚"（a 随机 3~15），图里却**固定画 7 枚硬币**
+   —— 孩子照着数就会和题干打架。**做法**：图元参数用变量（`{"type":"chest","count":"a"}`），
+   `test-figs.js` 断言「图上元素个数 === 题干里的数字」。
+   同理，图上画了几个就必须真有几个（Q1 笑脸、Q11 蔬菜、Q15 汽车、Q26 小汽车、Q29 房子…）。
+5. **图上不能把答案直接画/写出来。**
+   - 数轴（`numline`）只标两端两个数，中间刻度**不标数字**（全标出来答案就在图上）。
+   - 规律题只画"够看出规律"的前几组（Q17 只画第 1、2 组，问第 3 组）。
+   - 图上标"?"的地方才留空，且 `solution` 里讲怎么从图上读出来。
+
+> 每个图元都要能被**独立验算**：`test-figs.js` 不读模板公式，而是从 SVG 里把
+> `data-u` / `data-kind` / `data-v` / 坐标 / 角度读出来，用另一套算法重推一遍答案。
+> 已经这样验过的例子：Q9 数圆点、Q10 脚印落点读颜色、Q12 由表针角度反推时刻、
+> Q13 箭头落在第几条刻度、Q15 数汽车、Q16 数列/层数、Q17 由图上只数推第 3 组、
+> Q18 数整格＋半格、Q20 读柱高、Q21 数凹纹、Q22 按编号连线的边集、
+> Q23 前三个三角形自洽后补第四个数、Q25 读靶环最高分、Q26 数小汽车×KEY、
+> Q27 用「中心距 = √3R」数邻居、Q29 读门牌顺序、Q30 数硬币。
+> **新加图题时照着这个套路补一条断言**，不要只跑 smoke（那只看坐标合法/无 NaN）。
 
 > 需要机器数元素的图元（小棒、灯笼、划记、卡片、积木层、算式右端…）都加
 > `data-u="xxx"` 标记，`test-figs.js` 靠它做**独立验算**（数出来的数量必须等于数值）。
@@ -266,9 +336,12 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
 ```bash
 node tools/test-bank.js                       # 全库自检（生成/判分/配图/变式四道闸门）
 node tools/test-bank.js data/imports/xx.json  # 只检新批次
-node tools/test-figs.js                       # 配图语义的独立交叉验算
+node tools/test-figs.js                       # 配图语义的独立交叉验算（2022 + 2021 两批都在里面）
 node tools/test-srs.js && node tools/test-sync.js
 ```
+
+改图/加图题时还有两个临时脚本值得跑（放在 `.workbuddy/tmp*/` 下，不入库）：
+`smoke.js` 逐图元查 NaN／坐标越界／viewBox 超宽，`collide.js` 查文字互相压字／出画布。
 
 **`test-figs.js` 为什么必要**：`test-bank.js` 只检查"图能不能渲染、题干有没有提到图"，
 而**图里画的数对不对、答案和图形是否自洽**它看不出来。`test-figs.js` 用**另一种算法**
@@ -278,7 +351,10 @@ node tools/test-srs.js && node tools/test-sync.js
 已经抓到过的真实错误：Q3 规律写成 3n（应为共用边的 2n+1）、Q3 共用边重复画导致小棒数
 对不上、Q7 数轴箭头指反、Q11 存在第二组解、Q29 解析里的等式变形不成立、
 Q29 第三式等号右边被 viewBox 裁掉、Q21 问的是图上已经画出来的位置（且颜色恒为红）、
-Q26 把"往左"按答题人的视角算（应为西塔自己的视角）。
+Q26 把"往左"按答题人的视角算（应为西塔自己的视角）；
+2021 批次又抓到：Q9/Q20 主图和正确选项画得一模一样（等于送答案）、
+Q22 有个 `ord` 取值让两个选项画出同一张图、Q30 图里固定画 7 枚硬币而题干说 a 枚、
+Q10 花盆下的空方框没有标注、Q9 干扰骨牌会取到 `0|0` 空白牌。
 
 > 图形核对页：`node tools/_preview_figs.js <输出路径> --only=21,26,29 --times=5`
 > 只出某几题的多个变式；输出路径建议放在 `.workbuddy/` 下（该目录不参与提交）。

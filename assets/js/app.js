@@ -676,25 +676,27 @@
 
   /* ---------------- 多设备同步 ---------------- */
   function syncCode(full) {
-    var s = Store.settings();
+    var c = Store.current();
     return Sync.makeCode({
-      sid: s.sid, dev: s.devId, ts: Date.now(), full: !!full,
+      sid: c.sid, dev: c.devId, ts: Date.now(), full: !!full,
       from: Store.lastSync(),
       progress: Store.progress(), wrong: Store.wrongAll()
     });
   }
   function importCode(text) {
     var d = Sync.parseCode(text);
+    Store.ensureProfileBySid(d.sid, d.dev);   // 按码中编号归位/新建学生，再合并
     var cur = Sync.normalize(Sync.packLocal(Store.progress(), Store.wrongAll()));
     var r = Sync.merge(cur, d);
     var out = Sync.toLocal(cur);
     Store.saveProgress(out.progress);
     Store.saveWrong(out.wrong);
+    Store.setLastSync(Date.now());
     return r;
   }
   function pullCloud(quiet) {
-    var s = Store.settings();
-    return fetch('data/state/' + s.sid + '.json', { cache: 'no-store' })
+    var c = Store.current();
+    return fetch('data/state/' + c.sid + '.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) {
         if (!j) { if (!quiet) toast('云端还没有这个编号的进度'); return null; }
@@ -722,14 +724,15 @@
     try { document.execCommand('copy'); toast('已复制'); } catch (e) { toast('请手动全选复制'); }
   }
   function mailCode(code) {
-    var s = Store.settings();
-    var to = (s.parentEmail || '').trim();
+    var st = Store.settings();
+    var c = Store.current();
+    var to = (st.parentEmail || '').trim();
     if (!to) {
       to = prompt('家长邮箱（用于接收同步码）', '');
       if (!to) return;
-      s.parentEmail = to.trim(); Store.saveSettings(s);
+      st.parentEmail = to.trim(); Store.saveSettings(st);
     }
-    var subject = '一次一百分 同步码 ' + (s.sid || '');
+    var subject = '一次一百分 同步码 ' + (c.sid || '');
     var body = code + '\n\n—— 把这串码交给 WorkBuddy 合并即可同步进度。';
     window.location.href = 'mailto:' + encodeURIComponent(to) +
       '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
@@ -754,15 +757,15 @@
 
   /* 把答卷 + 同步码发到用户邮箱（dbsquared1311@hotmail.com），用户再粘回 WorkBuddy 合并入库 */
   function mailWB(code) {
-    var s = Store.settings();
+    var c = Store.current();
     var to = 'dbsquared1311@hotmail.com';
     var stats = SRS.stats();
-    var head = '一次一百分 同步（学生 ' + (s.studentName || s.sid || '?') + '）\n' +
+    var head = '一次一百分 同步（学生 ' + (c.name || c.sid || '?') + '）\n' +
       '已掌握 ' + stats.mastered + ' / 待清错题 ' + stats.wrong + ' / 到期待检测 ' + stats.due + '\n';
     var summary = roundSummaryText(lastResults);
     var body = head + (summary ? (summary + '\n\n') : '') +
       '── 同步码（把下面这串粘回 WorkBuddy 即可合并入库）──\n' + code;
-    var subject = '[1a1m-sync] ' + (s.sid || '');
+    var subject = '[1a1m-sync] ' + (c.sid || '');
     window.location.href = 'mailto:' + encodeURIComponent(to) +
       '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
@@ -822,20 +825,20 @@
 
   /* 交卷 / 练完一轮后自动把「答卷汇总 + 同步码」发到家长邮箱 */
   function autoMailReport(kind, reportText) {
-    var s = Store.settings();
+    var c = Store.current();
     var stats = SRS.stats();
-    var head = '一次一百分 自动汇报（学生 ' + (s.studentName || s.sid || '?') + '｜' + kind + '）\n' +
+    var head = '一次一百分 自动汇报（学生 ' + (c.name || c.sid || '?') + '｜' + kind + '）\n' +
       '已掌握 ' + stats.mastered + ' / 待清错题 ' + stats.wrong + ' / 到期待检测 ' + stats.due + '\n';
     var body = head + (reportText ? ('\n' + reportText + '\n\n') : '\n') +
       '── 同步码（把下面这串粘回 WorkBuddy 即可合并入库）──\n' + syncCode(true);
-    autoSendEmail('[1a1m-sync] ' + (s.sid || '') + ' ' + kind, body);
+    autoSendEmail('[1a1m-sync] ' + (c.sid || '') + ' ' + kind, body);
   }
 
   /* ---------------- 题目反馈（bug 上报，同样走 FormSubmit 到家长邮箱） ---------------- */
   function bugReportBody(tplId, q, desc) {
-    var s = Store.settings();
+    var c = Store.current();
     var lines = ['一次一百分 · 题目反馈', '────────────────────',
-      '学生：' + (s.studentName || s.sid || '?'),
+      '学生：' + (c.name || c.sid || '?'),
       '题目ID：' + (tplId || '?'),
       '类型：' + (q.type || '?'),
       '题干：' + (q.stemText || '')];
@@ -987,7 +990,10 @@
       s.retryInSession = $('#setRetry').checked;
       Store.saveSettings(s); toast('设置已保存'); renderStart();
     });
-    $('#btnResetProg').addEventListener('click', function () { if (confirm('清空所有学习进度（错题本、掌握度、历史）？题库保留。')) { Store.resetProgress(); location.reload(); } });
+    $('#btnResetProg').addEventListener('click', function () {
+      var nm = Store.current().name || '当前学生';
+      if (confirm('清空【' + nm + '】的学习进度（错题本、掌握度、历史）？题库保留，其他学生不受影响。')) { Store.resetProgress(); location.reload(); }
+    });
     $('#btnWipe').addEventListener('click', function () { if (confirm('清空全部数据，包括本机导入的题库？')) { Store.wipe(); location.reload(); } });
 
     $('#btnTheme').addEventListener('click', function () {
@@ -996,9 +1002,18 @@
       localStorage.setItem('a1p100:theme', t);
     });
     $('#btnWho').addEventListener('click', function () {
-      var s = Store.settings();
-      var n = prompt('学生姓名（用于本机显示）', s.studentName || '');
-      if (n !== null) { s.studentName = n.trim(); Store.saveSettings(s); updateWho(); }
+      renderStudentList();
+      $('#studentMask').classList.remove('hidden');
+    });
+    $('#btnStudentClose').addEventListener('click', function () { $('#studentMask').classList.add('hidden'); });
+    $('#studentMask').addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden'); });
+    $('#btnAddStudent').addEventListener('click', function () {
+      var inp = $('#newStudentName'), n = (inp.value || '').trim();
+      if (!n) { toast('请输入姓名'); return; }
+      Store.addProfile(n);
+      inp.value = '';
+      renderStudentList();
+      afterStudentChange();
     });
 
     document.addEventListener('keydown', function (e) {
@@ -1007,8 +1022,56 @@
   }
 
   function updateWho() {
-    var n = Store.settings().studentName;
-    $('#btnWho').textContent = n ? ('👤 ' + n) : '👤';
+    var c = Store.current();
+    $('#btnWho').textContent = c.name ? ('👤 ' + c.name) : '👤';
+  }
+
+  /* 学生管理弹层里的列表：切换 / 改名 / 删除 */
+  function renderStudentList() {
+    var list = Store.profiles(), cur = Store.currentId(), box = $('#studentList');
+    box.innerHTML = '';
+    list.forEach(function (p) {
+      var item = document.createElement('div');
+      item.className = 'list-item';
+      var isCur = p.id === cur;
+      var html = '<div class="row"><div class="t" style="flex:1">' + esc(p.name) +
+        (isCur ? ' <span class="pill new">当前</span>' : '') + '</div>';
+      if (!isCur) html += '<button class="btn sm" data-act="switch" data-id="' + p.id + '">切换</button>';
+      html += ' <button class="btn sm" data-act="rename" data-id="' + p.id + '">改名</button>';
+      if (list.length > 1) html += ' <button class="btn sm" data-act="del" data-id="' + p.id + '">删除</button>';
+      html += '</div>';
+      item.innerHTML = html;
+      box.appendChild(item);
+    });
+    Array.prototype.forEach.call(box.querySelectorAll('button[data-act]'), function (b) {
+      b.addEventListener('click', function () {
+        var id = b.dataset.id, act = b.dataset.act;
+        if (act === 'switch') { Store.setCurrent(id); closeStudentModal(); afterStudentChange(); }
+        else if (act === 'rename') {
+          var p = Store.profiles().filter(function (x) { return x.id === id; })[0];
+          var n = prompt('修改学生姓名', p ? p.name : '');
+          if (n !== null) { Store.renameProfile(id, n); renderStudentList(); updateWho(); }
+        } else if (act === 'del') {
+          var pp = Store.profiles().filter(function (x) { return x.id === id; })[0];
+          if (confirm('删除学生「' + (pp ? pp.name : '') + '」及其全部进度？此操作不可恢复。')) {
+            if (Store.removeProfile(id)) { renderStudentList(); afterStudentChange(); }
+            else toast('至少保留一个学生');
+          }
+        }
+      });
+    });
+  }
+  function closeStudentModal() { $('#studentMask').classList.add('hidden'); }
+
+  /* 切换学生后：刷新界面与当前视图，并拉取该学生的云端进度 */
+  function afterStudentChange() {
+    updateWho();
+    if (typeof renderStart === 'function') renderStart();
+    var active = document.querySelector('#tabs button.active');
+    var v = active ? active.dataset.view : 'practice';
+    if (v === 'stats' && typeof renderStats === 'function') renderStats();
+    else if (v === 'wrong' && typeof renderWrong === 'function') renderWrong();
+    if (Store.settings().autoSync !== false) pullCloud(true);
   }
   function download(name, text) {
     var a = document.createElement('a');

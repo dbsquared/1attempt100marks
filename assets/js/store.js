@@ -1,12 +1,20 @@
 /*!
  * store.js — 本地持久化（localStorage）+ 题库装载
  * 所有学生数据只存在本机浏览器，不上传任何服务器。
+ *
+ * 多学生模型：
+ *  - 身份（姓名 / sid / devId）放在 profiles 列表里，不再塞进 settings。
+ *  - 每个学生的进度 / 错题 / 历史 / 套卷 按 sid 命名空间隔离：
+ *      a1p100:v1:<sid>:progress / :wrong / :history / :papers / :lastSync
+ *  - 云端文件因此天然分文件（data/state/<sid>.json），不同学生互不干扰
+ *    （sync.js 的 merge 本就按 sid 区分，test-sync.js 已验证）。
+ *  - 自定义题库、练习设置（题量/连对次数等）是设备级、所有学生共用。
  */
 (function (global) {
   'use strict';
 
   var PREFIX = 'a1p100:v1:';
-  var FIXED_SID = 'a1m1';   // 统一学生编号：各设备共用 data/state/a1m1.json
+  var FIXED_SID = 'a1m1';   // 默认/迁移学生的云端编号，沿用历史 data/state/a1m1.json
 
   function read(key, def) {
     try {
@@ -19,45 +27,153 @@
     try { localStorage.setItem(PREFIX + key, JSON.stringify(val)); return true; }
     catch (e) { console.warn('写入失败', e); return false; }
   }
+  function rnd(n) {
+    return global.Sync && global.Sync.randomId
+      ? global.Sync.randomId(n)
+      : ('' + Math.random()).slice(2, 2 + (n || 6));
+  }
 
+  /* ---------- 档案迁移：旧的单学生数据 -> 按 sid 命名空间 ---------- */
+  function migrateIfNeeded() {
+    if (localStorage.getItem(PREFIX + 'profiles') !== null) return;
+    var old = read('settings', null) || {};
+    var sid = old.sid || FIXED_SID;
+    var name = (old.studentName || '').trim() || '学生1';
+    var devId = old.devId || rnd(4).toUpperCase();
+    // 把旧的“单一学生”数据搬进按 sid 命名空间的键
+    var op = read('progress', null), ow = read('wrong', null),
+        oh = read('history', null), opa = read('papers', null);
+    if (op) write(sid + ':progress', op);
+    if (ow) write(sid + ':wrong', ow);
+    if (oh) write(sid + ':history', oh);
+    if (opa) write(sid + ':papers', opa);
+    var ol = localStorage.getItem(PREFIX + 'lastSync');
+    if (ol !== null) { try { write(sid + ':lastSync', JSON.parse(ol)); } catch (e) {} }
+    var prof = { id: 'p_' + rnd(8), name: name, sid: sid, devId: devId, createdAt: Date.now() };
+    write('profiles', [prof]);
+    write('current', prof.id);
+    // 清理旧 settings 里的身份字段，避免被误用
+    if (old && typeof old === 'object') {
+      delete old.studentName; delete old.sid; delete old.devId;
+      write('settings', old);
+    }
+  }
+  migrateIfNeeded();
+
+  /* ---------- 档案读写 ---------- */
+  function profiles() { return read('profiles', []) || []; }
+  function saveProfiles(list) { write('profiles', list); }
+  function currentId() { return read('current', null); }
+
+  function current() {
+    var list = profiles(), id = currentId(), p = null;
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) { p = list[i]; break; }
+    if (!p && list.length) { p = list[0]; write('current', p.id); }
+    if (!p) { // 兜底：理论上 migrate 已建默认档案
+      p = { id: 'p_' + rnd(8), name: '学生1', sid: FIXED_SID, devId: rnd(4).toUpperCase(), createdAt: Date.now() };
+      saveProfiles([p]); write('current', p.id);
+    }
+    return p;
+  }
+  function setCurrent(id) {
+    if (!profiles().some(function (x) { return x.id === id; })) return false;
+    write('current', id); return true;
+  }
+  function profileBySid(sid) {
+    var list = profiles();
+    for (var i = 0; i < list.length; i++) if (list[i].sid === sid) return list[i];
+    return null;
+  }
+  // 按 sid 找到对应档案，没有就新建并切换过去（用于导入他人同步码）
+  function ensureProfileBySid(sid, devId) {
+    sid = sid || FIXED_SID;
+    var p = profileBySid(sid);
+    if (!p) {
+      var list = profiles();
+      p = {
+        id: 'p_' + rnd(8),
+        name: '学生' + (list.length + 1),
+        sid: sid,
+        devId: (devId || rnd(4)).toUpperCase(),
+        createdAt: Date.now()
+      };
+      list.push(p); saveProfiles(list);
+    }
+    write('current', p.id);
+    return p;
+  }
+  function addProfile(name) {
+    var list = profiles();
+    var prof = {
+      id: 'p_' + rnd(8),
+      name: (name || '').trim() || ('学生' + (list.length + 1)),
+      sid: rnd(5),
+      devId: rnd(4).toUpperCase(),
+      createdAt: Date.now()
+    };
+    list.push(prof); saveProfiles(list); write('current', prof.id);
+    return prof;
+  }
+  function renameProfile(id, name) {
+    var changed = false;
+    profiles().forEach(function (p) { if (p.id === id && name) { p.name = (name + '').trim() || p.name; changed = true; } });
+    if (changed) saveProfiles(profiles());
+  }
+  function removeProfile(id) {
+    var list = profiles();
+    if (list.length <= 1) return false; // 至少保留一个学生
+    var p = null;
+    list.forEach(function (x) { if (x.id === id) p = x; });
+    if (!p) return false;
+    saveProfiles(list.filter(function (x) { return x.id !== id; }));
+    ['progress', 'wrong', 'history', 'papers', 'lastSync'].forEach(function (k) {
+      localStorage.removeItem(PREFIX + p.sid + ':' + k);
+    });
+    if (currentId() === id) write('current', profiles()[0].id);
+    return true;
+  }
+
+  /* ---------- 练习设置（设备级，所有学生共用） ---------- */
   var DEFAULT_SETTINGS = {
-    studentName: '',
-    sid: '',            // 学生 ID，多设备共用一个才能同步
-    devId: '',          // 本机标识
-    autoSync: true,     // 打开页面时自动拉取云端进度
-    sessionSize: 10,        // 每次测试题量
-    newPerSession: 4,       // 每次最多引入的新题型
-    masterStreak: 3,        // 连续答对多少次算"掌握"
-    wrongNeed: 2,           // 错题需要额外答对多少次才移出错题本
-    retryInSession: false,  // 错题是否当场换数重练
-    shuffle: true
+    autoSync: true,
+    sessionSize: 10,
+    newPerSession: 4,
+    masterStreak: 3,
+    wrongNeed: 2,
+    retryInSession: false,
+    shuffle: true,
+    parentEmail: ''
   };
 
   var Store = {
+    /* ---------- 学生档案 ---------- */
+    profiles: profiles,
+    current: current,
+    currentId: currentId,
+    setCurrent: setCurrent,
+    profileBySid: profileBySid,
+    ensureProfileBySid: ensureProfileBySid,
+    addProfile: addProfile,
+    renameProfile: renameProfile,
+    removeProfile: removeProfile,
+
     /* ---------- 设置 ---------- */
     settings: function () {
       var s = read('settings', null);
       if (!s) { s = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); write('settings', s); }
-      // 补齐新增字段
       var changed = false;
       Object.keys(DEFAULT_SETTINGS).forEach(function (k) {
         if (s[k] === undefined) { s[k] = DEFAULT_SETTINGS[k]; changed = true; }
       });
-      // 多设备同步的 UI 已移除，所有设备统一用同一个学生编号，才能共用一份云端进度
-      if (s.sid !== FIXED_SID || !s.devId) {
-        s.sid = FIXED_SID;
-        s.devId = s.devId || global.Sync.randomId(4).toUpperCase();
-        changed = true;
-      }
       if (changed) write('settings', s);
       return s;
     },
     saveSettings: function (s) { write('settings', s); },
 
     /* ---------- 同步 ---------- */
-    lastSync: function () { return read('lastSync', 0) || 0; },
-    setLastSync: function (ts) { write('lastSync', ts); },
-    /** 用云端状态合并本机；返回统计 */
+    lastSync: function () { return read(current().sid + ':lastSync', 0) || 0; },
+    setLastSync: function (ts) { write(current().sid + ':lastSync', ts); },
+    /** 用云端状态合并本机（当前学生）；返回统计 */
     applyCloud: function (cloud) {
       var n = global.Sync.normalize(cloud);
       var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), Store.wrongAll()));
@@ -69,27 +185,39 @@
       return r;
     },
 
-    /* ---------- 进度 ---------- */
-    progress: function () { return read('progress', {}) || {}; },
-    saveProgress: function (p) { write('progress', p); },
+    /* ---------- 进度（当前学生） ---------- */
+    progress: function () { return read(current().sid + ':progress', {}) || {}; },
+    saveProgress: function (p) { write(current().sid + ':progress', p); },
 
     /* ---------- 错题本 ----------
      * 内部保存 need<=0 的"墓碑"记录，这样"已清零"这件事才能同步给别的设备。
      * 对外读取一律用 wrong()（只返回 need>0），需要同步时用 wrongAll()。 */
-    wrong: function () { return (read('wrong', []) || []).filter(function (x) { return x.need > 0; }); },
-    wrongAll: function () { return read('wrong', []) || []; },
-    saveWrong: function (w) { write('wrong', w); },
+    wrong: function () { return (read(current().sid + ':wrong', []) || []).filter(function (x) { return x.need > 0; }); },
+    wrongAll: function () { return read(current().sid + ':wrong', []) || []; },
+    saveWrong: function (w) { write(current().sid + ':wrong', w); },
 
     /* ---------- 历史 ---------- */
-    history: function () { return read('history', []) || []; },
+    history: function () { return read(current().sid + ':history', []) || []; },
     pushHistory: function (rec) {
       var h = Store.history();
       h.push(rec);
       if (h.length > 3000) h = h.slice(h.length - 3000);
-      write('history', h);
+      write(current().sid + ':history', h);
     },
 
-    /* ---------- 自定义题库（由 WorkBuddy 生成后导入） ---------- */
+    /* ---------- 套卷（当前学生） ---------- */
+    papers: function () { return read(current().sid + ':papers', []) || []; },
+    savePaper: function (p) {
+      var ps = Store.papers();
+      ps.unshift(p);
+      if (ps.length > 30) ps = ps.slice(0, 30);
+      write(current().sid + ':papers', ps);
+    },
+    removePaper: function (id) {
+      write(current().sid + ':papers', Store.papers().filter(function (p) { return p.id !== id; }));
+    },
+
+    /* ---------- 自定义题库（设备级，跨学生共享） ---------- */
     customBank: function () { return read('bank', []) || []; },
     saveCustomBank: function (list) { write('bank', list); },
     mergeCustomBank: function (list) {
@@ -107,41 +235,58 @@
     },
     clearCustomBank: function () { write('bank', []); },
 
-    /* ---------- 套卷 ---------- */
-    papers: function () { return read('papers', []) || []; },
-    savePaper: function (p) {
-      var ps = Store.papers();
-      ps.unshift(p);
-      if (ps.length > 30) ps = ps.slice(0, 30);
-      write('papers', ps);
-    },
-    removePaper: function (id) {
-      write('papers', Store.papers().filter(function (p) { return p.id !== id; }));
-    },
-
     /* ---------- 导入导出 ---------- */
     exportAll: function () {
+      var stus = profiles().map(function (p) {
+        return {
+          sid: p.sid,
+          progress: read(p.sid + ':progress', {}),
+          wrong: read(p.sid + ':wrong', []),
+          history: read(p.sid + ':history', []),
+          papers: read(p.sid + ':papers', []),
+          lastSync: read(p.sid + ':lastSync', 0)
+        };
+      });
       return {
-        v: 1,
+        v: 2,
         exportedAt: new Date().toISOString(),
         settings: Store.settings(),
-        progress: Store.progress(),
-        wrong: Store.wrong(),
-        history: Store.history(),
-        bank: Store.customBank()
+        bank: Store.customBank(),
+        profiles: profiles(),
+        current: currentId(),
+        students: stus
       };
     },
     importAll: function (data) {
       if (!data || typeof data !== 'object') throw new Error('数据格式不正确');
       if (data.settings) write('settings', data.settings);
-      if (data.progress) write('progress', data.progress);
-      if (data.wrong) write('wrong', data.wrong);
-      if (data.history) write('history', data.history);
       if (data.bank) write('bank', data.bank);
+      if (Array.isArray(data.students) && Array.isArray(data.profiles)) {
+        saveProfiles(data.profiles);
+        data.students.forEach(function (st) {
+          if (!st || !st.sid) return;
+          write(st.sid + ':progress', st.progress || {});
+          write(st.sid + ':wrong', st.wrong || []);
+          write(st.sid + ':history', st.history || []);
+          write(st.sid + ':papers', st.papers || []);
+          write(st.sid + ':lastSync', st.lastSync || 0);
+        });
+        write('current', data.current || (data.profiles[0] && data.profiles[0].id) || null);
+      } else if (data.progress) {
+        // 老格式（v1）：当作当前学生导入
+        Store.saveProgress(data.progress);
+        if (data.wrong) Store.saveWrong(data.wrong);
+        if (data.history) write(current().sid + ':history', data.history);
+        if (data.papers) write(current().sid + ':papers', data.papers);
+      }
       return true;
     },
     resetProgress: function () {
-      ['progress', 'wrong', 'history'].forEach(function (k) { localStorage.removeItem(PREFIX + k); });
+      // 只清空“当前学生”的进度/错题/历史（套卷保留）
+      var sid = current().sid;
+      ['progress', 'wrong', 'history'].forEach(function (k) {
+        localStorage.removeItem(PREFIX + sid + ':' + k);
+      });
     },
     wipe: function () {
       Object.keys(localStorage).filter(function (k) { return k.indexOf(PREFIX) === 0; })

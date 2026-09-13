@@ -1487,12 +1487,24 @@
       return s;
     },
 
-    /* 点连图：6 个点，编号由 order 决定（Q22）。order 是 6 个位置的编号串 */
+    /* 点连图：6 个点，编号由 order 决定（Q22）。order 是 6 个位置的编号串，
+       按「左下起逆时针」的位置顺序给出每点上的数字。
+       spec.given === 'close' 时把「1 和 6 之间那条线」先画出来 ——
+       原卷给的图里这条线已经画好了，学生只要补 1→2→…→6。 */
     dotfig: function (spec, vars) {
-      var order = str(spec.order, vars) || '162534';
+      var order = str(spec.order, vars) || '615423';
       var pos = [[104, 34], [216, 34], [46, 118], [274, 118], [104, 202], [216, 202]];
       var W = 320, H = 244, s = svgOpen(W, H, 'numbered dots');
-      for (var i = 0; i < 6; i++) {
+      var i;
+      if (spec.given === 'close') {
+        var i1 = -1, i6 = -1;
+        for (i = 0; i < 6; i++) { if (order[i] === '1') i1 = i; if (order[i] === '6') i6 = i; }
+        if (i1 >= 0 && i6 >= 0) {
+          s += '<line data-u="given" data-a="1" data-b="6" x1="' + pos[i1][0] + '" y1="' + pos[i1][1] +
+               '" x2="' + pos[i6][0] + '" y2="' + pos[i6][1] + '" stroke="#1f3f8f" stroke-width="3.4"/>';
+        }
+      }
+      for (i = 0; i < 6; i++) {
         s += '<g data-u="dot" data-n="' + order[i] + '"><circle cx="' + pos[i][0] + '" cy="' + pos[i][1] + '" r="8" fill="' + RED + '"/>' +
              '<text x="' + pos[i][0] + '" y="' + (pos[i][1] - 16) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + INK + '">' + order[i] + '</text></g>';
       }
@@ -1565,93 +1577,169 @@
       return s;
     },
 
-    /* 六边形密铺：从上到下三行，列数 k / k+1 / k（Q27）。
-       hr/hc 指定被涂色（提问）的那块：hr=0 顶行、hr=1 中行，hc 是行内序号。
-       顶行 hc=0 的块邻居 3 个、顶行内部 4 个、中行内部 6 个、中行两端 3 个。 */
-    hextile: function (spec, vars) {
-      var k = Math.max(2, Math.min(5, Math.round(num(spec.k, vars))));
-      var hr = Math.round(num(spec.hr, vars) || 0), hc = Math.round(num(spec.hc, vars) || 0);
-      var hl = spec.highlight === false ? -1 : 1;
-      var side = 26, w = Math.sqrt(3) * side, h = 2 * side, pad = 16, i, r;
-      var W = Math.round(pad * 2 + (k + 1) * w), H = Math.round(pad * 2 + h + 2 * 1.5 * side);
-      function hexAt(cx, cy, on) {
-        var pts = [], t;
+    /* 蜂巢密铺（Q27）：pat 是「每行几个」的数字串，如 "343" = 上 3、中 4、下 3。
+       **摆放规则（不重叠的必要条件）**：同一排等高横排，相邻两排必须错开半个六边形
+       （半个宽 = w/2），否则两块会压在一起、图形就废了。
+       行数相差 1 时，居中摆放本身恰好错开 w/2（原卷那个 3-4-3 就是这样，保持原样）；
+       行数相同或相差 ≥2 时，居中摆放会**完全对齐**（会重叠），所以下面按取模算出一个
+       0 或 w/2 的补正量，让任何 pat 都能铺成不重叠的一坨。
+       整幅按实际范围重新居中，宽度按范围算，避免被裁掉。
+       **所有六边形同色**：原题问的是「有几块只和 3 个其它块相接」，
+       所以不能把某一块涂成高亮（涂了就变成「数涂色块的邻居」这道完全不同的题）。
+       每块挂 data-r/data-c/data-x/data-y，自检脚本按「中心距 ≈ √3·side」独立重建邻接关系，
+       并检查图形连通、任意两块中心距 ≥ √3·side（不重叠）。 */
+    hexcomb: function (spec, vars) {
+      var code = String(str(spec.pattern, vars) || '343').replace(/[^0-9]/g, '') || '343';
+      var rows = code.split('').map(function (ch) { return parseInt(ch, 10); })
+        .filter(function (n) { return n >= 1 && n <= 6; });
+      if (rows.length < 2) rows = [3, 4, 3];
+      var side = 26, w = Math.sqrt(3) * side, half = w / 2, pad = 18, i, r;
+      /* 先算每行的左端偏移（不含整幅平移）：居中偏移 + 补正量 */
+      var off = [], n, minX = Infinity, maxX = -Infinity;
+      for (r = 0; r < rows.length; r++) {
+        n = rows[r];
+        var mid = -(n - 1) * half, add = 0;
+        if (r > 0) {
+          /* 与上一行的错位必须是 w/2 的奇数倍：算出来是偶数就补 w/2 */
+          var u = Math.round((off[r - 1] + half - mid) / half);
+          add = (((u % 2) + 2) % 2) ? half : 0;
+        }
+        off.push(mid + add);
+        minX = Math.min(minX, off[r]);
+        maxX = Math.max(maxX, off[r] + (n - 1) * w);
+      }
+      var W = Math.round((maxX - minX) + w + pad * 2);
+      var H = Math.round(pad * 2 + side * 2 + (rows.length - 1) * 1.5 * side);
+      var dx = pad + half - minX;                 /* 整幅水平居中 */
+      function hexPts(cx, cy) {
+        var out = [], t;
         for (t = 0; t < 6; t++) {
           var ang = -Math.PI / 2 + t * Math.PI / 3;
-          pts.push((cx + side * Math.cos(ang)).toFixed(1) + ',' + (cy + side * Math.sin(ang)).toFixed(1));
+          out.push((cx + side * Math.cos(ang)).toFixed(1) + ',' + (cy + side * Math.sin(ang)).toFixed(1));
         }
-        return '<polygon data-u="hex" data-hl="' + (on ? 1 : 0) + '" data-cx="' + cx.toFixed(1) + '" data-cy="' + cy.toFixed(1) +
-               '" points="' + pts.join(' ') + '" fill="' + (on ? '#f5c518' : '#a9662f') + '" stroke="' + INK + '" stroke-width="1.8"/>';
+        return out.join(' ');
       }
-      var s = svgOpen(W, H, 'hexagon tiling');
-      var cy0 = pad + side;
-      for (r = 0; r < 3; r++) {
-        var cnt = (r === 1) ? k + 1 : k, cy = cy0 + r * 1.5 * side;
-        for (i = 0; i < cnt; i++) {
-          var cx = (r === 1) ? pad + w * (i + 0.5) : pad + w * (i + 1);
-          s += hexAt(cx, cy, hl > 0 && r === hr && i === hc);
+      var s = svgOpen(W, H, 'hexagon tessellation');
+      for (r = 0; r < rows.length; r++) {
+        n = rows[r];
+        var cy = pad + side + r * 1.5 * side;
+        for (i = 0; i < n; i++) {
+          var cx = off[r] + dx + i * w;
+          s += '<polygon data-u="hex" data-r="' + r + '" data-c="' + i + '" data-x="' + cx.toFixed(1) + '" data-y="' + cy.toFixed(1) +
+               '" points="' + hexPts(cx, cy) + '" fill="#a9662f" stroke="' + INK + '" stroke-width="1.8"/>';
         }
       }
       s += '</svg>';
       return s;
     },
 
-    /* 一排四栋房子 + 左边一棵树（Q29）。四个孩子住四栋房子，房子之间距离相等。
-       perm 决定孩子在房子里的排列（0: Sita,Ben,Lin,Pete / 1: Ben,Sita,Pete,Lin /
-       2: Lin,Pete,Sita,Ben / 3: Pete,Lin,Ben,Sita），题目问「从离树最近排到最远」。
-       树在最左边，所以「越靠左 = 离树越近」。
-       名字写在屋顶**上方**：屋顶尖角在 baseY-h-w*0.46，写在下面会压到屋顶。 */
+    /* 一排四栋房子 + 一棵树（Q29）。房子之间**不等距**：gaps 是每两栋之间距离的
+       「份数」串，如 "112" = 第1段 1 份、第2段 1 份、第3段 2 份。
+       树默认立在最宽的那段空隙里（空隙够大才放得下树，原卷也是这么画的）。
+       房子上面**不写名字**、下面画空方框（原卷是拖名字的框）——
+       名字必须让学生按距离条件推出来，写在图上就等于把答案印出来了。
+       每栋挂 data-u/data-i/data-x，每段挂 data-u="gap" data-i/data-units。 */
     houses: function (spec, vars) {
-      var PERMS = [['Sita', 'Ben', 'Lin', 'Pete'],
-                   ['Ben', 'Sita', 'Pete', 'Lin'],
-                   ['Lin', 'Pete', 'Sita', 'Ben'],
-                   ['Pete', 'Lin', 'Ben', 'Sita']];
-      var perm = Math.max(0, Math.min(3, Math.round(num(spec.perm, vars) || 0)));
-      var names = PERMS[perm];
-      var hw = 58, unit = 32, padL = 64, padR = 20, baseY = 170, hh = 62;
-      var W = padL + 4 * hw + 3 * unit + padR, i;
-      var s = svgOpen(W, 230, 'four houses in a row');
-      s += '<line x1="12" y1="' + (baseY + 4) + '" x2="' + (W - 12) + '" y2="' + (baseY + 4) + '" stroke="#8a6b45" stroke-width="5"/>';
-      s += '<g data-u="tree">' + treeIcon(34, baseY + 4, 30) + '</g>';
-      var walls = ['#dbe9f5', '#fbe6c6', '#f6d6dd', '#e6e2f0'];
-      for (i = 0; i < 4; i++) {
-        var cx = padL + hw / 2 + i * (hw + unit);
-        s += '<g data-u="house" data-name="' + names[i] + '" data-i="' + i + '">' +
-             houseIcon(cx, baseY, hw, hh, walls[i], '#c62828') + '</g>';
-        s += '<text x="' + cx + '" y="' + (baseY - hh - 40) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + names[i] + '</text>';
+      var gc = String(str(spec.gaps, vars) || '112').replace(/[^0-9]/g, '') || '112';
+      var gaps = gc.split('').map(function (c) { return parseInt(c, 10); });
+      if (gaps.length !== 3 || gaps.some(function (g) { return g < 1 || g > 3; })) gaps = [1, 1, 2];
+      var hw = 52, hh = 58, pad = 36, unit = 38, baseY = 166, i;
+      var xs = [], x = pad + hw / 2;
+      xs.push(x);
+      for (i = 0; i < 3; i++) { x += hw / 2 + gaps[i] * unit + hw / 2; xs.push(x); }
+      var W = Math.round(xs[3] + hw / 2 + pad);
+      if (W > 480) { pad = 24; W = Math.round(xs[3] + hw / 2 + pad); }
+      /* 树站在哪段空隙：默认最宽的那段 */
+      var tg = Math.max(0, Math.min(2, Math.round(num(spec.tree, vars) || 0)));
+      if (spec.tree === undefined) {
+        tg = 0;
+        for (i = 1; i < 3; i++) if (gaps[i] > gaps[tg]) tg = i;
       }
-      /* 等距标注：三段一样长的双箭头，直观说明「房子之间的距离都相等」 */
-      var dy = baseY + 30;
+      var walls = ['#dbe9f5', '#fbe6c6', '#f6d6dd', '#e6e2f0'];
+      var s = svgOpen(W, 240, 'four houses, not equally spaced');
+      s += '<line x1="8" y1="' + (baseY + 4) + '" x2="' + (W - 8) + '" y2="' + (baseY + 4) + '" stroke="#8a6b45" stroke-width="5"/>';
+      for (i = 0; i < 4; i++) {
+        s += '<g data-u="house" data-i="' + i + '" data-x="' + xs[i] + '">' +
+             houseIcon(xs[i], baseY, hw, hh, walls[i], '#c62828') + '</g>';
+        s += '<rect class="namebox" data-u="namebox" x="' + (xs[i] - 26) + '" y="' + (baseY + 20) + '" width="52" height="26" rx="3" fill="#ffffff" stroke="#1f6feb" stroke-width="2"/>';
+      }
       for (i = 0; i < 3; i++) {
-        var a = padL + hw + i * (hw + unit), b = a + unit;
-        s += '<line x1="' + a + '" y1="' + dy + '" x2="' + b + '" y2="' + dy + '" stroke="' + GREY + '" stroke-width="1.6"/>';
-        s += '<line x1="' + a + '" y1="' + (dy - 5) + '" x2="' + a + '" y2="' + (dy + 5) + '" stroke="' + GREY + '" stroke-width="1.6"/>';
-        s += '<line x1="' + b + '" y1="' + (dy - 5) + '" x2="' + b + '" y2="' + (dy + 5) + '" stroke="' + GREY + '" stroke-width="1.6"/>';
+        var ga = xs[i] + hw / 2, gb = xs[i + 1] - hw / 2;
+        s += '<line data-u="gap" data-i="' + i + '" data-units="' + gaps[i] + '" x1="' + ga + '" y1="' + (baseY + 58) +
+             '" x2="' + gb + '" y2="' + (baseY + 58) + '" stroke="' + GREY + '" stroke-width="1.8"/>';
+        s += '<line x1="' + ga + '" y1="' + (baseY + 53) + '" x2="' + ga + '" y2="' + (baseY + 63) + '" stroke="' + GREY + '" stroke-width="1.8"/>';
+        s += '<line x1="' + gb + '" y1="' + (baseY + 53) + '" x2="' + gb + '" y2="' + (baseY + 63) + '" stroke="' + GREY + '" stroke-width="1.8"/>';
+      }
+      var tx = (xs[tg] + hw / 2 + xs[tg + 1] - hw / 2) / 2;
+      s += '<g data-u="tree" data-gap="' + tg + '">' + treeIcon(tx, baseY + 4, 34) + '</g>';
+      s += '</svg>';
+      return s;
+    },
+
+
+    /* 宝箱 + 天数表（Q30）。原卷那张图 = 宝箱卡通 + 「前三天取了几枚」的表格，
+       真正要读的是**表格**，所以这里的重点是表格必须画得出来（chest 只是装饰）。
+       表格每格的值由 cellText 从 vars 取名（传变量名，如 't1'，不能传表达式 'a+d'）。
+       硬币只画一小堆装饰，**不挂 data-u="coin"**，免得「图上的枚数」被当成条件去数。 */
+    chest: function (spec, vars) {
+      var cols = spec.cols || ['Day', 'Number of gold pieces taken out'];
+      var rows = spec.rows || [];
+      var widths = spec.widths || [92, 300];
+      var hasTable = rows.length > 0;
+      var pad = 16, rowH = 32, bw = 176, bh = 104;
+      var total = widths.reduce(function (a, b) { return a + b; }, 0);
+      var W = Math.round(Math.max(total + pad * 2, bw + pad * 2));
+      var headH = hasTable ? 14 + (rows.length + 1) * rowH : 0;
+      var H = pad + bh + 26 + headH + pad;
+      var cxm = W / 2, i, c;
+      var s = svgOpen(W, H, 'treasure chest and a table');
+      /* --- 宝箱（装饰） --- */
+      var tx = cxm - bw / 2, ty = pad;
+      s += '<path d="M' + tx + ',' + (ty + 40) + ' Q' + tx + ',' + ty + ' ' + (tx + bw / 2) + ',' + ty +
+           ' Q' + (tx + bw) + ',' + ty + ' ' + (tx + bw) + ',' + (ty + 40) + ' Z" fill="#8a5a2b" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<rect x="' + tx + '" y="' + (ty + 40) + '" width="' + bw + '" height="64" fill="#a9743f" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<rect x="' + tx + '" y="' + (ty + 40) + '" width="' + bw + '" height="12" fill="#7b4a2d" stroke="' + INK + '" stroke-width="1.6"/>';
+      /* 露出来的一小堆金币（固定 5 枚，仅装饰） */
+      var pile = [[-34, 6], [-17, 2], [0, 0], [17, 2], [34, 6]];
+      for (i = 0; i < pile.length; i++) {
+        s += '<circle cx="' + (cxm + pile[i][0]) + '" cy="' + (ty + 36 + pile[i][1]) + '" r="10" fill="#f5c518" stroke="' + INK + '" stroke-width="1.6"/>';
+      }
+      s += '<rect x="' + (cxm - 11) + '" y="' + (ty + 44) + '" width="22" height="28" rx="3" fill="#f5c518" stroke="' + INK + '" stroke-width="2"/>';
+      /* --- 天数表 --- */
+      if (hasTable) {
+        var y = ty + bh + 26, xOf = function (cc) { var xx = (W - total) / 2; for (var q = 0; q < cc; q++) xx += widths[q]; return xx; };
+        s += '<rect x="' + ((W - total) / 2) + '" y="' + y + '" width="' + total + '" height="' + ((rows.length + 1) * rowH) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+        for (c = 0; c < cols.length; c++) {
+          s += '<rect x="' + xOf(c) + '" y="' + y + '" width="' + widths[c] + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<text x="' + (xOf(c) + widths[c] / 2) + '" y="' + (y + rowH - 10) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(cols[c]) + '</text>';
+        }
+        for (i = 0; i < rows.length; i++) {
+          for (c = 0; c < cols.length; c++) {
+            s += '<rect x="' + xOf(c) + '" y="' + (y + (i + 1) * rowH) + '" width="' + widths[c] + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
+            s += '<text data-u="cell" data-r="' + i + '" data-c="' + c + '" x="' + (xOf(c) + widths[c] / 2) +
+                 '" y="' + (y + (i + 2) * rowH - 10) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' +
+                 esc(cellText(rows[i][c], vars)) + '</text>';
+          }
+        }
       }
       s += '</svg>';
       return s;
     },
 
-    /* 存钱罐（Q30）：上面 8 个一行地画出「他已经有的 count 枚硬币」——数量必须和题干
-       里的数字一致（老版本固定画 7 枚，题干说 14 枚时图会对不上）；下面画钱箱做装饰。
-       每天放几枚、要存到多少枚（= 答案 days）只在题干里，图里不画。 */
-    chest: function (spec, vars) {
-      var a = Math.max(1, Math.min(16, Math.round(num(spec.count, vars) || 1)));
-      var per = 8, pad = 20, cw = 21, chh = 22, i;
-      var rowsN = Math.ceil(a / per), headH = rowsN * chh + 6;
-      var W = pad * 2 + per * cw, H = headH + 150, cxm = W / 2;
-      var s = svgOpen(W, H, a + ' coins and a money box');
-      for (i = 0; i < a; i++) {
-        var r0 = Math.floor(i / per), cnt = Math.min(per, a - r0 * per);
-        var cx = cxm + ((i % per) - (cnt - 1) / 2) * cw, cy = 14 + r0 * chh;
-        s += '<circle data-u="coin" cx="' + cx.toFixed(1) + '" cy="' + cy + '" r="9" fill="#f5c518" stroke="' + INK + '" stroke-width="1.4"/>';
-      }
-      var y0 = headH;
-      s += '<path d="M' + (cxm - 74) + ',' + (y0 + 44) + ' Q' + (cxm - 74) + ',' + y0 + ' ' + cxm + ',' + y0 +
-           ' Q' + (cxm + 74) + ',' + y0 + ' ' + (cxm + 74) + ',' + (y0 + 44) + ' Z" fill="#8a5a2b" stroke="' + INK + '" stroke-width="2.2"/>';
-      s += '<rect x="' + (cxm - 74) + '" y="' + (y0 + 44) + '" width="148" height="70" fill="#a9743f" stroke="' + INK + '" stroke-width="2.2"/>';
-      s += '<rect x="' + (cxm - 74) + '" y="' + (y0 + 44) + '" width="148" height="12" fill="#7b4a2d" stroke="' + INK + '" stroke-width="1.6"/>';
-      s += '<rect x="' + (cxm - 10) + '" y="' + (y0 + 40) + '" width="20" height="26" rx="3" fill="#f5c518" stroke="' + INK + '" stroke-width="1.8"/>';
+    /* 骨牌配对（Q9）：上面画「示例」（两张总点数相同的骨牌，中间写 matches），
+       下面写一句 Jim picked up this domino. 再画他拿到的那张。
+       示例是原卷给的、必须画出来 ——「加起来一样多」这条规则全靠示例传达。 */
+    dominomatch: function (spec, vars) {
+      var ea = Math.round(num(spec.ea, vars)), eb = Math.round(num(spec.eb, vars));
+      var fa = Math.round(num(spec.fa, vars)), fb = Math.round(num(spec.fb, vars));
+      var pa = Math.round(num(spec.pa, vars)), pb = Math.round(num(spec.pb, vars));
+      var dw = 130, dh = 64, W = 470, s = svgOpen(W, 296, 'dominoes that match');
+      var ax = 12, gap = 84, bx = ax + dw + gap;
+      s += '<g data-u="exA" data-a="' + ea + '" data-b="' + eb + '">' + dominoTile(ax, 18, dw, dh, ea, eb) + '</g>';
+      s += '<text x="' + (ax + dw + gap / 2) + '" y="' + (18 + dh / 2 + 6) + '" font-size="16" text-anchor="middle" fill="' + INK + '">matches</text>';
+      s += '<g data-u="exB" data-a="' + fa + '" data-b="' + fb + '">' + dominoTile(bx, 18, dw, dh, fa, fb) + '</g>';
+      s += '<text x="' + ax + '" y="' + (18 + dh + 32) + '" font-size="15" fill="' + INK + '">Jim picked up this domino.</text>';
+      s += '<g data-u="picked" data-a="' + pa + '" data-b="' + pb + '">' + dominoTile(ax, 18 + dh + 54, dw, dh, pa, pb) + '</g>';
       s += '</svg>';
       return s;
     }

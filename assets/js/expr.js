@@ -25,7 +25,18 @@
     gcd: gcd, lcm: lcm,
     roundTo: function (x, n) { var p = Math.pow(10, n || 0); return Math.round(x * p) / p; },
     fracPart: function (x) { return x - Math.floor(x); },
-    mod: function (a, b) { var r = a % b; return r < 0 ? r + b : r; }
+    mod: function (a, b) { var r = a % b; return r < 0 ? r + b : r; },
+    /* 按序号取字符串：sel(i, s0, s1, s2…) —— 用来把「第几种」映射成名字/图案串。
+       为什么需要它：== 和 != 会把两边 round 成数字比较，字符串比较恒为假，
+       所以「四个孩子互不相同」这种约束只能用整数变量表达，再用 sel 换成名字。 */
+    sel: function (i) {
+      var args = Array.prototype.slice.call(arguments, 1);
+      if (!args.length) return 0;
+      var k = Math.round(+i);
+      if (!isFinite(k) || k < 0) k = 0;
+      if (k >= args.length) k = args.length - 1;
+      return args[k];
+    }
   };
 
   function tokenize(src) {

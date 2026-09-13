@@ -131,13 +131,13 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 3. **能用 SVG 模板按变量实时画吗？**
    - **凡题干里带变量的图，必须走这条**（静态原题图数值一变必然对不上）。
    - 模板加 `"diagram": { "type": "...", ... }`，参数写变量名（如 `{"type":"stick","parts":"k"}`）。
-   - 现有 **58** 种类型见 `assets/js/diagrams.js`（`Diagrams.types` 可列出全部名字）：
+   - 现有 **59** 种类型见 `assets/js/diagrams.js`（`Diagrams.types` 可列出全部名字）：
 
      | 类别 | 类型 |
      |---|---|
-     | 计数 / 数数 | `vase` 花瓶、`pens` 笔、`faces` 笑脸、`veggies` 蔬菜阵列、`cardrow` 数字卡片、`domino` 单张骨牌、`dominorow` 骨牌选项、`chest` 存钱罐硬币、`targetboard` 靶盘、`pictograph` 象形统计图 |
-     | 平面 / 立体图形 | `hexagon` 六边形缺边、`house` 房子缺形状、`stickrow` 小棒三角串、`tiling` 方砖、`tilepatch` 补块、`sameshapes` 四个形状找全等、`twoboxes` 两个盒子、`hextile` 六边形密铺、`blockstack` 积木塔(3D)、`giftboxes` 礼物盒(3D)、`solidcubes` 单位小方块(3D) |
-     | 位置 / 方向 | `numberline`、`numline` 数轴箭头（`numline` 只标两端，答案不会印在图上）、`board` 棋盘走子、`boardopt` 棋盘候选格、`bookshelf` 书架取书、`building` 楼层剖面、`standcircle` 围圈轮流数、`housepots` 房子＋花盆＋脚印（按箭头走）、`houses` 一排房子＋树（等距）、`dotfig` 编号点 |
+     | 计数 / 数数 | `vase` 花瓶、`pens` 笔、`faces` 笑脸、`veggies` 蔬菜阵列、`cardrow` 数字卡片、`domino` 单张骨牌、`dominorow` 骨牌选项、`dominomatch` 骨牌配对示范＋待配那张、`chest` 宝箱＋天数表（金币只是装饰，不挂 `data-u="coin"`）、`targetboard` 靶盘、`pictograph` 象形统计图 |
+     | 平面 / 立体图形 | `hexagon` 六边形缺边、`house` 房子缺形状、`stickrow` 小棒三角串、`tiling` 方砖、`tilepatch` 补块、`sameshapes` 四个形状找全等、`twoboxes` 两个盒子、`hexcomb` 六边形密铺（全同色，`pattern` 写每行块数串）、`blockstack` 积木塔(3D)、`giftboxes` 礼物盒(3D)、`solidcubes` 单位小方块(3D) |
+     | 位置 / 方向 | `numberline`、`numline` 数轴箭头（`numline` 只标两端，答案不会印在图上）、`board` 棋盘走子、`boardopt` 棋盘候选格、`bookshelf` 书架取书、`building` 楼层剖面、`standcircle` 围圈轮流数、`housepots` 房子＋花盆＋脚印（按箭头走）、`houses` 一排房子＋树（**间距不等距**，`gaps` 写每段距离的份数串；**名字不许画在图上**，留空名字框让学生推）、`dotfig` 编号点（`given:'close'` 会把已给的 6–1 那条线先画出来） |
      | 时间 / 数据 | `clocks`、`clocksmatch` 钟面列、`digitalclock` 电子钟选项、`weekstrip` 一周七天（Today）、`seasonwheel` 四季圆盘、`weathercard` 天气日期卡、`tallychart`、`tallytable` 划记表、`datatable` 数据表、`barchart` 柱状图 |
      | 规律 / 代数 | `lanterns` 循环灯笼、`patternrow` 形状循环＋问号、`symeq` 图形符号算式、`stick` 小棍分段、`teddyseries` 每组多 2 只、`trianglepuz` 三角形里外数 |
      | 度量 / 钱币 | `papers` 按比例的长方形纸、`squareposts` 围栏柱子、`coins` 硬币面值、`carrow` 一排汽车（长＋间隔）、`areagrid` 方格纸面积、`bottle` 水瓶凹纹（半瓶） |
@@ -286,15 +286,42 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
 
 > 每个图元都要能被**独立验算**：`test-figs.js` 不读模板公式，而是从 SVG 里把
 > `data-u` / `data-kind` / `data-v` / 坐标 / 角度读出来，用另一套算法重推一遍答案。
-> 已经这样验过的例子：Q9 数圆点、Q10 脚印落点读颜色、Q12 由表针角度反推时刻、
-> Q13 箭头落在第几条刻度、Q15 数汽车、Q16 数列/层数、Q17 由图上只数推第 3 组、
-> Q18 数整格＋半格、Q20 读柱高、Q21 数凹纹、Q22 按编号连线的边集、
-> Q23 前三个三角形自洽后补第四个数、Q25 读靶环最高分、Q26 数小汽车×KEY、
-> Q27 用「中心距 = √3R」数邻居、Q29 读门牌顺序、Q30 数硬币。
+> 已经这样验过的例子：Q9 数圆点配对（示范那对总数相同）、Q10 脚印落点读颜色、
+> Q12 由表针角度反推时刻、Q13 刻度等距→每格 =(E−B)/n 且 ≠1、Q15 数汽车、
+> Q16 数列/层数、Q17 由图上只数推第 3 组、Q18 数整格＋半格、Q20 独立算三人个数再读柱高、
+> Q21 数凹纹、Q22 读图上编号→算连线边集（含已给的 6–1 线）、Q23 前三个三角形自洽后补第四个数、
+> Q25 读靶环最高分、Q26 数小汽车×KEY、Q27 用「中心距 = √3R」数邻居、
+> Q29 从图上量到的间距独立解出唯一排法、Q30 读表验证公差 d 后逐天累加。
 > **新加图题时照着这个套路补一条断言**，不要只跑 smoke（那只看坐标合法/无 NaN）。
 
 > 需要机器数元素的图元（小棒、灯笼、划记、卡片、积木层、算式右端…）都加
 > `data-u="xxx"` 标记，`test-figs.js` 靠它做**独立验算**（数出来的数量必须等于数值）。
+> 排列类图形还要把**几何参数**写进标记（如 `data-r/data-c/data-x/data-y`、
+> `data-units`、`data-gap`），这样自检脚本能重算位置关系（邻居、间距、是否重叠）。
+
+### 4.5.5 图形必须"自己立得住"：不重叠、连通、（规律题的）答案随图变
+
+1. **密铺/排列类图形要验几何，不能只看坐标合法。**
+   踩过的坑：`hexcomb`（蜂巢）里相邻两排**块数相同时**，居中摆放会让两块完全对齐叠在一起
+   （点顶六边形同列必须相距 2R，而上下排间距只有 1.5R）→ 图上出现压在一起的六边形，
+   连通性断成两半（10 块只连通 5 块）。
+   **做法**：相邻排的水平错位必须是「半个宽」的奇数倍；块数相差 1 时居中摆放恰好满足
+   （原卷 3-4-3 保持原样），否则补一个 ±w/2（`hexcomb` 已按取模自动补），
+   并按实际范围重新居中、按范围算画布宽（避免裁切）。
+   **自检**：`test-figs.js` 断言「任意两块中心距 ≥ √3·side（不重叠）」＋「图形连通」
+   ＋「每块至少 1 个邻居，不成孤块」。同类图形（积木、圆点阵、卡片阵…）照这个思路验。
+2. **"数一数图上有几个"的题，答案必须由图形本身决定，并且随图形变。**
+   踩过的坑：Q27 的答案原来写成算术式 `cnt = 2*(pi==0)+6*(pi==1)+…`，和图形实际对不上
+   （几何独立算出 4，公式说 8）→ 学生会照着图数字、却和判分不一致。
+   **做法**：每种排布**查表**给答案（`cnt: "sel(ni, 6, 2, 4, 7)"`），图案由同一个 `ni` 决定
+   （`pat: "sel(ni, P0, P1, P2, P3)"`），两者一起变；`test-figs.js` 抽样 240 次，断言
+   「每种排布的几何计数 === 答案」且「四种排布给出四个**不同**答案」
+   （答案不随变式变 = 假变式）。同源教训见下面第 3 条。
+3. **选项是图时，选项的画法必须由变量驱动**（Q9/Q20 踩过）：选项目的内容写死 ⇒
+   每次生成的选项一模一样 ⇒ 答案永远是同一个。正确做法是让选项内容引用变量
+   （`{"type":"dominorow","a":"ma","b":"mb"}`），并且**干扰项也要随变量变**、
+   彼此互不相同（`test-figs.js` 会抽样比对四个选项图两两不同）。
+
 
 ### 4.6 变式检查（每道题**必做**）
 
@@ -310,7 +337,9 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
    图题保留了固定答案。**发现就改，不要靠用户截图来提醒。**
 
 > 想看图形长什么样：`node tools/_preview_figs.js` 会生成 `tools/_figs-preview.html`，
-> 每个配图模板出两个随机变式，肉眼核图用。
+> 每个配图模板出两个随机变式，肉眼核图用。常用参数：
+> `--set=icas21y2m`（只出某一批/某几题的图）、`--times=3`（每题几个变式）、
+> `--inline`（把原题图 base64 内嵌——IDE 预览沙箱里相对路径会 404，交给用户核图时必须加）。
 
 ## 5. 表达式语法（constraints / answer.expr / derived）
 

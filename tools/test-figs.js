@@ -539,25 +539,36 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q5 两个正方形的边长独立算出且相等 ✓ 正确选项点名的正是这两个 ✓');
 }
 
-/* ---------- 21Q9：四张骨牌的点数数出来，最多的那张唯一 ---------- */
+/* ---------- 21Q9：示例那对「总数相同」照图验一遍，再数圆点找和「拿起这张」总数相同的那张 ---------- */
 {
   const t = byId('icas21y2m-09');
-  const LABEL = { zh: ['甲', '乙', '丙', '丁'], en: ['A', 'B', 'C', 'D'] };
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
     const v = q.vars;
-    chk(!q.diagramSvg, '21Q9 不该再有主图（会和正确选项重复）');
+    const exA = q.diagramSvg.match(/data-u="exA" data-a="(\d+)" data-b="(\d+)"/);
+    const exB = q.diagramSvg.match(/data-u="exB" data-a="(\d+)" data-b="(\d+)"/);
+    const pk = q.diagramSvg.match(/data-u="picked" data-a="(\d+)" data-b="(\d+)"/);
+    chk(!!exA && !!exB && !!pk, '21Q9 主图应画出「示范那一对」和「吉姆拿起的这张」');
+    if (!exA || !exB || !pk) continue;
+    /* 规则全靠示范传达：示范那两张的总点数必须相等 */
+    chk(+exA[1] + +exA[2] === +exB[1] + +exB[2],
+      '21Q9 示范那两张应总点数相同：' + exA[1] + '|' + exA[2] + '=' + (+exA[1] + +exA[2]) +
+      '，' + exB[1] + '|' + exB[2] + '=' + (+exB[1] + +exB[2]));
+    chk(/matches/.test(q.diagramSvg), '21Q9 示范两张之间应写 matches');
+    chk(/Jim picked up this domino/.test(q.diagramSvg), '21Q9 应写出 Jim picked up this domino');
+    const P = +pk[1] + +pk[2];
+    chk(P === v.pa + v.pb, '21Q9 图上「拿起的那张」是 ' + pk[1] + '|' + pk[2] + ' = ' + P + '，变量是 ' + v.pa + '|' + v.pb);
+    /* 选项：一个字一个字地数圆点，得到每张的总点数 */
     const sums = (q.optionsSvg || []).map(s => (s.match(/data-u="pip"/g) || []).length);
-    chk(sums.length === 4 && sums.every(x => x > 0), '21Q9 四个骨牌选项应都画出圆点：' + sums.join(','));
-    const mx = Math.max.apply(null, sums);
-    chk(sums.filter(x => x === mx).length === 1, '21Q9 点数最多的一张应唯一：' + sums.join(','));
-    chk(sums[q.correctIndex] === mx, '21Q9 正确选项不是点数最多的那张：' + sums.join(',') + ' 选了 ' + q.correctIndex);
-    chk(mx === v.a + v.b, '21Q9 点数最多的应是 ' + v.a + '|' + v.b + ' 那张 = ' + (v.a + v.b) + ' 点，实际 ' + mx + '（' + sums.join(',') + '）');
-    chk(q.options[q.correctIndex] === LABEL[q.lang === 'en' ? 'en' : 'zh'][0],
-      '21Q9 选中「' + q.options[q.correctIndex] + '」，点数最多的是原来的第 1 张（' + LABEL.zh[0] + '）');
-    chk(sums.filter((x, j) => j !== q.correctIndex).every(x => x <= 6), '21Q9 干扰项点数应都不超过 6：' + sums.join(','));
+    chk(sums.length === 4 && sums.every(x => x > 0), '21Q9 四个骨牌选项都应画出圆点：' + sums.join(','));
+    chk(sums.length === 4 && sums[q.correctIndex] === P,
+      '21Q9 正确选项总点数应为 ' + P + '（和拿起这张一样），实际 ' +
+      (sums[q.correctIndex]) + '（四张 = ' + sums.join(', ') + '）');
+    chk(sums.filter(x => x === P).length === 1, '21Q9 只有一张的总点数等于 ' + P + '：' + sums.join(','));
+    chk(new Set(sums).size === 4, '21Q9 四张骨牌总点数应互不相同（否则有多个正确答案）：' + sums.join(','));
+    chk(sums.every(x => x >= 2 && x <= 12), '21Q9 骨牌总点数应在 2..12 之间：' + sums.join(','));
   }
-  console.log('21Q9 逐张数出圆点数 ✓ 最多的那张唯一且为正确选项 ✓ 无重复主图 ✓');
+  console.log('21Q9 示范那对总数相同 ✓ 逐张数圆点 ✓ 与「拿起这张」总数相同的唯一那张 = 正确选项 ✓');
 }
 
 /* ---------- 21Q10：从图上走到哪盆花，就读哪盆的颜色 ---------- */
@@ -655,7 +666,7 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q12 表针角度独立算出 = 标注时间 ✓ 正确选项 = 1 号钟面 ✓ 四个电子钟互不相同 ✓');
 }
 
-/* ---------- 21Q13：数轴只标两端，箭头落在第 k 格 ---------- */
+/* ---------- 21Q13：数轴按「平均分」独立算每格（考点是等分，不是每格数 1） ---------- */
 {
   const t = byId('icas21y2m-13');
   for (let i = 0; i < REP21; i++) {
@@ -666,18 +677,28 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
     const labels = mAll(q.diagramSvg, /<text[^>]*font-size="19"[^>]*>(\d+)<\/text>/g).map(m => +m[1]);
     chk(labels.length === 2, '21Q13 数轴上只应标出两端两个数（多标就等于把答案写出来），实际 ' + labels.length + ' 个：' + labels.join(','));
     chk(labels[0] === v.B && labels[1] === v.E, '21Q13 两端应标 ' + v.B + ' / ' + v.E + '，实际 ' + labels.join(' / '));
-    chk(v.E - v.B === 10, '21Q13 数轴跨度应为 10，实际 ' + (v.E - v.B));
-    chk((v.E - v.B) % v.n === 0, '21Q13 每格不是整数：10 / ' + v.n);
+    /* 图上刻度必须真的等距，否则「平均分」这条信息读不出来 */
+    const ds = ticks.slice(1).map((x, j) => x - ticks[j]);
+    chk(ds.every(d => Math.abs(d - ds[0]) < 0.05), '21Q13 刻度间距不等，读不出「平均分」：' + ds.map(d => d.toFixed(1)).join(','));
+    const span = v.E - v.B;
+    chk(span % v.n === 0, '21Q13 ' + v.E + ' − ' + v.B + ' = ' + span + ' 不能被 ' + v.n + ' 整除');
+    const step = span / v.n;
+    chk(step === v.s, '21Q13 每格应为 ' + v.s + '，实际 ' + step);
+    chk(step !== 1, '21Q13 每格正好是 1 个单位，考不出「平均分」（原题每格不是 1）');
     const arrow = q.diagramSvg.match(/<line data-u="arrow" data-k="(\d+)" x1="([\d.]+)"/);
     chk(!!arrow, '21Q13 图上缺少箭头');
     chk(+arrow[1] === v.k, '21Q13 箭头在第 ' + arrow[1] + ' 格，变量 k=' + v.k);
-    chk(Math.abs(+arrow[2] - ticks[v.k]) < 1.5, '21Q13 箭头没落在第 ' + v.k + ' 条刻度上（箭头 x=' + arrow[2] + '，刻度 x=' + ticks[v.k] + '）');
-    const step = (v.E - v.B) / v.n;
-    chk(String(q.options[q.correctIndex]) === String(v.B + v.k * step),
-      '21Q13 答案 ' + q.options[q.correctIndex] + ' 应为 ' + (v.B + v.k * step) + '（' + v.B + ' + ' + v.k + '×' + step + '）');
+    chk(Math.abs(+arrow[2] - ticks[v.k]) < 0.01, '21Q13 箭头没落在第 ' + v.k + ' 条刻度上（箭头 x=' + arrow[2] + '，刻度 x=' + ticks[v.k] + '）');
+    const ans = v.B + v.k * step;
+    chk(String(q.options[q.correctIndex]) === String(ans),
+      '21Q13 答案 ' + q.options[q.correctIndex] + ' 应为 ' + v.B + ' + ' + v.k + '×' + step + ' = ' + ans);
     chk(new Set(q.options.map(String)).size === 4, '21Q13 四个选项应互不相同：' + q.options.join(','));
+    /* 「一格数 1」这个学生最容易犯的错，必须做成干扰项，而且不能碰巧等于正确答案 */
+    const opts = q.options.map(String);
+    chk(opts.indexOf(String(v.B + v.k)) >= 0, '21Q13 应把「每格数 1」的答案 ' + (v.B + v.k) + ' 做成干扰项：' + opts.join(','));
+    chk(String(v.B + v.k) !== String(ans), '21Q13 干扰项「每格数 1」和正确答案撞了：' + ans);
   }
-  console.log('21Q13 只标两端 ✓ 箭头落在第 k 条刻度 ✓ 答案 = B + k×每格 ✓');
+  console.log('21Q13 刻度等距 ✓ 每格 = (E−B)/n 且 ≠ 1 ✓ 箭头落在第 k 格 ✓ 答案 = B + k×每格 ✓');
 }
 
 /* ---------- 21Q14：从两个盒子里拿，哪一对根本拿不到 ---------- */
@@ -785,26 +806,35 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q18 从图上数整格+半格 ✓ 最小面积唯一 ✓ 与正确选项一致 ✓');
 }
 
-/* ---------- 21Q20：四张柱状图，只有一张的三根柱高都对 ---------- */
+/* ---------- 21Q20：先自己把三个数算出来，再逐张读柱高 ---------- */
 {
   const t = byId('icas21y2m-20');
+  const NAMES = ['Tim', 'David', 'Amy'];
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
     const v = q.vars;
-    chk(!q.diagramSvg, '21Q20 不该再有主图（会和正确选项重复）');
+    chk(!q.diagramSvg, '21Q20 不该再有主图（会和正确选项重复，等于把答案摆在眼前）');
+    /* 独立算：David = dv；Amy = David 的 kk 倍；Tim 比 Amy 多 mm */
+    const dv = v.dv, amy = dv * v.kk, tim = amy + v.mm;
+    chk(amy !== dv && tim !== amy && tim !== dv, '21Q20 三个人摘的个数应互不相同：' + tim + '/' + dv + '/' + amy);
     const bars = (q.optionsSvg || []).map(s => mAll(s, /<rect data-u="bar" data-v="([\d.]+)"/g).map(m => +m[1]));
     chk(bars.length === 4 && bars.every(b => b.length === 3), '21Q20 每个选项应有 3 根柱子');
-    const want = [v.v1, v.v2, v.v3];
+    const names = (q.optionsSvg || []).map(s => mAll(s, /<text[^>]*y="147"[^>]*>(\w+)<\/text>/g).map(m => m[1]));
+    chk(names.length === 4 && names.every(n => n.join(',') === NAMES.join(',')),
+      '21Q20 每张图柱子的次序都应是 Tim / David / Amy：' + JSON.stringify(names));
+    const want = [tim, dv, amy];
     const hit = bars.map((b, j) => b.join(',') === want.join(',') ? j : -1).filter(j => j >= 0);
-    chk(hit.length === 1, '21Q20 应恰好有一张柱状图的三根柱高 = ' + want.join(',') + '，实际 ' + hit.length + '（' + bars.map(b => b.join('|')).join(' / ') + '）');
-    chk(hit[0] === q.correctIndex, '21Q20 正确的那张是选项 ' + hit[0] + '，模板选了 ' + q.correctIndex);
-    const uniq = new Set(bars.map(b => b.join(',')));
-    chk(uniq.size === 4, '21Q20 四张图应互不相同：' + bars.map(b => b.join('|')).join(' / '));
-    chk(/Tim/.test((q.optionsSvg || []).join('')) && /David/.test((q.optionsSvg || []).join('')) && /Amy/.test((q.optionsSvg || []).join('')),
-      '21Q20 选项图上应用原卷人名 Tim / David / Amy');
-    chk(!/[\u4e00-\u9fff]/.test((q.optionsSvg || []).join('')), '21Q20 选项图里出现了中文');
+    chk(hit.length === 1, '21Q20 应恰好有一张图的柱高 = 算出来的 ' + want.join(',') + '，实际 ' + hit.length +
+      '（' + bars.map(b => b.join('|')).join(' / ') + '）');
+    chk(hit.length === 1 && hit[0] === q.correctIndex, '21Q20 柱高全对的是选项 ' + hit[0] + '，模板选了 ' + q.correctIndex);
+    chk(new Set(bars.map(b => b.join(','))).size === 4, '21Q20 四张图应互不相同：' + bars.map(b => b.join('|')).join(' / '));
+    chk(Math.max(tim, amy, dv) <= v.ax, '21Q20 最高的柱子 ' + Math.max(tim, amy, dv) + ' 超出纵轴上限 ' + v.ax);
+    const all = (q.optionsSvg || []).join('');
+    NAMES.forEach(n => chk(all.indexOf(n) >= 0, '21Q20 选项图上应出现原卷人名 ' + n));
+    chk(all.indexOf('Number of apples') >= 0, '21Q20 纵轴应标原卷英文 Number of apples');
+    chk(!/[\u4e00-\u9fff]/.test(all), '21Q20 选项图里出现了中文');
   }
-  console.log('21Q20 逐张读柱高 ✓ 只有一张三根柱都对 ✓ 四张互不相同 ✓');
+  console.log('21Q20 独立算出 David/Amy/Tim 的个数 ✓ 只有一张柱高全对 ✓ 四张互不相同 ✓');
 }
 
 /* ---------- 21Q21：数瓶颈上的凹纹，水面正好在半瓶 ---------- */
@@ -826,7 +856,7 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q21 从图上数凹纹定总格数 ✓ 恰好一瓶水面在半瓶 ✓');
 }
 
-/* ---------- 21Q22：按编号连线的图，和干扰项比对 ---------- */
+/* ---------- 21Q22：从图上读编号位置，独立算出「按 1→2→…→6 连线」的边集 ---------- */
 {
   const t = byId('icas21y2m-22');
   const ed = s => mAll(s, /<line data-u="edge" x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/g)
@@ -839,18 +869,28 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
     chk(dots.length === 6, '21Q22 图上应有 6 个编号点，实际 ' + dots.length);
     chk(new Set(dots.map(d => d.n)).size === 6, '21Q22 编号应 1..6 各一个：' + dots.map(d => d.n).join(','));
     const pos = [];
-    for (let n2 = 1; n2 <= 6; n2++) { const d = dots.find(x => x.n === n2); pos.push([d.x, d.y].join()); }
+    for (let n2 = 1; n2 <= 6; n2++) { const d = dots.find(x => x.n === n2); if (d) pos[n2 - 1] = [d.x, d.y].join(); }
+    chk(pos.length === 6 && pos.every(Boolean), '21Q22 有编号对不上位置');
+    /* 图上已经画好的那条线必须是 6–1（题干说的「这条已经画好」） */
+    const gv = q.diagramSvg.match(/<line data-u="given" data-a="1" data-b="6" x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/);
+    chk(!!gv, '21Q22 图上应先把 6–1 那条线画好');
+    if (gv) {
+      const ga = [(+gv[1]).toFixed(1), (+gv[2]).toFixed(1)].join(), gb = [(+gv[3]).toFixed(1), (+gv[4]).toFixed(1)].join();
+      chk([ga, gb].sort().join('>') === [pos[0], pos[5]].sort().join('>'),
+        '21Q22 那条已画好的线不是连在编号 1 和 6 上的');
+    }
+    /* 按编号 1→2→…→5→6 再加 6→1，算出应有的 6 条边 */
     const want = [];
     for (let k = 0; k < 6; k++) want.push([pos[k], pos[(k + 1) % 6]].sort().join('>'));
     want.sort();
     const got = (q.optionsSvg || []).map(ed);
     chk(got.length === 4, '21Q22 应有 4 个选项图');
     const hit = got.map((g, j) => g.join('|') === want.join('|') ? j : -1).filter(j => j >= 0);
-    chk(hit.length === 1, '21Q22 应恰好有一个选项是按编号 1→2→…→6→1 连出来的，实际 ' + hit.length);
-    chk(hit[0] === q.correctIndex, '21Q22 按编号连出来的是选项 ' + hit[0] + '，模板选了 ' + q.correctIndex);
+    chk(hit.length === 1, '21Q22 应恰好有一个选项是按图上编号连出来的，实际 ' + hit.length);
+    chk(hit.length === 1 && hit[0] === q.correctIndex, '21Q22 按编号连出来的是选项 ' + hit[0] + '，模板选了 ' + q.correctIndex);
     chk(new Set(got.map(g => g.join('|'))).size === 4, '21Q22 四个选项的连线应互不相同（否则有多个正确答案）');
   }
-  console.log('21Q22 按编号顺序连线的图形独立算出 ✓ 唯一命中正确选项 ✓ 四选项互不相同 ✓');
+  console.log('21Q22 从图上读编号位置 ✓ 已给的 6–1 线对得上 ✓ 唯一命中「按编号连线」的选项 ✓');
 }
 
 /* ---------- 21Q23：前三个三角形验证规律，第四个自己补 ---------- */
@@ -913,71 +953,166 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q26 数图上小汽车个数 ✓ 读 KEY 的倍数 ✓ 相乘得答案 ✓');
 }
 
-/* ---------- 21Q27：六边形密铺 —— 用「中心距 = √3R」独立数邻居 ---------- */
+/* ---------- 21Q27：蜂巢密铺 —— 用「中心距 = √3·R」独立重建邻接关系，数只接 3 个的块 ---------- */
 {
   const t = byId('icas21y2m-27');
+  const parse = svg => mAll(svg,
+    /<polygon data-u="hex" data-r="(\d+)" data-c="(\d+)" data-x="([\d.]+)" data-y="([\d.]+)" points="([^"]+)" fill="([^"]+)"/g)
+    .map(m => {
+      const pts = m[5].split(' ').map(p => p.split(',').map(Number));
+      return { r: +m[1], c: +m[2], x: +m[3], y: +m[4],
+               R: Math.hypot(pts[0][0] - +m[3], pts[0][1] - +m[4]), fill: m[6] };
+    });
+  /* 两块共用一条边 ⇔ 中心距 = √3·R */
+  const adjOf = hex => {
+    const step = Math.sqrt(3) * hex[0].R;
+    return hex.map(h => hex.filter(o => o !== h && Math.abs(Math.hypot(o.x - h.x, o.y - h.y) - step) < 1.0));
+  };
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
-    const hex = mAll(q.diagramSvg, /<polygon data-u="hex" data-hl="(\d)" data-cx="([\d.]+)" data-cy="([\d.]+)" points="([^"]+)"/g)
-      .map(m => {
-        const pts = m[4].split(' ').map(p => p.split(',').map(Number));
-        const R = Math.hypot(pts[0][0] - +m[2], pts[0][1] - +m[3]);
-        return { hl: +m[1], cx: +m[2], cy: +m[3], R: R };
-      });
-    chk(hex.length >= 9, '21Q27 图上六边形太少：' + hex.length);
-    const hl = hex.filter(h => h.hl === 1);
-    chk(hl.length === 1, '21Q27 应恰好涂色一个六边形，实际 ' + hl.length);
-    const C = hl[0];
-    chk(hex.filter(h => h.hl !== 1).every(h => h.R > 0), '21Q27 六边形顶点解析异常');
-    const step = Math.sqrt(3) * C.R;                     /* 共用一条边的邻居中心距 */
-    const nb = hex.filter(h => h !== C && Math.abs(Math.hypot(h.cx - C.cx, h.cy - C.cy) - step) < 1.2);
-    chk(nb.length === q.value, '21Q27 图上与涂色块共用一条边的有 ' + nb.length + ' 个，模板答案 ' + q.value);
-    chk(q.value === q.vars.cnt, '21Q27 答案应等于 cnt 变量：' + q.value + ' vs ' + q.vars.cnt);
-    /* 其余六边形不能也和它共用边（否则数漏了） */
-    const near = hex.filter(h => h !== C && Math.abs(Math.hypot(h.cx - C.cx, h.cy - C.cy) - step) < 4);
-    chk(near.length === nb.length, '21Q27 有六边形处在「边缘距离」上，判定阈值不够稳：' + near.length);
+    const hex = parse(q.diagramSvg);
+    chk(hex.length >= 6, '21Q27 图上六边形太少：' + hex.length);
+    /* 原题是「同色密铺」，不能把某一块涂色 —— 涂了就变成「数涂色块的邻居」这道完全不同的题 */
+    chk(new Set(hex.map(h => h.fill)).size === 1,
+      '21Q27 六边形必须全部同色，实际有 ' + new Set(hex.map(h => h.fill)).size + ' 种颜色：' + hex.map(h => h.fill).filter((f, j, a) => a.indexOf(f) === j).join(','));
+    chk(hex.every(h => Math.abs(h.R - hex[0].R) < 0.05), '21Q27 六边形大小应完全一致');
+    const rows = {};
+    hex.forEach(h => rows[h.r] = (rows[h.r] || 0) + 1);
+    const rowKeys = Object.keys(rows).map(Number).sort((a, b) => a - b);
+    chk(rowKeys.length >= 2, '21Q27 至少要有两行才拼得成蜂巢：' + rowKeys.join(','));
+    rowKeys.forEach(r => chk(rows[r] >= 1, '21Q27 第 ' + r + ' 行是空的'));
+    const adj = adjOf(hex), nb = adj.map(a => a.length);
+    chk(nb.every(v => v <= 6), '21Q27 一个六边形最多只能和 6 个相接：' + nb.join(','));
+    chk(nb.every(v => v >= 1), '21Q27 有六边形孤零零没和任何一块相接，不成一坨：' + nb.join(','));
+    /* 连通性：从第 1 块出发能不能走到所有块 */
+    const vis = [0], stk = [0];
+    while (stk.length) {
+      const k = stk.pop();
+      adj[k].forEach(o => { const j = hex.indexOf(o); if (vis.indexOf(j) < 0) { vis.push(j); stk.push(j); } });
+    }
+    chk(vis.length === hex.length, '21Q27 图形不连通（有块飘在外面）：' + vis.length + '/' + hex.length);
+    const only3 = nb.filter(v => v === 3).length;
+    chk(only3 === q.value, '21Q27 图上只和 3 个相接的六边形有 ' + only3 + ' 个，模板答案 ' + q.value +
+      '（每块邻居数 ' + nb.join(',') + '）');
+    /* 判定要稳：不能有块落在「共边距离」和「同排隔一块」之间的模糊带上 */
+    const amb = [], step = Math.sqrt(3) * hex[0].R, R = hex[0].R;
+    hex.forEach(h => hex.forEach(o => {
+      if (o === h) return;
+      const d = Math.hypot(o.x - h.x, o.y - h.y);
+      if (d > step + 1 && d < 2 * R - 1) amb.push(d);
+    }));
+    chk(!amb.length, '21Q27 有六边形落在模糊距离带上，邻居判定不稳：' + amb.slice(0, 3).map(v => v.toFixed(1)).join(','));
+    const hist = {};
+    nb.forEach(v => hist[v] = (hist[v] || 0) + 1);
+    chk(Object.keys(hist).length >= 2, '21Q27 所有六边形的邻居数都一样，题目没有区分度：' + JSON.stringify(hist));
   }
-  console.log('21Q27 用中心距 = √3R 独立数出共用边的邻居数 ✓ 与答案一致 ✓');
+  /* 变式抽查：每种排布 → 答案必须对得上，而且四种排布要给出四个不同答案
+     （否则「换个变式答案还是同一个」，等于没变） */
+  const P2A = {};
+  for (let i = 0; i < 240; i++) {
+    const q = Generator.instantiate(t);
+    const hex = parse(q.diagramSvg);
+    const geom = adjOf(hex).map(a => a.length).filter(v => v === 3).length;
+    const pat = q.vars.pat;
+    chk(geom === q.value, '21Q27 排布 ' + pat + ' 的图上只有 ' + geom + ' 块只接 3 个，答案却是 ' + q.value);
+    if (P2A[pat] === undefined) P2A[pat] = q.value;
+    else chk(P2A[pat] === q.value, '21Q27 同一排布 ' + pat + ' 给出了不同答案：' + P2A[pat] + ' / ' + q.value);
+  }
+  const pats = Object.keys(P2A);
+  chk(pats.length === 4, '21Q27 应有 4 种排布，实际 ' + pats.length + '：' + pats.join(' '));
+  chk(new Set(pats.map(p => P2A[p])).size === 4,
+    '21Q27 四种排布必须给出四个不同答案：' + pats.map(p => p + '→' + P2A[p]).join('，'));
+  chk(P2A['343'] === 6, '21Q27 原卷那个 3-4-3 的图形应得 6（原卷选项 4/6/7/8 里正解就是 6），实际 ' + P2A['343']);
+  console.log('21Q27 全同色密铺 ✓ 中心距 √3R 独立重建邻接 ✓ 只接 3 个的块数 = 答案 ✓ 四种排布答案互不相同 ✓');
 }
 
-/* ---------- 21Q29：从左到右读门牌，就是从离树最近排到最远 ---------- */
+/* ---------- 21Q29：房子**不等距** —— 用图上量到的位置独立解出唯一排序 ---------- */
 {
   const t = byId('icas21y2m-29');
+  const NAMES4 = ['Pete', 'Sita', 'Lin', 'Ben'];
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
-    const houses = mAll(q.diagramSvg, /<g data-u="house" data-name="([^"]+)" data-i="(\d+)">/g)
-      .map(m => ({ name: m[1], i: +m[2] })).sort((a, b) => a.i - b.i);
-    chk(houses.length === 4, '21Q29 图上应有 4 栋房子，实际 ' + houses.length);
-    chk(new Set(houses.map(h => h.name)).size === 4, '21Q29 四个名字应各不相同：' + houses.map(h => h.name).join(','));
-    const tree = q.diagramSvg.match(/<g data-u="tree">([\s\S]*?)<\/g>/);
-    chk(!!tree, '21Q29 图上缺少大树');
-    const wallX = mAll(q.diagramSvg, /<g data-u="house"[^>]*><rect x="([\d.]+)"/g).map(m => +m[1]);
-    const treeCx = mAll(tree[1], /<circle cx="([\d.]+)"/g).map(m => +m[1]);
-    const tcx = treeCx.reduce((a, b) => a + b, 0) / treeCx.length;
-    chk(treeCx.length === 3 && tcx < Math.min.apply(null, wallX), '21Q29 大树应在最左边（树 x=' + tcx + '，最左的墙 x=' + Math.min.apply(null, wallX) + '）');
-    /* 等距标注：三段一样长的双箭头 */
-    chk((q.diagramSvg.match(/stroke="#b9bec7" stroke-width="1.6"/g) || []).length >= 3, '21Q29 图上应画出三段等距标注');
-    const want = houses.map(h => h.name).join(', ');
-    chk(String(q.options[q.correctIndex]) === want,
-      '21Q29 从左到右是 ' + want + '，选中「' + q.options[q.correctIndex] + '」');
+    const v = q.vars;
+    const hp = mAll(q.diagramSvg, /<g data-u="house" data-i="(\d+)" data-x="([\d.]+)"/g).map(m => ({ i: +m[1], x: +m[2] }));
+    chk(hp.length === 4, '21Q29 图上应有 4 栋房子，实际 ' + hp.length);
+    const gp = mAll(q.diagramSvg, /<line data-u="gap" data-i="(\d+)" data-units="(\d+)"/g).map(m => ({ i: +m[1], u: +m[2] }));
+    chk(gp.length === 3, '21Q29 图上应画出 3 段间距，实际 ' + gp.length);
+    /* 名字绝不能画在图上（写了就等于把答案印出来）——原卷是让学生把名字拖进去 */
+    NAMES4.forEach(n => chk(q.diagramSvg.indexOf(n) < 0, '21Q29 图上不能出现名字，却写了 ' + n));
+    chk((q.diagramSvg.match(/data-u="namebox"/g) || []).length === 4, '21Q29 应留出 4 个空名字框');
+    /* 图上量到的间距必须和 data-units 成正比，否则「宽的那段」读不出来 */
+    const wall = 52, unit = 38, ds = [], us = [];
+    for (let j = 0; j < 3; j++) { ds.push(hp[j + 1].x - hp[j].x - wall); us.push(gp[j].u); }
+    chk(ds.every((d, j) => Math.abs(d - us[j] * unit) < 0.6),
+      '21Q29 图上间距和标称份数不成比例：' + ds.map((d, j) => d.toFixed(0) + 'px/' + us[j] + '份').join(' '));
+    chk(new Set(us).size > 1, '21Q29 三段间距的份数应不完全相同（原题就是不等距的）：' + us.join(','));
+    /* 大树必须站在最宽的那段空隙里 —— 这是「哪一头宽」的唯一线索 */
+    const tg = +(q.diagramSvg.match(/<g data-u="tree" data-gap="(\d+)"/) || [])[1];
+    const widest = us.indexOf(Math.max.apply(null, us));
+    chk(tg === widest, '21Q29 大树应站在最宽的那段（第 ' + widest + ' 段），实际站在第 ' + tg + ' 段');
+    /* 独立解：把四栋房子从 0 起按份数排开，1 份 = u 步，穷举 24 种安排，要求解唯一 */
+    const cum = [0];
+    for (let j = 0; j < 3; j++) cum.push(cum[j] + us[j]);
+    const k1 = v.U1 / v.u, k2 = v.U2 / v.u;
+    chk(Number.isInteger(k1) && Number.isInteger(k2), '21Q29 步数不是 u 的整数倍：U1=' + v.U1 + ', U2=' + v.U2 + ', u=' + v.u);
+    const kids = [v.X, v.Y, v.Z, v.W];
+    const all = [];
+    const walk = (rest, cur) => {
+      if (!rest.length) { all.push(cur.slice()); return; }
+      rest.forEach((n, j) => walk(rest.filter((x, k) => k !== j), cur.concat([n])));
+    };
+    walk(kids, []);
+    const ok = all.filter(a => {
+      const at = n => cum[a.indexOf(n)];                     /* 住在第 j 栋 → 坐标 cum[j]（单位：份） */
+      return Math.abs(at(v.X) - at(v.Z)) === k1 && Math.abs(at(v.Y) - at(v.Z)) === k1 &&
+             Math.abs(at(v.Z) - at(v.W)) === k2 && Math.abs(at(v.Y) - at(v.W)) === k2;
+    });
+    chk(ok.length === 1, '21Q29 按图上间距解出的排法有 ' + ok.length + ' 种（应唯一）：' +
+      ok.map(a => a.join(',')).join(' | ') + '（份数 ' + us.join('') + '，U1=' + v.U1 + '，U2=' + v.U2 + '，u=' + v.u + '）');
+    if (ok.length === 1) {
+      chk(String(q.options[q.correctIndex]) === ok[0].join(', '),
+        '21Q29 独立推出 ' + ok[0].join(', ') + '，选中「' + q.options[q.correctIndex] + '」');
+    }
     chk(new Set(q.options.map(String)).size === 4, '21Q29 四个选项应互不相同：' + q.options.join(' | '));
   }
-  console.log('21Q29 树在最左 + 门牌顺序独立读出 ✓ 与正确选项一致 ✓');
+  console.log('21Q29 名字未画在图上 ✓ 间距不等距 + 大树在宽段 ✓ 距离条件解唯一 = 正确选项 ✓');
 }
 
-/* ---------- 21Q30：图上硬币数必须和题干里的枚数一致 ---------- */
+/* ---------- 21Q30：等差数列 —— 读表验证「每天多 d 枚」，再逐天累加 ---------- */
 {
   const t = byId('icas21y2m-30');
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
     const v = q.vars;
-    const coins = (q.diagramSvg.match(/data-u="coin"/g) || []).length;
-    chk(coins === v.a, '21Q30 图上画了 ' + coins + ' 枚硬币，题干说已经有 ' + v.a + ' 枚');
-    chk(v.a + v.d * v.days === v.T, '21Q30 ' + v.a + ' + ' + v.d + '×' + v.days + ' 应等于 ' + v.T);
-    chk(q.value === v.days, '21Q30 答案 ' + q.value + ' 应为天数 ' + v.days);
-    chk(Number.isInteger((v.T - v.a) / v.d), '21Q30 （T − a）÷ d 不是整数：' + (v.T - v.a) + ' / ' + v.d);
+    /* 宝箱上的金币只是装饰，不能挂标记（挂了就会被当成条件去数） */
+    chk(!/data-u="coin"/.test(q.diagramSvg), '21Q30 宝箱上的金币只是装饰，不该挂 coin 标记');
+    chk(/Day/.test(q.diagramSvg), '21Q30 表头应有 Day');
+    chk(/Number of gold pieces taken out/.test(q.diagramSvg), '21Q30 表头应有 Number of gold pieces taken out');
+    chk(!/[\u4e00-\u9fff]/.test(q.diagramSvg), '21Q30 配图里出现了中文');
+    const cells = {};
+    mAll(q.diagramSvg, /<text data-u="cell" data-r="(\d+)" data-c="(\d+)"[^>]*>([^<]*)<\/text>/g)
+      .forEach(m => { cells[m[1] + '-' + m[2]] = m[3]; });
+    chk(Object.keys(cells).length === 6, '21Q30 表格应是 3 天 × 2 列 = 6 格，实际 ' + Object.keys(cells).length);
+    const t1 = +cells['0-1'], t2 = +cells['1-1'], t3 = +cells['2-1'];
+    chk(t1 === v.a, '21Q30 表里第 1 天取 ' + t1 + ' 枚，应等于 a=' + v.a);
+    chk(t2 - t1 === v.d, '21Q30 第 2 天比第 1 天多 ' + (t2 - t1) + ' 枚，应为 d=' + v.d);
+    chk(t3 - t2 === v.d, '21Q30 第 3 天比第 2 天多 ' + (t3 - t2) + ' 枚，应为 d=' + v.d);
+    chk(v.d >= 1, '21Q30 每天多取的枚数 d 必须为正（否则不是「越来越多」）');
+    /* 独立累加：每天取 a、a+d、a+2d……，看哪天累计正好等于 T */
+    let sum = 0, day = 0, hitDay = -1;
+    while (day < 80) {
+      day++; sum += v.a + (day - 1) * v.d;
+      if (sum >= v.T) { hitDay = (sum === v.T ? day : -1); break; }
+    }
+    chk(hitDay === v.n, '21Q30 逐天累加：第 ' + hitDay + ' 天正好取空 ' + v.T + ' 枚，模板答案 ' + v.n);
+    chk(v.T === v.n * v.a + v.d * v.n * (v.n - 1) / 2, '21Q30 T 应等于等差前 ' + v.n + ' 项和：' + v.T);
+    chk(Number.isInteger(v.T) && v.T > 0, '21Q30 T 不是正整数：' + v.T);
+    chk(q.value === v.n, '21Q30 答案 ' + q.value + ' 应为天数 ' + v.n);
+    /* 若按「每天都取一样多」算，天数不同 —— 说明题目真的在考等差 */
+    const flat = v.T / v.a;
+    chk(!Number.isInteger(flat) || flat !== v.n, '21Q30 按「每天取 a 枚」也能整除得同一天数，考不出等差');
   }
-  console.log('21Q30 图上硬币数 = 题干枚数 ✓ a + d×days = T ✓');
+  console.log('21Q30 表里是等差数列（公差 d）✓ 逐天累加恰好第 n 天取空 ✓ 金币不被当条件 ✓');
 }
 
 /* ---------- 选项图形两两不同（否则等于有两个正确答案）---------- */
@@ -1001,13 +1136,20 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   const CASES = [
     ['icas21y2m-03', ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Today']],
     ['icas21y2m-04', ['Kate', 'Pete']],
+    ['icas21y2m-09', ['matches', 'Jim picked up this domino.']],
     ['icas21y2m-10', ['red', 'blue', 'green', 'yellow', 'walk this way']],
     ['icas21y2m-14', ['Box 1', 'Box 2']],
     ['icas21y2m-15', ['5 cm', '2 cm']],
     ['icas21y2m-17', ['Shape 1', 'Shape 2']],
     ['icas21y2m-20', ['Tim', 'David', 'Amy', 'Number of apples']],
     ['icas21y2m-26', ['KEY', 'Red', 'Green', 'Blue', 'cars']],
-    ['icas21y2m-29', ['Sita', 'Ben', 'Lin', 'Pete']]
+    ['icas21y2m-30', ['Day', 'Number of gold pieces taken out']],
+    /* 这几道题的图里只有数字/几何图形，没有文字 —— 只查「不许出现中文」
+       （Q29 的人名必须**不**出现在图上，已在上面单列校验） */
+    ['icas21y2m-13', []],
+    ['icas21y2m-22', []],
+    ['icas21y2m-27', []],
+    ['icas21y2m-29', []]
   ];
   CASES.forEach(([id, words]) => {
     const t = byId(id);

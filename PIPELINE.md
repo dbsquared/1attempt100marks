@@ -341,6 +341,52 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
 > `--set=icas21y2m`（只出某一批/某几题的图）、`--times=3`（每题几个变式）、
 > `--inline`（把原题图 base64 内嵌——IDE 预览沙箱里相对路径会 404，交给用户核图时必须加）。
 
+### 4.7 「原题模式」的数据：`original` 字段
+
+组卷界面有个「原题」勾选框：勾上后**不抽数**，直接用原卷那一道题的数值渲染（答案固定，仍可自动判分、
+照常进错题本）。支撑它的就是模板上的 `original` 字段：
+
+```json
+"original": { "n": 4, "k": 7 }        // 变量名 → 原卷上的原始取值
+```
+
+**每道真题模板都要补这一项**，写在 `data/imports/批次名.json` 里（照 §8 入库）。
+补录规则（顺序不能跳）：
+
+1. **逐题打开原卷扫描图**（`assets/originals/<批次>y2m-qNN.png`）读出每个变量的原始取值，
+   再用官方 Answer Sheet 反查、消歧。**不许凭答案倒推一个「差不多」的数**。
+2. 有些变量是**内部下标/枚举**（`bidx` / `perm` / `s0` / `n0` / `i1..i4` / `seed` / `xa` 等）：
+   **先读该题的 `answer.options` / `answer.optionsSvg` 顺序**，再决定下标取几号。
+3. 数值必须**满足模板自己的 `constraints`**（原题模式不会替你校验，`test-original.js` 会）。
+4. 实例化后的**答案必须等于官方答案**。做不到的（模板问法或图形与原卷不同构）
+   **宁可这条不写 `original`** —— 原题模式下会自动跳过该题，**缺一道题可以，出一张答案对不上的
+   「原题卷」不行**。
+5. 光看小图数不清时，用 Python 从 PNG 里直接量化（例：`.workbuddy/tmp/q9pips*.py` 数骨牌点数、
+   `q24grid.py` 抽棋盘格颜色、`q21lan.py` 抽灯笼颜色序列）——比肉眼可靠得多。
+
+校验与核对（改完必跑）：
+
+```bash
+node tools/test-original.js                        # 逐题比官方答案 + 比约束；打印未收录清单
+node tools/_preview_original.js --inline           # 生成 tools/_original-preview.html（左原卷右生成）
+node tools/_preview_original.js --set=icas21y2m --inline
+```
+
+**已经踩过的坑（别再退回旧理解）**：
+
+- 模板里有相当一部分是「**同思路、换情境**」的变式（2021 Q19 原卷是读书剩页数、模板换成铅笔；
+  Q28 原卷是公交车座位、模板换成小鸟；Q25 原卷是混合环数、模板改成「全中 5 分环 + 奖励 - 罚分」）。
+  这类题照「答案与原卷一致」定值即可，但**题干情境不等于原卷原文**，属于已知取舍。
+- **未收录**（模板与原卷不同构，用原题数值会得到错误答案）：
+  - `icas22y2m-13a/-13b` 原卷答案是 `G`（第 0 层），而 13a 只问「地面上第几层」、13b 只问「地面下第几层」，
+    两者都到不了 0；
+  - `icas22y2m-21` 原卷灯笼是 **7 色循环** `YGBYRBB`（第 13/14 个 = blue, yellow），模板是 4 色循环；
+  - `icas21y2m-16` 原卷立体 **8 块**，模板的 `solidcubes` 模型最小 21 块；
+  - `icas21y2m-26` 原卷问「绿色车几辆」，模板问「一共几辆」。
+- `icas21y2m-09` 原卷：示范对 `5|2` 与 `6|1`（都等于 7），Jim 拿到 `5|4`，答案是 `6|3`。
+  模板的正确项固定是 `(pa-1, pb+1)`，所以要把 `pa` 取成「原卷答案的一半」才能两边都对上：
+  `pa=4, pb=5` → 出题画 `4|5`（原卷的 `5|4`）、正确项 `3|6`（原卷的 `6|3`）。
+
 ## 5. 表达式语法（constraints / answer.expr / derived）
 
 - 运算：`+ - * / % ^`（`^` 为乘方），比较 `== != < <= > >=`，逻辑 `&& || !`
@@ -366,6 +412,7 @@ spec 里直接写变量名即可，diagrams 会按当前变量重算。
 node tools/test-bank.js                       # 全库自检（生成/判分/配图/变式四道闸门）
 node tools/test-bank.js data/imports/xx.json  # 只检新批次
 node tools/test-figs.js                       # 配图语义的独立交叉验算（2022 + 2021 两批都在里面）
+node tools/test-original.js                   # 「原题模式」数值自检（答案 + 约束），见 §4.7
 node tools/test-srs.js && node tools/test-sync.js
 ```
 
@@ -402,10 +449,27 @@ Q10 花盆下的空方框没有标注、Q9 干扰骨牌会取到 `0|0` 空白牌
 ## 8. 入库与发布
 
 1. 把新模板追加进 `data/question-bank.json` 的 `templates` 数组（或放进 `data/imports/批次名.json`）。
-2. `node tools/test-bank.js` 通过。
-3. `git add -A && git commit -m "题库：新增 XX 真题模板 N 条"`
-4. `GIT_TERMINAL_PROMPT=0 git push origin main`（**必须**加 `GIT_TERMINAL_PROMPT=0`，否则凭据冲突会挂住）
-5. GitHub Pages 约 30–60 秒后生效：<https://dbsquared.github.io/1attempt100marks/>
+   **改模板必须同时改 `data/imports/*.json` 和 `data/question-bank.json`** ——
+   `node tools/merge-bank.js` 会用 imports 覆盖前者，只改一处下次 merge 就回滚。
+2. `node tools/test-bank.js`（+ 改过图/原题数值时加 `test-figs.js` / `test-original.js`）通过。
+3. **发布用 GitHub Git Data API，不要用 `git push`** —— 本机 `http_proxy` 指向 WorkBuddy 自带代理，
+   `git` 走 HTTPS 会 100% 超时（`GIT_TERMINAL_PROMPT=0` 也救不了）。流程：
+   ```bash
+   node tools/gh-audit.js          # 推送前审计：远程有本地没有的会被删掉、哪些文件内容不同
+   node tools/gh-push.js "提交说明"  # 用 Git Data API 提交整个工作区
+   ```
+   - `gh-push.js` 是**整棵 tree 替换**式提交：远程有、本地没有的文件会被删掉。所以**先跑 `gh-audit.js`**。
+   - 另一个会话可能同时在这个工作区里干活：用
+     `A1M_SKIP="papers/,xxx.md" node tools/gh-push.js "..."` 临时排除还没写完的文件
+     （被排除的路径必须是远程本来就没有的，否则会在远程被删）。
+   - `tools/_*preview*.html` 这类核对页是**生成物**，`gh-push.js` 已自动跳过。
+   - token 存在 `C:\Users\dbsqu\.gh_token_1a1m`，由脚本读取。**命令行里不要出现 token 明文**
+     （会触发敏感内容拦截并超时）。
+4. GitHub Pages 约 30–60 秒后生效：<https://dbsquared.github.io/1attempt100marks/>
+5. **改了 `assets/` 下的 js/css 或 `index.html`，必须把 `index.html` 里的 `?v=N` 全部 +1**
+   （缓存戳），否则老客户端不会刷新。改完用
+   `curl https://raw.githubusercontent.com/dbsquared/1attempt100marks/main/index.html`
+   确认线上的 `?v=` 已经是新值 —— **注意别的会话可能已经把它顶到更大的数字，先看线上再决定加到几**。
 6. 把新模板的 JSON 一并回复给用户，用户可在网页「题库管理 → 导入」立刻使用，不必等部署。
 
 ## 9. 给学生/家长的说明口径

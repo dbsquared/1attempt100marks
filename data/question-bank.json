@@ -1323,6 +1323,9 @@
       "diagram": {
         "type": "giftboxes",
         "pick": "bidx"
+      },
+      "original": {
+        "bidx": 0
       }
     },
     {
@@ -2025,6 +2028,10 @@
         "type": "bookshelf",
         "rows": 3,
         "cols": 5
+      },
+      "original": {
+        "r": 2,
+        "c": 3
       }
     },
     {
@@ -2536,6 +2543,11 @@
         "n": "n",
         "r": "r",
         "c": "c"
+      },
+      "original": {
+        "n": 6,
+        "r": 4,
+        "c": 4
       }
     },
     {
@@ -2723,6 +2735,12 @@
         "cols": "cols",
         "sr": "sr",
         "sc": "sc"
+      },
+      "original": {
+        "rows": 5,
+        "cols": 5,
+        "sr": 1,
+        "sc": 2
       }
     },
     {
@@ -3121,6 +3139,12 @@
         "pB": "pB",
         "pC": "pC",
         "pD": "pD"
+      },
+      "original": {
+        "a": 6,
+        "f1": 0,
+        "f2": 3,
+        "f3": 4
       }
     },
     {
@@ -3778,6 +3802,13 @@
         "fb": "fb",
         "pa": "pa",
         "pb": "pb"
+      },
+      "original": {
+        "pa": 4,
+        "pb": 5,
+        "ea": 5,
+        "eb": 2,
+        "fa": 6
       }
     },
     {
@@ -3850,6 +3881,11 @@
         "perm": "perm",
         "start": "s0",
         "n": "n0"
+      },
+      "original": {
+        "perm": 2,
+        "s0": 0,
+        "n0": 2
       }
     },
     {
@@ -4245,6 +4281,9 @@
           "rhombus",
           "rect"
         ]
+      },
+      "original": {
+        "xa": "star"
       }
     },
     {
@@ -4441,6 +4480,9 @@
         "rows": 2,
         "c0": "c0",
         "groups": 2
+      },
+      "original": {
+        "c0": 3
       }
     },
     {
@@ -4616,7 +4658,13 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q19.png",
-      "noFigure": "纯文字应用题，数量关系全在题干里，画图反而会把答案画出来"
+      "noFigure": "纯文字应用题，数量关系全在题干里，画图反而会把答案画出来",
+      "original": {
+        "r": 5,
+        "b": 13,
+        "g": 30,
+        "k": 2
+      }
     },
     {
       "id": "icas21y2m-20",
@@ -4900,6 +4948,9 @@
       "diagram": {
         "type": "dotfig",
         "seed": "seed"
+      },
+      "original": {
+        "seed": 7
       }
     },
     {
@@ -4996,6 +5047,11 @@
             "v"
           ]
         ]
+      },
+      "original": {
+        "bl": 6,
+        "br": 7,
+        "v": 15
       }
     },
     {
@@ -5098,6 +5154,11 @@
       "originalImage": "assets/originals/2021y2m-q25.png",
       "diagram": {
         "type": "targetboard"
+      },
+      "original": {
+        "k": 6,
+        "b": 5,
+        "m": 2
       }
     },
     {
@@ -5305,7 +5366,12 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q28.png",
-      "noFigure": "纯文字应用题（鸟飞走又飞回），数量关系全在题干里"
+      "noFigure": "纯文字应用题（鸟飞走又飞回），数量关系全在题干里",
+      "original": {
+        "a": 39,
+        "b": 10,
+        "c": 10
+      }
     },
     {
       "id": "icas21y2m-29",
@@ -5449,6 +5515,20 @@
       "diagram": {
         "type": "houses",
         "gaps": "gaps"
+      },
+      "original": {
+        "m": 0,
+        "u": 50,
+        "i1": 0,
+        "i2": 1,
+        "i3": 2,
+        "i4": 3,
+        "G0": "112",
+        "G1": "211",
+        "N0": "Pete",
+        "N1": "Sita",
+        "N2": "Lin",
+        "N3": "Ben"
       }
     },
     {
@@ -5529,6 +5609,11 @@
             "t3"
           ]
         ]
+      },
+      "original": {
+        "a": 2,
+        "d": 2,
+        "n": 5
       }
     }
   ]

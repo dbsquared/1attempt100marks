@@ -44,15 +44,24 @@ if (!curl('GET', API + '/git/ref/heads/' + BRANCH).object) {
 
 /* 1. 收集文件 */
 const SKIP = new Set(['.git', 'node_modules', '.workbuddy', '.chromeprofile']);
+/* 生成物不提交：tools/_*preview*.html 是核对用的临时页面（内嵌原卷图，体积大） */
+const SKIP_RE = [/^tools\/_[^/]*preview[^/]*\.html$/i];
+/* A1M_SKIP=前缀1,前缀2 —— 临时排除某些路径（例如另一个会话正在写、还没写完的文件）。
+   注意：被排除的路径必须是「远程本来就没有」的，否则会在远程被删掉。 */
+const SKIP_PREFIX = (process.env.A1M_SKIP || '').split(',').map(s => s.trim()).filter(Boolean);
 const files = [];
+const skipped = [];
 (function walk(dir, rel) {
   for (const name of fs.readdirSync(dir)) {
     if (SKIP.has(name)) continue;
-    const full = path.join(dir, name), r = rel ? rel + '/' + name : name;
-    if (fs.statSync(full).isDirectory()) walk(full, r);
+    const full = path.join(dir, name), r = (rel ? rel + '/' + name : name).replace(/\\/g, '/');
+    if (fs.statSync(full).isDirectory()) walk(full, rel ? rel + '/' + name : name);
+    else if (SKIP_RE.some(re => re.test(r))) skipped.push(r);
+    else if (SKIP_PREFIX.some(p => r.indexOf(p) === 0)) skipped.push(r);
     else files.push({ path: r, full });
   }
 })(root, '');
+if (skipped.length) console.log('跳过 ' + skipped.length + ' 个文件：' + skipped.join(', '));
 console.log('待提交文件 ' + files.length + ' 个');
 
 /* 2. 逐个建 blob */

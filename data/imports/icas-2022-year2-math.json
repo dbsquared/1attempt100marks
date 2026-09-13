@@ -461,6 +461,9 @@
       "diagram": {
         "type": "giftboxes",
         "pick": "bidx"
+      },
+      "original": {
+        "bidx": 0
       }
     },
     {
@@ -1163,6 +1166,10 @@
         "type": "bookshelf",
         "rows": 3,
         "cols": 5
+      },
+      "original": {
+        "r": 2,
+        "c": 3
       }
     },
     {
@@ -1674,6 +1681,11 @@
         "n": "n",
         "r": "r",
         "c": "c"
+      },
+      "original": {
+        "n": 6,
+        "r": 4,
+        "c": 4
       }
     },
     {
@@ -1861,6 +1873,12 @@
         "cols": "cols",
         "sr": "sr",
         "sc": "sc"
+      },
+      "original": {
+        "rows": 5,
+        "cols": 5,
+        "sr": 1,
+        "sc": 2
       }
     },
     {
@@ -2259,6 +2277,12 @@
         "pB": "pB",
         "pC": "pC",
         "pD": "pD"
+      },
+      "original": {
+        "a": 6,
+        "f1": 0,
+        "f2": 3,
+        "f3": 4
       }
     }
   ]

@@ -112,7 +112,7 @@
     }
     if (!q) { session.idx++; return nextQuestion(); }
 
-    curQ = q; curChoice = null; locked = false;
+    curQ = q; curChoice = null; locked = false; matchLinks = [];
     session.sigCount[q.sig] = (session.sigCount[q.sig] || 0) + 1;
 
     var st = SRS.state(tpl.id);
@@ -129,6 +129,125 @@
     window.scrollTo(0, 0);
   }
 
+  /* ---------- 连线配对题（match） ---------- */
+  function computeCorrectLinks(q) {
+    var out = [];
+    (q.leftItems || []).forEach(function (L, i) {
+      (q.rightItems || []).forEach(function (R, j) {
+        if (L.key === R.key) out.push([i, j]);
+      });
+    });
+    return out;
+  }
+
+  function matchWidgetHtml(q, key) {
+    var h = '<div class="match-wrap" data-qkey="' + esc(key) + '">' +
+      '<svg class="match-lines"></svg>' +
+      '<div class="match-col match-L">' +
+      (q.leftItems || []).map(function (it, i) {
+        return '<div class="mitem" data-side="L" data-i="' + i + '">' + it.svg + '</div>';
+      }).join('') + '</div>' +
+      '<div class="match-col match-R">' +
+      (q.rightItems || []).map(function (it, j) {
+        return '<div class="mitem" data-side="R" data-i="' + j + '">' + it.svg + '</div>';
+      }).join('') + '</div>' +
+      '</div>';
+    return h;
+  }
+
+  function setupMatch(mw, q, getLinks, setLinks, opts) {
+    opts = opts || {};
+    var svg = mw.querySelector('.match-lines');
+    var pend = null; // 待连的左项 {side:'L', i}
+
+    function items(side) {
+      return Array.prototype.slice.call(mw.querySelectorAll('.mitem[data-side="' + side + '"]'));
+    }
+    function linkIdx(ln, l, r) {
+      for (var k = 0; k < ln.length; k++) if (ln[k][0] === l && ln[k][1] === r) return k;
+      return -1;
+    }
+    function redraw() {
+      var Ls = items('L'), Rs = items('R');
+      var ln = getLinks() || [];
+      var correct = opts.correctLinks || [];
+      var drawn = ln.map(function (lk) {
+        var ok = correct.some(function (c) { return c[0] === lk[0] && c[1] === lk[1]; });
+        return { lk: lk, ok: ok, dash: false };
+      });
+      if (opts.locked && correct.length) {
+        correct.forEach(function (c) {
+          if (linkIdx(ln, c[0], c[1]) < 0) drawn.push({ lk: c, ok: true, dash: true });
+        });
+      }
+      var w = mw.clientWidth, hgt = mw.clientHeight;
+      svg.setAttribute('viewBox', '0 0 ' + w + ' ' + hgt);
+      svg.setAttribute('width', w);
+      svg.setAttribute('height', hgt);
+      var mr = mw.getBoundingClientRect(), s = '';
+      drawn.forEach(function (o) {
+        var lEl = Ls[o.lk[0]], rEl = Rs[o.lk[1]];
+        if (!lEl || !rEl) return;
+        var lr = lEl.getBoundingClientRect(), rr = rEl.getBoundingClientRect();
+        var x1 = lr.right - mr.left, y1 = lr.top + lr.height / 2 - mr.top;
+        var x2 = rr.left - mr.left, y2 = rr.top + rr.height / 2 - mr.top;
+        s += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) +
+          '" stroke="' + (o.ok ? '#16a34a' : '#dc2626') + '" stroke-width="3" stroke-linecap="round"' +
+          (o.dash ? ' stroke-dasharray="6 6"' : '') + ' opacity="0.9"/>';
+      });
+      svg.innerHTML = s;
+      Ls.forEach(function (el, i) {
+        var has = ln.some(function (lk) { return lk[0] === i; });
+        el.classList.toggle('conn', has);
+        el.classList.toggle('pend', !!(pend && pend.side === 'L' && pend.i === i));
+      });
+      Rs.forEach(function (el, j) {
+        var has = ln.some(function (lk) { return lk[1] === j; });
+        el.classList.toggle('conn', has);
+        el.classList.toggle('pend', !!(pend && pend.side === 'R' && pend.i === j));
+      });
+    }
+
+    function clickItem(side, i) {
+      if (opts.locked) return;
+      var ln = getLinks() || [];
+      if (side === 'L') {
+        if (pend && pend.side === 'L' && pend.i === i) { pend = null; redraw(); return; }
+        // 点已连的左项 = 取消它的连线
+        var beforeL = ln.length;
+        for (var k = ln.length - 1; k >= 0; k--) if (ln[k][0] === i) ln.splice(k, 1);
+        if (ln.length !== beforeL) { setLinks(ln); pend = null; redraw(); return; }
+        pend = { side: 'L', i: i };
+        redraw();
+        return;
+      }
+      // 右项
+      if (!pend) {
+        // 没有待连左项：点已连的右项 = 取消它的连线
+        var beforeR = ln.length;
+        for (var k2 = ln.length - 1; k2 >= 0; k2--) if (ln[k2][1] === i) ln.splice(k2, 1);
+        if (ln.length !== beforeR) { setLinks(ln); redraw(); }
+        return;
+      }
+      var l = pend.i;
+      // 1:1：清掉该左项与该右项的旧连线后连新线
+      for (var k3 = ln.length - 1; k3 >= 0; k3--) if (ln[k3][0] === l || ln[k3][1] === i) ln.splice(k3, 1);
+      ln.push([l, i]);
+      pend = null;
+      setLinks(ln);
+      redraw();
+    }
+
+    items('L').forEach(function (el) {
+      el.addEventListener('click', function () { clickItem('L', +el.dataset.i); });
+    });
+    items('R').forEach(function (el) {
+      el.addEventListener('click', function () { clickItem('R', +el.dataset.i); });
+    });
+    window.addEventListener('resize', redraw);
+    redraw();
+  }
+
   function renderQuestionCard(q, tpl) {
     var h = '<div class="stem">' + q.stemHtml + '</div>';
     if (q.diagramSvg) h += '<div class="diagram-wrap">' + q.diagramSvg + '</div>';
@@ -139,6 +258,10 @@
         return '<div class="opt" data-i="' + i + '"><span class="k">' + 'ABCDEFGH'[i] + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
       }).join('') + '</div>';
       if (multi) h += '<div class="small muted">本题为多选</div>';
+      h += '<div class="row"><button class="btn primary" id="btnSubmit">提交答案</button></div>';
+    } else if (q.type === 'match') {
+      h += matchWidgetHtml(q, q.key);
+      h += '<div class="small muted" style="margin:4px 0 8px">先点左边一个钟面，再点右边对应的电子钟；点已连的项可取消连线。</div>';
       h += '<div class="row"><button class="btn primary" id="btnSubmit">提交答案</button></div>';
     } else {
       var ph = q.type === 'fraction' ? '如 3/4 或 0.75' : (q.type === 'expression' ? '如 3x+5' : '填写答案');
@@ -194,6 +317,9 @@
     if (curQ.type === 'choice') {
       if (curChoice === null || (Array.isArray(curChoice) && !curChoice.length)) { toast('先选一个答案'); return; }
       input = curChoice;
+    } else if (curQ.type === 'match') {
+      input = (matchLinks || []).slice();
+      if (!input.length) { toast('先把左边的钟面和右边的电子钟连起来'); return; }
     } else {
       input = ($('#ansInput').value || '').trim();
       if (!input) { toast('请先填写答案'); return; }
@@ -415,6 +541,10 @@
           var g = (q.optionsSvg && q.optionsSvg[k]) ? '<span class="opt-svg">' + q.optionsSvg[k] + '</span>' : '';
           return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
         }).join('') + '</div>';
+      } else if (q.type === 'match') {
+        h += matchWidgetHtml(q, q.key);
+        if (!paper.graded) h += '<div class="small muted" style="margin:4px 0 8px">先点左边一个钟面，再点右边对应的电子钟。</div>';
+        else h += '<div class="row" style="margin-top:6px"><span class="pill ' + (a && a.ok ? 'ok' : 'wrong') + '">' + (a && a.ok ? '✓ 配对全对' : '✗ 有连线不对，绿线=正确连法') + '</span></div>';
       } else {
         var val = a && a.raw !== undefined ? a.raw : '';
         h += '<div class="answer-box" style="margin-top:8px">' +
@@ -512,6 +642,7 @@
         if (!paper.marks[q.key]) return false;
         var a = paper.answers[q.key];
         if (q.type === 'choice') return !(a && a.picked !== null && a.picked !== undefined);
+        if (q.type === 'match') return !(a && a.links && a.links.length);
         return !(a && a.raw !== undefined && String(a.raw).trim() !== '');
       }).map(function (q) { return idxByKey[q.key]; }).sort(function (a, b) { return a - b; });
       var msg = '你标记了 ' + markedKeys.length + ' 道题（第 ' + nums.join('、') + ' 题）';

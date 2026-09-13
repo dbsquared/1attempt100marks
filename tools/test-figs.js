@@ -856,41 +856,55 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q21 从图上数凹纹定总格数 ✓ 恰好一瓶水面在半瓶 ✓');
 }
 
-/* ---------- 21Q22：从图上读编号位置，独立算出「按 1→2→…→6 连线」的边集 ---------- */
+/* ---------- 21Q22：主图只有 6 个随机摆放的编号点（不画线）；
+     从图上读点坐标，独立重算「按 1→2→…→6→1 连成的闭合环」，验证唯一命中 ---------- */
 {
   const t = byId('icas21y2m-22');
-  const ed = s => mAll(s, /<line data-u="edge" x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/g)
-    .map(m => { const a = [(+m[1]).toFixed(1), (+m[2]).toFixed(1)], b = [(+m[3]).toFixed(1), (+m[4]).toFixed(1)];
-                return [a.join(), b.join()].sort().join('>'); }).sort();
+  const EDGES = /<line data-u="edge" x1="(-?[\d.]+)" y1="(-?[\d.]+)" x2="(-?[\d.]+)" y2="(-?[\d.]+)"/g;
+  const ed = s => mAll(s, EDGES).map(m => {
+    const a = [(+m[1]).toFixed(1), (+m[2]).toFixed(1)], b = [(+m[3]).toFixed(1), (+m[4]).toFixed(1)];
+    return [a.join(), b.join()].sort().join('>');
+  }).sort();
+  const ends = s => mAll(s, EDGES).reduce((acc, m) => acc.concat(
+    [[(+m[1]).toFixed(1), (+m[2]).toFixed(1)].join(), [(+m[3]).toFixed(1), (+m[4]).toFixed(1)].join()]), []);
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
-    const dots = mAll(q.diagramSvg, /<g data-u="dot" data-n="(\d)"><circle cx="([\d.]+)" cy="([\d.]+)"/g)
+    /* 主图：只能有点，不能有任何连线（原本那条「6–1 已画好」的线已按用户要求去掉） */
+    chk(!/data-u="given"/.test(q.diagramSvg) && q.diagramSvg.indexOf('<line') < 0,
+      '21Q22 主图不该画任何连线');
+    const dots = mAll(q.diagramSvg, /<g data-u="dot" data-n="(\d)" data-x="(-?[\d.]+)" data-y="(-?[\d.]+)"/g)
       .map(m => ({ n: +m[1], x: (+m[2]).toFixed(1), y: (+m[3]).toFixed(1) }));
     chk(dots.length === 6, '21Q22 图上应有 6 个编号点，实际 ' + dots.length);
     chk(new Set(dots.map(d => d.n)).size === 6, '21Q22 编号应 1..6 各一个：' + dots.map(d => d.n).join(','));
     const pos = [];
     for (let n2 = 1; n2 <= 6; n2++) { const d = dots.find(x => x.n === n2); if (d) pos[n2 - 1] = [d.x, d.y].join(); }
     chk(pos.length === 6 && pos.every(Boolean), '21Q22 有编号对不上位置');
-    /* 图上已经画好的那条线必须是 6–1（题干说的「这条已经画好」） */
-    const gv = q.diagramSvg.match(/<line data-u="given" data-a="1" data-b="6" x1="([\d.]+)" y1="([\d.]+)" x2="([\d.]+)" y2="([\d.]+)"/);
-    chk(!!gv, '21Q22 图上应先把 6–1 那条线画好');
-    if (gv) {
-      const ga = [(+gv[1]).toFixed(1), (+gv[2]).toFixed(1)].join(), gb = [(+gv[3]).toFixed(1), (+gv[4]).toFixed(1)].join();
-      chk([ga, gb].sort().join('>') === [pos[0], pos[5]].sort().join('>'),
-        '21Q22 那条已画好的线不是连在编号 1 和 6 上的');
+    /* 点位不能退化：两两间距够大、整体铺得开，否则图形读不出来 */
+    let mind = Infinity;
+    const xs = dots.map(d => +d.x), ys = dots.map(d => +d.y);
+    for (let a = 0; a < 6; a++) for (let b = a + 1; b < 6; b++) {
+      mind = Math.min(mind, Math.hypot(+dots[a].x - +dots[b].x, +dots[a].y - +dots[b].y));
     }
+    chk(mind >= 58, '21Q22 点位太挤（最近两点 ' + mind.toFixed(1) + 'px）');
+    chk(Math.max(...xs) - Math.min(...xs) >= 160 && Math.max(...ys) - Math.min(...ys) >= 110,
+      '21Q22 点位铺得太窄/太扁：' + (Math.max(...xs) - Math.min(...xs)) + '×' + (Math.max(...ys) - Math.min(...ys)));
     /* 按编号 1→2→…→5→6 再加 6→1，算出应有的 6 条边 */
     const want = [];
     for (let k = 0; k < 6; k++) want.push([pos[k], pos[(k + 1) % 6]].sort().join('>'));
     want.sort();
     const got = (q.optionsSvg || []).map(ed);
     chk(got.length === 4, '21Q22 应有 4 个选项图');
+    got.forEach((g, j) => chk(g.length === 6, '21Q22 选项 ' + j + ' 应是 6 条边的闭合环，实际 ' + g.length));
+    /* 4 个选项必须画在主图那一组点上，否则没法逐点比对 */
+    (q.optionsSvg || []).forEach((s, j) => {
+      chk(ends(s).every(v => pos.indexOf(v) >= 0), '21Q22 选项 ' + j + ' 的点不在主图那 6 个点上');
+    });
     const hit = got.map((g, j) => g.join('|') === want.join('|') ? j : -1).filter(j => j >= 0);
     chk(hit.length === 1, '21Q22 应恰好有一个选项是按图上编号连出来的，实际 ' + hit.length);
     chk(hit.length === 1 && hit[0] === q.correctIndex, '21Q22 按编号连出来的是选项 ' + hit[0] + '，模板选了 ' + q.correctIndex);
     chk(new Set(got.map(g => g.join('|'))).size === 4, '21Q22 四个选项的连线应互不相同（否则有多个正确答案）');
   }
-  console.log('21Q22 从图上读编号位置 ✓ 已给的 6–1 线对得上 ✓ 唯一命中「按编号连线」的选项 ✓');
+  console.log('21Q22 主图只有 6 个随机点（无连线）✓ 点位不退化 ✓ 四图同一组点且互不相同 ✓ 唯一命中「按编号连成闭合环」✓');
 }
 
 /* ---------- 21Q23：前三个三角形验证规律，第四个自己补 ---------- */

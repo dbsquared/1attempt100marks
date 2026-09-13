@@ -4627,55 +4627,18 @@
       ],
       "source": "ICAS 2021 Year 2 Mathematics Q22",
       "stem": {
-        "en": "Mia had this dot-to-dot picture: every dot has a number on it, and the line from 6 back to 1 is already drawn. She joined the rest of the dots in order from 1 to 6 (1 to 2, 2 to 3, and so on). Which figure did she draw?",
-        "zh": "米娅有一张连点图：每个点都标着数字，而且 6 和 1 之间的那条线已经画好了。她把剩下的点按 1 到 6 的顺序依次连起来（1 连 2、2 连 3……）。她画出来的是哪个图形？"
+        "en": "Mia had this dot-to-dot picture: six dots, and every dot has a number on it. She joined the dots in the order of their numbers — 1 to 2, 2 to 3, and so on up to 6 — and then joined 6 back to 1. Which of these shows what Mia drew?",
+        "zh": "米娅有一张连点图：6 个点，每个点上标着一个数字。她按数字的顺序把点连起来：1 连 2、2 连 3……一直连到 6，最后再从 6 连回 1。她画出来的是哪个图形？"
       },
       "vars": {
-        "oi": {
+        "seed": {
           "type": "int",
-          "min": 0,
-          "max": 5
-        },
-        "O0": {
-          "type": "pick",
-          "from": [
-            "615423"
-          ]
-        },
-        "O1": {
-          "type": "pick",
-          "from": [
-            "123465"
-          ]
-        },
-        "O2": {
-          "type": "pick",
-          "from": [
-            "123546"
-          ]
-        },
-        "O3": {
-          "type": "pick",
-          "from": [
-            "123564"
-          ]
-        },
-        "O4": {
-          "type": "pick",
-          "from": [
-            "123645"
-          ]
-        },
-        "O5": {
-          "type": "pick",
-          "from": [
-            "123654"
-          ]
+          "min": 1,
+          "max": 999999
         }
       },
-      "derived": {
-        "ord": "sel(oi, O0, O1, O2, O3, O4, O5)"
-      },
+      "derived": {},
+      "constraints": [],
       "answer": {
         "type": "choice",
         "options": [
@@ -4687,33 +4650,36 @@
         "optionsSvg": [
           {
             "type": "dotjoin",
-            "order": "ord"
+            "seed": "seed",
+            "which": 0
           },
           {
             "type": "dotjoin",
-            "pattern": "0,1,2,3,4,5"
+            "seed": "seed",
+            "which": 1
           },
           {
             "type": "dotjoin",
-            "pattern": "0,2,4,1,3,5"
+            "seed": "seed",
+            "which": 2
           },
           {
             "type": "dotjoin",
-            "pattern": "1,0,3,2,5,4"
+            "seed": "seed",
+            "which": 3
           }
         ],
         "correctIndex": 0
       },
       "solution": {
-        "en": "Find the dot numbered 1, then follow the numbers upwards. Join 1→2, 2→3, 3→4, 4→5, 5→6 — and remember 6→1 is already drawn. The right figure is the one whose lines meet the dots in exactly that order. The other three join the dots in a different order (going straight round the outside gives a hexagon; skipping every other dot gives a star). Check the figures one by one.",
-        "zh": "先找到标着 1 的那个点，再顺着编号一个个找下去，按 1→2、2→3、3→4、4→5、5→6 连线，别忘了 6→1 已经画好了。正确答案那幅图，它的连线顺序和编号完全对得上。另外三幅是按别的顺序连的（顺着外圈连会得到六边形，隔一个点连会得到五角星）。一幅一幅对照着看。"
+        "en": "Find the dot numbered 1, then join the dots in order 2, 3, 4, 5, 6 and finally from 6 back to 1. Only one of the four figures joins the dots in exactly that order. The others join them in a different order (going straight round the outside gives a hexagon; skipping every other dot gives a star). Check the figures one by one against the numbers.",
+        "zh": "先找到标着 1 的那个点，再按 2、3、4、5、6 的顺序依次连过去，最后从 6 连回 1。四个图形里只有一个的连线顺序和编号完全一样；另外三个是按别的顺序连的（顺着外圈连会得到六边形，隔一个点连会得到五角星）。一幅一幅对着编号看。"
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q22.png",
       "diagram": {
         "type": "dotfig",
-        "order": "ord",
-        "given": "close"
+        "seed": "seed"
       }
     },
     {

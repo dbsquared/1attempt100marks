@@ -224,6 +224,24 @@ kbd { background: var(--surface-2); border: 1px solid var(--border); border-bott
 .list-item { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; background: var(--surface); }
 .list-item .t { font-weight: 600; margin-bottom: 4px; }
 
+/* ---------- 题库/系统管理：加宽 + 放大 ---------- */
+body.view-wide .wrap,
+body.view-wide nav.tabs,
+body.view-wide .top-inner { max-width: 1120px; }
+
+.bank-card { padding: 22px 24px; }
+.bank-card h2 { font-size: 22px; margin-bottom: 4px; }
+.bank-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bank-list { margin-top: 16px; max-height: 82vh; overflow: auto; padding-right: 6px; }
+#view-bank .list-item { padding: 16px 18px; }
+#view-bank .list-item .t { font-size: 16px; }
+#view-bank .cmp-col .cmp-body { padding: 12px; }
+#view-bank .cmp-h { font-size: 13px; margin-bottom: 8px; }
+/* 宽屏下原题图更大、对照更清晰 */
+@media (min-width: 980px) {
+  #view-bank .cmp { grid-template-columns: minmax(200px, 32%) 1fr; gap: 20px; }
+}
+
 /* ---------- 学生管理弹层 ---------- */
 .modal-mask {
   position: fixed; inset: 0; z-index: 60;

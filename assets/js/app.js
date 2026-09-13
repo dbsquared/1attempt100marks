@@ -49,14 +49,19 @@
   /* ---------------- Tab 切换 ---------------- */
   function switchView(name) {
     $$('#tabs button').forEach(function (b) { b.classList.toggle('active', b.dataset.view === name); });
-    ['practice', 'paper', 'wrong', 'stats', 'bank'].forEach(function (v) {
+    ['practice', 'paper', 'wrong', 'stats', 'bank', 'manage'].forEach(function (v) {
       $('#view-' + v).classList.toggle('hidden', v !== name);
     });
+    var wide = (name === 'bank' || name === 'manage');
+    document.body.classList.toggle('view-wide', wide);
     if (name === 'stats') renderStats();
     if (name === 'wrong') renderWrong();
     if (name === 'bank') renderBank();
+    if (name === 'manage') renderManage();
     window.scrollTo(0, 0);
   }
+  /* 系统管理界面：进入时刷新一下设置项，避免数值没回填 */
+  function renderManage() { fillSettings(); }
 
   /* ---------------- 练习：开始 ---------------- */
   function renderStart() {
@@ -984,6 +989,14 @@
     });
     $('#btnBankReload').addEventListener('click', function () { Bank.load().then(function () { renderBank(); toast('已重新加载'); }); });
     $('#bankSrcBox').addEventListener('change', renderBankList);
+    $('#bankSrcAll').addEventListener('click', function () {
+      Array.prototype.forEach.call($('#bankSrcBox').querySelectorAll('input'), function (c) { c.checked = true; });
+      renderBankList();
+    });
+    $('#bankSrcNone').addEventListener('click', function () {
+      Array.prototype.forEach.call($('#bankSrcBox').querySelectorAll('input'), function (c) { c.checked = false; });
+      renderBankList();
+    });
 
     /* ---- 发邮件（结果页，手动兜底） ---- */
     $('#btnSendResult').addEventListener('click', function () {

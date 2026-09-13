@@ -1489,56 +1489,35 @@
       return s;
     },
 
-    /* 点连图：6 个点，编号由 order 决定（Q22）。order 是 6 个位置的编号串，
-       按「左下起逆时针」的位置顺序给出每点上的数字。
-       spec.given === 'close' 时把「1 和 6 之间那条线」先画出来 ——
-       原卷给的图里这条线已经画好了，学生只要补 1→2→…→6。 */
+    /* 点连图主图（Q22）：只画 6 个带编号的点，**一条线都不画**。
+       点的位置每次随机（由 seed 决定），每点上的编号也是随机排列。
+       每个点挂 data-n / data-x / data-y，自检脚本据此独立重算「按编号连成的闭合环」。 */
     dotfig: function (spec, vars) {
-      var order = str(spec.order, vars) || '615423';
-      var pos = [[104, 34], [216, 34], [46, 118], [274, 118], [104, 202], [216, 202]];
-      var W = 320, H = 244, s = svgOpen(W, H, 'numbered dots');
-      var i;
-      if (spec.given === 'close') {
-        var i1 = -1, i6 = -1;
-        for (i = 0; i < 6; i++) { if (order[i] === '1') i1 = i; if (order[i] === '6') i6 = i; }
-        if (i1 >= 0 && i6 >= 0) {
-          s += '<line data-u="given" data-a="1" data-b="6" x1="' + pos[i1][0] + '" y1="' + pos[i1][1] +
-               '" x2="' + pos[i6][0] + '" y2="' + pos[i6][1] + '" stroke="#1f3f8f" stroke-width="3.4"/>';
-        }
-      }
+      var seed = Math.round(num(spec.seed, vars)) || 1;
+      var L = q22Build(seed), s = svgOpen(Q22_W, Q22_H, 'numbered dots'), i;
       for (i = 0; i < 6; i++) {
-        s += '<g data-u="dot" data-n="' + order[i] + '"><circle cx="' + pos[i][0] + '" cy="' + pos[i][1] + '" r="8" fill="' + RED + '"/>' +
-             '<text x="' + pos[i][0] + '" y="' + (pos[i][1] - 16) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + INK + '">' + order[i] + '</text></g>';
+        s += '<g data-u="dot" data-n="' + L.num[i] + '" data-x="' + L.pts[i][0] + '" data-y="' + L.pts[i][1] + '">' +
+             '<circle cx="' + L.pts[i][0] + '" cy="' + L.pts[i][1] + '" r="7.5" fill="' + RED + '"/>' +
+             '<text x="' + L.pts[i][0] + '" y="' + (L.pts[i][1] - 15) + '" font-size="19" font-weight="700" text-anchor="middle" fill="' + INK + '">' + L.num[i] + '</text></g>';
       }
       s += '</svg>';
       return s;
     },
 
-    /* 点连图的四种画法（Q22 选项）。两种给法：
-       · pattern = 6 个位置下标按连线顺序排成的串；
-       · order   = 各点上的编号串 —— 内部换算成「按编号 1→6 依次连线」的顺序，
-                   这样同一份模板里 dotfig 和「正确选项」可以共用同一个变量。 */
+    /* 点连图的四种画法（Q22 选项）：which = 0 是按编号 1→2→…→6→1 连（正确项），
+       1..3 是干扰项。画法由 q22Pick(seed) 统一给出，且和主图共用同一组点，
+       所以选项之间、选项与主图都能逐点对上。 */
     dotjoin: function (spec, vars) {
-      var seq, order;
-      if (spec.order !== undefined) {
-        var perm = str(spec.order, vars), n;
-        seq = [];
-        for (n = 1; n <= 6; n++) {
-          var idx = perm.indexOf(String(n));
-          if (idx < 0) return '';
-          seq.push(idx);
-        }
-      } else {
-        seq = str(spec.pattern, vars).split(',').map(function (x) { return Math.round(parseFloat(x)); });
+      var seed = Math.round(num(spec.seed, vars)) || 1;
+      var which = Math.round(num(spec.which, vars)) || 0;
+      var L = q22Build(seed), pick = q22Pick(seed);
+      var seq = pick[which] || pick[0];
+      var s = svgOpen(Q22_W, Q22_H, 'joined dots'), i;
+      for (i = 0; i < seq.length; i++) {
+        var p1 = L.pts[seq[i]], p2 = L.pts[seq[(i + 1) % seq.length]];
+        s += '<line data-u="edge" x1="' + p1[0] + '" y1="' + p1[1] + '" x2="' + p2[0] + '" y2="' + p2[1] + '" stroke="#1f3f8f" stroke-width="3.2"/>';
       }
-      order = seq;
-      var pos = [[104, 34], [216, 34], [46, 118], [274, 118], [104, 202], [216, 202]];
-      var W = 320, H = 244, s = svgOpen(W, H, 'joined dots'), i;
-      for (i = 0; i < order.length; i++) {
-        var p1 = pos[order[i]], p2 = pos[order[(i + 1) % order.length]];
-        s += '<line data-u="edge" x1="' + p1[0] + '" y1="' + p1[1] + '" x2="' + p2[0] + '" y2="' + p2[1] + '" stroke="#1f3f8f" stroke-width="3.4"/>';
-      }
-      for (i = 0; i < 6; i++) s += '<circle cx="' + pos[i][0] + '" cy="' + pos[i][1] + '" r="7" fill="' + RED + '"/>';
+      for (i = 0; i < 6; i++) s += '<circle cx="' + L.pts[i][0] + '" cy="' + L.pts[i][1] + '" r="6.5" fill="' + RED + '"/>';
       s += '</svg>';
       return s;
     },
@@ -1782,6 +1761,141 @@
     o += '<rect x="' + (cx - 32) + '" y="' + (cy + 6) + '" width="64" height="12" rx="4" fill="#7bc47f" stroke="' + INK + '" stroke-width="2"/>';
     o += '<circle cx="' + (cx - 18) + '" cy="' + (cy + 19) + '" r="6" fill="' + INK + '"/><circle cx="' + (cx + 18) + '" cy="' + (cy + 19) + '" r="6" fill="' + INK + '"/>';
     return o;
+  }
+
+  /* ---------- Q22 连点图：6 个点每次随机摆放 ----------
+     主图只画 6 个「带编号的点」，不画任何线；4 个选项是「按编号顺序连线」的四种画法（闭合）。
+     主图和 4 个选项必须用**同一组坐标**，否则学生没法逐点比对；所以这里用一个以 seed 为种子
+     的确定性 PRNG（mulberry32）：只要 seed 一样，任何一次 q22Build() 都得到同一组点和编号。
+     选项的画法由 which 指定（0 = 按编号连 = 正确项；1..3 = 干扰项），干扰项的连线顺序从
+     坐标几何算出来（外圈顺序 / 隔一个连 / 按 x 交错），并保证与正确项及彼此都不重复。 */
+  var Q22_W = 320, Q22_H = 252;
+
+  function q22Prng(seed) {
+    var s = (Math.round(seed) >>> 0) || 1;
+    return function () {
+      s = (s + 0x6D2B79F5) | 0;
+      var t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function q22BBox(p) {
+    var x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, i;
+    for (i = 0; i < p.length; i++) {
+      x0 = Math.min(x0, p[i][0]); x1 = Math.max(x1, p[i][0]);
+      y0 = Math.min(y0, p[i][1]); y1 = Math.max(y1, p[i][1]);
+    }
+    return [x0, y0, x1, y1];
+  }
+
+  function q22Spread(p, min) {
+    var i, j, dx, dy;
+    for (i = 0; i < p.length; i++) for (j = i + 1; j < p.length; j++) {
+      dx = p[i][0] - p[j][0]; dy = p[i][1] - p[j][1];
+      if (dx * dx + dy * dy < min * min) return false;
+    }
+    return true;
+  }
+
+  /* 数字写在点的正上方（宽 22、高 21），别的点不能落进这个框里，否则字会被盖住 */
+  function q22LabelsOk(p) {
+    var i, j, lx0, lx1, ly0, ly1;
+    for (i = 0; i < p.length; i++) {
+      lx0 = p[i][0] - 12; lx1 = p[i][0] + 12; ly0 = p[i][1] - 34; ly1 = p[i][1] - 12;
+      for (j = 0; j < p.length; j++) {
+        if (j === i) continue;
+        if (p[j][0] > lx0 - 6 && p[j][0] < lx1 + 6 && p[j][1] > ly0 - 6 && p[j][1] < ly1 + 6) return false;
+      }
+    }
+    return true;
+  }
+
+  /* 6 个点的坐标 + 每点上的编号（编号是一个排列）。同一个 seed 必定得到同一结果。 */
+  function q22Build(seed) {
+    var rnd = q22Prng(seed * 2654435761 + 12345);
+    var mx = 34, myTop = 50, myBot = 26, pts = null, tries, i;
+    for (tries = 0; tries < 900; tries++) {
+      var p = [];
+      for (i = 0; i < 6; i++) {
+        p.push([mx + rnd() * (Q22_W - 2 * mx), myTop + rnd() * (Q22_H - myTop - myBot)]);
+      }
+      if (!q22Spread(p, 68) || !q22LabelsOk(p)) continue;
+      var bb = q22BBox(p);
+      if ((bb[2] - bb[0]) < 170 || (bb[3] - bb[1]) < 118) continue;
+      pts = p; break;
+    }
+    if (!pts) {                                  /* 兜底：抖动 3×2 网格（一定满足间距要求） */
+      var gx = [64, 160, 256], gy = [76, 186];
+      pts = [];
+      for (i = 0; i < 6; i++) {
+        pts.push([gx[i % 3] + (rnd() - 0.5) * 24, gy[Math.floor(i / 3)] + (rnd() - 0.5) * 24]);
+      }
+    }
+    /* 把外接框在画布里居中，再取整（主图和选项要用完全一样的整数坐标） */
+    var b2 = q22BBox(pts);
+    var dx = (Q22_W - (b2[2] - b2[0])) / 2 - b2[0], dy = (Q22_H - (b2[3] - b2[1])) / 2 - b2[1];
+    for (i = 0; i < 6; i++) { pts[i][0] = Math.round(pts[i][0] + dx); pts[i][1] = Math.round(pts[i][1] + dy); }
+    /* 编号：随机排列 1..6 */
+    var num = [1, 2, 3, 4, 5, 6], r2 = q22Prng(seed * 40503 + 7), a, b, t;
+    for (a = 5; a > 0; a--) { b = Math.floor(r2() * (a + 1)); t = num[a]; num[a] = num[b]; num[b] = t; }
+    return { pts: pts, num: num };
+  }
+
+  /* 闭合环的规范形：旋转、反向都算同一个环，取字典序最小者（用于判「两幅图是不是同一幅」） */
+  function q22Canon(seq) {
+    var best = null, dir, r, s, rot, str;
+    for (dir = 0; dir < 2; dir++) {
+      s = dir ? seq.slice().reverse() : seq.slice();
+      for (r = 0; r < s.length; r++) {
+        rot = s.slice(r).concat(s.slice(0, r));
+        str = rot.join('-');
+        if (best === null || str < best) best = str;
+      }
+    }
+    return best;
+  }
+
+  /* 把 6 个点按「绕重心一圈」的角度排序（外圈顺序） */
+  function q22AngularOrder(pts) {
+    var idx = [], i, cx = 0, cy = 0;
+    for (i = 0; i < pts.length; i++) { idx.push(i); cx += pts[i][0]; cy += pts[i][1]; }
+    cx /= pts.length; cy /= pts.length;
+    idx.sort(function (a, b) {
+      var ta = Math.atan2(pts[a][1] - cy, pts[a][0] - cx), tb = Math.atan2(pts[b][1] - cy, pts[b][0] - cx);
+      return (ta - tb) || (pts[a][0] - pts[b][0]);
+    });
+    return idx;
+  }
+
+  /* 四个选项的连线顺序：0 = 按编号 1→6 连（正确项）；1..3 = 三个互不相同的画法 */
+  function q22Pick(seed) {
+    var L = q22Build(seed), pts = L.pts, num = L.num, i, k;
+    var correct = [];
+    for (k = 1; k <= 6; k++) for (i = 0; i < 6; i++) if (num[i] === k) correct.push(i);
+    var out = [correct], seen = [q22Canon(correct)];
+    var ang = q22AngularOrder(pts);
+    var byX = [0, 1, 2, 3, 4, 5].sort(function (a, b) { return pts[a][0] - pts[b][0]; });
+    var pool = [
+      ang.slice(),
+      [ang[0], ang[2], ang[4], ang[1], ang[3], ang[5]],
+      [byX[0], byX[2], byX[4], byX[1], byX[3], byX[5]],
+      [ang[0], ang[1], ang[2], ang[5], ang[4], ang[3]],
+      [ang[0], ang[3], ang[1], ang[4], ang[2], ang[5]]
+    ];
+    for (i = 0; i < pool.length && out.length < 4; i++) {
+      var c = q22Canon(pool[i]);
+      if (seen.indexOf(c) < 0) { seen.push(c); out.push(pool[i]); }
+    }
+    var rnd = q22Prng(seed * 2246822519 + 91), guard = 0, j, m, tt, perm, cc;
+    while (out.length < 4 && guard++ < 300) {          /* 兜底：还不够就用确定性乱序补 */
+      perm = [0, 1, 2, 3, 4, 5];
+      for (j = 5; j > 0; j--) { m = Math.floor(rnd() * (j + 1)); tt = perm[j]; perm[j] = perm[m]; perm[m] = tt; }
+      cc = q22Canon(perm);
+      if (seen.indexOf(cc) < 0) { seen.push(cc); out.push(perm); }
+    }
+    return out;
   }
 
   function fmt(v) {

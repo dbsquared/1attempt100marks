@@ -119,7 +119,7 @@
       (st.seen ? '<span class="pill ' + (st.mastered ? 'ok' : '') + '">已练 ' + st.seen + ' 次 · 连对 ' + st.streak + '</span>' : '');
 
     renderQuestionCard(q, tpl);
-    $('#qfb').innerHTML = '';
+    renderBugFeedback('#qfb', tpl.id, q);
     window.scrollTo(0, 0);
   }
 
@@ -407,6 +407,10 @@
           '</div>';
       }
       if (paper.graded && a && !a.ok && q.solutionHtml) h += '<div class="solution">' + q.solutionHtml + '</div>';
+      /* 每题下方：反馈题目按钮 + 内联输入框（事件委托在 wirePaperBugFeedback） */
+      h += '<div class="qbug"><button type="button" class="bugbtn">⚠ 反馈题目</button>' +
+        '<div class="bugbox hidden"><textarea class="bugta" placeholder="请描述这道题的问题（可选），比如答案算错、图看不清、选项有歧义…"></textarea>' +
+        '<div class="row"><button type="button" class="btn sm bugsend">发送反馈</button><button type="button" class="btn sm bugcancel">取消</button></div></div></div>';
       h += '</div>';
     });
     h += '</div>';
@@ -827,6 +831,72 @@
     autoSendEmail('[1a1m-sync] ' + (s.sid || '') + ' ' + kind, body);
   }
 
+  /* ---------------- 题目反馈（bug 上报，同样走 FormSubmit 到家长邮箱） ---------------- */
+  function bugReportBody(tplId, q, desc) {
+    var s = Store.settings();
+    var lines = ['一次一百分 · 题目反馈', '────────────────────',
+      '学生：' + (s.studentName || s.sid || '?'),
+      '题目ID：' + (tplId || '?'),
+      '类型：' + (q.type || '?'),
+      '题干：' + (q.stemText || '')];
+    if (q.type === 'choice') {
+      lines.push('选项：' + (q.options || []).map(function (o, k) { return 'ABCDEFGH'[k] + '. ' + o; }).join('  '));
+      var ci = q.correctIndex;
+      lines.push('正确答案：' + (Array.isArray(ci) ? ci.map(function (i) { return 'ABCDEFGH'[i]; }).join('+') : 'ABCDEFGH'[ci]));
+    } else {
+      lines.push('正确答案：' + (q.display != null ? q.display : ''));
+    }
+    if (q.vars) lines.push('变量：' + JSON.stringify(q.vars));
+    lines.push('用户描述：' + (desc || '(未填写)'));
+    lines.push('');
+    lines.push('（把本邮件转发给 WorkBuddy 即可定位并修复该题）');
+    return lines.join('\n');
+  }
+  function sendBugReport(tplId, q, desc) {
+    autoSendEmail('[1a1m-bug] ' + (tplId || ''), bugReportBody(tplId, q, desc));
+    toast('已发送反馈，谢谢！');
+  }
+  /* 练习模式：在 #qfb 渲染反馈按钮 + 内联输入框 */
+  function renderBugFeedback(boxId, tplId, q) {
+    var box = $(boxId);
+    box.innerHTML = '<button type="button" class="bugbtn" id="btnBug">⚠ 反馈题目</button>' +
+      '<div class="bugbox hidden" id="bugBox"><textarea class="bugta" id="bugTa" placeholder="请描述这道题的问题（可选）："></textarea>' +
+      '<div class="row"><button type="button" class="btn sm" id="bugSend">发送反馈</button><button type="button" class="btn sm" id="bugCancel">取消</button></div></div>';
+    $('#btnBug').addEventListener('click', function () {
+      $('#bugBox').classList.toggle('hidden');
+      if (!$('#bugBox').classList.contains('hidden')) $('#bugTa').focus();
+    });
+    $('#bugCancel').addEventListener('click', function () { $('#bugBox').classList.add('hidden'); });
+    $('#bugSend').addEventListener('click', function () {
+      sendBugReport(tplId, q, $('#bugTa').value.trim());
+      $('#bugBox').classList.add('hidden');
+    });
+  }
+  /* 试卷模式：#paperArea 内每题一个反馈块，用事件委托（只挂一次） */
+  function wirePaperBugFeedback() {
+    $('#paperArea').addEventListener('click', function (e) {
+      var t = e.target;
+      var b = t.closest ? t.closest('.bugbtn') : null;
+      if (b) {
+        var box = b.parentElement.querySelector('.bugbox');
+        box.classList.toggle('hidden');
+        if (!box.classList.contains('hidden')) { var ta = box.querySelector('.bugta'); if (ta) ta.focus(); }
+        return;
+      }
+      var c = t.closest ? t.closest('.bugcancel') : null;
+      if (c) { c.closest('.bugbox').classList.add('hidden'); return; }
+      var sd = t.closest ? t.closest('.bugsend') : null;
+      if (sd) {
+        var pw = sd.closest('.paper-q');
+        var qk = pw.dataset.key;
+        var q = paper.questions.filter(function (x) { return x.key === qk; })[0];
+        var ta = pw.querySelector('.bugta');
+        sendBugReport(q.tplId, q, ta ? ta.value.trim() : '');
+        pw.querySelector('.bugbox').classList.add('hidden');
+      }
+    });
+  }
+
   /* ---------------- 设置 ---------------- */
   function fillSettings() {
     var s = Store.settings();
@@ -869,6 +939,7 @@
     $('#btnGenPaper').addEventListener('click', genPaper);
     $('#btnPrintPaper').addEventListener('click', function () { window.print(); });
     $('#btnSubmitPaper').addEventListener('click', submitPaper);
+    wirePaperBugFeedback();   // 试卷每题的反馈按钮（事件委托，只挂一次）
 
     $('#btnImport').addEventListener('click', function () { doImport($('#bankInput').value); $('#bankInput').value = ''; renderBank(); });
     $('#btnImportFile').addEventListener('click', function () { $('#fileInput').click(); });

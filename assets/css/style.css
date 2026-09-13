@@ -226,9 +226,25 @@ kbd { background: var(--surface-2); border: 1px solid var(--border); border-bott
 fieldset { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; }
 legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
 
+/* ---------- 题目反馈（bug 上报） ---------- */
+.qbug { margin-top: 12px; }
+.bugbtn {
+  border: 1px solid var(--warn); background: var(--warn-soft); color: var(--warn);
+  border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.bugbtn:hover { filter: brightness(1.05); border-color: var(--warn); }
+.bugbox {
+  margin-top: 10px; padding: 12px; border: 1px solid var(--border);
+  border-radius: 12px; background: var(--surface-2);
+}
+.bugbox .bugta { min-height: 70px; resize: vertical; }
+.bugbox .row { margin-top: 10px; }
+.bugsend { background: var(--warn); color: #1f1300; border-color: var(--warn); }
+.bugsend:hover { filter: brightness(1.05); }
+
 /* ---------- 打印 ---------- */
 @media print {
-  header.top, nav.tabs, .no-print, .feedback, .answer-box input { display: none !important; }
+  header.top, nav.tabs, .no-print, .feedback, .answer-box input, .qbug { display: none !important; }
   body { background: #fff; color: #000; }
   .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
   .paper-q { page-break-inside: avoid; }

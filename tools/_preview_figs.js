@@ -7,6 +7,10 @@
      node tools/_preview_figs.js <输出路径>               指定输出文件
      node tools/_preview_figs.js <输出路径> --only=21,26,29 --times=5
      node tools/_preview_figs.js <输出路径> --set=icas21y2m  换成 2021 批
+     node tools/_preview_figs.js <输出路径> --inline         原题图嵌成 base64（自包含，给内置预览用）
+
+   为什么要有 --inline：IDE 的内置预览是把 HTML 复制到沙箱目录里再给的，
+   相对路径的原题截图会 404（实测 /assets/... → 404）。嵌成 data URI 才能左右对照。
 */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const root = path.join(__dirname, '..');
@@ -30,8 +34,18 @@ const SET = setArg || 'icas22y2m';
 const SETNAME = { icas22y2m: 'ICAS 2022 Year 2', icas21y2m: 'ICAS 2021 Year 2' }[SET] || SET;
 const ONLY = onlyArg ? onlyArg.split(',').map(s => SET + '-' + s.trim().padStart(2, '0')) : null;
 const TIMES = timesArg ? Math.max(1, Math.min(8, +timesArg)) : null;
-/* 图片用相对于产物目录的路径，产物放到别处（如 .workbuddy/）也能显示原题截图 */
+/* 图片用相对于产物目录的路径，产物放到别处（如 .workbuddy/）也能显示原题截图
+   （--inline 时改成 base64 内嵌，见下面的 imgSrc） */
 const IMG = (path.relative(path.dirname(OUT), root) || '.').replace(/\\/g, '/');
+const INLINE = args.indexOf('--inline') >= 0;
+const EXT_MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' };
+function imgSrc(rel) {
+  if (!INLINE) return IMG + '/' + rel;
+  const p = path.join(root, rel);
+  if (!fs.existsSync(p)) return IMG + '/' + rel;
+  const mime = EXT_MIME[path.extname(p).toLowerCase()] || 'image/png';
+  return 'data:' + mime + ';base64,' + fs.readFileSync(p).toString('base64');
+}
 
 const CSS = `
 body{font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;background:#15181d;color:#e6e6e6;padding:22px}
@@ -68,7 +82,7 @@ figs.forEach(t => {
        (t.diagram ? t.diagram.type : '无主图') + '</code>' +
        (t.answer && t.answer.optionsSvg ? ' + optionsSvg' : '') + '</h3><table><tr>';
   h += '<td class="orig"><div class="tag">原题</div>' +
-       (t.originalImage ? '<img src="' + IMG + '/' + t.originalImage + '" alt="原题">' : '<span class="none">（无原题图）</span>') + '</td>';
+       (t.originalImage ? '<img src="' + imgSrc(t.originalImage) + '" alt="原题">' : '<span class="none">（无原题图）</span>') + '</td>';
   h += '<td class="gen">';
   // Q8 有 4 个可被标出的盒子，每种都出一次，方便核对每个盒子的形状比例
   const times = TIMES || (t.id === 'icas22y2m-08' ? 4 : 2);  for (let i = 0; i < times; i++) {

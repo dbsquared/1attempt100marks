@@ -459,8 +459,24 @@
     if (el) el.textContent = n ? ('🔖 已标记 ' + n + ' 题') : '';
   }
 
+  /* 交卷前确认学生已填真实姓名：未填则提示并允许当场补填，但不强制阻止交卷 */
+  function ensureStudentName() {
+    if (Store.currentHasRealName()) return;
+    var cur = Store.current();
+    var curName = cur.name || '未命名';
+    if (confirm('提示：当前学生还没有填写真实姓名（显示「' + curName + '」）。\n\n点「确定」先填姓名，点「取消」直接交卷。')) {
+      var n = prompt('请输入学生姓名', '');
+      if (n && n.trim()) {
+        Store.renameProfile(cur.id, n.trim());
+        updateWho();
+        renderStudentList();
+      }
+    }
+  }
+
   function submitPaper() {
     if (!paper || paper.graded) return;
+    ensureStudentName();
     // 有被标记的题目时，先提示并允许跳回查看，避免漏做
     var markedKeys = Object.keys(paper.marks || {}).filter(function (k) { return paper.marks[k]; });
     if (markedKeys.length) {

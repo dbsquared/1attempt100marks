@@ -60,6 +60,14 @@
   }
   migrateIfNeeded();
 
+  /* 真实姓名判定：空、纯空白、或仍是自动生成的占位名「学生N」都算未填 */
+  function isRealName(name) {
+    var s = (name == null ? '' : String(name)).trim();
+    if (!s) return false;
+    if (/^学生\d+$/.test(s)) return false;
+    return true;
+  }
+
   /* ---------- 档案读写 ---------- */
   function profiles() { return read('profiles', []) || []; }
   function saveProfiles(list) { write('profiles', list); }
@@ -156,6 +164,8 @@
     addProfile: addProfile,
     renameProfile: renameProfile,
     removeProfile: removeProfile,
+    isRealName: isRealName,
+    currentHasRealName: function () { return isRealName(current().name); },
 
     /* ---------- 设置 ---------- */
     settings: function () {

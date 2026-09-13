@@ -1127,10 +1127,12 @@
       return s;
     },
 
-    /* 四张骨牌横排（Q9 选项） */
+    /* 四张骨牌横排（Q9 选项）。骨牌两半的点数写进 data-a/data-b，
+       自检脚本据此独立核对「每半不超过 6 点」「画出来的圆点数 = 两半之和」。 */
     dominorow: function (spec, vars) {
+      var a = Math.round(num(spec.a, vars)), b = Math.round(num(spec.b, vars));
       var W = 168, H = 92, s = svgOpen(W, H, 'domino option');
-      s += dominoTile(9, 10, 150, 72, Math.round(num(spec.a, vars)), Math.round(num(spec.b, vars)));
+      s += '<g data-u="optdom" data-a="' + a + '" data-b="' + b + '">' + dominoTile(9, 10, 150, 72, a, b) + '</g>';
       s += '</svg>';
       return s;
     },

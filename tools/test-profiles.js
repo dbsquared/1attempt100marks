@@ -35,10 +35,18 @@ chk('默认学生沿用 sid a1m1（云端连续）', profs[0].sid === 'a1m1');
 chk('默认学生即为当前', S.current().id === profs[0].id);
 chk('当前学生进度初始为空', Object.keys(S.progress()).length === 0);
 
+/* ---------- A2. 真实姓名判定 ---------- */
+chk('默认档案名 学生1 不算已填真名', !S.isRealName('学生1'));
+chk('空白名不算已填', !S.isRealName('   '));
+chk('空名不算已填', !S.isRealName(''));
+chk('真实姓名算已填', S.isRealName('小明'));
+chk('当前默认学生尚未填真名', !S.currentHasRealName());
+
 /* ---------- B. 多学生操作 ---------- */
 let defId = profs[0].id;
 let m = S.addProfile('小明');
 chk('添加后共 2 个学生', S.profiles().length === 2);
+chk('添加真实姓名后当前已填真名', S.currentHasRealName());
 chk('添加后自动切换到新学生', S.current().name === '小明');
 chk('新学生 sid 与默认不同', S.current().sid !== 'a1m1');
 S.saveProgress({ 'x1': { seen: 3 } });

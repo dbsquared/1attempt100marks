@@ -3600,7 +3600,9 @@
         "ea + eb - fa <= 6",
         "ea + eb != P",
         "ea != P",
-        "ea != pa || eb != pb"
+        "ea != pa || eb != pb",
+        "pa - 1 != pb",
+        "fa != eb"
       ],
       "answer": {
         "type": "choice",

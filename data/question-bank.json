@@ -904,6 +904,9 @@
       "sanity": {
         "integer": true,
         "min": 1
+      },
+      "original": {
+        "n": 7
       }
     },
     {
@@ -958,6 +961,9 @@
         "day": "d",
         "month": 6,
         "weather": "sunny"
+      },
+      "original": {
+        "d": 6
       }
     },
     {
@@ -1009,6 +1015,9 @@
       "diagram": {
         "type": "stickrow",
         "shapes": 3
+      },
+      "original": {
+        "n": 4
       }
     },
     {
@@ -1054,7 +1063,10 @@
         "type": "hexagon",
         "drawn": "k"
       },
-      "originalImage": "assets/originals/2022y2m-q04.png"
+      "originalImage": "assets/originals/2022y2m-q04.png",
+      "original": {
+        "k": 4
+      }
     },
     {
       "id": "icas22y2m-05",
@@ -1117,6 +1129,9 @@
           9
         ],
         "slots": 2
+      },
+      "original": {
+        "p": 2
       }
     },
     {
@@ -1175,6 +1190,9 @@
       "diagram": {
         "type": "house",
         "omit": "omitIdx"
+      },
+      "original": {
+        "omitIdx": 0
       }
     },
     {
@@ -1240,7 +1258,12 @@
         "n": "n",
         "k": "k"
       },
-      "originalImage": "assets/originals/2022y2m-q07.png"
+      "originalImage": "assets/originals/2022y2m-q07.png",
+      "original": {
+        "E": 50,
+        "n": 10,
+        "k": 7
+      }
     },
     {
       "id": "icas22y2m-08",
@@ -1390,6 +1413,12 @@
           "c3"
         ],
         "unit": "goal"
+      },
+      "original": {
+        "c0": 4,
+        "c1": 3,
+        "c2": 2,
+        "c3": 5
       }
     },
     {
@@ -1470,6 +1499,11 @@
             "rhs": "?"
           }
         ]
+      },
+      "original": {
+        "a": 9,
+        "b": 4,
+        "c": 2
       }
     },
     {
@@ -1564,6 +1598,13 @@
           "v5"
         ],
         "slots": 0
+      },
+      "original": {
+        "v1": 4,
+        "v2": 9,
+        "v3": 6,
+        "v4": 7,
+        "v5": 5
       }
     },
     {
@@ -1630,6 +1671,10 @@
         "type": "clocks",
         "baseH": "h",
         "correctCell": "cell"
+      },
+      "original": {
+        "h": 12,
+        "cell": 3
       }
     },
     {
@@ -1861,6 +1906,12 @@
             "count": "dd"
           }
         ]
+      },
+      "original": {
+        "a": 11,
+        "b": 2,
+        "c": 3,
+        "dd": 5
       }
     },
     {
@@ -1906,7 +1957,10 @@
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q15.png",
-      "noFigure": "原题为纯文字应用题（草莓吃一半再吃一半），无图"
+      "noFigure": "原题为纯文字应用题（草莓吃一半再吃一半），无图",
+      "original": {
+        "L": 8
+      }
     },
     {
       "id": "icas22y2m-16",
@@ -2016,7 +2070,10 @@
         "type": "stick",
         "parts": "k"
       },
-      "originalImage": "assets/originals/2022y2m-q17.png"
+      "originalImage": "assets/originals/2022y2m-q17.png",
+      "original": {
+        "k": 8
+      }
     },
     {
       "id": "icas22y2m-18",
@@ -2084,6 +2141,10 @@
       "diagram": {
         "type": "standcircle",
         "start": "S"
+      },
+      "original": {
+        "S": 20,
+        "n": 7
       }
     },
     {
@@ -2126,7 +2187,10 @@
         "type": "squareposts",
         "p": "p"
       },
-      "originalImage": "assets/originals/2022y2m-q19.png"
+      "originalImage": "assets/originals/2022y2m-q19.png",
+      "original": {
+        "p": 5
+      }
     },
     {
       "id": "icas22y2m-20",
@@ -2178,7 +2242,12 @@
       },
       "sourceSet": "ICAS 2022 Year 2 Mathematics",
       "originalImage": "assets/originals/2022y2m-q20.png",
-      "noFigure": "原题为纯文字应用题（比多比少求总数），无图"
+      "noFigure": "原题为纯文字应用题（比多比少求总数），无图",
+      "original": {
+        "a": 6,
+        "m": 10,
+        "k": 2
+      }
     },
     {
       "id": "icas22y2m-21",
@@ -2312,6 +2381,9 @@
       "diagram": {
         "type": "seasonwheel",
         "month": "m"
+      },
+      "original": {
+        "m": 11
       }
     },
     {
@@ -2356,6 +2428,9 @@
       },
       "diagram": {
         "type": "coins"
+      },
+      "original": {
+        "T": 10
       }
     },
     {
@@ -2519,6 +2594,10 @@
         "type": "papers",
         "m": "m",
         "k": "k"
+      },
+      "original": {
+        "m": 3,
+        "k": 2
       }
     },
     {
@@ -2771,6 +2850,17 @@
             "to": 2
           }
         ]
+      },
+      "original": {
+        "s": 10,
+        "a1": 9,
+        "f1": 3,
+        "a2": 5,
+        "f2": 6,
+        "a3": 7,
+        "f3": 4,
+        "a4": 3,
+        "f4": 7
       }
     },
     {
@@ -2839,6 +2929,9 @@
         ],
         "count": "n",
         "offset": "off"
+      },
+      "original": {
+        "n": 4
       }
     },
     {
@@ -2945,6 +3038,11 @@
             "rhs": "C"
           }
         ]
+      },
+      "original": {
+        "c": 15,
+        "t": 10,
+        "d": 5
       }
     },
     {

@@ -129,6 +129,66 @@
     window.scrollTo(0, 0);
   }
 
+  /* ---------- 题头锁定：滚下去看选项时题干常驻，滚到下一题自动让位 ---------- */
+  /* 把吸顶导航的真实高度写进 CSS 变量，题干就停在导航下方而不是被盖住 */
+  function syncHoldTop() {
+    var hd = document.querySelector('header.top');
+    var px = hd ? Math.round(hd.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty('--hold-top', Math.max(px, 0) + 'px');
+    return Math.max(px, 0);
+  }
+
+  var holdIO = null;
+  /* 给每个 .qhold 决定锁「题干+图」还是只锁「题干」，并挂哨兵判断是否已粘住。
+     整块高过半个屏幕就只锁题干；题干自己就太高（或整块本来就不需要滚动）则不锁。 */
+  function applyHold(root) {
+    if (!root || !root.querySelectorAll) return;
+    var top = syncHoldTop();
+    var vh = window.innerHeight || 768;
+    var boxes = root.querySelectorAll('.qhold');
+    var sens = [];
+    Array.prototype.forEach.call(boxes, function (box) {
+      var stem = box.querySelector('.qhold-stem');
+      if (!stem) return;
+      box.classList.remove('hold-all', 'hold-stem', 'stuck');
+      var hAll = box.offsetHeight;
+      if (!hAll) return;                                   /* 隐藏中的视图不处理 */
+      /* 题头太高就退一步：先试「题干+图」整块，装不下就只锁题干，题干本身就占满屏则索性不锁 */
+      var avail = Math.max(vh - top, 240);
+      var mode = hAll <= avail * 0.62 ? 'hold-all'
+        : (stem.offsetHeight <= avail * 0.5 ? 'hold-stem' : '');
+      if (!mode) return;
+      box.classList.add(mode);
+      /* 1px 哨兵贴着题头上沿，它一离开视口就说明题头已经粘住了 */
+      var sen = box.previousElementSibling;
+      if (!sen || !sen.classList || !sen.classList.contains('hold-sentinel')) {
+        sen = document.createElement('i');
+        sen.className = 'hold-sentinel';
+        sen.setAttribute('aria-hidden', 'true');
+        box.parentNode.insertBefore(sen, box);
+      }
+      sen.__holdBox = box;
+      sens.push(sen);
+    });
+    if (holdIO) { holdIO.disconnect(); holdIO = null; }
+    if (!sens.length || !window.IntersectionObserver) return;
+    holdIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var b = en.target.__holdBox;
+        if (b) b.classList.toggle('stuck', !en.isIntersecting);
+      });
+    }, { rootMargin: '-' + Math.max(top - 2, 0) + 'px 0px 0px 0px', threshold: 0 });
+    sens.forEach(function (s) { holdIO.observe(s); });
+  }
+
+  var holdTimer = null;
+  function reholdAll() {
+    if (holdTimer) clearTimeout(holdTimer);
+    holdTimer = setTimeout(function () { applyHold(document); }, 120);
+  }
+  window.addEventListener('resize', reholdAll);
+  window.addEventListener('orientationchange', reholdAll);
+
   /* ---------- 连线配对题（match） ---------- */
   function computeCorrectLinks(q) {
     var out = [];
@@ -249,8 +309,8 @@
   }
 
   function renderQuestionCard(q, tpl) {
-    var h = '<div class="stem">' + q.stemHtml + '</div>';
-    if (q.diagramSvg) h += '<div class="diagram-wrap">' + q.diagramSvg + '</div>';
+    var h = '<div class="qhold"><div class="qhold-stem"><div class="stem">' + q.stemHtml + '</div></div>' +
+      (q.diagramSvg ? '<div class="diagram-wrap">' + q.diagramSvg + '</div>' : '') + '</div>';
     if (q.type === 'choice') {
       var multi = Array.isArray(q.correctIndex);
       h += '<div class="opts">' + q.options.map(function (o, i) {
@@ -276,6 +336,7 @@
       '<div id="origImg" class="hidden"><img src="' + esc(tpl.image) + '" alt="原题" style="max-width:100%;margin-top:8px;border:1px solid var(--border);border-radius:10px"></div></p>';
     if (tpl.source) h += '<p class="small muted" style="margin-top:14px">来源：' + esc(tpl.source) + '</p>';
     $('#qcard').innerHTML = h;
+    applyHold($('#qcard'));
     var lk = $('#lnkOrig');
     if (lk) lk.addEventListener('click', function () { $('#origImg').classList.toggle('hidden'); });
 
@@ -469,11 +530,19 @@
     return origLangOf(tpl);
   }
 
+  /* 原题在卷子里的顺序：按 source 末尾的 Qn 排，和原卷题号一致 */
+  function origNoOf(tpl) {
+    var m = /Q\s*(\d+)/i.exec(tpl.source || '');
+    return m ? +m[1] : 999;
+  }
+
   function genPaper() {
     var size = Math.max(1, Math.min(60, +$('#ppSize').value || 10));
     var langMode = ($('#ppLang') && $('#ppLang').value) || 'orig';
+    var origMode = !!($('#ppOriginal') && $('#ppOriginal').checked);
     var scope = $('#ppScope').value, sub = $('#ppSubject').value, topic = $('#ppTopic').value;
     var all = Bank.all().filter(function (t) { return !sub || (t.subject || '') === sub; });
+    if (origMode) all = all.filter(function (t) { return t.original; });   // 原题模式：只出已录入原题数值的真题
     var ids = all.map(function (t) { return t.id; });
     var p = Store.progress(), w = Store.wrong().map(function (x) { return x.id; });
 
@@ -486,30 +555,47 @@
     var srcs = checkedSources('#ppSources');
     if (srcs.length) ids = ids.filter(function (id) { var t = Bank.byId(id); return t && srcs.indexOf(sourceSetOf(t)) >= 0; });
 
-    if (!ids.length) { toast('该条件下没有题目'); return; }
-    shuffle(ids);
+    if (!ids.length) {
+      toast(origMode ? '该来源没有录入原题数值（目前仅 ICAS 2021 / 2022 真卷支持「原题」）' : '该条件下没有题目');
+      return;
+    }
+
     var picked = [], sigs = {};
-    for (var i = 0; i < size * 3 && picked.length < size; i++) {
-      var id = ids[i % ids.length];
-      var tpl = Bank.byId(id); if (!tpl) continue;
-      Generator.preferLang = paperLangFor(tpl, langMode);
-      var q = Generator.instantiate(tpl, { count: sigs });
-      if (!q) continue;
-      if (picked.some(function (x) { return x.sig === q.sig; })) continue;
-      sigs[q.sig] = 1;
-      picked.push(q);
+    if (origMode) {
+      /* 原题：每个模板固定一题，按原卷题号排序取前 size 题，不抽数、不洗牌 */
+      var tpls = ids.map(function (id) { return Bank.byId(id); }).filter(function (t) { return !!t; });
+      tpls.sort(function (a, b) { return origNoOf(a) - origNoOf(b); });
+      for (var k = 0; k < tpls.length && picked.length < size; k++) {
+        Generator.preferLang = paperLangFor(tpls[k], langMode);
+        var q = Generator.instantiate(tpls[k], null, { original: true });
+        if (!q) continue;
+        if (picked.some(function (x) { return x.tplId === q.tplId; })) continue;
+        picked.push(q);
+      }
+    } else {
+      shuffle(ids);
+      for (var i = 0; i < size * 3 && picked.length < size; i++) {
+        var id = ids[i % ids.length];
+        var tpl = Bank.byId(id); if (!tpl) continue;
+        Generator.preferLang = paperLangFor(tpl, langMode);
+        var q2 = Generator.instantiate(tpl, { count: sigs });
+        if (!q2) continue;
+        if (picked.some(function (x) { return x.sig === q2.sig; })) continue;
+        sigs[q2.sig] = 1;
+        picked.push(q2);
+      }
     }
     Generator.preferLang = null;   // 复位，避免影响练习模式的随机语言
-    if (!picked.length) { toast('生成失败，请检查题库模板'); return; }
+    if (!picked.length) { toast(origMode ? '原题数值缺失，无法出题' : '生成失败，请检查题库模板'); return; }
 
-    paper = { questions: picked, answers: {}, marks: {}, graded: false, createdAt: Date.now(), id: 'P' + Date.now() };
+    paper = { questions: picked, answers: {}, marks: {}, graded: false, createdAt: Date.now(), id: 'P' + Date.now(), original: origMode };
     renderPaper();
     $('#btnPrintPaper').classList.remove('hidden');
     $('#btnSubmitPaper').classList.remove('hidden');
   }
 
   function renderPaper() {
-    var h = '<div class="card"><div class="row"><h2 style="margin:0">卷子 · ' + paper.questions.length + ' 题</h2>' +
+    var h = '<div class="card"><div class="row"><h2 style="margin:0">卷子 · ' + paper.questions.length + ' 题' + (paper.original ? ' <span class="pill new">原题</span>' : '') + '</h2>' +
       '<span class="spacer"></span><span class="small muted">' + fmtDate(paper.createdAt) + ' 生成</span></div>';
     if (paper.graded) {
       var ok = paper.questions.filter(function (q) { return paper.answers[q.key] && paper.answers[q.key].ok; }).length;
@@ -521,14 +607,16 @@
     paper.questions.forEach(function (q, i) {
       var a = paper.answers[q.key];
       var marked = paper.marks[q.key];
-      h += '<div class="paper-q' + (marked ? ' marked' : '') + '" data-key="' + q.key + '"><div><span class="no">' + (i + 1) + '.</span>' +
+      h += '<div class="paper-q' + (marked ? ' marked' : '') + '" data-key="' + q.key + '">' +
+        '<div class="qhold"><div class="qhold-stem"><span class="no">' + (i + 1) + '.</span>' +
         q.stemHtml +
         (q.unit ? ' <span class="unit">（' + esc(q.unit) + '）</span>' : '') +
         '<span class="print-only"> ______________________</span>' +
         (paper.graded ? '' : '<button type="button" class="markbtn' + (marked ? ' on' : '') + '" data-q="' + q.key + '">' + (marked ? '🔖 已标记' : '🔖 标记') + '</button>') +
         '</div>' +
         (q.diagramSvg ? '<div class="diagram-wrap">' + q.diagramSvg + '</div>' : '') +
-        (q.tpl.image ? '<div class="paper-img"><img src="' + esc(q.tpl.image) + '" alt="原题图"></div>' : '');
+        (q.tpl.image ? '<div class="paper-img"><img src="' + esc(q.tpl.image) + '" alt="原题图"></div>' : '') +
+        '</div>';
       if (q.type === 'choice') {
         h += '<div class="opts" style="margin-top:8px">' + q.options.map(function (o, k) {
           var cls = 'opt';
@@ -561,6 +649,7 @@
     });
     h += '</div>';
     $('#paperArea').innerHTML = h;
+    applyHold($('#paperArea'));
 
     $$('#paperArea .opt').forEach(function (el) {
       el.addEventListener('click', function () {
@@ -1111,6 +1200,13 @@
       renderStart();
       toast('题库加载失败：' + e.message);
     });
+
+    /* 吸顶导航高度会随标签换行变化，盯着它随时刷新「题干停在多高」 */
+    syncHoldTop();
+    if (window.ResizeObserver) {
+      var hd = document.querySelector('header.top');
+      if (hd) new ResizeObserver(function () { syncHoldTop(); }).observe(hd);
+    }
 
     $$('#tabs button').forEach(function (b) { b.addEventListener('click', function () { switchView(b.dataset.view); }); });
 

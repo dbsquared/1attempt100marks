@@ -29,10 +29,6 @@
     for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
     return arr;
   }
-  function shuffle(arr) {
-    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
-    return arr;
-  }
 
   /* ---------- 数值格式化 ---------- */
   function fmtNum(v, digits) {
@@ -153,7 +149,8 @@
     return true;
   }
 
-  function computeAnswer(tpl, vars, lang) {
+  function computeAnswer(tpl, vars, lang, cfg) {
+    cfg = cfg || {};
     var a = tpl.answer || {};
     var out = { type: a.type || 'number' };
 
@@ -166,8 +163,10 @@
       var opts = (a.options || []).map(function (o) { return renderText(resolveField(o, lang), vars); });
       var multi = Array.isArray(ci);
       var idxs = opts.map(function (_, i) { return i; });
-      // 洗牌
-      for (var i = idxs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = idxs[i]; idxs[i] = idxs[j]; idxs[j] = t; }
+      // 洗牌（「原题模式」cfg.noShuffle 保持原卷选项顺序，correctIndex 即为原卷下标）
+      if (!cfg.noShuffle) {
+        for (var i = idxs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = idxs[i]; idxs[i] = idxs[j]; idxs[j] = t; }
+      }
       var newOpts = idxs.map(function (i) { return opts[i]; });
       // 选项配图（图形式的选项，避免用文字描述图形而"泄题"），与选项一起洗牌
       if (a.optionsSvg && global.Diagrams) {
@@ -197,8 +196,8 @@
           return { svg: svg, key: key };
         });
       }
-      out.leftItems = shuffle(buildItems(a.left));
-      out.rightItems = shuffle(buildItems(a.right));
+      out.leftItems = cfg.noShuffle ? buildItems(a.left) : shuffle(buildItems(a.left));
+      out.rightItems = cfg.noShuffle ? buildItems(a.right) : shuffle(buildItems(a.right));
       return out;
     }
 
@@ -255,12 +254,64 @@
     return h.toString(36);
   }
 
+  /* 用给定变量组装一道题的实例（随机模式与「原题模式」共用） */
+  function buildQ(tpl, vars, lang, sig, cfg) {
+    cfg = cfg || {};
+    var ans = computeAnswer(tpl, vars, lang, cfg);
+    return {
+      key: cfg.original ? (tpl.id + '#orig') : (tpl.id + '#' + sig),
+      sig: sig,
+      tplId: tpl.id,
+      tpl: tpl,
+      vars: vars,
+      lang: lang,
+      original: !!cfg.original,
+      stemHtml: renderHtml(resolveField(tpl.stem, lang), vars),
+      stemText: renderText(resolveField(tpl.stem, lang), vars),
+      solutionHtml: renderHtml(resolveField(tpl.solution, lang), vars),
+      solutionText: renderText(resolveField(tpl.solution, lang), vars),
+      type: ans.type,
+      value: ans.value,
+      display: ans.display,
+      options: ans.options,
+      optionsSvg: ans.optionsSvg,
+      correctIndex: ans.correctIndex,
+      leftItems: ans.leftItems,
+      rightItems: ans.rightItems,
+      num: ans.num, den: ans.den,
+      tolerance: ans.tolerance,
+      digits: ans.digits,
+      alternatives: ans.alternatives,
+      unit: tpl.unit || '',
+      hint: renderHtml(resolveField(tpl.hint, lang), vars),
+      diagramSvg: (tpl.diagram && global.Diagrams) ? global.Diagrams.render(tpl.diagram, vars) : ''
+    };
+  }
+
+  /* 「原题模式」：按模板 original 字段还原原卷那一道题（固定变量、不抽数、不洗牌） */
+  function instantiateOriginal(tpl) {
+    if (!tpl || !tpl.original) return null;
+    var vars = {};
+    try {
+      Object.keys(tpl.original).forEach(function (k) { vars[k] = tpl.original[k]; });
+      var der = tpl.derived || {};
+      Object.keys(der).forEach(function (k) { vars[k] = Expr.eval(der[k], vars); });
+    } catch (e) { return null; }
+    try {
+      return buildQ(tpl, vars, pickLang(tpl), 'orig', { original: true, noShuffle: true });
+    } catch (e) { return null; }
+  }
+
   /**
    * 实例化一道题
    * @param {object} tpl 模板
-   * @param {object} [avoid] 可选：{sigSet:Set} 避免与已生成的数值雷同
+   * @param {object} [avoid] 可选：{count:{sig:1}} 避免与已生成的数值雷同
+   * @param {object} [opts]  可选：{original:true} 出原题（需模板带 original 字段）
    */
-  function instantiate(tpl, avoid) {
+  function instantiate(tpl, avoid, opts) {
+    opts = opts || {};
+    if (opts.original) return instantiateOriginal(tpl);
+
     var last = null;
     for (var attempt = 0; attempt < 400; attempt++) {
       var vars;
@@ -268,40 +319,12 @@
       if (!checkConstraints(tpl, vars)) continue;
       var lang = pickLang(tpl);
       var ans;
-      try { ans = computeAnswer(tpl, vars, lang); } catch (e) { continue; }
+      try { ans = computeAnswer(tpl, vars, lang, {}); } catch (e) { continue; }
       if (!checkSanity(tpl, ans)) continue;
 
       var sig = hashCode(JSON.stringify(vars));
       if (avoid && avoid.count && avoid.count[sig]) { if (attempt < 300) continue; }
-      last = {
-        key: tpl.id + '#' + sig,
-        sig: sig,
-        tplId: tpl.id,
-        tpl: tpl,
-        vars: vars,
-        lang: lang,
-        stemHtml: renderHtml(resolveField(tpl.stem, lang), vars),
-        stemText: renderText(resolveField(tpl.stem, lang), vars),
-        solutionHtml: renderHtml(resolveField(tpl.solution, lang), vars),
-        solutionText: renderText(resolveField(tpl.solution, lang), vars),
-        type: ans.type,
-        value: ans.value,
-        display: ans.display,
-        options: ans.options,
-        optionsSvg: ans.optionsSvg,
-        correctIndex: ans.correctIndex,
-        leftItems: ans.leftItems,
-        rightItems: ans.rightItems,
-        leftItems: ans.leftItems,
-        rightItems: ans.rightItems,
-        num: ans.num, den: ans.den,
-        tolerance: ans.tolerance,
-        digits: ans.digits,
-        alternatives: ans.alternatives,
-        unit: tpl.unit || '',
-        hint: renderHtml(resolveField(tpl.hint, lang), vars),
-        diagramSvg: (tpl.diagram && global.Diagrams) ? global.Diagrams.render(tpl.diagram, vars) : ''
-      };
+      last = buildQ(tpl, vars, lang, sig, {});
       break;
     }
     return last;
@@ -309,6 +332,7 @@
 
   global.Generator = {
     instantiate: instantiate,
+    instantiateOriginal: instantiateOriginal,
     renderHtml: renderHtml,
     renderText: renderText,
     fmtNum: fmtNum,

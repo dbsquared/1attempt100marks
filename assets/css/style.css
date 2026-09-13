@@ -115,6 +115,15 @@ textarea { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-
 .pill.new { background: var(--brand-soft); color: var(--brand); border-color: transparent; }
 .pill.review { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
 .pill.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+/* 题库管理列表里每个题的「原卷题号」徽标（ICAS 模板 id 尾号 = Q 几） */
+.qno {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 30px; height: 22px; padding: 0 8px; margin-right: 6px;
+  border-radius: 7px; background: var(--brand); color: #fff;
+  font-weight: 700; font-size: 13px; line-height: 1; vertical-align: middle;
+  letter-spacing: .3px;
+}
+.qno::before { content: "Q"; font-size: 10px; opacity: .85; margin-right: 1px; }
 
 .stem { font-size: 20px; line-height: 1.9; margin: 6px 0 18px; }
 .stem .blank {

@@ -587,6 +587,15 @@
     if (s && typeof s === 'object' && !Array.isArray(s)) s = s.zh || s.en || '';
     return String(s || '');
   }
+  /* 题号：ICAS 模板 id 形如 icas21y2m-09，尾号就是原卷题号（Q1~Q30/Q31）。
+     个别题拆成 a/b 两个变体（如 icas22y2m-13a/13b 都是原卷第 13 题），取前导数字即可。
+     示例模板（m6-frac-add 之类）没有原卷题号，返回 null。用于「题库管理」列表里直接标出 Q 几，
+     方便对照「请你复验 Q9 / Q13 / Q20…」这类指名。 */
+  function tplQNo(t) {
+    if (!t || !t.id) return null;
+    var m = t.id.match(/^icas\d{2}y2m-(\d+)/);
+    return m ? parseInt(m[1], 10) : null;
+  }
   /* 题库对照右栏：直接画出「拆解后的简化 SVG」，而不是原题截图。
      有 SVG 选项的题把选项图也一并列出，方便一眼看出选项是不是泄题。 */
   function figHtml(t) {
@@ -615,6 +624,10 @@
     $('#bankList').innerHTML = all.map(function (t) {
       var st = p[t.id];
       var desc = t.title || tplStemText(t).replace(/\{[^}]*\}/g, '…');
+      var qno = tplQNo(t);
+      var badge = qno != null
+        ? '<span class="qno" title="' + esc(sourceSetOf(t)) + ' · 第 ' + qno + ' 题">' + qno + '</span>'
+        : '';
       var orig = t.originalImage
         ? '<a href="' + esc(t.originalImage) + '" target="_blank" rel="noopener" title="点击看大图">' +
           '<img src="' + esc(t.originalImage) + '" alt="原题" class="orig-img"></a>'
@@ -622,7 +635,7 @@
       return '<div class="list-item"><div class="cmp">' +
         '<div class="cmp-col"><div class="cmp-h">原题</div><div class="cmp-body">' + orig + '</div></div>' +
         '<div class="cmp-col"><div class="cmp-h">导入的题</div><div class="cmp-body">' +
-        '<div class="t">' + esc(t.subject || '') + ' · ' + esc(t.topic || '') +
+        '<div class="t">' + badge + esc(t.subject || '') + ' · ' + esc(t.topic || '') +
         ' <span class="pill">' + stars(t.difficulty || 2) + '</span>' +
         (st && st.mastered ? ' <span class="pill ok">已掌握</span>' : (st && st.seen ? ' <span class="pill">练过 ' + st.seen + ' 次</span>' : ' <span class="pill new">未练</span>')) +
         (custom.indexOf(t.id) >= 0 ? ' <span class="pill review">本机</span>' : '') + '</div>' +

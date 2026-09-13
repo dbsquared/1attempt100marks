@@ -3784,16 +3784,17 @@
       "topic": "时刻对应",
       "grade": "二年级",
       "difficulty": 2,
-      "title": "哪个电子钟和钟面 1 一样",
+      "title": "把钟面和数字钟连起来",
       "tags": [
         "时间",
         "钟面",
-        "电子钟"
+        "电子钟",
+        "配对"
       ],
       "source": "ICAS 2021 Year 2 Mathematics Q12",
       "stem": {
-        "en": "Clock 1 shows a time. Which of these digital clocks shows the same time?",
-        "zh": "1 号钟面上的时刻是几点几分？下面哪个电子钟显示的时间和它一样？"
+        "en": "Draw a line from each clock on the left to the digital clock on the right that shows the same time.",
+        "zh": "把左边每个钟面和右边时间相同的电子钟连起来。"
       },
       "vars": {
         "h0": {

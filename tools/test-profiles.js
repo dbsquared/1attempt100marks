@@ -58,6 +58,15 @@ S.saveProgress({ 'y1': { seen: 1 } });
 S.setCurrent(m.id);
 chk('切回小明后看不到默认的进度', !S.progress()['y1'] && !!S.progress()['x1']);
 
+/* ---------- B2. 改名（回归：曾因把 profiles() 读两次、第二次写回旧数据而失效） ---------- */
+S.renameProfile(defId, '小红');
+chk('改名写回本地', S.profileBySid('a1m1').name === '小红', S.profileBySid('a1m1').name);
+chk('改名不波及其他学生', S.profileBySid(m.sid).name === '小明', S.profileBySid(m.sid).name);
+S.renameProfile(m.id, '  小刚  ');
+chk('改名自动 trim 空白', S.profileBySid(m.sid).name === '小刚', S.profileBySid(m.sid).name);
+S.renameProfile(m.id, '');
+chk('空名不改动（保留原名）', S.profileBySid(m.sid).name === '小刚', S.profileBySid(m.sid).name);
+
 /* ---------- C. 按 sid 路由导入 ---------- */
 let s2 = S.ensureProfileBySid('kid99', 'AB12');
 chk('ensureProfileBySid 新建并切换', S.current().sid === 'kid99' && S.profiles().length === 3);

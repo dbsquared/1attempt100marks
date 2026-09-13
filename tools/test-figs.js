@@ -571,47 +571,36 @@ const mAll = (s, re) => [...String(s || '').matchAll(re)];
   console.log('21Q9 示范那对总数相同 ✓ 逐张数圆点 ✓ 与「拿起这张」总数相同的唯一那张 = 正确选项 ✓');
 }
 
-/* ---------- 21Q10：从图上走到哪盆花，就读哪盆的颜色 ---------- */
+/* ---------- 21Q10：从图上走到哪盆花，就读哪盆的颜色（图上不画脚印点，答案靠学生自己数）---------- */
 {
   const t = byId('icas21y2m-10');
   for (let i = 0; i < REP21; i++) {
     const q = Generator.instantiate(t);
     const v = q.vars;
+    /* 4 盆花：data-j + 颜色 + 中心 x（potIcon 的 path 起点为 cx-18） */
     const pots = [];
-    mAll(q.diagramSvg, /<g data-u="pot" data-j="(\d+)" data-fill="([^"]+)"/g).forEach(m => { pots[+m[1]] = { fill: m[2] }; });
+    mAll(q.diagramSvg, /<g data-u="pot" data-j="(\d+)" data-fill="([^"]+)"><path d="M([\d.]+),/g)
+      .forEach(m => { pots[+m[1]] = { fill: m[2], x: +m[3] + 18 }; });
     chk(pots.length === 4 && pots.every(Boolean), '21Q10 图上应有 4 盆花，实际 ' + pots.length);
-    const node = q.diagramSvg.match(/<circle cx="([\d.]+)" cy="[\d.]+" r="[\d.]+"/);
-    chk(!!node, '21Q10 图上应有房子的位置参照');
-    /* 花盆 x 坐标（potIcon 的 path 起点 cx-18） */
-    const potX = [];
-    mAll(q.diagramSvg, /<g data-u="pot" data-j="(\d+)" data-fill="[^"]+"><path d="M([\d.]+),/g)
-      .forEach(m => { potX[+m[1]] = +m[2] + 18; });
-    /* 房子画在中间两盆之间（houseIcon 的墙宽 190，以 houseX 为中心） */
-    const wall = q.diagramSvg.match(/<g data-u="pot"[\s\S]*?$/) ? null : null;
-    const houseX = (potX[1] + potX[2]) / 2 + 0;   /* 165 / 305 的中间 = 235 */
-    const arrow = q.diagramSvg.match(/<line data-u="arrow" data-dir="(-?\d+)" data-n="(\d+)"/);
+    chk(!!q.diagramSvg.match(/<circle[^>]*r="[\d.]+"/), '21Q10 图上应有房子的位置参照');
+    /* 箭头：data-dir 方向，data-n 步数，x1 为起点（startX = houseX + dir*34） */
+    const arrow = q.diagramSvg.match(/<line data-u="arrow" data-dir="(-?\d+)" data-n="(\d+)" x1="([\d.]+)"/);
     chk(!!arrow, '21Q10 图上缺少箭头');
-    chk(+arrow[2] === v.n0, '21Q10 箭头标注的步数 ' + arrow[2] + ' 应为 ' + v.n0);
-    const steps = mAll(q.diagramSvg, /<ellipse data-u="step" cx="([\d.]+)"/g).map(m => +m[1]);
-    chk(steps.length === v.n0, '21Q10 脚印点 ' + steps.length + ' 个，应为 ' + v.n0);
-    const dir = +arrow[1];
-    chk(steps.every(x => dir > 0 ? x > houseX : x < houseX),
-      '21Q10 脚印方向与箭头相反（dir=' + dir + '，脚印 ' + steps.join(',') + '，房子 x=' + houseX + '）');
-    chk(steps.every((x, j) => j === 0 || (dir > 0 ? x > steps[j - 1] : x < steps[j - 1])),
-      '21Q10 脚印应按箭头方向递进：' + steps.join(','));
-    /* 停下的一盆 = 最后一个脚印正对的那盆 */
-    const last = steps[steps.length - 1];
-    let stop = -1, best = 1e9;
-    potX.forEach((x, j) => { if (Math.abs(x - last) < best) { best = Math.abs(x - last); stop = j; } });
-    chk(best < 2, '21Q10 最后一个脚印没对上任何一盆花（脚印 x=' + last + '）');
-    const col = pots[stop].fill;
-    chk(q.options[q.correctIndex] === col,
-      '21Q10 停在 ' + potX.map((x, j) => 'pot' + j + '(' + pots[j].fill + '@' + x + ')').join(' ') +
-      ' 的 ' + stop + ' 号盆，颜色应为 ' + col + '，选中「' + q.options[q.correctIndex] + '」');
-    /* 四个选项颜色互不相同 */
+    const dir = +arrow[1], n0v = +arrow[2], startX = +arrow[3];
+    chk(n0v === v.n0, '21Q10 箭头标注的步数 ' + n0v + ' 应为 ' + v.n0);
+    const houseX = startX - dir * 34;
+    /* 沿箭头方向数 n0 盆：取箭头那一侧、按方向排序后的第 n0 盆 */
+    const side = pots.filter(p => (p.x - houseX) * dir > 0)
+                     .sort((a, b) => dir > 0 ? a.x - b.x : b.x - a.x);
+    chk(side.length >= n0v, '21Q10 箭头一侧花盆只有 ' + side.length + ' 盆，不够走 ' + n0v + ' 盆');
+    const stop = side[n0v - 1];
+    chk(!!stop, '21Q10 沿箭头走 ' + n0v + ' 盆没有对应花盆');
+    chk(q.options[q.correctIndex] === stop.fill,
+      '21Q10 沿箭头走 ' + n0v + ' 盆停在「' + stop.fill + '」(x=' + stop.x + ')，正确选项应为它，实际选中「' +
+      q.options[q.correctIndex] + '」');
     chk(new Set(q.options).size === 4, '21Q10 选项颜色应互不相同：' + q.options.join(','));
   }
-  console.log('21Q10 脚印方向/步数与箭头一致 ✓ 停下的花盆颜色 = 正确选项 ✓');
+  console.log('21Q10 箭头方向/步数正确 ✓ 沿箭头数 n0 盆停下的颜色 = 正确选项 ✓');
 }
 
 /* ---------- 21Q11：数出蔬菜个数，再拿走 t 个 ---------- */

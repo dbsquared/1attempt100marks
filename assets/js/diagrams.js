@@ -1157,17 +1157,13 @@
         s += '<g data-u="pot" data-j="' + i + '" data-fill="' + col + '">' + potIcon(xs[i], base, 20, col) + '</g>';
         if (labels) s += '<text x="' + xs[i] + '" y="' + (base + 30) + '" font-size="13" text-anchor="middle" fill="' + INK + '">' + col + '</text>';
       }
-      /* 行走方向：从房子出发的箭头 + 沿途 n 个脚印点（脚印正对着第 2、3 个花盆，
-         或反向的第 2、1 个花盆）—— 点的个数就是「走了几个花盆」。 */
+      /* 行走方向：从房子出发的箭头（不沿途画脚印点，避免直接提示考生走了哪几盆）。
+         考点就是「按箭头方向数 n 盆花」，答案由学生在图上自己数出来。 */
       var ay = base + 88, dir = sdir === 0 ? 1 : -1;
       var startX = houseX + dir * 34, tipX = dir > 0 ? 412 : 58;
       s += '<line data-u="arrow" data-dir="' + dir + '" data-n="' + n + '" x1="' + startX + '" y1="' + ay +
            '" x2="' + tipX + '" y2="' + ay + '" stroke="#c62828" stroke-width="3.4"/>';
       s += '<polygon points="' + (tipX + dir * 15) + ',' + ay + ' ' + tipX + ',' + (ay - 9) + ' ' + tipX + ',' + (ay + 9) + '" fill="#c62828"/>';
-      for (i = 0; i < n; i++) {
-        var dotX = dir > 0 ? xs[2 + i] : xs[1 - i];
-        s += '<ellipse data-u="step" cx="' + dotX + '" cy="' + ay + '" rx="7" ry="10" fill="#c62828" opacity="0.75"/>';
-      }
       s += '<text x="' + (dir > 0 ? 300 : 172) + '" y="' + (ay + 30) + '" font-size="15" font-weight="700" text-anchor="middle" fill="#c62828">walk this way</text>';
       s += '</svg>';
       return s;

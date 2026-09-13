@@ -3162,6 +3162,9 @@
       "diagram": {
         "type": "faces",
         "count": "n"
+      },
+      "original": {
+        "n": 8
       }
     },
     {
@@ -3248,6 +3251,10 @@
         "type": "patternrow",
         "total": "total",
         "mark": "mark"
+      },
+      "original": {
+        "total": 12,
+        "mark": 8
       }
     },
     {
@@ -3321,6 +3328,10 @@
       "diagram": {
         "type": "weekstrip",
         "today": "t"
+      },
+      "original": {
+        "t": 1,
+        "d": 1
       }
     },
     {
@@ -3396,6 +3407,10 @@
           "a",
           "b"
         ]
+      },
+      "original": {
+        "a": 6,
+        "b": 4
       }
     },
     {
@@ -3453,6 +3468,9 @@
       "diagram": {
         "type": "sameshapes",
         "pair": "pair"
+      },
+      "original": {
+        "pair": 2
       }
     },
     {
@@ -3523,7 +3541,12 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q06.png",
-      "noFigure": "题干和选项全是数字，题目本身不需要配图；原题也只是一组数字选项"
+      "noFigure": "题干和选项全是数字，题目本身不需要配图；原题也只是一组数字选项",
+      "original": {
+        "lo": 10,
+        "hi": 100,
+        "c": 11
+      }
     },
     {
       "id": "icas21y2m-07",
@@ -3585,7 +3608,10 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q07.png",
-      "noFigure": "四个候选问题本身就是全部信息，配图无从画起、也不需要"
+      "noFigure": "四个候选问题本身就是全部信息，配图无从画起、也不需要",
+      "original": {
+        "name": "Ben"
+      }
     },
     {
       "id": "icas21y2m-08",
@@ -3633,7 +3659,11 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q08.png",
-      "noFigure": "数列本身已经写在题干里，不需要配图"
+      "noFigure": "数列本身已经写在题干里，不需要配图",
+      "original": {
+        "s": 11,
+        "d": 5
+      }
     },
     {
       "id": "icas21y2m-09",
@@ -3874,6 +3904,10 @@
       "diagram": {
         "type": "veggies",
         "count": "n"
+      },
+      "original": {
+        "r": 2,
+        "t": 7
       }
     },
     {
@@ -4028,7 +4062,17 @@
         "zh": "模拟钟面上短针指小时，长针指分钟；长针指 12 是整点，指 6 是半点。照这样读出每个钟面的时刻，再连到右边数字相同的电子钟。"
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
-      "originalImage": "assets/originals/2021y2m-q12.png"
+      "originalImage": "assets/originals/2021y2m-q12.png",
+      "original": {
+        "h0": 6,
+        "m0": 0,
+        "h1": 12,
+        "m1": 30,
+        "h2": 1,
+        "m2": 0,
+        "h3": 11,
+        "m3": 30
+      }
     },
     {
       "id": "icas21y2m-13",
@@ -4114,6 +4158,12 @@
         "E": "E",
         "n": "n",
         "k": "k"
+      },
+      "original": {
+        "s": 2,
+        "n": 5,
+        "B": 63,
+        "k": 4
       }
     },
     {
@@ -4241,6 +4291,9 @@
         "n": "n",
         "L": 5,
         "g": 2
+      },
+      "original": {
+        "n": 6
       }
     },
     {
@@ -4496,6 +4549,14 @@
             "fill": "#e5484d"
           }
         ]
+      },
+      "original": {
+        "s0": 3,
+        "t0": 1,
+        "s1": 3,
+        "t1": 2,
+        "s2": 4,
+        "t2": 1
       }
     },
     {
@@ -4688,7 +4749,13 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q20.png",
-      "noFigure": "原题的四张柱状图就是四个选项本身（已逐张画在选项里），题干再画一张会和正确选项完全重复，等于把答案摆在眼前"
+      "noFigure": "原题的四张柱状图就是四个选项本身（已逐张画在选项里），题干再画一张会和正确选项完全重复，等于把答案摆在眼前",
+      "original": {
+        "dv": 3,
+        "kk": 2,
+        "mm": 3,
+        "ax": 10
+      }
     },
     {
       "id": "icas21y2m-21",
@@ -4761,7 +4828,10 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q21.png",
-      "noFigure": "原题的水瓶就是选项本身（四张水位不同的瓶子图已作为 optionsSvg 呈现），题干不需要再配一张主图"
+      "noFigure": "原题的水瓶就是选项本身（四张水位不同的瓶子图已作为 optionsSvg 呈现），题干不需要再配一张主图",
+      "original": {
+        "ridges": 6
+      }
     },
     {
       "id": "icas21y2m-22",
@@ -4971,7 +5041,11 @@
       },
       "sourceSet": "ICAS 2021 Year 2 Mathematics",
       "originalImage": "assets/originals/2021y2m-q24.png",
-      "noFigure": "纯文字应用题（比较两个人的年龄），年龄全在题干里，无图"
+      "noFigure": "纯文字应用题（比较两个人的年龄），年龄全在题干里，无图",
+      "original": {
+        "p": 40,
+        "c": 5
+      }
     },
     {
       "id": "icas21y2m-25",
@@ -5174,6 +5248,13 @@
       "diagram": {
         "type": "hexcomb",
         "pattern": "pat"
+      },
+      "original": {
+        "ni": 0,
+        "P0": "343",
+        "P1": "234",
+        "P2": "233",
+        "P3": "23332"
       }
     },
     {

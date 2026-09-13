@@ -140,26 +140,24 @@
 
   var holdIO = null;
   /* 给每个 .qhold 决定锁「题干+图」还是只锁「题干」，并挂哨兵判断是否已粘住。
-     整块高过半个屏幕就只锁题干；题干自己就太高（或整块本来就不需要滚动）则不锁。 */
+     题头比「屏幕可用高度的六成」还高就降级成只锁题干；题干自己就占满屏则索性不锁。 */
   function applyHold(root) {
     if (!root || !root.querySelectorAll) return;
     var top = syncHoldTop();
     var vh = window.innerHeight || 768;
+    var avail = Math.max(vh - top, 240);
     var boxes = root.querySelectorAll('.qhold');
     var sens = [];
     Array.prototype.forEach.call(boxes, function (box) {
       var stem = box.querySelector('.qhold-stem');
       if (!stem) return;
+      var hAll = box.offsetHeight, hStem = stem.offsetHeight;
+      if (!hAll) return;                    /* 视图正被隐藏：保持现状，别把已算好的类擦掉 */
       box.classList.remove('hold-all', 'hold-stem', 'stuck');
-      var hAll = box.offsetHeight;
-      if (!hAll) return;                                   /* 隐藏中的视图不处理 */
-      /* 题头太高就退一步：先试「题干+图」整块，装不下就只锁题干，题干本身就占满屏则索性不锁 */
-      var avail = Math.max(vh - top, 240);
-      var mode = hAll <= avail * 0.62 ? 'hold-all'
-        : (stem.offsetHeight <= avail * 0.5 ? 'hold-stem' : '');
+      var mode = hAll <= avail * 0.62 ? 'hold-all' : (hStem <= avail * 0.5 ? 'hold-stem' : '');
       if (!mode) return;
       box.classList.add(mode);
-      /* 1px 哨兵贴着题头上沿，它一离开视口就说明题头已经粘住了 */
+      /* 1px 哨兵贴着题头上沿，它一离开视口就说明题头真的粘住了（用来点亮分隔线） */
       var sen = box.previousElementSibling;
       if (!sen || !sen.classList || !sen.classList.contains('hold-sentinel')) {
         sen = document.createElement('i');
@@ -170,8 +168,9 @@
       sen.__holdBox = box;
       sens.push(sen);
     });
-    if (holdIO) { holdIO.disconnect(); holdIO = null; }
-    if (!sens.length || !window.IntersectionObserver) return;
+    if (!window.IntersectionObserver) return;
+    if (!sens.length) return;               /* 这次没有要观察的题头，保留原有观察器 */
+    if (holdIO) holdIO.disconnect();
     holdIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var b = en.target.__holdBox;

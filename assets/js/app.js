@@ -154,7 +154,10 @@
       var hAll = box.offsetHeight, hStem = stem.offsetHeight;
       if (!hAll) return;                    /* 视图正被隐藏：保持现状，别把已算好的类擦掉 */
       box.classList.remove('hold-all', 'hold-stem', 'stuck');
-      var mode = hAll <= avail * 0.62 ? 'hold-all' : (hStem <= avail * 0.5 ? 'hold-stem' : '');
+      /* 带图的题：题干和图一起锁（用户要求）；整块放得下就整块锁，放不下至少锁题干 */
+      var hasFig = !!box.querySelector('.diagram-wrap, .paper-img');
+      var kW = hasFig ? 0.85 : 0.62, kS = hasFig ? 0.85 : 0.5;
+      var mode = hAll <= avail * kW ? 'hold-all' : (hStem <= avail * kS ? 'hold-stem' : '');
       if (!mode) return;
       box.classList.add(mode);
       /* 1px 哨兵贴着题头上沿，它一离开视口就说明题头真的粘住了（用来点亮分隔线） */

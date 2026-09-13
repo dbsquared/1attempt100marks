@@ -130,7 +130,7 @@
       var multi = Array.isArray(q.correctIndex);
       h += '<div class="opts">' + q.options.map(function (o, i) {
         var g = (q.optionsSvg && q.optionsSvg[i]) ? '<span class="opt-svg">' + q.optionsSvg[i] + '</span>' : '';
-        return '<div class="opt" data-i="' + i + '"><span class="k">' + 'ABCDEFGH'[i] + '</span><span>' + o + '</span>' + g + '</div>';
+        return '<div class="opt" data-i="' + i + '"><span class="k">' + 'ABCDEFGH'[i] + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
       }).join('') + '</div>';
       if (multi) h += '<div class="small muted">本题为多选</div>';
       h += '<div class="row"><button class="btn primary" id="btnSubmit">提交答案</button></div>';
@@ -397,7 +397,7 @@
             if (isC) cls += ' correct'; else if (isS) cls += ' wrongsel';
           } else if (a && a.picked !== null && a.picked !== undefined && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k)) cls += ' sel';
           var g = (q.optionsSvg && q.optionsSvg[k]) ? '<span class="opt-svg">' + q.optionsSvg[k] + '</span>' : '';
-          return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span><span>' + o + '</span>' + g + '</div>';
+          return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
         }).join('') + '</div>';
       } else {
         var val = a && a.raw !== undefined ? a.raw : '';

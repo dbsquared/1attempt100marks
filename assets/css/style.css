@@ -115,15 +115,6 @@ textarea { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-
 .pill.new { background: var(--brand-soft); color: var(--brand); border-color: transparent; }
 .pill.review { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
 .pill.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
-/* 题库管理列表里每个题的「原卷题号」徽标（ICAS 模板 id 尾号 = Q 几） */
-.qno {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 30px; height: 22px; padding: 0 8px; margin-right: 6px;
-  border-radius: 7px; background: var(--brand); color: #fff;
-  font-weight: 700; font-size: 13px; line-height: 1; vertical-align: middle;
-  letter-spacing: .3px;
-}
-.qno::before { content: "Q"; font-size: 10px; opacity: .85; margin-right: 1px; }
 
 /* ---- 题头锁定：往下拉看选项/解析时题干常驻，滚到下一题自动让位 ---- */
 /* --hold-top 由 JS 写入（吸顶导航的真实高度），保证题干停在导航下方而不是被盖住 */
@@ -250,10 +241,6 @@ table.tbl tr:last-child td { border-bottom: none; }
 .mitem.pend { border-color: var(--brand); background: var(--brand-soft); box-shadow: 0 0 0 3px var(--brand-soft); }
 .mitem.conn { border-color: var(--ok); background: var(--ok-soft); }
 .match-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.cmp-opts { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
-.cmp-opt { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px; text-align: center; }
-.cmp-opt b { display: block; font-size: 12px; color: var(--muted); }
-.cmp-opt .diagram { max-width: 110px; }
 
 .hidden { display: none !important; }
 .center { text-align: center; }
@@ -279,14 +266,6 @@ body.view-wide .top-inner { max-width: 1120px; }
 .bank-card h2 { font-size: 22px; margin-bottom: 4px; }
 .bank-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .bank-list { margin-top: 16px; max-height: 82vh; overflow: auto; padding-right: 6px; }
-#view-bank .list-item { padding: 16px 18px; }
-#view-bank .list-item .t { font-size: 16px; }
-#view-bank .cmp-col .cmp-body { padding: 12px; }
-#view-bank .cmp-h { font-size: 13px; margin-bottom: 8px; }
-/* 宽屏下原题图更大、对照更清晰 */
-@media (min-width: 980px) {
-  #view-bank .cmp { grid-template-columns: minmax(200px, 32%) 1fr; gap: 20px; }
-}
 
 /* ---------- 学生管理弹层 ---------- */
 .modal-mask {
@@ -303,14 +282,6 @@ body.view-wide .top-inner { max-width: 1120px; }
 .modal-head h3 { margin: 0; font-size: 17px; }
 #studentList .list-item:last-child { margin-bottom: 0; }
 #studentList .row { gap: 8px; }
-
-/* 题库管理：原题 ⟷ 导入的题 左右对照 */
-.cmp { display: grid; grid-template-columns: minmax(110px, 38%) 1fr; gap: 14px; align-items: start; }
-.cmp-col { min-width: 0; }
-.cmp-h { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: .5px; }
-.cmp-body { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
-.orig-img { display: block; width: 100%; height: auto; border-radius: 6px; background: #fff; }
-@media (max-width: 640px) { .cmp { grid-template-columns: 1fr; } }
 
 fieldset { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; }
 legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
@@ -343,3 +314,90 @@ legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
   .print-only { display: block !important; }
 }
 .print-only { display: none; }
+
+/* ---------- 题库管理：整卷归档页风格的题卡（bk- 前缀，避免与练习界面的 .opts/.opt 撞车） ---------- */
+#bankSearch { flex: 1; min-width: 180px; }
+.bk-statgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 8px; margin: 10px 0; }
+.bk-stat {
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 8px 10px; text-align: center;
+}
+.bk-stat span { display: block; font-size: 11px; color: var(--muted); }
+.bk-stat b { font-size: 19px; line-height: 1.3; }
+
+.bk-card {
+  border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+  margin-bottom: 12px; background: var(--surface);
+}
+.bk-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
+  border-bottom: 1px dashed var(--border); padding-bottom: 8px; margin-bottom: 10px;
+}
+.bk-no { font-weight: 800; font-size: 17px; color: var(--brand); letter-spacing: .5px; }
+.bk-no.bk-nox { color: var(--muted); font-weight: 600; font-size: 15px; }
+.bk-topic { font-size: 12px; background: var(--brand-soft); color: var(--brand); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.bk-title { font-size: 14px; font-weight: 600; }
+.bk-meta { font-size: 12px; color: var(--muted); margin-left: auto; }
+.bk-state { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+.bk-stem { margin: 0 0 8px; font-size: 15px; }
+.bk-tag {
+  display: inline-block; font-size: 10px; font-weight: 700; color: #fff; background: var(--muted);
+  border-radius: 4px; padding: 1px 5px; margin-right: 8px; vertical-align: 2px;
+}
+.bk-stem.bk-zh { color: var(--text); background: var(--surface-2); border-left: 3px solid var(--border); padding: 6px 10px; border-radius: 0 6px 6px 0; }
+
+.bk-fig { margin: 10px 0; text-align: center; }
+.bk-fig svg { max-width: 100%; height: auto; }
+
+.bk-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px; margin: 10px 0; }
+.bk-opts-svg { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+.bk-opt {
+  display: flex; align-items: center; gap: 8px; min-width: 0;
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
+  font-size: 14px; background: var(--surface-2);
+}
+.bk-opt b { font-size: 12px; color: var(--muted); flex: none; }
+.bk-optxt { min-width: 0; }
+.bk-opt.hit { background: var(--ok-soft); border-color: var(--ok); }
+.bk-opt.hit b { color: var(--ok); }
+.bk-tick { color: var(--ok); font-weight: 800; margin-left: auto; flex: none; }
+.bk-optsvg { display: block; min-width: 0; }
+.bk-optsvg svg { max-width: 100%; height: auto; display: block; }
+
+.bk-match { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.bk-matchh { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.bk-matchitem { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 8px; padding: 5px 8px; margin-bottom: 5px; background: var(--surface-2); }
+.bk-matchitem svg { max-width: 90px; height: auto; }
+
+.bk-ans { font-size: 14px; margin: 8px 0 0; }
+.bk-ans b { color: var(--ok); }
+.bk-sol { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.bk-sol summary { cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600; outline: none; }
+.bk-solbody { font-size: 14px; margin-top: 8px; }
+.bk-flag {
+  font-size: 13px; color: var(--warn); background: var(--warn-soft);
+  border: 1px dashed var(--warn); border-radius: 8px; padding: 6px 10px; margin: 8px 0;
+}
+
+.bk-v { padding-top: 2px; }
+.bk-var > .bk-v + .bk-v { border-top: 1px dashed var(--border); margin-top: 12px; padding-top: 12px; }
+.bk-varhead { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .5px; margin: 0 0 6px; }
+
+.bk-tpl { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
+.bk-tpl > summary { cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600; outline: none; }
+.bk-tplbody { margin-top: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+.bk-sub { font-weight: 700; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+.bk-ul { margin: 4px 0; padding-left: 20px; }
+.bk-ul li { font-size: 12.5px; }
+.bk-origwrap { margin-bottom: 10px; }
+.bk-origimg { display: block; max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+
+.bk-actions { margin-top: 10px; flex-wrap: wrap; align-items: center; }
+.bk-actions .spacer { flex: 1 1 auto; }
+
+@media (max-width: 640px) {
+  .bk-match { grid-template-columns: 1fr; }
+  .bk-head .bk-meta { margin-left: 0; flex-basis: 100%; }
+}
+

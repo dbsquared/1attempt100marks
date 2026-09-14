@@ -850,79 +850,228 @@
     if (s && typeof s === 'object' && !Array.isArray(s)) s = s.zh || s.en || '';
     return String(s || '');
   }
-  /* 题号：ICAS 模板 id 形如 icas21y2m-09，尾号就是原卷题号（Q1~Q30/Q31）。
-     个别题拆成 a/b 两个变体（如 icas22y2m-13a/13b 都是原卷第 13 题），取前导数字即可。
-     示例模板（m6-frac-add 之类）没有原卷题号，返回 null。用于「题库管理」列表里直接标出 Q 几，
-     方便对照「请你复验 Q9 / Q13 / Q20…」这类指名。 */
+  /* 题号：模板 id 尾号就是原卷题号，用于「题库管理」列表里直接标出 Q 几，
+     方便对照「请你复验 Q9 / Q13 / Q20…」这类指名。
+       · SEAMO 一批：seamo25a-q07 → 7
+       · ICAS 两批：icas21y2m-09 → 9；icas22y2m-13a / 13b 是同一题的两个变体 → 都取 13
+     示例模板（m6-frac-add 之类）没有原卷题号，返回 null（列表里不显示徽标）。 */
   function tplQNo(t) {
     if (!t || !t.id) return null;
-    var m = t.id.match(/^icas\d{2}y2m-(\d+)/);
+    var id = String(t.id);
+    var m = id.match(/-q(\d+)/i) || id.match(/^icas\d{2}y2m-(\d+)/);
     return m ? parseInt(m[1], 10) : null;
   }
-  /* 题库对照右栏：直接画出「拆解后的简化 SVG」，而不是原题截图。
-     有 SVG 选项的题把选项图也一并列出，方便一眼看出选项是不是泄题。 */
-  function figHtml(t) {
-    if (!t.diagram && !(t.answer && t.answer.optionsSvg)) return '';
-    var q;
-    try { q = Generator.instantiate(t); } catch (e) { q = null; }
-    if (!q) return '';
-    var h = '';
-    if (q.diagramSvg) h += '<div class="diagram-wrap" style="margin:8px 0">' + q.diagramSvg + '</div>';
-    if (q.optionsSvg && q.optionsSvg.length) {
-      h += '<div class="cmp-opts">' + q.optionsSvg.map(function (s, i) {
-        return '<span class="cmp-opt"><b>' + 'ABCDEFGH'[i] + '</b>' + s + '</span>';
-      }).join('') + '</div>';
+  /* ---------------- 题库管理：题卡渲染（仿 papers/*.html 整卷归档页的表现方式） ----------------
+     原来的做法是「左原题截图 / 右一句题干 + 最多把选项图列出来」，看不出题目到底长什么样；
+     现在每道题渲染成一张完整题卡：题号徽标 + 知识点 + 来源/难度/掌握状态 + 题干 + 自绘简化图
+     + 选项网格（正确项打钩）+ 折叠解析，并保留「预览变式」按钮（可再出 3 例）。 */
+  var LETTERS = 'ABCDEFGH';
+
+  function stemLangHtml(t) {
+    var s = t && t.stem;
+    if (s && typeof s === 'object' && !Array.isArray(s)) {
+      var h = '';
+      if (s.en) h += '<p class="bk-stem"><span class="bk-tag">EN</span>' + esc(String(s.en)) + '</p>';
+      if (s.zh) h += '<p class="bk-stem bk-zh">' + esc(String(s.zh)) + '</p>';
+      return h || '<p class="bk-stem muted">（模板没有题干）</p>';
     }
+    return '<p class="bk-stem">' + esc(String(s || '')) + '</p>';
+  }
+
+  /* 把一道「实例化后的变式」画成归档页那样的题卡主体。q 为 null 表示生成失败。
+     外层套 .bk-v，这样「预览变式」追加多例时彼此之间有虚线分隔。 */
+  function variantHtml(q, label) {
+    if (!q) return '<section class="bk-v"><p class="bk-flag">⚠ 这个模板暂时生成不出变式，请检查 vars 范围与 constraints 是否过紧。</p></section>';
+    var h = '';
+    if (label) h += '<div class="bk-varhead">' + esc(label) + '</div>';
+    h += '<p class="bk-stem">' + q.stemHtml + '</p>';
+    if (q.diagramSvg) h += '<figure class="bk-fig">' + q.diagramSvg + '</figure>';
+    var ansTxt;
+    if (q.type === 'choice' && q.options && q.options.length) {
+      var ci = q.correctIndex;
+      var idxs = Array.isArray(ci) ? ci : [ci];
+      var isHit = Array.isArray(ci)
+        ? function (i) { return ci.indexOf(i) >= 0; }
+        : function (i) { return i === ci; };
+      var hasSvg = !!(q.optionsSvg && q.optionsSvg.length);
+      /* 图形选项题的 options 往往是「甲/乙/丙…」这类占位标签，直接显示会与左侧字母重复、添乱，
+         所以碰上是单个占位字符就藏起来；有实义文字（数字、短语）照常显示。 */
+      var isPlaceholder = function (s) { return /^[A-E甲乙丙丁戊]$/.test(s); };
+      if (hasSvg) h += '<p class="bk-flag">选项本身是图形（已按图形选项渲染，正确项打钩）。</p>';
+      h += '<div class="bk-opts' + (hasSvg ? ' bk-opts-svg' : '') + '">' + q.options.map(function (o, i) {
+        var svg = (q.optionsSvg && q.optionsSvg[i]) ? '<span class="bk-optsvg">' + q.optionsSvg[i] + '</span>' : '';
+        var txt = String(o == null ? '' : o).trim();
+        var showTxt = txt && !(hasSvg && isPlaceholder(txt));
+        return '<div class="bk-opt' + (isHit(i) ? ' hit' : '') + '"><b>' + LETTERS[i] + '</b>' +
+          (showTxt ? '<span class="bk-optxt">' + esc(txt) + '</span>' : '') + svg +
+          (isHit(i) ? '<span class="bk-tick">✓</span>' : '') + '</div>';
+      }).join('') + '</div>';
+      // 答案写「选项字母」——图形选项题的 display 只是占位标签文字，会与打钩的字母对不上
+      var realTxt = idxs.map(function (i) { return String(q.options[i] == null ? '' : q.options[i]).trim(); })
+        .filter(function (s) { return s && !isPlaceholder(s); });
+      ansTxt = idxs.map(function (i) { return LETTERS[i]; }).join('、') +
+        (realTxt.length ? '（' + esc(realTxt.join('、')) + '）' : '');
+      if (Array.isArray(ci)) h += '<p class="small muted">本题为多选，正确项：' + ansTxt + '</p>';
+    } else {
+      ansTxt = esc(String(q.display)) + (q.unit ? ' ' + esc(String(q.unit)) : '');
+      if (q.type === 'match') {
+        h += '<div class="bk-match">' +
+          '<div class="bk-matchcol"><div class="bk-matchh">左</div>' + (q.leftItems || []).map(function (it) {
+            return '<div class="bk-matchitem">' + (it.svg || '') + '<span>' + esc(String(it.key == null ? '' : it.key)) + '</span></div>';
+          }).join('') + '</div>' +
+          '<div class="bk-matchcol"><div class="bk-matchh">右</div>' + (q.rightItems || []).map(function (it) {
+            return '<div class="bk-matchitem">' + (it.svg || '') + '<span>' + esc(String(it.key == null ? '' : it.key)) + '</span></div>';
+          }).join('') + '</div></div>';
+      }
+    }
+    h += '<p class="bk-ans"><b>答案：</b>' + ansTxt + '</p>';
+    if (q.solutionHtml) h += '<details class="bk-sol"><summary>查看解析</summary><div class="bk-solbody">' + q.solutionHtml + '</div></details>';
+    return '<section class="bk-v">' + h + '</section>';
+  }
+
+  /* 折叠区里的「模板信息 / 原题对照」 */
+  function tplInfoHtml(t) {
+    var h = '';
+    if (t.source) h += '<p class="small muted">' + esc(t.source) + '</p>';
+    if (t.originalImage) {
+      h += '<div class="bk-origwrap"><a href="' + esc(t.originalImage) + '" target="_blank" rel="noopener" title="点击看大图">' +
+        '<img src="' + esc(t.originalImage) + '" alt="原题" class="bk-origimg"></a>' +
+        '<div class="small muted">原卷截图（' + esc(t.originalImage.split('/').pop()) + '）</div></div>';
+    } else {
+      h += '<p class="small muted">（没有录入原卷截图）</p>';
+    }
+    h += '<div class="bk-sub">原始题干（含占位符）</div>' + stemLangHtml(t);
+    var vs = t.vars || {}, vk = Object.keys(vs);
+    if (vk.length) {
+      h += '<div class="bk-sub">变量</div><ul class="bk-ul">' + vk.map(function (k) {
+        var v = vs[k], d;
+        if (v && typeof v === 'object') {
+          if (v.from) d = 'pick：' + JSON.stringify(v.from);
+          else d = (v.min != null ? v.min : '?') + ' ~ ' + (v.max != null ? v.max : '?') +
+            (v.step != null ? '，步长 ' + v.step : '') + (v.digits != null ? '，' + v.digits + ' 位小数' : '');
+        } else d = JSON.stringify(v);
+        return '<li><code>' + esc(k) + '</code> ' + esc(d) + '</li>';
+      }).join('') + '</ul>';
+    }
+    var dk = Object.keys(t.derived || {});
+    if (dk.length) h += '<div class="bk-sub">导出量</div><p class="small"><code>' + esc(dk.join(', ')) + '</code></p>';
+    if (t.constraints && t.constraints.length) {
+      h += '<div class="bk-sub">约束</div><ul class="bk-ul">' + t.constraints.map(function (c) {
+        return '<li><code>' + esc(c) + '</code></li>';
+      }).join('') + '</ul>';
+    }
+    if (t.tags && t.tags.length) h += '<div class="bk-sub">标签</div><p class="small muted">' + esc(t.tags.join(' · ')) + '</p>';
+    h += '<div class="bk-sub">模板 id</div><p class="small"><code>' + esc(t.id) + '</code>' +
+      (t.original ? ' · <span class="pill ok">有原题模式</span>' : '') + '</p>';
     return h;
+  }
+
+  /* 顶部统计面板 */
+  function renderBankStats() {
+    var srcs = checkedSources('#bankSrcBox'), allBank = Bank.all();
+    var list = allBank.filter(function (t) { return !srcs.length || srcs.indexOf(sourceSetOf(t)) >= 0; });
+    var p = Store.progress(), mastered = 0, seen = 0, bySrc = {};
+    list.forEach(function (t) {
+      var st = p[t.id] || {};
+      if (st.seen) seen++;
+      if (st.mastered) mastered++;
+      var s = sourceSetOf(t);
+      bySrc[s] = (bySrc[s] || 0) + 1;
+    });
+    var ss = Object.keys(bySrc).sort();
+    var rows = ss.map(function (s) {
+      return '<tr><td>' + esc(s) + '</td><td>' + bySrc[s] + '</td></tr>';
+    }).join('');
+    $('#bankStats').innerHTML =
+      '<div class="bk-statgrid">' +
+      '<div class="bk-stat"><span>当前列表</span><b>' + list.length + '</b></div>' +
+      '<div class="bk-stat"><span>题库总数</span><b>' + allBank.length + '</b></div>' +
+      '<div class="bk-stat"><span>来源</span><b>' + ss.length + '</b></div>' +
+      '<div class="bk-stat"><span>练过</span><b>' + seen + '</b></div>' +
+      '<div class="bk-stat"><span>已掌握</span><b>' + mastered + '</b></div>' +
+      '</div>' +
+      '<details class="bk-tpl"><summary>按来源分布</summary><table class="tbl"><thead><tr><th>来源</th><th>题数</th></tr></thead><tbody>' +
+      rows + '</tbody></table></details>';
+  }
+
+  function bankQuery() {
+    var el = $('#bankSearch');
+    return el ? String(el.value || '').trim().toLowerCase() : '';
+  }
+  function matchQuery(t, q) {
+    if (!q) return true;
+    var qno = tplQNo(t);
+    var hay = [t.id, t.title, t.topic, t.subject, t.source, sourceSetOf(t), tplStemText(t),
+      (t.tags || []).join(' '), qno != null ? ('q' + qno) : ''].join(' ').toLowerCase();
+    return hay.indexOf(q) >= 0;
   }
 
   function renderBankList() {
     var srcs = checkedSources('#bankSrcBox');
+    var q = bankQuery();
     var allBank = Bank.all();
-    var all = allBank.filter(function (t) { return !srcs.length || srcs.indexOf(sourceSetOf(t)) >= 0; });
+    var all = allBank.filter(function (t) {
+      return (!srcs.length || srcs.indexOf(sourceSetOf(t)) >= 0) && matchQuery(t, q);
+    });
     var custom = Store.customBank().map(function (t) { return t.id; });
-    $('#bankInfo').innerHTML = '共 ' + all.length + ' / ' + allBank.length + ' 个题型模板（内置 ' + Bank.base.length + '，本机导入 ' + custom.length + '）' + (srcs.length ? ' · 已按来源筛选' : '');
-    if (!all.length) { $('#bankList').innerHTML = '<p class="muted">该来源下没有题型。</p>'; return; }
+    $('#bankInfo').innerHTML = '共 ' + all.length + ' / ' + allBank.length + ' 个题型模板（内置 ' + Bank.base.length +
+      '，本机导入 ' + custom.length + '）' + (srcs.length ? ' · 已按来源筛选' : '') + (q ? ' · 关键词「' + esc(q) + '」' : '');
+    renderBankStats();
+    if (!all.length) { $('#bankList').innerHTML = '<p class="muted">没有符合条件的题型。</p>'; return; }
     var p = Store.progress();
     $('#bankList').innerHTML = all.map(function (t) {
-      var st = p[t.id];
-      var desc = t.title || tplStemText(t).replace(/\{[^}]*\}/g, '…');
+      var st = p[t.id] || {};
       var qno = tplQNo(t);
       var badge = qno != null
-        ? '<span class="qno" title="' + esc(sourceSetOf(t)) + ' · 第 ' + qno + ' 题">' + qno + '</span>'
-        : '';
-      var orig = t.originalImage
-        ? '<a href="' + esc(t.originalImage) + '" target="_blank" rel="noopener" title="点击看大图">' +
-          '<img src="' + esc(t.originalImage) + '" alt="原题" class="orig-img"></a>'
-        : '<span class="small muted">（无原题图）</span>';
-      return '<div class="list-item"><div class="cmp">' +
-        '<div class="cmp-col"><div class="cmp-h">原题</div><div class="cmp-body">' + orig + '</div></div>' +
-        '<div class="cmp-col"><div class="cmp-h">导入的题</div><div class="cmp-body">' +
-        '<div class="t">' + badge + esc(t.subject || '') + ' · ' + esc(t.topic || '') +
-        ' <span class="pill">' + stars(t.difficulty || 2) + '</span>' +
-        (st && st.mastered ? ' <span class="pill ok">已掌握</span>' : (st && st.seen ? ' <span class="pill">练过 ' + st.seen + ' 次</span>' : ' <span class="pill new">未练</span>')) +
-        (custom.indexOf(t.id) >= 0 ? ' <span class="pill review">本机</span>' : '') + '</div>' +
-        '<div class="small muted">' + esc(desc) + '</div>' +
-        figHtml(t) +
-        '<div class="row" style="margin-top:6px"><code class="small muted">' + esc(t.id) + '</code>' +
-        '<span class="spacer"></span>' +
-        '<button class="btn sm" data-preview="' + esc(t.id) + '">预览变式</button>' +
+        ? '<span class="bk-no" title="' + esc(sourceSetOf(t)) + ' · 第 ' + qno + ' 题">Q' + qno + '</span>'
+        : '<span class="bk-no bk-nox" title="示例模板，不对应原卷题号">—</span>';
+      var qq;
+      try { qq = Generator.instantiate(t); } catch (e) { qq = null; }
+      var state = st.mastered ? '<span class="pill ok">已掌握</span>'
+        : (st.seen ? '<span class="pill">练过 ' + st.seen + ' 次</span>' : '<span class="pill new">未练</span>');
+      return '<article class="bk-card" id="bk-' + esc(t.id) + '">' +
+        '<header class="bk-head">' + badge +
+        '<span class="bk-topic">' + esc(t.topic || t.subject || '未分类') + '</span>' +
+        (t.title ? '<span class="bk-title">' + esc(t.title) + '</span>' : '') +
+        '<span class="bk-meta">' + esc(sourceSetOf(t)) + ' · 难度 ' + stars(t.difficulty || 2) + '</span>' +
+        '<span class="bk-state">' + state +
+        (custom.indexOf(t.id) >= 0 ? ' <span class="pill review">本机</span>' : '') + '</span>' +
+        '</header>' +
+        '<div class="bk-var" data-var="' + esc(t.id) + '">' + variantHtml(qq, '变式示例') + '</div>' +
+        '<details class="bk-tpl"><summary>模板信息 · 原题对照</summary><div class="bk-tplbody">' + tplInfoHtml(t) + '</div></details>' +
+        '<div class="row bk-actions">' +
+        '<button class="btn sm" data-preview="' + esc(t.id) + '">预览变式（再出 3 例）</button>' +
+        (t.original ? '<button class="btn sm" data-orig="' + esc(t.id) + '">看原题数值</button>' : '') +
         (custom.indexOf(t.id) >= 0 ? '<button class="btn sm" data-del="' + esc(t.id) + '">删除</button>' : '') +
-        '</div><div class="small" data-pv="' + esc(t.id) + '"></div>' +
-        '</div></div></div></div>';
+        '<span class="spacer"></span><code class="small muted">' + esc(t.id) + '</code>' +
+        '</div></article>';
     }).join('');
     $$('#bankList [data-preview]').forEach(function (b) {
       b.addEventListener('click', function () {
         var tpl = Bank.byId(b.dataset.preview);
-        var out = [];
+        var box = $('.bk-var[data-var="' + b.dataset.preview + '"]');
+        if (!tpl || !box) return;
+        var out = '';
         for (var i = 0; i < 3; i++) {
-          var q = Generator.instantiate(tpl);
-          if (!q) { out.push('（生成失败）'); continue; }
-          out.push(esc(q.stemText + ' = ' + q.display + (q.unit ? ' ' + q.unit : '')) +
-            (q.diagramSvg ? '<div class="diagram-wrap">' + q.diagramSvg + '</div>' : ''));
+          var qq;
+          try { qq = Generator.instantiate(tpl); } catch (e) { qq = null; }
+          out += variantHtml(qq, '变式 ' + (i + 2));
         }
-        $('[data-pv="' + b.dataset.preview + '"]').innerHTML = '<div style="margin-top:6px" class="small">' +
-          out.join('<hr style="border:none;border-top:1px dashed var(--border);margin:6px 0">') + '</div>';
+        box.insertAdjacentHTML('beforeend', out);
+        b.disabled = true;
+        b.textContent = '已再出 3 例';
+      });
+    });
+    $$('#bankList [data-orig]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var tpl = Bank.byId(b.dataset.orig);
+        var box = $('.bk-var[data-var="' + b.dataset.orig + '"]');
+        if (!tpl || !box) return;
+        var qq = null;
+        try { qq = Generator.instantiate(tpl, null, { original: true }); } catch (e) { qq = null; }
+        box.insertAdjacentHTML('beforeend', variantHtml(qq, '原题数值（原卷那一题）'));
+        b.disabled = true;
+        b.textContent = '已插入原题';
       });
     });
     $$('#bankList [data-del]').forEach(function (b) {
@@ -1248,6 +1397,8 @@
       Array.prototype.forEach.call($('#bankSrcBox').querySelectorAll('input'), function (c) { c.checked = false; });
       renderBankList();
     });
+    $('#bankSearch').addEventListener('input', renderBankList);
+    $('#bankSearchClear').addEventListener('click', function () { $('#bankSearch').value = ''; renderBankList(); });
 
     /* ---- 发邮件（结果页，手动兜底） ---- */
     $('#btnSendResult').addEventListener('click', function () {

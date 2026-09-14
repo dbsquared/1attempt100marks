@@ -26,7 +26,9 @@ inbox/                    用户放真题图片的地方（jpg/png/webp/pdf 转�
 assets/originals/         可选：原题裁切图，模板里用 "image": "assets/originals/xxx.png" 引用
 data/question-bank.json   主题库（提交进仓库，所有设备可见）
 data/imports/*.json       按批次拆分的题库（同样会被主题库合并，见下）
+papers/<卷名>.json         整卷「解析归档」的唯一数据源（.md/.html 由 tools/build-paper-archive.js 生成）
 tools/test-bank.js        模板自检（生成 300 次 + 判分自检）
+tools/test-bankui.js      「题库管理」界面渲染自检（无头浏览器不可用时替代冒烟测试）
 tools/test-srs.js         错题调度自检
 tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 ```
@@ -411,10 +413,24 @@ node tools/_preview_original.js --set=icas21y2m --inline
 ```bash
 node tools/test-bank.js                       # 全库自检（生成/判分/配图/变式四道闸门）
 node tools/test-bank.js data/imports/xx.json  # 只检新批次
-node tools/test-figs.js                       # 配图语义的独立交叉验算（2022 + 2021 两批都在里面）
+node tools/test-figs.js                       # 配图语义的独立交叉验算（ICAS 两批 + SEAMO 一批都在里面）
 node tools/test-original.js                   # 「原题模式」数值自检（答案 + 约束），见 §4.7
+node tools/test-bankui.js                     # 「题库管理」界面的渲染自检（改了 app.js 的题卡渲染就要跑）
 node tools/test-srs.js && node tools/test-sync.js
 ```
+
+**`test-bankui.js` 为什么必要**：本机没有可用的无头浏览器（Chrome/Edge 的
+`--headless --dump-dom` 静默退出、输出 0 字节），`index.html` 没法做端到端冒烟，
+界面 bug 只能靠肉眼发现——「题库管理看不到题号」「预览变式看不到选项」两个 bug 就是这么漏出去的。
+它的做法是把 `app.js` 里 `tplQNo` / `variantHtml` / `tplInfoHtml` / `renderBankList` 等**纯渲染函数
+原文抠出来**（按花括号配对，跳过字符串/注释/正则字面量），在 Node 沙箱里喂真题库数据跑，再断言
+渲染出的 HTML：每个 choice 题的选项必须渲染全、正确项必须打钩、答案字母必须与打钩项一致、
+图形选项题必须把 `optionsSvg` 真画出来且不再显示占位标签、`index.html` 与 `app.js` 的
+`#bank*` id 必须两侧都在。验的是真代码，不是另写一份"等价实现"。
+
+> 想肉眼核对题卡外观：`node tools/test-bankui.js --html=.workbuddy/tmp/bank.html [--only=seamo --limit=10]`
+> 会导出一个静态页面，样式内联 `style.css`，内容就是真实 `renderBankList` 的输出（放 `.workbuddy/` 下，不入库）。
+
 
 改图/加图题时还有两个临时脚本值得跑（放在 `.workbuddy/tmp*/` 下，不入库）：
 `smoke.js` 逐图元查 NaN／坐标越界／viewBox 超宽，`collide.js` 查文字互相压字／出画布。

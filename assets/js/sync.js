@@ -109,6 +109,7 @@
       v: 1,
       sid: o.sid,
       dev: o.dev,
+      name: o.name || '',   // 携带档案名，供云端索引按名字归位
       ts: Math.floor((o.ts || Date.now()) / 1000),
       full: o.full ? 1 : 0,
       p: packProgress(o.progress, o.from, o.full),
@@ -133,10 +134,11 @@
   }
 
   /* ---------- 云端文件格式 ---------- */
-  function toCloud(n, sid) {
+  function toCloud(n, sid, name) {
     return {
       v: 1,
       sid: sid,
+      name: name || '',   // 档案名，供 data/state/index.json 按名字归位
       updatedAt: Date.now(),
       p: Object.keys(n.p).map(function (id) {
         var s = n.p[id];

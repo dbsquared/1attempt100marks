@@ -99,6 +99,17 @@ const cloud2 = S.normalize(null);
 S.merge(cloud2, S.parseCode(code(D, 0, true)));
 chk('不同学生 ID 分文件存放互不干扰', S.count(cloud2).p === 1 && !cloud2.w['m6-frac-add']);
 
+/* 9. 云端姓名索引：名字随同步码与云端文件传递 */
+const N = dev('nm001', 'NNNN'); N.name = '丘小团';
+const cN = S.makeCode({ sid: N.sid, dev: N.devId, ts: Date.now(), full: true, from: 0, progress: N.p, wrong: N.w, name: N.name });
+const pN = S.parseCode(cN);
+chk('同步码携带档案名', pN.name === '丘小团', String(pN.name));
+const cloudN = S.normalize(null);
+S.merge(cloudN, pN);
+const fileN = S.toCloud(cloudN, N.sid, pN.name);
+chk('云端文件携带档案名', fileN.name === '丘小团', String(fileN.name));
+chk('toCloud 不传名字时为空串', S.toCloud(cloudN, N.sid).name === '');
+
 console.log(log.join('\n'));
 console.log('-'.repeat(64));
 console.log(ok ? '✓ 同步逻辑全部通过' : '✗ 存在失败项');

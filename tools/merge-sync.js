@@ -59,6 +59,7 @@ for (const code of codes) {
     bySid[d.sid] = { norm: Sync.normalize(base), file: f, existed: !!base };
   }
   const s = bySid[d.sid];
+  if (d.name) s.name = d.name;   // 取最近一次同步码里的档案名，供云端索引按名字归位
   const r = Sync.merge(s.norm, d);
   const c = Sync.count(s.norm);
   console.log('  ' + d.sid + ' ← 设备 ' + d.dev + (d.full ? '（全量）' : '（增量）') +
@@ -71,8 +72,21 @@ if (dry) { console.log('[dry-run] 未写盘'); process.exit(0); }
 if (!fs.existsSync(stateDir)) fs.mkdirSync(stateDir, { recursive: true });
 for (const sid of Object.keys(bySid)) {
   const s = bySid[sid];
-  fs.writeFileSync(s.file, JSON.stringify(Sync.toCloud(s.norm, sid), null, 2) + '\n');
+  fs.writeFileSync(s.file, JSON.stringify(Sync.toCloud(s.norm, sid, s.name), null, 2) + '\n');
   console.log('✓ 已写入 ' + path.relative(root, s.file) + (s.existed ? '' : '（新建）'));
 }
+/* 重新生成 data/state/index.json：name -> sid（供新浏览器按名字归位到已有档案） */
+try {
+  const files = fs.readdirSync(stateDir).filter(f => f.endsWith('.json') && f !== 'index.json');
+  const idx = {};
+  for (const f of files) {
+    try {
+      const j = JSON.parse(fs.readFileSync(path.join(stateDir, f), 'utf8'));
+      if (j && j.name && j.sid) idx[j.name] = j.sid;
+    } catch (e) { /* 跳过坏文件 */ }
+  }
+  fs.writeFileSync(path.join(stateDir, 'index.json'), JSON.stringify(idx, null, 2) + '\n');
+  console.log('✓ 已生成 ' + path.relative(root, path.join(stateDir, 'index.json')) + '（' + Object.keys(idx).length + ' 个档案）');
+} catch (e) { console.error('× 生成 index.json 失败：' + e.message); }
 console.log('\n下一步：node tools/gh-push.js "同步学生进度"');
 process.exit(fail ? 1 : 0);

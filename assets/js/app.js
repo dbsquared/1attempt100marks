@@ -1203,7 +1203,8 @@
     return Sync.makeCode({
       sid: c.sid, dev: c.devId, ts: Date.now(), full: !!full,
       from: Store.lastSync(),
-      progress: Store.progress(), wrong: Store.wrongAll()
+      progress: Store.progress(), wrong: Store.wrongAll(),
+      name: c.name || ''
     });
   }
   function importCode(text) {
@@ -1217,7 +1218,39 @@
     Store.saveProgress(out.progress);
     Store.saveWrong(out.wrong);
     Store.setLastSync(Date.now());
+    if (d.name && !Store.isRealName(Store.current().name)) Store.renameProfile(Store.current().id, d.name);
     return r;
+  }
+  /* 按名字在云端索引里查找同名档案；命中则归位到其 sid（跨设备认人），否则新建 */
+  var _idxCache = null;
+  function fetchCloudIndex() {
+    if (_idxCache) return Promise.resolve(_idxCache);
+    return fetch('data/state/index.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (j) {
+        var m = {};
+        Object.keys(j || {}).forEach(function (k) { m[k.toLowerCase()] = { sid: j[k], name: k }; });
+        _idxCache = m;
+        return m;
+      })
+      .catch(function () { return {}; });
+  }
+  function joinOrCreate(name, done) {
+    fetchCloudIndex().then(function (idx) {
+      var hit = idx ? idx[name.toLowerCase()] : null;
+      if (hit && hit.sid) {
+        var p = Store.ensureProfileBySid(hit.sid);   // 归位/新建到云端同名档案的 sid
+        if (p && name && !Store.isRealName(p.name)) Store.renameProfile(p.id, name);
+        Store.setCurrent(p.id);
+        toast('已关联到云端同名档案「' + name + '」');
+      } else {
+        Store.addProfile(name);
+      }
+      done();
+    }).catch(function () {
+      Store.addProfile(name);
+      done();
+    });
   }
   function pullCloud(quiet) {
     var c = Store.current();
@@ -1225,6 +1258,8 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) {
         if (!j) { if (!quiet) toast('云端还没有这个编号的进度'); return null; }
+        // 防御异步切换串档：如果切换学生后当前 sid 已不是本次请求的目标，则丢弃
+        if (Store.current().sid !== c.sid) { return null; }
         var r = Store.applyCloud(j);
         renderStart();
         if (!quiet) toast('已合并云端：新增 ' + r.pNew + ' 题，更新 ' + r.pUpd + ' 题');
@@ -1556,7 +1591,7 @@
     $('#btnStudentClose').addEventListener('click', function () { $('#studentMask').classList.add('hidden'); });
     $('#studentMask').addEventListener('click', function (e) { if (e.target === this) this.classList.add('hidden'); });
     $('#btnAddStudent').addEventListener('click', function () {
-      var inp = $('#newStudentName'), n = (inp.value || '').trim();
+      var btn = this, inp = $('#newStudentName'), n = (inp.value || '').trim();
       if (!n) { toast('请输入姓名'); return; }
       var dup = Store.profileByName(n);
       if (dup) {
@@ -1564,10 +1599,13 @@
         inp.focus();
         return;
       }
-      Store.addProfile(n);
-      inp.value = '';
-      renderStudentList();
-      afterStudentChange();
+      btn.disabled = true;
+      joinOrCreate(n, function () {
+        btn.disabled = false;
+        inp.value = '';
+        renderStudentList();
+        afterStudentChange();
+      });
     });
 
     document.addEventListener('keydown', function (e) {

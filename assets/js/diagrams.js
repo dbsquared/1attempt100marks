@@ -1956,9 +1956,12 @@
   }
 
   /* 12 等分圆盘：从 start 点钟方向起连续涂 count 格（Q10）。
-     阴影格本身由 start/count 决定 —— 图与答案同源，不能各写各的。 */
+     阴影格本身由 start/count 决定 —— 图与答案同源，不能各写各的。
+     注意：**盘面里不要写 1..12 的钟点数字** —— 原卷（2025seamoA-q10.png）只有 12 条辐条 + 外圆，
+     一个数字都没有；多写数字等于往图里塞原题没有的信息（解析里用「N 点钟方向」描述起点，
+     12 条辐条本身就足以让学生自己数出来）。 */
   function discSvg(cx, cy, r, start, count) {
-    var o = '', k, a0, a1, a, rr;
+    var o = '', k, a0, a1;
     start = ((Math.round(start) % 12) + 12) % 12;
     count = Math.max(0, Math.min(12, Math.round(count)));
     for (k = 0; k < 12; k++) {
@@ -1970,12 +1973,6 @@
            ' Z" fill="' + (((k - start + 12) % 12) < count ? '#6cbf72' : '#ffffff') + '" stroke="' + INK + '" stroke-width="1"/>';
     }
     o += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + INK + '" stroke-width="2"/>';
-    for (k = 1; k <= 12; k++) {                     /* 钟点数字（1..12），图上不写中文 */
-      a = (k * 30 - 90) * Math.PI / 180;
-      rr = r * 0.74;
-      o += '<text x="' + (cx + rr * Math.cos(a)).toFixed(1) + '" y="' + (cy + rr * Math.sin(a) + 3.2).toFixed(1) +
-           '" font-size="' + Math.max(7, r * 0.29).toFixed(1) + '" text-anchor="middle" fill="' + INK + '">' + k + '</text>';
-    }
     return o;
   }
 

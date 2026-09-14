@@ -1377,8 +1377,16 @@ function clockOk(svg, cx, cy, h, m, tag) {
       return m[1] + '/' + m[2];
     }));
     chk(pairs.length === 5, 'SEAMO Q10 选项圆盘里有重复：' + JSON.stringify(pairs));
+    /* 盘面里除了缺格的「?」不该有任何文字 —— 原卷 2025seamoA-q10.png 只有 12 条辐条 + 外圆，
+       一个数字都没有。曾经画成了钟面（1..12 写在盘里），等于往图里塞原题没有的信息。 */
+    const discTxt = (svg.match(/<text[^>]*>[^<]*<\/text>/g) || []).map(s => s.replace(/<[^>]*>/g, ''));
+    chk(discTxt.length === 1 && discTxt[0] === '?', 'SEAMO Q10 圆盘阵里只应有缺格的「?」，实际 ' + JSON.stringify(discTxt));
+    (q.optionsSvg || []).forEach((s, i) => {
+      const ot = (s.match(/<text[^>]*>[^<]*<\/text>/g) || []).length;
+      chk(ot === 0, 'SEAMO Q10 选项 ' + 'ABCDE'[i] + ' 的圆盘里不该有文字（原卷盘面无数字），实际 ' + ot + ' 个');
+    });
   }
-  console.log('SEAMO Q10  阴影数按列递增、起点逐行顺时针挪 1 ✓  绿色扇区逐格数过 ✓  正确选项 = 缺格的起点/格数 ✓');
+  console.log('SEAMO Q10  阴影数按列递增、起点逐行顺时针挪 1 ✓  绿色扇区逐格数过 ✓  正确选项 = 缺格的起点/格数 ✓  盘面无多余数字 ✓');
 }
 
 /* ---------- SEAMO Q11：两个钟面独立读数（表针角度 = 标注），差 = 答案 ---------- */

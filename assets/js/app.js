@@ -1225,7 +1225,7 @@
   var _idxCache = null;
   function fetchCloudIndex() {
     if (_idxCache) return Promise.resolve(_idxCache);
-    return fetch('data/state/index.json', { cache: 'no-store' })
+    return fetch('data/state/index.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : {}; })
       .then(function (j) {
         var m = {};
@@ -1254,7 +1254,7 @@
   }
   function pullCloud(quiet) {
     var c = Store.current();
-    return fetch('data/state/' + c.sid + '.json', { cache: 'no-store' })
+    return fetch('data/state/' + c.sid + '.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) {
         if (!j) { if (!quiet) toast('云端还没有这个编号的进度'); return null; }

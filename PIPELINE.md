@@ -396,7 +396,7 @@ node tools/_preview_original.js --set=icas21y2m --inline
   同型的不同数值（变式）自然归到同一条 `id` 下，错题本界面按 `id` 分组展示，每个变式可折叠还原。
 - 还原原题用 `Generator.instantiateWithVars(tpl, vars, lang)`（generator.js 新增），能完整复现
   题干、自绘 SVG、选项与解析，不依赖任何文字缓存。
-- 旧数据只有 `lastStem/lastGiven/lastExpected`（无 vars）时，错题本退化为纯文字展示，不会报错。
+- 旧数据只有 `lastStem/lastGiven/lastExpected`（无 vars，即 Phase 1 之前创建的错题）时无法精确还原数值；`renderWrong` 用 `restoreOrFresh(tpl, inst)`：有 vars 就 `instantiateWithVars` 精确还原，没有就退而 `Generator.instantiate(tpl)` 生成同类一道新变式，至少把**配图与选项**亮出来（题卡标注「原题数值未保存」），与题库管理的「变式示例」一致，不再退化为纯文字。
 - **错题本界面（`renderWrong`）直接显示「最近错的那道原题」**：每张错题卡用 `variantHtml` 仿
   「题库管理」题卡样式（Q 题号徽标 + 知识点 + 待清/错过次数 + 题干 + 自绘 SVG + 选项网格 + 答案 +
   折叠「查看解析」），最近一次 `instances` 末尾那条被还原后整张渲染出来，并在题卡标题上标出

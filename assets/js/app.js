@@ -794,6 +794,16 @@
     genPaper();
   }
 
+  /* 还原某条"当时错的原题"：有保存的 vars 就精确还原；
+     旧数据没存 vars 时退而生成同类一道新变式，至少把配图和选项亮出来（仿题库管理"变式示例"） */
+  function restoreOrFresh(tpl, inst) {
+    if (inst && inst.vars) {
+      try { var q = Generator.instantiateWithVars(tpl, inst.vars, inst.lang); if (q) return { q: q, restored: true }; } catch (e) {}
+    }
+    try { var f = Generator.instantiate(tpl); if (f) return { q: f, restored: false }; } catch (e) {}
+    return { q: null, restored: false };
+  }
+
   function renderWrong() {
     var w = Store.wrong();
     if (!w.length) {
@@ -814,8 +824,6 @@
       if (!insts.length) return '';
       var last = insts[insts.length - 1];
       var prev = insts.slice(0, -1);
-      // 还原"最近一次错"的那道原题
-      var lastQ = last.vars ? (function () { try { return Generator.instantiateWithVars(tpl, last.vars, last.lang); } catch (e) { return null; } })() : null;
       var qno = tplQNo(tpl);
       var badge = qno != null
         ? '<span class="bk-no" title="' + esc(sourceSetOf(tpl)) + ' · 第 ' + qno + ' 题">Q' + qno + '</span>'
@@ -826,20 +834,22 @@
         '<span class="bk-meta">最近错 ' + fmtDate(x.lastTs) + '</span>' +
         '<span class="bk-state"><span class="pill wrong">待清 ' + x.need + ' 次</span>' +
         '<span class="pill">错 ' + x.times + ' 次</span></span></header>';
-      // 直接显示最近错的原题（仿题库管理题卡：题干+图+选项+答案+解析）
-      var lastLabel = '最近错的原题 · ' + fmtDate(last.ts) +
+      // 直接显示最近错的原题（仿题库管理题卡：题干+图+选项+答案+解析）；旧数据没存数值则显示同类新变式
+      var rl = restoreOrFresh(tpl, last);
+      var lastLabel = (rl.restored ? '最近错的原题' : '同类题型示例（原题数值未保存）') + ' · ' + fmtDate(last.ts) +
         ' ｜ 你写 ' + esc(last.given || '—') + '，正确 ' + esc(last.expected || '—');
-      var lastBlock = lastQ ? variantHtml(lastQ, lastLabel)
+      var lastBlock = rl.q ? variantHtml(rl.q, lastLabel)
         : '<p class="small">' + esc(last.lastStem || '（这道题已无法还原，原题数据缺失）') + '</p>';
       // 浏览之前错误版本
       var prevBlock = '';
       if (prev.length) {
         prevBlock = '<details class="bk-tpl wrong-prev"><summary>浏览之前错误版本（' + prev.length + ' 个）</summary>' +
           '<div class="bk-tplbody">' + prev.map(function (inst, i) {
-            var pq = inst.vars ? (function () { try { return Generator.instantiateWithVars(tpl, inst.vars, inst.lang); } catch (e) { return null; } })() : null;
+            var rp = restoreOrFresh(tpl, inst);
             var label = '第 ' + (prev.length - i) + ' 次错 · ' + fmtDate(inst.ts) +
+              (rp.restored ? '' : '（数值未保存）') +
               ' ｜ 你写 ' + esc(inst.given || '—') + '，正确 ' + esc(inst.expected || '—');
-            return '<div class="wrong-prev-item">' + (pq ? variantHtml(pq, label)
+            return '<div class="wrong-prev-item">' + (rp.q ? variantHtml(rp.q, label)
               : '<p class="small">' + esc(inst.lastStem || '（已无法还原）') + '</p>') + '</div>';
           }).join('') + '</div></details>';
       }

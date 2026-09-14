@@ -621,8 +621,14 @@
 
     /* 楼层剖面：地面 G，地上 1..up，地下 B1..Bdown（Q13） */
     building: function (spec, vars) {
-      var up = Math.max(2, Math.min(8, Math.round(num(spec.up, vars) || 6)));
-      var down = Math.max(1, Math.min(6, Math.round(num(spec.down, vars) || 4)));
+      var up0 = Math.max(2, Math.min(8, Math.round(num(spec.up, vars) || 6)));
+      var down0 = Math.max(1, Math.min(6, Math.round(num(spec.down, vars) || 4)));
+      /* 电梯最高到达的地上楼层 = 从 B{b} 上 u 层 = u - b。
+         原题只约束了「终点楼层 ≤ up」，但图画必须高到能放下整个行程（含峰值），
+         否则图里楼层不够、学生数不出来。这里把楼画到至少峰值那层。 */
+      var peak = Math.max(1, num('u', vars) - num('b', vars));
+      var up = Math.max(up0, Math.min(9, peak));
+      var down = down0;
       var rowH = 30, w = 132, x = 24, padT = 16;
       var H = padT * 2 + (up + down) * rowH + 34;
       var s = svgOpen(w + 48, H, 'building floors');

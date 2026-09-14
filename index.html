@@ -151,7 +151,11 @@
   <section id="view-wrong" class="hidden" data-page-node-id="XXsCWkTIbml8D5D8pgh5PB">
     <div class="card" data-page-node-id="fPLGTHjEtd4uLyp7po38Tz">
       <h2 data-page-node-id="CawmeOcFH9kirskBeXdRlC">错题本</h2>
-      <p class="small muted" data-page-node-id="smGE4r4z38lGbagl58YgJC">这里的题型会在下次测试里带着<b data-page-node-id="WbAU4ivpeSSUhhAXdQNPiv">新数值</b>重新出现，直到彻底掌握。</p>
+      <p class="small muted" data-page-node-id="smGE4r4z38lGbagl58YgJC">这里的题型会在下次测试里带着<b data-page-node-id="WbAU4ivpeSSUhhAXdQNPiv">新数值</b>重新出现，直到彻底掌握。每次答错都会把<b>当时那道原题</b>留在这里，同型的不同数值归到同一道题下面。</p>
+      <div class="row" style="margin:10px 0 4px">
+        <button class="btn primary" id="btnWrongPaper">📝 生成错题卷（≥10 题，变式充数）</button>
+        <span class="small muted">错题不够 10 道会自动用同型变式补齐，计入统计。</span>
+      </div>
       <div id="wrongList" style="margin-top:12px" data-page-node-id="KgFyHkFGu5AMEc6CGo3eyK"></div>
     </div>
   </section>
@@ -278,12 +282,12 @@
 
 <script src="assets/js/expr.js?v=27"></script>
 <script src="assets/js/diagrams.js?v=27"></script>
-<script src="assets/js/generator.js?v=27"></script>
+<script src="assets/js/generator.js?v=28"></script>
 <script src="assets/js/grader.js?v=27"></script>
 <script src="assets/js/sync.js?v=27"></script>
-<script src="assets/js/store.js?v=27"></script>
+<script src="assets/js/store.js?v=28"></script>
 <script src="assets/js/srs.js?v=27"></script>
-<script src="assets/js/app.js?v=27"></script>
+<script src="assets/js/app.js?v=29"></script>
 
 <!-- 页脚版本徽标：自动读取 app.js 的 ?v= 参数，方便确认浏览器实际运行的代码版本 -->
 <div id="verBadge" style="position:fixed;right:10px;bottom:8px;font-size:11px;color:#b9bec7;pointer-events:none;z-index:9"></div>

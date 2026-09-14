@@ -37,6 +37,20 @@ s1.slice(1).forEach(x => SRS.record(x.id, true, {}));
 const w = Store.wrong();
 ok &= chk('错题进入错题本（需再答对 2 次）', w.length === 1 && w[0].id === s1[0].id && w[0].need === 2, JSON.stringify(w));
 
+// 2b. 错题本应如实保存"当时那道原题"的变量与答案（用于还原原题、把变种归到一起）
+SRS.record(s1[1].id, false, { given: '错答', expected: '正答', vars: { a: 3, b: 5 }, lang: 'zh' });
+const w2 = Store.wrongAll().filter(x => x.id === s1[1].id)[0];
+ok &= chk('错题记录保存原题变量与答案',
+  !!(w2 && w2.instances && w2.instances.length &&
+     w2.instances[w2.instances.length - 1].vars && w2.instances[w2.instances.length - 1].vars.a === 3 &&
+     w2.instances[w2.instances.length - 1].expected === '正答'),
+  JSON.stringify(w2 && w2.instances));
+// 答对不应新增"错题原题"记录（instances 只记录答错的那次）
+const instBefore = w2 ? w2.instances.length : 0;
+SRS.record(s1[1].id, true, { given: 'x', expected: 'y', vars: { a: 9 }, lang: 'zh' });
+const w3 = Store.wrongAll().filter(x => x.id === s1[1].id)[0];
+ok &= chk('答对不新增错题原题记录', w3 ? w3.instances.length === instBefore : true);
+
 // 3. 第二轮：错题必须出现在最前面
 let s2 = SRS.buildSession({ mode: 'daily' });
 ok &= chk('错题出现在第二轮首位', s2.length > 0 && s2[0].id === s1[0].id && s2[0].reason === 'wrong');

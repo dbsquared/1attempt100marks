@@ -57,11 +57,23 @@
       var idx = -1;
       for (var i = 0; i < w.length; i++) if (w[i].id === id) { idx = i; break; }
       if (!ok) {
-        if (idx < 0) { w.push({ id: id, need: 0, times: 0, firstTs: now(), lastTs: now() }); idx = w.length - 1; }
+        if (idx < 0) { w.push({ id: id, need: 0, times: 0, firstTs: now(), lastTs: now(), instances: [] }); idx = w.length - 1; }
         w[idx].need = Math.max(w[idx].need, s.wrongNeed);
         w[idx].times++;
         w[idx].lastTs = now();
-        if (extra) { w[idx].lastGiven = extra.given; w[idx].lastExpected = extra.expected; w[idx].lastStem = extra.stem; }
+        if (extra) {
+          w[idx].lastGiven = extra.given; w[idx].lastExpected = extra.expected; w[idx].lastStem = extra.stem;
+          // 把"当时错的那道原题"作为一条记录存下来（同型的不同数值算不同变种，归到这一条错题下）
+          if (!w[idx].instances) w[idx].instances = [];
+          w[idx].instances.push({
+            ts: now(),
+            vars: extra.vars,
+            lang: extra.lang,
+            given: extra.given,
+            expected: extra.expected
+          });
+          if (w[idx].instances.length > 30) w[idx].instances = w[idx].instances.slice(-30);
+        }
       } else if (idx >= 0) {
         w[idx].need -= 1;
         w[idx].lastTs = now();

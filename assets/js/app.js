@@ -116,13 +116,22 @@
     session.sigCount[q.sig] = (session.sigCount[q.sig] || 0) + 1;
 
     var st = SRS.state(tpl.id);
-    $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
-    $('#qBar').style.width = ((session.idx) / session.queue.length * 100) + '%';
-    $('#qBadges').innerHTML =
-      reasonPill(item.reason) +
-      '<span class="pill">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
-      '<span class="pill">' + stars(tpl.difficulty || 2) + '</span>' +
-      (st.seen ? '<span class="pill ' + (st.mastered ? 'ok' : '') + '">已练 ' + st.seen + ' 次 · 连对 ' + st.streak + '</span>' : '');
+    if (session.reviewRedo) {
+      $('#qProgress').textContent = '解析 + 变式（不计入统计）';
+      $('#qBar').style.width = '0%';
+      $('#qBadges').innerHTML =
+        '<span class="pill review">解析+变式</span>' +
+        '<span class="pill">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
+        '<span class="pill">' + stars(tpl.difficulty || 2) + '</span>';
+    } else {
+      $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
+      $('#qBar').style.width = ((session.idx) / session.queue.length * 100) + '%';
+      $('#qBadges').innerHTML =
+        reasonPill(item.reason) +
+        '<span class="pill">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
+        '<span class="pill">' + stars(tpl.difficulty || 2) + '</span>' +
+        (st.seen ? '<span class="pill ' + (st.mastered ? 'ok' : '') + '">已练 ' + st.seen + ' 次 · 连对 ' + st.streak + '</span>' : '');
+    }
 
     renderQuestionCard(q, tpl);
     renderBugFeedback('#qfb', tpl.id, q);
@@ -391,21 +400,28 @@
     var res = Grader.grade(curQ, input);
     var tpl = curQ.tpl;
 
-    SRS.record(tpl.id, res.ok, { given: res.given, expected: res.expected, stem: curQ.stemText });
-    Store.pushHistory({
-      ts: Date.now(), tid: tpl.id, ok: res.ok, given: res.given, expected: res.expected,
-      stem: curQ.stemText, topic: tpl.topic || '', mode: session ? session.mode : 'paper'
-    });
-
-    session.results.push({
-      tid: tpl.id, sig: curQ.sig, ok: res.ok, given: res.given, expected: res.expected,
-      stem: curQ.stemText, stemHtml: curQ.stemHtml, solution: curQ.solutionHtml, type: curQ.type
-    });
-
-    // 错题当场换数重练
-    if (!res.ok && Store.settings().retryInSession) {
-      session.queue.push({ id: tpl.id, reason: 'wrong' });
-      $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
+    // 解析+变式练习（不计入统计）：既不写进度/错题本，也不进历史统计
+    if (session && session.noCount) {
+      // 仅把本次作答临时放进 results，用于"换变式"时避免抽到同一道
+      session.results.push({
+        tid: tpl.id, sig: curQ.sig, ok: res.ok, given: res.given, expected: res.expected,
+        stem: curQ.stemText, stemHtml: curQ.stemHtml, solution: curQ.solutionHtml, type: curQ.type
+      });
+    } else {
+      SRS.record(tpl.id, res.ok, { given: res.given, expected: res.expected, stem: curQ.stemText, vars: curQ.vars, lang: curQ.lang });
+      Store.pushHistory({
+        ts: Date.now(), tid: tpl.id, ok: res.ok, given: res.given, expected: res.expected,
+        stem: curQ.stemText, topic: tpl.topic || '', mode: session ? session.mode : 'paper'
+      });
+      session.results.push({
+        tid: tpl.id, sig: curQ.sig, ok: res.ok, given: res.given, expected: res.expected,
+        stem: curQ.stemText, stemHtml: curQ.stemHtml, solution: curQ.solutionHtml, type: curQ.type
+      });
+      // 错题当场换数重练
+      if (!res.ok && Store.settings().retryInSession) {
+        session.queue.push({ id: tpl.id, reason: 'wrong' });
+        $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
+      }
     }
 
     renderFeedback(res, curQ);
@@ -424,15 +440,26 @@
     else if (q.solutionHtml) h += '<div class="solution">' + q.solutionHtml + '</div>';
 
     var st = SRS.state(q.tplId);
-    h += '<div class="small muted" style="margin-top:10px">' +
-      (res.ok
-        ? '连续答对 ' + st.streak + ' 次' + (st.mastered ? ' · 已掌握，将在 ' + fmtDue(st.due) + '抽样检测' : '（连对 ' + Store.settings().masterStreak + ' 次即掌握）')
-        : '已加入错题本，下次测试会换一组数值再考你') +
-      '</div>';
-    h += '<div class="row" style="margin-top:12px"><button class="btn primary" id="btnNext">' +
-      (session && session.idx + 1 < session.queue.length ? '下一题' : '查看成绩') + '</button></div></div>';
+    if (session && session.reviewRedo) {
+      h += '<div class="small muted" style="margin-top:10px">解析 + 变式练习，<b>不计入掌握度统计</b>。看完解析，换一道新变式再练。</div>';
+      h += '<div class="row" style="margin-top:12px"><button class="btn primary" id="btnNext">再来一题（新变式）</button>' +
+        '<button class="btn" id="btnBackWrong">返回错题本</button></div></div>';
+    } else {
+      h += '<div class="small muted" style="margin-top:10px">' +
+        (res.ok
+          ? '连续答对 ' + st.streak + ' 次' + (st.mastered ? ' · 已掌握，将在 ' + fmtDue(st.due) + '抽样检测' : '（连对 ' + Store.settings().masterStreak + ' 次即掌握）')
+          : '已加入错题本，下次测试会换一组数值再考你') +
+        '</div>';
+      h += '<div class="row" style="margin-top:12px"><button class="btn primary" id="btnNext">' +
+        (session && session.idx + 1 < session.queue.length ? '下一题' : '查看成绩') + '</button></div></div>';
+    }
     $('#qfb').innerHTML = h;
-    $('#btnNext').addEventListener('click', function () { session.idx++; nextQuestion(); });
+    if (session && session.reviewRedo) {
+      $('#btnNext').addEventListener('click', function () { nextQuestion(); });
+      $('#btnBackWrong').addEventListener('click', function () { session = null; switchView('wrong'); });
+    } else {
+      $('#btnNext').addEventListener('click', function () { session.idx++; nextQuestion(); });
+    }
     $('#btnNext').focus();
   }
 
@@ -547,12 +574,20 @@
     if (origMode) all = all.filter(function (t) { return t.original; });   // 原题模式：只出已录入原题数值的真题
     var ids = all.map(function (t) { return t.id; });
     var p = Store.progress(), w = Store.wrong().map(function (x) { return x.id; });
+    // 错题组卷：每次不得少于 10 道；错题本题数不够时用同型变式充数
+    var effectiveSize = (scope === 'wrong') ? Math.max(size, 10) : size;
 
     if (scope === 'wrong') ids = w.filter(function (id) { return ids.indexOf(id) >= 0; });
     else if (scope === 'topic') ids = all.filter(function (t) { return (t.topic || '') === topic; }).map(function (t) { return t.id; });
     else if (scope === 'unmastered') ids = ids.filter(function (id) { return !p[id] || !p[id].mastered; });
     else if (scope === 'new') ids = SRS.newIds(ids);
     if (topic && scope !== 'topic') ids = ids.filter(function (id) { var t = Bank.byId(id); return t && (t.topic || '') === topic; });
+
+    // 错题本为空时，用「未掌握题型」凑满，保证错题组卷始终可用（仍计入统计）
+    if (scope === 'wrong' && !ids.length) {
+      ids = all.filter(function (t) { var s = p[t.id]; return !s || !s.seen || !s.mastered; }).map(function (t) { return t.id; });
+      toast('错题本为空，已用「未掌握题型」凑满 10 题组卷');
+    }
 
     var srcs = checkedSources('#ppSources');
     if (srcs.length) ids = ids.filter(function (id) { var t = Bank.byId(id); return t && srcs.indexOf(sourceSetOf(t)) >= 0; });
@@ -564,10 +599,10 @@
 
     var picked = [], sigs = {};
     if (origMode) {
-      /* 原题：每个模板固定一题，按原卷题号排序取前 size 题，不抽数、不洗牌 */
+      /* 原题：每个模板固定一题，按原卷题号排序取前 effectiveSize 题，不抽数、不洗牌 */
       var tpls = ids.map(function (id) { return Bank.byId(id); }).filter(function (t) { return !!t; });
       tpls.sort(function (a, b) { return origNoOf(a) - origNoOf(b); });
-      for (var k = 0; k < tpls.length && picked.length < size; k++) {
+      for (var k = 0; k < tpls.length && picked.length < effectiveSize; k++) {
         Generator.preferLang = paperLangFor(tpls[k], langMode);
         var q = Generator.instantiate(tpls[k], null, { original: true });
         if (!q) continue;
@@ -576,7 +611,9 @@
       }
     } else {
       shuffle(ids);
-      for (var i = 0; i < size * 3 && picked.length < size; i++) {
+      /* 第一遍：在错题题型间循环，抽不重复数值的变式，直到凑满 effectiveSize */
+      var guard = 0;
+      for (var i = 0; (i < effectiveSize * 3 || picked.length < effectiveSize) && guard < effectiveSize * 12 && picked.length < effectiveSize; i++, guard++) {
         var id = ids[i % ids.length];
         var tpl = Bank.byId(id); if (!tpl) continue;
         Generator.preferLang = paperLangFor(tpl, langMode);
@@ -585,6 +622,15 @@
         if (picked.some(function (x) { return x.sig === q2.sig; })) continue;
         sigs[q2.sig] = 1;
         picked.push(q2);
+      }
+      /* 第二遍兜底：个别模板变式极少抽不够时，放宽「数值不重复」限制，保证达到题量 */
+      var j = 0;
+      while (picked.length < effectiveSize && j < effectiveSize * 4) {
+        var id2 = ids[j % ids.length]; j++;
+        var tpl2 = Bank.byId(id2); if (!tpl2) continue;
+        Generator.preferLang = paperLangFor(tpl2, langMode);
+        var q3 = Generator.instantiate(tpl2, null);
+        if (q3) picked.push(q3);
       }
     }
     Generator.preferLang = null;   // 复位，避免影响练习模式的随机语言
@@ -768,32 +814,84 @@
   }
 
   /* ---------------- 错题本 ---------------- */
+  /* 把一条"当时错的原题"记录渲染成可折叠的卡片：还原原题（题干+图+选项+答案）并显示你当时写错的 vs 正确 */
+  function wrongInstanceHtml(tpl, inst, i) {
+    var title = '第 ' + (i + 1) + ' 次错 · ' + fmtDate(inst.ts);
+    var line = '你写 <b>' + esc(inst.given || '—') + '</b>，正确答案 <b>' + esc(inst.expected || '—') + '</b>';
+    var body;
+    if (inst.vars) {
+      var q = null;
+      try { q = Generator.instantiateWithVars(tpl, inst.vars, inst.lang); } catch (e) { q = null; }
+      body = q ? variantHtml(q, '当时原题') : '<p class="muted">（这道题已无法还原，原题数据缺失）</p>';
+    } else {
+      // 旧版本数据：只保留了文字，没有可还原的变量
+      body = '<p class="small">' + esc(inst.lastStem || '') + '</p>';
+    }
+    return '<details class="wrong-inst"><summary>' + esc(title) + ' ｜ ' + line + '</summary>' +
+      '<div class="wrong-inst-body">' + body + '</div></details>';
+  }
+
+  /* 解析+变式练习（不计入统计）：同题型不断换新数值，看完解析再练，但不写进度/错题本 */
+  function startReviewRedo(tplId) {
+    switchView('practice');
+    $('#pStart').classList.add('hidden');
+    $('#pResult').classList.add('hidden');
+    $('#pQuiz').classList.remove('hidden');
+    session = { mode: 'review-redo', topic: tplId, queue: [{ id: tplId, reason: 'review' }], idx: 0, results: [], sigCount: {}, startedAt: Date.now(), noCount: true, reviewRedo: true };
+    nextQuestion();
+  }
+
+  /* 从错题本一键组卷（≥10 题，错题不够用同型变式充数；计入统计） */
+  function genWrongPaper() {
+    $('#ppScope').value = 'wrong';
+    var el = $('#ppSize'); if (el) el.value = Math.max(10, +el.value || 10);
+    switchView('paper');
+    genPaper();
+  }
+
   function renderWrong() {
     var w = Store.wrong();
-    if (!w.length) { $('#wrongList').innerHTML = '<p class="muted">错题本是空的 —— 保持住 👍</p>'; return; }
+    if (!w.length) {
+      $('#wrongList').innerHTML = '<p class="muted">错题本是空的 —— 保持住 👍</p>' +
+        '<div class="row" style="margin-top:12px"><button class="btn" id="btnWrongPaperEmpty">📝 生成错题卷（用未掌握题型凑满 10 题）</button></div>';
+      var be = $('#btnWrongPaperEmpty');
+      if (be) be.addEventListener('click', genWrongPaper);
+      return;
+    }
     w.sort(function (a, b) { return (b.lastTs || 0) - (a.lastTs || 0); });
     $('#wrongList').innerHTML = w.map(function (x) {
       var tpl = Bank.byId(x.id);
       if (!tpl) return '';
       var st = SRS.state(x.id);
-      return '<div class="list-item">' +
-        '<div class="t">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + ' <span class="pill wrong">还需答对 ' + x.need + ' 次</span>' +
-        ' <span class="pill">错过 ' + x.times + ' 次</span></div>' +
+      var insts = (x.instances && x.instances.length)
+        ? x.instances
+        : (x.lastStem ? [{ ts: x.lastTs, given: x.lastGiven, expected: x.lastExpected, lastStem: x.lastStem }] : []);
+      var instHtml = insts.map(function (inst, i) { return wrongInstanceHtml(tpl, inst, i); }).join('');
+      return '<div class="list-item wrong-card">' +
+        '<div class="t">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') +
+          ' <span class="pill wrong">还需答对 ' + x.need + ' 次</span>' +
+          ' <span class="pill">错过 ' + x.times + ' 次</span>' +
+          (insts.length ? ' <span class="pill">变种 ' + insts.length + ' 道</span>' : '') + '</div>' +
         '<div class="small muted">' + esc(tpl.title || Generator.renderText(tpl.stem, {})) + '</div>' +
-        (x.lastStem ? '<div class="small">上次：' + esc(x.lastStem) + ' &nbsp;你写了 <b>' + esc(x.lastGiven || '') + '</b>，正确答案 <b>' + esc(x.lastExpected || '') + '</b></div>' : '') +
-        '<div class="row" style="margin-top:8px"><button class="btn sm primary" data-redo="' + esc(x.id) + '">换组数字重练</button>' +
-        '<span class="small muted">最近 ' + fmtDate(x.lastTs) + '</span></div>' +
+        (instHtml ? '<div style="margin:8px 0">' + instHtml + '</div>' : '') +
+        '<div class="row" style="margin-top:8px">' +
+          '<button class="btn sm primary" data-redo="' + esc(x.id) + '">换组数字重练</button>' +
+          '<button class="btn sm" data-review="' + esc(x.id) + '">解析+变式（不计入）</button>' +
+          '<span class="small muted">最近 ' + fmtDate(x.lastTs) + '</span></div>' +
         '</div>';
     }).join('');
     $$('#wrongList [data-redo]').forEach(function (b) {
       b.addEventListener('click', function () {
         switchView('practice');
         startSession('topic', null);
-        // 直接进入该题型单题重练
+        // 直接进入该题型单题重练（计入统计）
         session = { mode: 'topic', queue: [{ id: b.dataset.redo, reason: 'wrong' }], idx: 0, results: [], sigCount: {}, startedAt: Date.now() };
         $('#pStart').classList.add('hidden'); $('#pResult').classList.add('hidden'); $('#pQuiz').classList.remove('hidden');
         nextQuestion();
       });
+    });
+    $$('#wrongList [data-review]').forEach(function (b) {
+      b.addEventListener('click', function () { startReviewRedo(b.dataset.review); });
     });
   }
 
@@ -1111,9 +1209,11 @@
   function importCode(text) {
     var d = Sync.parseCode(text);
     Store.ensureProfileBySid(d.sid, d.dev);   // 按码中编号归位/新建学生，再合并
-    var cur = Sync.normalize(Sync.packLocal(Store.progress(), Store.wrongAll()));
+    var prevWrong = Store.wrongAll();   // 合并前本机错题（含 instances 历史）
+    var cur = Sync.normalize(Sync.packLocal(Store.progress(), prevWrong));
     var r = Sync.merge(cur, d);
     var out = Sync.toLocal(cur);
+    out.wrong = Store.preserveWrongInstances(out.wrong, prevWrong);
     Store.saveProgress(out.progress);
     Store.saveWrong(out.wrong);
     Store.setLastSync(Date.now());
@@ -1367,7 +1467,11 @@
     $('#topicBtns').addEventListener('click', function (e) {
       var t = e.target.closest('[data-topic]'); if (t) startSession('topic', t.dataset.topic);
     });
-    $('#btnQuit').addEventListener('click', function () { if (confirm('结束本轮并查看成绩？')) finishSession(); });
+    $('#btnQuit').addEventListener('click', function () {
+      if (session && session.reviewRedo) { session = null; switchView('wrong'); return; }
+      if (confirm('结束本轮并查看成绩？')) finishSession();
+    });
+    $('#btnWrongPaper').addEventListener('click', genWrongPaper);
     $('#btnAgain').addEventListener('click', function () { $('#pResult').classList.add('hidden'); $('#pStart').classList.remove('hidden'); renderStart(); });
     $('#btnBackHome').addEventListener('click', function () { $('#pResult').classList.add('hidden'); $('#pStart').classList.remove('hidden'); renderStart(); });
 
@@ -1454,6 +1558,12 @@
     $('#btnAddStudent').addEventListener('click', function () {
       var inp = $('#newStudentName'), n = (inp.value || '').trim();
       if (!n) { toast('请输入姓名'); return; }
+      var dup = Store.profileByName(n);
+      if (dup) {
+        toast('「' + dup.name + '」已存在，换一个名字再添加（如英文名/小名/网名）');
+        inp.focus();
+        return;
+      }
       Store.addProfile(n);
       inp.value = '';
       renderStudentList();
@@ -1494,7 +1604,13 @@
         else if (act === 'rename') {
           var p = Store.profiles().filter(function (x) { return x.id === id; })[0];
           var n = prompt('修改学生姓名', p ? p.name : '');
-          if (n !== null) { Store.renameProfile(id, n); renderStudentList(); updateWho(); }
+          if (n !== null) {
+            n = n.trim();
+            if (!n) { toast('姓名不能为空'); return; }
+            var dup = Store.profileByName(n);
+            if (dup && dup.id !== id) { toast('「' + dup.name + '」已存在，换一个名字'); return; }
+            Store.renameProfile(id, n); renderStudentList(); updateWho();
+          }
         } else if (act === 'del') {
           var pp = Store.profiles().filter(function (x) { return x.id === id; })[0];
           if (confirm('删除学生「' + (pp ? pp.name : '') + '」及其全部进度？此操作不可恢复。')) {

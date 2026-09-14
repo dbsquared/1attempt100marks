@@ -67,6 +67,15 @@ chk('改名自动 trim 空白', S.profileBySid(m.sid).name === '小刚', S.profi
 S.renameProfile(m.id, '');
 chk('空名不改动（保留原名）', S.profileBySid(m.sid).name === '小刚', S.profileBySid(m.sid).name);
 
+/* ---------- B3. 同名拒绝（避免手滑/跨设备造成同名副本） ---------- */
+let beforeB3 = S.profiles().length;
+let dupAdd = S.addProfile('小刚');             // 小刚 已存在（B2 把小明改名而来）
+chk('同名添加被拒绝（返回 null）', dupAdd === null);
+chk('同名添加不增加档案数', S.profiles().length === beforeB3, '' + S.profiles().length);
+chk('profileByName 精确命中已存在档案', S.profileByName('小刚') && S.profileByName('小刚').sid === m.sid);
+chk('profileByName 忽略首尾空格', !!S.profileByName('  小刚 '));
+chk('profileByName 查不存在的名字返回 null', S.profileByName('不存在的人') === null);
+
 /* ---------- C. 按 sid 路由导入 ---------- */
 let s2 = S.ensureProfileBySid('kid99', 'AB12');
 chk('ensureProfileBySid 新建并切换', S.current().sid === 'kid99' && S.profiles().length === 3);

@@ -389,6 +389,24 @@ node tools/_preview_original.js --set=icas21y2m --inline
   模板的正确项固定是 `(pa-1, pb+1)`，所以要把 `pa` 取成「原卷答案的一半」才能两边都对上：
   `pa=4, pb=5` → 出题画 `4|5`（原卷的 `5|4`）、正确项 `3|6`（原卷的 `6|3`）。
 
+## 4.8 错题本与错题组卷（前端逻辑）
+
+- 错题本每条记录（`Store.wrongAll()` 里的对象）在答错时会向 `instances` 数组追加一条
+  `{ts, vars, lang, given, expected}`，即**当时那道原题**的完整变量取值 + 学生错答 + 正确答案。
+  同型的不同数值（变式）自然归到同一条 `id` 下，错题本界面按 `id` 分组展示，每个变式可折叠还原。
+- 还原原题用 `Generator.instantiateWithVars(tpl, vars, lang)`（generator.js 新增），能完整复现
+  题干、自绘 SVG、选项与解析，不依赖任何文字缓存。
+- 旧数据只有 `lastStem/lastGiven/lastExpected`（无 vars）时，错题本退化为纯文字展示，不会报错。
+- 「**解析+变式（不计入）**」按钮（`startReviewRedo`）：同题型不断换新数值练习，看完解析再答，
+  **不写进度/错题本/历史统计**（`session.noCount` 跳过 `SRS.record` 与 `pushHistory`）。
+- 「**换组数字重练**」按钮：仍是计入统计的真实重练（会递减 `need`）。
+- 「**生成错题卷（≥10 题，变式充数）**」（`genWrongPaper` → `genPaper` scope=wrong）：
+  错题题型不足 10 道时，在同一批错题题型间循环抽**新数值变式**补齐到至少 10 道；
+  个别模板变式极少抽不够时放宽「数值不重复」限制兜底。错题本为空则回退到「未掌握题型」凑满。
+  错题卷走试卷引擎，交卷**计入统计**（`SRS.record`）。
+- 多设备同步：`instances` 是设备端额外历史，同步码只传 `{id,need,times,lastTs}` 摘要；
+  合并时 `Store.preserveWrongInstances` 把本机已记录的原题历史按 id 带回来，避免被云端摘要覆盖丢失。
+
 ## 5. 表达式语法（constraints / answer.expr / derived）
 
 - 运算：`+ - * / % ^`（`^` 为乘方），比较 `== != < <= > >=`，逻辑 `&& || !`

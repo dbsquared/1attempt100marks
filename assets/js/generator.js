@@ -288,6 +288,15 @@
     };
   }
 
+  /* 用「已保存的变量取值」还原一道曾经出过的题（错题本里如实还原当时那道原题） */
+  function instantiateWithVars(tpl, vars, lang) {
+    if (!tpl || !vars) return null;
+    try {
+      var sig = hashCode(JSON.stringify(vars));
+      return buildQ(tpl, vars, lang || pickLang(tpl), sig, {});
+    } catch (e) { return null; }
+  }
+
   /* 「原题模式」：按模板 original 字段还原原卷那一道题（固定变量、不抽数、不洗牌） */
   function instantiateOriginal(tpl) {
     if (!tpl || !tpl.original) return null;
@@ -333,6 +342,7 @@
   global.Generator = {
     instantiate: instantiate,
     instantiateOriginal: instantiateOriginal,
+    instantiateWithVars: instantiateWithVars,
     renderHtml: renderHtml,
     renderText: renderText,
     fmtNum: fmtNum,

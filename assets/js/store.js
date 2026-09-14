@@ -92,6 +92,19 @@
     for (var i = 0; i < list.length; i++) if (list[i].sid === sid) return list[i];
     return null;
   }
+  // 规范化名字：去首尾空格并转小写，用于「同名」判定（大小写/空格差异都视为同名）
+  function normName(name) {
+    return (name == null ? '' : String(name)).trim().toLowerCase();
+  }
+  // 按名字查重。名字不是身份键（身份靠 sid），但为避免 UI 上出现两个长得一样的档案，
+  // 新增/改名时据此拒绝重复。忽略大小写与首尾空格。
+  function profileByName(name) {
+    var t = normName(name);
+    if (!t) return null;
+    var list = profiles();
+    for (var i = 0; i < list.length; i++) if (normName(list[i].name) === t) return list[i];
+    return null;
+  }
   // 按 sid 找到对应档案，没有就新建并切换过去（用于导入他人同步码）
   function ensureProfileBySid(sid, devId) {
     sid = sid || FIXED_SID;
@@ -111,6 +124,7 @@
     return p;
   }
   function addProfile(name) {
+    if (profileByName(name)) return null;   // 拒绝同名，避免 UI 上出现两个长得一样的档案
     var list = profiles();
     var prof = {
       id: 'p_' + rnd(8),
@@ -167,6 +181,7 @@
     currentId: currentId,
     setCurrent: setCurrent,
     profileBySid: profileBySid,
+    profileByName: profileByName,
     ensureProfileBySid: ensureProfileBySid,
     addProfile: addProfile,
     renameProfile: renameProfile,
@@ -190,12 +205,22 @@
     /* ---------- 同步 ---------- */
     lastSync: function () { return read(current().sid + ':lastSync', 0) || 0; },
     setLastSync: function (ts) { write(current().sid + ':lastSync', ts); },
+    /** 合并时把本机已记录的"当时原题"历史（instances）按 id 带回来，避免被云端摘要覆盖丢掉 */
+    preserveWrongInstances: function (merged, prevWrong) {
+      var map = {};
+      (prevWrong || []).forEach(function (x) { if (x && x.id && x.instances && x.instances.length) map[x.id] = x.instances; });
+      (merged || []).forEach(function (x) { if (map[x.id]) x.instances = map[x.id]; });
+      return merged;
+    },
+
     /** 用云端状态合并本机（当前学生）；返回统计 */
     applyCloud: function (cloud) {
+      var prevWrong = Store.wrongAll();   // 合并前本机错题（含 instances 历史）
       var n = global.Sync.normalize(cloud);
-      var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), Store.wrongAll()));
+      var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), prevWrong));
       var r = global.Sync.merge(cur, { p: cloud.p, w: cloud.w });
       var out = global.Sync.toLocal(cur);
+      out.wrong = Store.preserveWrongInstances(out.wrong, prevWrong);
       Store.saveProgress(out.progress);
       Store.saveWrong(out.wrong);
       Store.setLastSync(Date.now());

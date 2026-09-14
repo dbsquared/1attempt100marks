@@ -116,22 +116,13 @@
     session.sigCount[q.sig] = (session.sigCount[q.sig] || 0) + 1;
 
     var st = SRS.state(tpl.id);
-    if (session.reviewRedo) {
-      $('#qProgress').textContent = '解析 + 变式（不计入统计）';
-      $('#qBar').style.width = '0%';
-      $('#qBadges').innerHTML =
-        '<span class="pill review">解析+变式</span>' +
-        '<span class="pill">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
-        '<span class="pill">' + stars(tpl.difficulty || 2) + '</span>';
-    } else {
-      $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
-      $('#qBar').style.width = ((session.idx) / session.queue.length * 100) + '%';
-      $('#qBadges').innerHTML =
-        reasonPill(item.reason) +
-        '<span class="pill">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
-        '<span class="pill">' + stars(tpl.difficulty || 2) + '</span>' +
-        (st.seen ? '<span class="pill ' + (st.mastered ? 'ok' : '') + '">已练 ' + st.seen + ' 次 · 连对 ' + st.streak + '</span>' : '');
-    }
+    $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
+    $('#qBar').style.width = ((session.idx) / session.queue.length * 100) + '%';
+    $('#qBadges').innerHTML =
+      reasonPill(item.reason) +
+      '<span class="pill">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
+      '<span class="pill">' + stars(tpl.difficulty || 2) + '</span>' +
+      (st.seen ? '<span class="pill ' + (st.mastered ? 'ok' : '') + '">已练 ' + st.seen + ' 次 · 连对 ' + st.streak + '</span>' : '');
 
     renderQuestionCard(q, tpl);
     renderBugFeedback('#qfb', tpl.id, q);
@@ -400,28 +391,20 @@
     var res = Grader.grade(curQ, input);
     var tpl = curQ.tpl;
 
-    // 解析+变式练习（不计入统计）：既不写进度/错题本，也不进历史统计
-    if (session && session.noCount) {
-      // 仅把本次作答临时放进 results，用于"换变式"时避免抽到同一道
-      session.results.push({
-        tid: tpl.id, sig: curQ.sig, ok: res.ok, given: res.given, expected: res.expected,
-        stem: curQ.stemText, stemHtml: curQ.stemHtml, solution: curQ.solutionHtml, type: curQ.type
-      });
-    } else {
-      SRS.record(tpl.id, res.ok, { given: res.given, expected: res.expected, stem: curQ.stemText, vars: curQ.vars, lang: curQ.lang });
-      Store.pushHistory({
-        ts: Date.now(), tid: tpl.id, ok: res.ok, given: res.given, expected: res.expected,
-        stem: curQ.stemText, topic: tpl.topic || '', mode: session ? session.mode : 'paper'
-      });
-      session.results.push({
-        tid: tpl.id, sig: curQ.sig, ok: res.ok, given: res.given, expected: res.expected,
-        stem: curQ.stemText, stemHtml: curQ.stemHtml, solution: curQ.solutionHtml, type: curQ.type
-      });
-      // 错题当场换数重练
-      if (!res.ok && Store.settings().retryInSession) {
-        session.queue.push({ id: tpl.id, reason: 'wrong' });
-        $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
-      }
+    // 记录进度 / 错题本 / 历史
+    SRS.record(tpl.id, res.ok, { given: res.given, expected: res.expected, stem: curQ.stemText, vars: curQ.vars, lang: curQ.lang });
+    Store.pushHistory({
+      ts: Date.now(), tid: tpl.id, ok: res.ok, given: res.given, expected: res.expected,
+      stem: curQ.stemText, topic: tpl.topic || '', mode: session ? session.mode : 'paper'
+    });
+    session.results.push({
+      tid: tpl.id, sig: curQ.sig, ok: res.ok, given: res.given, expected: res.expected,
+      stem: curQ.stemText, stemHtml: curQ.stemHtml, solution: curQ.solutionHtml, type: curQ.type
+    });
+    // 错题当场换数重练
+    if (!res.ok && Store.settings().retryInSession) {
+      session.queue.push({ id: tpl.id, reason: 'wrong' });
+      $('#qProgress').textContent = (session.idx + 1) + ' / ' + session.queue.length;
     }
 
     renderFeedback(res, curQ);
@@ -440,26 +423,15 @@
     else if (q.solutionHtml) h += '<div class="solution">' + q.solutionHtml + '</div>';
 
     var st = SRS.state(q.tplId);
-    if (session && session.reviewRedo) {
-      h += '<div class="small muted" style="margin-top:10px">解析 + 变式练习，<b>不计入掌握度统计</b>。看完解析，换一道新变式再练。</div>';
-      h += '<div class="row" style="margin-top:12px"><button class="btn primary" id="btnNext">再来一题（新变式）</button>' +
-        '<button class="btn" id="btnBackWrong">返回错题本</button></div></div>';
-    } else {
-      h += '<div class="small muted" style="margin-top:10px">' +
-        (res.ok
-          ? '连续答对 ' + st.streak + ' 次' + (st.mastered ? ' · 已掌握，将在 ' + fmtDue(st.due) + '抽样检测' : '（连对 ' + Store.settings().masterStreak + ' 次即掌握）')
-          : '已加入错题本，下次测试会换一组数值再考你') +
-        '</div>';
-      h += '<div class="row" style="margin-top:12px"><button class="btn primary" id="btnNext">' +
-        (session && session.idx + 1 < session.queue.length ? '下一题' : '查看成绩') + '</button></div></div>';
-    }
+    h += '<div class="small muted" style="margin-top:10px">' +
+      (res.ok
+        ? '连续答对 ' + st.streak + ' 次' + (st.mastered ? ' · 已掌握，将在 ' + fmtDue(st.due) + '抽样检测' : '（连对 ' + Store.settings().masterStreak + ' 次即掌握）')
+        : '已加入错题本，下次测试会换一组数值再考你') +
+      '</div>';
+    h += '<div class="row" style="margin-top:12px"><button class="btn primary" id="btnNext">' +
+      (session && session.idx + 1 < session.queue.length ? '下一题' : '查看成绩') + '</button></div></div>';
     $('#qfb').innerHTML = h;
-    if (session && session.reviewRedo) {
-      $('#btnNext').addEventListener('click', function () { nextQuestion(); });
-      $('#btnBackWrong').addEventListener('click', function () { session = null; switchView('wrong'); });
-    } else {
-      $('#btnNext').addEventListener('click', function () { session.idx++; nextQuestion(); });
-    }
+    $('#btnNext').addEventListener('click', function () { session.idx++; nextQuestion(); });
     $('#btnNext').focus();
   }
 
@@ -814,33 +786,6 @@
   }
 
   /* ---------------- 错题本 ---------------- */
-  /* 把一条"当时错的原题"记录渲染成可折叠的卡片：还原原题（题干+图+选项+答案）并显示你当时写错的 vs 正确 */
-  function wrongInstanceHtml(tpl, inst, i) {
-    var title = '第 ' + (i + 1) + ' 次错 · ' + fmtDate(inst.ts);
-    var line = '你写 <b>' + esc(inst.given || '—') + '</b>，正确答案 <b>' + esc(inst.expected || '—') + '</b>';
-    var body;
-    if (inst.vars) {
-      var q = null;
-      try { q = Generator.instantiateWithVars(tpl, inst.vars, inst.lang); } catch (e) { q = null; }
-      body = q ? variantHtml(q, '当时原题') : '<p class="muted">（这道题已无法还原，原题数据缺失）</p>';
-    } else {
-      // 旧版本数据：只保留了文字，没有可还原的变量
-      body = '<p class="small">' + esc(inst.lastStem || '') + '</p>';
-    }
-    return '<details class="wrong-inst"><summary>' + esc(title) + ' ｜ ' + line + '</summary>' +
-      '<div class="wrong-inst-body">' + body + '</div></details>';
-  }
-
-  /* 解析+变式练习（不计入统计）：同题型不断换新数值，看完解析再练，但不写进度/错题本 */
-  function startReviewRedo(tplId) {
-    switchView('practice');
-    $('#pStart').classList.add('hidden');
-    $('#pResult').classList.add('hidden');
-    $('#pQuiz').classList.remove('hidden');
-    session = { mode: 'review-redo', topic: tplId, queue: [{ id: tplId, reason: 'review' }], idx: 0, results: [], sigCount: {}, startedAt: Date.now(), noCount: true, reviewRedo: true };
-    nextQuestion();
-  }
-
   /* 从错题本一键组卷（≥10 题，错题不够用同型变式充数；计入统计） */
   function genWrongPaper() {
     $('#ppScope').value = 'wrong';
@@ -862,23 +807,51 @@
     $('#wrongList').innerHTML = w.map(function (x) {
       var tpl = Bank.byId(x.id);
       if (!tpl) return '';
-      var st = SRS.state(x.id);
+      // instances 最新在末尾；旧数据没有 instances，退化成单条 lastStem 记录
       var insts = (x.instances && x.instances.length)
         ? x.instances
         : (x.lastStem ? [{ ts: x.lastTs, given: x.lastGiven, expected: x.lastExpected, lastStem: x.lastStem }] : []);
-      var instHtml = insts.map(function (inst, i) { return wrongInstanceHtml(tpl, inst, i); }).join('');
-      return '<div class="list-item wrong-card">' +
-        '<div class="t">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') +
-          ' <span class="pill wrong">还需答对 ' + x.need + ' 次</span>' +
-          ' <span class="pill">错过 ' + x.times + ' 次</span>' +
-          (insts.length ? ' <span class="pill">变种 ' + insts.length + ' 道</span>' : '') + '</div>' +
-        '<div class="small muted">' + esc(tpl.title || Generator.renderText(tpl.stem, {})) + '</div>' +
-        (instHtml ? '<div style="margin:8px 0">' + instHtml + '</div>' : '') +
-        '<div class="row" style="margin-top:8px">' +
+      if (!insts.length) return '';
+      var last = insts[insts.length - 1];
+      var prev = insts.slice(0, -1);
+      // 还原"最近一次错"的那道原题
+      var lastQ = last.vars ? (function () { try { return Generator.instantiateWithVars(tpl, last.vars, last.lang); } catch (e) { return null; } })() : null;
+      var qno = tplQNo(tpl);
+      var badge = qno != null
+        ? '<span class="bk-no" title="' + esc(sourceSetOf(tpl)) + ' · 第 ' + qno + ' 题">Q' + qno + '</span>'
+        : '<span class="bk-no bk-nox" title="示例模板">—</span>';
+      var head = '<header class="bk-head">' + badge +
+        '<span class="bk-topic">' + esc(tpl.subject || '') + ' · ' + esc(tpl.topic || '') + '</span>' +
+        (tpl.title ? '<span class="bk-title">' + esc(tpl.title) + '</span>' : '') +
+        '<span class="bk-meta">最近错 ' + fmtDate(x.lastTs) + '</span>' +
+        '<span class="bk-state"><span class="pill wrong">待清 ' + x.need + ' 次</span>' +
+        '<span class="pill">错 ' + x.times + ' 次</span></span></header>';
+      // 直接显示最近错的原题（仿题库管理题卡：题干+图+选项+答案+解析）
+      var lastLabel = '最近错的原题 · ' + fmtDate(last.ts) +
+        ' ｜ 你写 ' + esc(last.given || '—') + '，正确 ' + esc(last.expected || '—');
+      var lastBlock = lastQ ? variantHtml(lastQ, lastLabel)
+        : '<p class="small">' + esc(last.lastStem || '（这道题已无法还原，原题数据缺失）') + '</p>';
+      // 浏览之前错误版本
+      var prevBlock = '';
+      if (prev.length) {
+        prevBlock = '<details class="bk-tpl wrong-prev"><summary>浏览之前错误版本（' + prev.length + ' 个）</summary>' +
+          '<div class="bk-tplbody">' + prev.map(function (inst, i) {
+            var pq = inst.vars ? (function () { try { return Generator.instantiateWithVars(tpl, inst.vars, inst.lang); } catch (e) { return null; } })() : null;
+            var label = '第 ' + (prev.length - i) + ' 次错 · ' + fmtDate(inst.ts) +
+              ' ｜ 你写 ' + esc(inst.given || '—') + '，正确 ' + esc(inst.expected || '—');
+            return '<div class="wrong-prev-item">' + (pq ? variantHtml(pq, label)
+              : '<p class="small">' + esc(inst.lastStem || '（已无法还原）') + '</p>') + '</div>';
+          }).join('') + '</div></details>';
+      }
+      return '<article class="bk-card wrong-card" id="wk-' + esc(x.id) + '">' +
+        head +
+        '<div class="bk-var">' + lastBlock + '</div>' +
+        prevBlock +
+        '<div class="row bk-actions">' +
           '<button class="btn sm primary" data-redo="' + esc(x.id) + '">换组数字重练</button>' +
-          '<button class="btn sm" data-review="' + esc(x.id) + '">解析+变式（不计入）</button>' +
-          '<span class="small muted">最近 ' + fmtDate(x.lastTs) + '</span></div>' +
-        '</div>';
+          '<span class="spacer"></span>' +
+          '<code class="small muted">' + esc(x.id) + '</code>' +
+        '</div></article>';
     }).join('');
     $$('#wrongList [data-redo]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -889,9 +862,6 @@
         $('#pStart').classList.add('hidden'); $('#pResult').classList.add('hidden'); $('#pQuiz').classList.remove('hidden');
         nextQuestion();
       });
-    });
-    $$('#wrongList [data-review]').forEach(function (b) {
-      b.addEventListener('click', function () { startReviewRedo(b.dataset.review); });
     });
   }
 
@@ -1503,7 +1473,6 @@
       var t = e.target.closest('[data-topic]'); if (t) startSession('topic', t.dataset.topic);
     });
     $('#btnQuit').addEventListener('click', function () {
-      if (session && session.reviewRedo) { session = null; switchView('wrong'); return; }
       if (confirm('结束本轮并查看成绩？')) finishSession();
     });
     $('#btnWrongPaper').addEventListener('click', genWrongPaper);

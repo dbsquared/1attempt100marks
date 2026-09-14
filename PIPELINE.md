@@ -397,9 +397,15 @@ node tools/_preview_original.js --set=icas21y2m --inline
 - 还原原题用 `Generator.instantiateWithVars(tpl, vars, lang)`（generator.js 新增），能完整复现
   题干、自绘 SVG、选项与解析，不依赖任何文字缓存。
 - 旧数据只有 `lastStem/lastGiven/lastExpected`（无 vars）时，错题本退化为纯文字展示，不会报错。
-- 「**解析+变式（不计入）**」按钮（`startReviewRedo`）：同题型不断换新数值练习，看完解析再答，
-  **不写进度/错题本/历史统计**（`session.noCount` 跳过 `SRS.record` 与 `pushHistory`）。
-- 「**换组数字重练**」按钮：仍是计入统计的真实重练（会递减 `need`）。
+- **错题本界面（`renderWrong`）直接显示「最近错的那道原题」**：每张错题卡用 `variantHtml` 仿
+  「题库管理」题卡样式（Q 题号徽标 + 知识点 + 待清/错过次数 + 题干 + 自绘 SVG + 选项网格 + 答案 +
+  折叠「查看解析」），最近一次 `instances` 末尾那条被还原后整张渲染出来，并在题卡标题上标出
+  「你写 X，正确 Y」。更旧的版本收进「**浏览之前错误版本（N 个）**」可折叠区，每条同样用
+  `variantHtml` 还原展示，便于对照同一题型的多次错答演变。
+- 没有独立的「解析+变式」按钮：**解析**就是题卡里的「查看解析」，**变式**就是下方「换组数字重练」
+  （二者重复，故已移除 `startReviewRedo` / `session.noCount` / `session.reviewRedo` 整条不计入路径，
+  所有作答一律计入统计）。
+- 「**换组数字重练**」按钮：进入该题型单题重练（计入统计，会递减 `need`）。
 - 「**生成错题卷（≥10 题，变式充数）**」（`genWrongPaper` → `genPaper` scope=wrong）：
   错题题型不足 10 道时，在同一批错题题型间循环抽**新数值变式**补齐到至少 10 道；
   个别模板变式极少抽不够时放宽「数值不重复」限制兜底。错题本为空则回退到「未掌握题型」凑满。

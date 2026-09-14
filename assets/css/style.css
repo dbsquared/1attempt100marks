@@ -387,6 +387,12 @@ legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
 .bk-tpl { border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 10px; }
 .bk-tpl > summary { cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600; outline: none; }
 .bk-tplbody { margin-top: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+
+/* 错题本：浏览之前错误版本时，旧版本之间加间隔 */
+.wrong-prev-item { margin: 10px 0; }
+.wrong-prev-item + .wrong-prev-item { border-top: 1px dashed var(--border); padding-top: 10px; }
+.wrong-card.bk-card { border-color: var(--bad-soft); }
+.wrong-card .bk-head { background: var(--bad-soft); }
 .bk-sub { font-weight: 700; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
 .bk-ul { margin: 4px 0; padding-left: 20px; }
 .bk-ul li { font-size: 12.5px; }

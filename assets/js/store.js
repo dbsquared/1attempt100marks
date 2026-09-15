@@ -239,6 +239,9 @@
      *  replace=false：逐条按 updatedAt 合并，用于手动同步码的多设备合并，保留本机未合并进度。 */
     applyCloud: function (cloud, replace) {
       if (replace) {
+        // 空云端不覆盖：保护尚未合并到云端的新学生，避免把本机进度清成 0
+        var hasData = Object.keys(cloud.p || {}).length || (cloud.w || []).length;
+        if (!hasData) return { pNew: 0, pUpd: 0, replaced: false, skippedEmpty: true };
         var local = global.Sync.toLocal(global.Sync.normalize(cloud));
         local.wrong = Store.preserveWrongInstances(local.wrong, Store.wrongAll());
         Store.saveProgress(local.progress);

@@ -33,7 +33,10 @@
       if (full || !fromSec) return true;
       return Math.floor((x.lastTs || 0) / 1000) > fromSec;
     }).map(function (x) {
-      return [x.id, x.need, x.times, Math.floor((x.lastTs || 0) / 1000)];
+      var a = [x.id, x.need, x.times, Math.floor((x.lastTs || 0) / 1000)];
+      // 携带「当时错的原题」数值（instances），让其他设备也能还原出原题图文
+      if (x.instances && x.instances.length) a.push(x.instances);
+      return a;
     });
   }
 
@@ -46,7 +49,7 @@
       n.p[a[0]] = { seen: a[1], ok: a[2], bad: a[3], streak: a[4], mastered: !!a[5], due: a[6] * DAY, lastTs: a[7] * 1000 };
     });
     (cloud.w || []).forEach(function (a) {
-      n.w[a[0]] = { id: a[0], need: a[1], times: a[2], lastTs: a[3] * 1000 };
+      n.w[a[0]] = { id: a[0], need: a[1], times: a[2], lastTs: a[3] * 1000, instances: a[4] || null };
     });
     return n;
   }
@@ -93,10 +96,12 @@
         return;
       }
       if (!cur) {
-        n.w[id] = { id: id, need: a[1], times: a[2], lastTs: u };
+        n.w[id] = { id: id, need: a[1], times: a[2], lastTs: u, instances: (a[4] && a[4].length) ? a[4] : [] };
         r.wNew++;
       } else if (u > (cur.lastTs || 0)) {
         cur.need = a[1]; cur.times = a[2]; cur.lastTs = u;
+        // 取较新一方的原题数值（instances）；旧客户端不带则保留本机已有
+        cur.instances = (a[4] && a[4].length) ? a[4] : (cur.instances || []);
         r.wUpd++;
       }
     });
@@ -146,7 +151,9 @@
       }),
       w: Object.keys(n.w).map(function (id) {
         var x = n.w[id];
-        return [id, x.need, x.times, Math.floor((x.lastTs || 0) / 1000)];
+        var a = [id, x.need, x.times, Math.floor((x.lastTs || 0) / 1000)];
+        if (x.instances && x.instances.length) a.push(x.instances);
+        return a;
       })
     };
   }
@@ -160,7 +167,7 @@
     });
     Object.keys(n.w).forEach(function (id) {
       var x = n.w[id];
-      wrong.push({ id: id, need: x.need, times: x.times, firstTs: x.lastTs, lastTs: x.lastTs });
+      wrong.push({ id: id, need: x.need, times: x.times, firstTs: x.lastTs, lastTs: x.lastTs, instances: x.instances || [] });
     });
     return { progress: progress, wrong: wrong };
   }

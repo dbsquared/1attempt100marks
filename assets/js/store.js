@@ -161,6 +161,24 @@
     if (currentId() === id) write('current', profiles()[0].id);
     return true;
   }
+  /** 把某个档案的身份编号(sid)改到新的云端编号，并迁移其本机数据键；
+   *  用于「按名字归位到云端同名档案」——同名但本机编号不同的档案，统一收敛到云端那个 sid。 */
+  function setProfileSid(id, newSid) {
+    if (!newSid) return false;
+    var list = profiles();
+    var p = null;
+    list.forEach(function (x) { if (x.id === id) p = x; });
+    if (!p || p.sid === newSid) return false;
+    var old = p.sid;
+    ['progress', 'wrong', 'history', 'papers', 'lastSync'].forEach(function (k) {
+      var val = read(old + ':' + k, null);
+      if (val !== null) write(newSid + ':' + k, val);
+      localStorage.removeItem(PREFIX + old + ':' + k);
+    });
+    p.sid = newSid;
+    saveProfiles(list);
+    return true;
+  }
 
   /* ---------- 练习设置（设备级，所有学生共用） ---------- */
   var DEFAULT_SETTINGS = {
@@ -186,6 +204,7 @@
     addProfile: addProfile,
     renameProfile: renameProfile,
     removeProfile: removeProfile,
+    setProfileSid: setProfileSid,
     isRealName: isRealName,
     currentHasRealName: function () { return isRealName(current().name); },
 
@@ -213,8 +232,20 @@
       return merged;
     },
 
-    /** 用云端状态合并本机（当前学生）；返回统计 */
-    applyCloud: function (cloud) {
+    /** 用云端状态更新本机（当前学生）。
+     *  replace=true：云端为准，整份覆盖本机。用于「名字已在云端索引中」的学生——名字即身份，
+     *    云端是权威记录，整份覆盖可清掉本机遗留的孤立错题，各浏览器都收敛到云端同一份。
+     *    空云端不覆盖（保护尚未合并的新学生），交由下面的合并分支兜底。
+     *  replace=false：逐条按 updatedAt 合并，用于手动同步码的多设备合并，保留本机未合并进度。 */
+    applyCloud: function (cloud, replace) {
+      if (replace) {
+        var local = global.Sync.toLocal(global.Sync.normalize(cloud));
+        local.wrong = Store.preserveWrongInstances(local.wrong, Store.wrongAll());
+        Store.saveProgress(local.progress);
+        Store.saveWrong(local.wrong);
+        Store.setLastSync(Date.now());
+        return { pNew: 0, pUpd: 0, replaced: true };
+      }
       var prevWrong = Store.wrongAll();   // 合并前本机错题（含 instances 历史）
       var n = global.Sync.normalize(cloud);
       var cur = global.Sync.normalize(global.Sync.packLocal(Store.progress(), prevWrong));

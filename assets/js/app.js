@@ -821,9 +821,10 @@
       var insts = (x.instances && x.instances.length)
         ? x.instances
         : (x.lastStem ? [{ ts: x.lastTs, given: x.lastGiven, expected: x.lastExpected, lastStem: x.lastStem }] : []);
-      if (!insts.length) return '';
-      var last = insts[insts.length - 1];
-      var prev = insts.slice(0, -1);
+      // 即使没有任何「当时原题」记录（例如从云端 pull 下来的紧凑错题），也保留整张题卡，
+      // 用同类新变式兜底，绝不整卡丢弃（否则统计有 7 条、列表却空白）
+      var last = insts.length ? insts[insts.length - 1] : null;
+      var prev = insts.length ? insts.slice(0, -1) : [];
       var qno = tplQNo(tpl);
       var badge = qno != null
         ? '<span class="bk-no" title="' + esc(sourceSetOf(tpl)) + ' · 第 ' + qno + ' 题">Q' + qno + '</span>'
@@ -834,12 +835,17 @@
         '<span class="bk-meta">最近错 ' + fmtDate(x.lastTs) + '</span>' +
         '<span class="bk-state"><span class="pill wrong">待清 ' + x.need + ' 次</span>' +
         '<span class="pill">错 ' + x.times + ' 次</span></span></header>';
-      // 直接显示最近错的原题（仿题库管理题卡：题干+图+选项+答案+解析）；旧数据没存数值则显示同类新变式
+      // 直接显示最近错的原题（仿题库管理题卡：题干+图+选项+答案+解析）；无原题数值则显示同类新变式
       var rl = restoreOrFresh(tpl, last);
-      var lastLabel = (rl.restored ? '最近错的原题' : '同类题型示例（原题数值未保存）') + ' · ' + fmtDate(last.ts) +
-        ' ｜ 你写 ' + esc(last.given || '—') + '，正确 ' + esc(last.expected || '—');
+      var lastLabel;
+      if (last) {
+        lastLabel = (rl.restored ? '最近错的原题' : '同类题型示例（原题数值未保存）') + ' · ' + fmtDate(last.ts) +
+          ' ｜ 你写 ' + esc(last.given || '—') + '，正确 ' + esc(last.expected || '—');
+      } else {
+        lastLabel = '同步错题 · 原题数值未随同步保存 · ' + fmtDate(x.lastTs) + ' ｜ 换组数字重练即可清零';
+      }
       var lastBlock = rl.q ? variantHtml(rl.q, lastLabel)
-        : '<p class="small">' + esc(last.lastStem || '（这道题已无法还原，原题数据缺失）') + '</p>';
+        : '<p class="small">' + (last && last.lastStem ? esc(last.lastStem) : '（这道题已无法还原，原题数据缺失）') + '</p>';
       // 浏览之前错误版本
       var prevBlock = '';
       if (prev.length) {
@@ -1217,10 +1223,13 @@
   }
   function joinOrCreate(name, done) {
     fetchCloudIndex().then(function (idx) {
-      var hit = idx ? idx[name.toLowerCase()] : null;
+      var key = (name || '').trim().toLowerCase();
+      var hit = idx ? idx[key] : null;
       if (hit && hit.sid) {
-        var p = Store.ensureProfileBySid(hit.sid);   // 归位/新建到云端同名档案的 sid
-        if (p && name && !Store.isRealName(p.name)) Store.renameProfile(p.id, name);
+        var p = Store.profileByName(name);                 // 本机同名档案（编号可能不同）
+        if (!p) p = Store.ensureProfileBySid(hit.sid);    // 没有则按云端编号新建
+        else if (p.sid !== hit.sid) Store.setProfileSid(p.id, hit.sid); // 编号不对 -> 归位到云端 sid
+        if (name && !Store.isRealName(p.name)) Store.renameProfile(p.id, name);
         Store.setCurrent(p.id);
         toast('已关联到云端同名档案「' + name + '」');
       } else {
@@ -1232,7 +1241,7 @@
       done();
     });
   }
-  function pullCloud(quiet) {
+  function pullCloud(quiet, replace) {
     var c = Store.current();
     return fetch('data/state/' + c.sid + '.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -1240,12 +1249,58 @@
         if (!j) { if (!quiet) toast('云端还没有这个编号的进度'); return null; }
         // 防御异步切换串档：如果切换学生后当前 sid 已不是本次请求的目标，则丢弃
         if (Store.current().sid !== c.sid) { return null; }
-        var r = Store.applyCloud(j);
+        var nonEmpty = Object.keys(j.p || {}).length || (j.w || []).length;
+        // 名字已在云端索引中的学生：云端为准整份覆盖（清掉本机孤立错题），但空云端不覆盖以免误删新学生
+        if (replace && nonEmpty) {
+          var r = Store.applyCloud(j, true);
+          renderStart();
+          if (!quiet) toast('已按云端记录同步（整份覆盖）');
+          return r;
+        }
+        var r2 = Store.applyCloud(j, false);
         renderStart();
-        if (!quiet) toast('已合并云端：新增 ' + r.pNew + ' 题，更新 ' + r.pUpd + ' 题');
-        return r;
+        if (!quiet) toast('已合并云端：新增 ' + r2.pNew + ' 题，更新 ' + r2.pUpd + ' 题');
+        return r2;
       })
       .catch(function (e) { if (!quiet) toast('拉取失败：' + e.message); return null; });
+  }
+  /* 启动时把本机档案按云端姓名索引归位：同名但编号不同 -> 改到云端编号；并去除同名重复档案。
+     这样各浏览器对同一名字都收敛到同一个云端 sid，不再出现 7/42/0 各显神通。 */
+  function reconcileFromIndex() {
+    if (!_idxCache) return;
+    // 1) 同名且编号与索引不一致的，改到云端编号
+    Store.profiles().forEach(function (p) {
+      var key = (p.name || '').trim().toLowerCase();
+      var hit = _idxCache[key];
+      if (hit && hit.sid && p.sid !== hit.sid) Store.setProfileSid(p.id, hit.sid);
+    });
+    // 2) 去重：同一名字仍出现多个档案时，只保留编号与索引一致（或第一个），其余删除
+    var list = Store.profiles(), keep = {}, removes = [];
+    list.forEach(function (p) {
+      var key = (p.name || '').trim().toLowerCase();
+      var hit = _idxCache[key];
+      var pref = hit && hit.sid ? hit.sid : null;
+      if (keep[key] == null) { keep[key] = p.id; return; }
+      var favored = (pref && p.sid === pref) ? p.id : keep[key];
+      var drop = (favored === p.id) ? keep[key] : p.id;
+      keep[key] = favored; removes.push(drop);
+    });
+    removes.forEach(function (id) { Store.removeProfile(id); });
+  }
+
+  /* 同步当前学生：若名字已在云端索引中，则云端为准整份覆盖（replace）；否则按 updatedAt 合并 */
+  function syncCurrentProfile(quiet) {
+    var c = Store.current();
+    var replace = false;
+    if (_idxCache) {
+      var key = (c.name || '').trim().toLowerCase();
+      var hit = _idxCache[key];
+      if (hit && hit.sid) {
+        if (c.sid !== hit.sid) { Store.setProfileSid(c.id, hit.sid); c = Store.current(); }
+        replace = true;
+      }
+    }
+    return pullCloud(quiet, replace);
   }
   function showCode(code) {
     var ta = $('#sendCode');
@@ -1460,7 +1515,13 @@
 
     Bank.load().then(function () {
       renderStart(); fillPaperSelects(); fillSettings(); updateWho();
-      if (Store.settings().autoSync !== false) pullCloud(true);
+      if (Store.settings().autoSync !== false) {
+        // 先拉云端姓名索引，把本机档案归位到权威 sid，再按云端记录同步（同名即覆盖）
+        fetchCloudIndex().then(function () {
+          reconcileFromIndex();
+          syncCurrentProfile(true);
+        });
+      }
     }).catch(function (e) {
       console.error(e);
       renderStart();
@@ -1648,7 +1709,7 @@
     var v = active ? active.dataset.view : 'practice';
     if (v === 'stats' && typeof renderStats === 'function') renderStats();
     else if (v === 'wrong' && typeof renderWrong === 'function') renderWrong();
-    if (Store.settings().autoSync !== false) pullCloud(true);
+    if (Store.settings().autoSync !== false) syncCurrentProfile(true);
   }
   function download(name, text) {
     var a = document.createElement('a');

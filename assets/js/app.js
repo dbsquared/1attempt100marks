@@ -774,7 +774,7 @@
       var input = q.type === 'match' ? (a ? a.links : []) : (q.type === 'choice' ? (a ? a.picked : null) : (a ? a.raw : ''));
       var res = Grader.grade(q, input);
       paper.answers[q.key] = { picked: a ? a.picked : null, raw: a ? a.raw : '', links: a ? a.links : [], ok: res.ok, given: res.given, expected: res.expected };
-      SRS.record(q.tplId, res.ok, { given: res.given, expected: res.expected, stem: q.stemText });
+      SRS.record(q.tplId, res.ok, { given: res.given, expected: res.expected, stem: q.stemText, vars: q.vars, lang: q.lang });
       Store.pushHistory({ ts: Date.now(), tid: q.tplId, ok: res.ok, given: res.given, expected: res.expected, stem: q.stemText, topic: q.tpl.topic || '', mode: 'paper' });
     });
     paper.graded = true;
@@ -846,6 +846,16 @@
       }
       var lastBlock = rl.q ? variantHtml(rl.q, lastLabel)
         : '<p class="small">' + (last && last.lastStem ? esc(last.lastStem) : '（这道题已无法还原，原题数据缺失）') + '</p>';
+      // 说明：累计错答次数 vs 可还原的历史版本数。更早的作答（"记录原题数值"功能上线前）没有存下来，
+      // 所以有些题显示"错 N 次"却没有「浏览之前错误版本」可点 —— 用一行小字讲清楚，避免困惑。
+      var missNote = '';
+      var totalWrong = x.times || 0, recorded = insts.length;
+      if (totalWrong > recorded) {
+        var miss = totalWrong - recorded;
+        missNote = '<p class="small muted" style="margin:6px 0 0">共错 ' + totalWrong + ' 次，其中 ' + miss +
+          ' 次没保存当时题目（更早的作答），无法还原' +
+          (recorded ? '；下面只列出可还原的版本。' : '，下面用同类新变式代替。') + '</p>';
+      }
       // 浏览之前错误版本
       var prevBlock = '';
       if (prev.length) {
@@ -862,6 +872,7 @@
       return '<article class="bk-card wrong-card" id="wk-' + esc(x.id) + '">' +
         head +
         '<div class="bk-var">' + lastBlock + '</div>' +
+        missNote +
         prevBlock +
         '<div class="row bk-actions">' +
           '<button class="btn sm primary" data-redo="' + esc(x.id) + '">换组数字重练</button>' +

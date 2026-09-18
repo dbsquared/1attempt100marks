@@ -1101,6 +1101,14 @@
     return hay.indexOf(q) >= 0;
   }
 
+  /* 题库管理：每道题单独记住用户切换过的显示语言（未切过时回退到原题语言） */
+  var bankLang = {};
+  function bankLangOf(t) { return bankLang[t.id] || origLangOf(t); }
+  function isBilingual(t) {
+    var s = t && t.stem;
+    return !!(s && typeof s === 'object' && !Array.isArray(s) && typeof s.en !== 'undefined' && typeof s.zh !== 'undefined');
+  }
+
   function renderBankList() {
     var srcs = checkedSources('#bankSrcBox');
     var q = bankQuery();
@@ -1117,11 +1125,12 @@
     $('#bankList').innerHTML = all.map(function (t) {
       var st = p[t.id] || {};
       var qno = tplQNo(t);
+      var lang = bankLangOf(t);
       var badge = qno != null
         ? '<span class="bk-no" title="' + esc(sourceSetOf(t)) + ' · 第 ' + qno + ' 题">Q' + qno + '</span>'
         : '<span class="bk-no bk-nox" title="示例模板，不对应原卷题号">—</span>';
       var qq;
-      try { qq = Generator.instantiate(t); } catch (e) { qq = null; }
+      try { qq = Generator.instantiate(t, null, { lang: lang }); } catch (e) { qq = null; }
       var state = st.mastered ? '<span class="pill ok">已掌握</span>'
         : (st.seen ? '<span class="pill">练过 ' + st.seen + ' 次</span>' : '<span class="pill new">未练</span>');
       return '<article class="bk-card" id="bk-' + esc(t.id) + '">' +
@@ -1135,6 +1144,7 @@
         '<div class="bk-var" data-var="' + esc(t.id) + '">' + variantHtml(qq, '变式示例') + '</div>' +
         '<details class="bk-tpl"><summary>模板信息 · 原题对照</summary><div class="bk-tplbody">' + tplInfoHtml(t) + '</div></details>' +
         '<div class="row bk-actions">' +
+        (isBilingual(t) ? '<button class="btn sm" data-langtoggle="' + esc(t.id) + '">🌐 ' + (lang === 'en' ? 'EN' : '中文') + '</button>' : '') +
         '<button class="btn sm" data-preview="' + esc(t.id) + '">预览变式（再出 3 例）</button>' +
         (t.original ? '<button class="btn sm" data-orig="' + esc(t.id) + '">看原题数值</button>' : '') +
         (custom.indexOf(t.id) >= 0 ? '<button class="btn sm" data-del="' + esc(t.id) + '">删除</button>' : '') +
@@ -1149,12 +1159,32 @@
         var out = '';
         for (var i = 0; i < 3; i++) {
           var qq;
-          try { qq = Generator.instantiate(tpl); } catch (e) { qq = null; }
+          try { qq = Generator.instantiate(tpl, null, { lang: bankLangOf(tpl) }); } catch (e) { qq = null; }
           out += variantHtml(qq, '变式 ' + (i + 2));
         }
         box.insertAdjacentHTML('beforeend', out);
         b.disabled = true;
         b.textContent = '已再出 3 例';
+      });
+    });
+    $$('#bankList [data-langtoggle]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id = b.dataset.langtoggle;
+        var tpl = Bank.byId(id);
+        if (!tpl) return;
+        var cur = bankLang[id] || origLangOf(tpl);
+        var next = (cur === 'en') ? 'zh' : 'en';
+        bankLang[id] = next;
+        var box = $('.bk-var[data-var="' + id + '"]');
+        if (!box) return;
+        var qq = null;
+        try { qq = Generator.instantiate(tpl, null, { lang: next }); } catch (e) { qq = null; }
+        box.innerHTML = variantHtml(qq, '变式示例');
+        /* 切换语言后，重置「预览变式」按钮，让它按新语言再出例 */
+        var card = box.closest('.bk-card');
+        var prev = card && card.querySelector('[data-preview]');
+        if (prev) { prev.disabled = false; prev.textContent = '预览变式（再出 3 例）'; }
+        b.textContent = '🌐 ' + (next === 'en' ? 'EN' : '中文');
       });
     });
     $$('#bankList [data-orig]').forEach(function (b) {
@@ -1163,7 +1193,7 @@
         var box = $('.bk-var[data-var="' + b.dataset.orig + '"]');
         if (!tpl || !box) return;
         var qq = null;
-        try { qq = Generator.instantiate(tpl, null, { original: true }); } catch (e) { qq = null; }
+        try { qq = Generator.instantiate(tpl, null, { original: true, lang: origLangOf(tpl) }); } catch (e) { qq = null; }
         box.insertAdjacentHTML('beforeend', variantHtml(qq, '原题数值（原卷那一题）'));
         b.disabled = true;
         b.textContent = '已插入原题';

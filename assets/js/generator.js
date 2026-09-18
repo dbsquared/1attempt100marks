@@ -298,7 +298,7 @@
   }
 
   /* 「原题模式」：按模板 original 字段还原原卷那一道题（固定变量、不抽数、不洗牌） */
-  function instantiateOriginal(tpl) {
+  function instantiateOriginal(tpl, forceLang) {
     if (!tpl || !tpl.original) return null;
     var vars = {};
     try {
@@ -306,8 +306,12 @@
       var der = tpl.derived || {};
       Object.keys(der).forEach(function (k) { vars[k] = Expr.eval(der[k], vars); });
     } catch (e) { return null; }
+    /* 没指定语言时取「原题语言」：双语字段带 en 即英文原卷（ICAS/SEAMO 等），否则中文原版 */
+    var lang = (forceLang === 'zh' || forceLang === 'en')
+      ? forceLang
+      : ((tpl.stem && typeof tpl.stem === 'object' && typeof tpl.stem.en !== 'undefined') ? 'en' : 'zh');
     try {
-      return buildQ(tpl, vars, pickLang(tpl), 'orig', { original: true, noShuffle: true });
+      return buildQ(tpl, vars, lang, 'orig', { original: true, noShuffle: true });
     } catch (e) { return null; }
   }
 
@@ -319,14 +323,15 @@
    */
   function instantiate(tpl, avoid, opts) {
     opts = opts || {};
-    if (opts.original) return instantiateOriginal(tpl);
+    if (opts.original) return instantiateOriginal(tpl, opts.lang);
 
     var last = null;
+    var forceLang = (opts.lang === 'zh' || opts.lang === 'en') ? opts.lang : null;
     for (var attempt = 0; attempt < 400; attempt++) {
       var vars;
       try { vars = genVars(tpl); } catch (e) { continue; }
       if (!checkConstraints(tpl, vars)) continue;
-      var lang = pickLang(tpl);
+      var lang = forceLang || pickLang(tpl);
       var ans;
       try { ans = computeAnswer(tpl, vars, lang, {}); } catch (e) { continue; }
       if (!checkSanity(tpl, ans)) continue;

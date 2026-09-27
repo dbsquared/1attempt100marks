@@ -1143,11 +1143,12 @@
         "zop": "sel(wop, '乘', '除')",
         "top": "sel(wop, 'multiplying', 'dividing')",
         "tz": "sel(wop, '积', '商')",
-        "te": "sel(wop, 'product', 'quotient')"
+        "te": "sel(wop, 'product', 'quotient')",
+        "relEn": "sel(w1 == w2, 'different', 'the same')",
+        "resEn": "sel(w1 == w2, 'negative', 'positive')",
+        "relZh": "sel(w1 == w2, '异号', '同号')",
+        "resZh": "sel(w1 == w2, '负数', '正数')"
       },
-      "constraints": [
-        "w1 != w2"
-      ],
       "answer": {
         "type": "choice",
         "correctIndex": 0,
@@ -1174,8 +1175,8 @@
         "integer": true
       },
       "solution": {
-        "en": "Work out the sign rule first: a {t1} number and a {t2} number have DIFFERENT signs, and multiplying or dividing numbers of different signs always gives a NEGATIVE result. Confirm it with real numbers: ({n1}) × ({n2}) = {P} and ({n1}) ÷ ({n2}) = {Q}. So the answer must state {tn}, which only (A) does. (B), (C) and (D) all claim the result is {tna}, but a {t1} number with a {t2} number can never give that sign.",
-        "zh": "先抓符号规律：{t1z}数与{t2z}数**异号**，异号两数相乘或相除，结果一定是负数。用实际数字确认：({n1}) × ({n2}) = {P}，({n1}) ÷ ({n2}) = {Q}。所以正确说法必须写{zm}，只有 (A) 是这样。(B)(C)(D) 都说结果是{zma}，而{t1z}数与{t2z}数运算绝对得不到这个符号。"
+        "en": "Work out the sign rule first: a {t1} number and a {t2} number have {relEn} signs, and multiplying or dividing numbers with {relEn} signs always gives a {resEn} result. Check with real numbers: ({n1}) × ({n2}) = {P} and ({n1}) ÷ ({n2}) = {Q}. So the true statement is the one saying the result is {tn} — the other three all claim the result is {tna}, which is impossible.",
+        "zh": "先抓符号规律：{t1z}数与{t2z}数{relZh}，{relZh}两数相乘或相除，结果一定是{resZh}。用实际数字确认：({n1}) × ({n2}) = {P}，({n1}) ÷ ({n2}) = {Q}。所以正确的说法是「结果是{tn}」的那一句，其余三句都说结果是{zma}，不可能成立。"
       },
       "hint": {
         "en": "Check the sign rule first: like signs give a positive result, unlike signs give a negative result.",
@@ -1700,7 +1701,7 @@
       },
       "answer": {
         "type": "choice",
-        "correctIndex": "sel(r, 1, 0, 3, 2)",
+        "correctIndex": "sel(r, i0, i1, i2, 2)",
         "options": [
           {
             "en": "W",
@@ -1721,8 +1722,8 @@
         ]
       },
       "solution": {
-        "en": "On the diagram: X = {lJ} & {rJ} only, W = {lJ} & {bJ} only, Z = {rJ} & {bJ} only, and Y is where all three overlap. The employee {roleEn}. That is exactly region {ansName}.",
-        "zh": "图中：X = 只属于{lJ}和{rJ}的区域，W = 只属于{lJ}和{bJ}的区域，Z = 只属于{rJ}和{bJ}的区域，Y = 三者交集。该员工{roleZh}，对应的正是{ansName}区。"
+        "en": "On the diagram the letters are fixed: X is Stocker & Checker only, W is Stocker & Deli only, Z is Checker & Deli only, and Y is where all three overlap. The employee {roleEn}. That is exactly region {ansName}.",
+        "zh": "图上的字母是固定的：X = 只属于理货（Stocker）和收银（Checker）的区域，W = 只属于理货（Stocker）和熟食部（Deli）的区域，Z = 只属于收银（Checker）和熟食部（Deli）的区域，Y = 三个岗位都重叠的区域。该员工{roleZh}，对应的正是{ansName}区。"
       },
       "diagram": {
         "type": "venn3",
@@ -1738,9 +1739,15 @@
         "lJ": "sel(p, 'Stocker', 'Stocker', 'Checker', 'Checker', 'Deli', 'Deli')",
         "rJ": "sel(p, 'Checker', 'Deli', 'Stocker', 'Deli', 'Stocker', 'Checker')",
         "bJ": "sel(p, 'Deli', 'Checker', 'Deli', 'Stocker', 'Checker', 'Stocker')",
+        "l0": "sel(p, 'X','W','X','Z','W','Z')",
+        "l1": "sel(p, 'W','X','Z','X','Z','W')",
+        "l2": "sel(p, 'Z','Z','W','W','X','X')",
+        "ansName": "sel(r, l0, l1, l2, 'Y')",
+        "i0": "sel(p, 1,0,1,3,0,3)",
+        "i1": "sel(p, 0,1,3,1,3,0)",
+        "i2": "sel(p, 3,3,0,0,1,1)",
         "roleEn": "sel(i, 'only works as a Stocker and as a Checker', 'only works as a Stocker and in the Deli', 'only works as a Checker and in the Deli', 'works as a Stocker, as a Checker and in the Deli', 'only works as a Stocker and in the Deli', 'only works as a Stocker and as a Checker', 'only works in the Deli and as a Checker', 'works as a Stocker, in the Deli and as a Checker', 'only works as a Checker and as a Stocker', 'only works as a Checker and in the Deli', 'only works as a Stocker and in the Deli', 'works as a Checker, as a Stocker and in the Deli', 'only works as a Checker and in the Deli', 'only works as a Checker and as a Stocker', 'only works in the Deli and as a Stocker', 'works as a Checker, in the Deli and as a Stocker', 'only works in the Deli and as a Stocker', 'only works in the Deli and as a Checker', 'only works as a Stocker and as a Checker', 'works in the Deli, as a Stocker and as a Checker', 'only works in the Deli and as a Checker', 'only works in the Deli and as a Stocker', 'only works as a Checker and as a Stocker', 'works in the Deli, as a Checker and as a Stocker')",
-        "roleZh": "sel(i, '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '三个岗位都做（理货（Stocker）、收银（Checker）和熟食部（Deli））', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '三个岗位都做（理货（Stocker）、熟食部（Deli）和收银（Checker））', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '三个岗位都做（收银（Checker）、理货（Stocker）和熟食部（Deli））', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '三个岗位都做（收银（Checker）、熟食部（Deli）和理货（Stocker））', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '三个岗位都做（熟食部（Deli）、理货（Stocker）和收银（Checker））', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '三个岗位都做（熟食部（Deli）、收银（Checker）和理货（Stocker））')",
-        "ansName": "sel(r, 'X', 'W', 'Z', 'Y')"
+        "roleZh": "sel(i, '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '三个岗位都做（理货（Stocker）、收银（Checker）和熟食部（Deli））', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '三个岗位都做（理货（Stocker）、熟食部（Deli）和收银（Checker））', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '三个岗位都做（收银（Checker）、理货（Stocker）和熟食部（Deli））', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '三个岗位都做（收银（Checker）、熟食部（Deli）和理货（Stocker））', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '三个岗位都做（熟食部（Deli）、理货（Stocker）和收银（Checker））', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '三个岗位都做（熟食部（Deli）、收银（Checker）和理货（Stocker））')"
       }
     },
     {
@@ -2040,10 +2047,10 @@
         }
       },
       "derived": {
-        "f": "sel(i, 3, 5, 7, 7, 3, 5, 3, 5)",
-        "m": "sel(i, 5, 11, 11, 13, 3, 11, 37, 13)",
-        "g": "sel(i, 7, 3, 3, 3, 37, 7, 3, 7)",
-        "N": "sel(i, 105, 165, 231, 273, 333, 385, 333, 455)"
+        "f": "sel(i, 2, 2, 3, 3, 3, 5, 5, 7)",
+        "m": "sel(i, 7, 5, 7, 7, 3, 7, 7, 11)",
+        "g": "sel(i, 11, 13, 11, 13, 37, 11, 13, 13)",
+        "N": "sel(i, 154, 130, 231, 273, 333, 385, 455, 1001)"
       },
       "answer": {
         "type": "integer",
@@ -2058,7 +2065,7 @@
         "zh": "把 {N} 写成三个都大于 1 的整数相乘：{N} = {f} × {m} × {g}。这三个数中最小的是 {f}。"
       },
       "noFigure": "原题为纯文字因数题，无图",
-      "noVariantReason": "因数分解题，{N} 取 8 个可唯一分解为三因子（且最小因子各不相同）的固定值",
+      "noVariantReason": "因数分解题，{N} 取 8 个可写成三因子（均 >1）乘积的固定值，答案恒取最小因子（2/3/5/7 四种）",
       "original": {
         "i": 4
       },
@@ -2300,6 +2307,21 @@
             22,
             23
           ]
+        },
+        "c1": {
+          "type": "int",
+          "min": 1,
+          "max": 5
+        },
+        "c2": {
+          "type": "int",
+          "min": 1,
+          "max": 4
+        },
+        "c3": {
+          "type": "int",
+          "min": 1,
+          "max": 2
         }
       },
       "derived": {
@@ -2346,15 +2368,21 @@
         "type": "gridroutes",
         "m": "m",
         "n": "n",
-        "kids": "{ca},{cb},{cc},{cd}"
+        "kids": "{ca},{cb},{cc},{cd}",
+        "c1": "c1",
+        "c2": "c2",
+        "c3": "c3"
       },
       "original": {
         "m": 7,
         "n": 5,
-        "p4": 3
+        "p4": 3,
+        "c1": 3,
+        "c2": 1,
+        "c3": 1
       },
       "constraints": [
-        "m + n >= 8"
+        "c2 <= m-4"
       ],
       "originalAnswer": "D"
     },
@@ -2519,8 +2547,8 @@
         "S": "(k+1)*base",
         "small": "base",
         "big": "k*base",
-        "fracEn": "sel(k, 'one half', 'one third', 'one fourth', 'one fifth', 'one sixth', 'one seventh', 'one eighth', 'one ninth')",
-        "fracZh": "sel(k, '一半', '三分之一', '四分之一', '五分之一', '六分之一', '七分之一', '八分之一', '九分之一')"
+        "fracEn": "sel(k, '', '', 'one half', 'one third', 'one fourth', 'one fifth', 'one sixth', 'one seventh', 'one eighth', 'one ninth')",
+        "fracZh": "sel(k, '', '', '一半', '三分之一', '四分之一', '五分之一', '六分之一', '七分之一', '八分之一', '九分之一')"
       },
       "answer": {
         "type": "choice",

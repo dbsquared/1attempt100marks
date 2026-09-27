@@ -2756,16 +2756,20 @@
          绿（位2）：先上 2 格走第 2 行走廊，绕 2 个街区(+4)，长 m+n+4
          橙（位3）：先上 3 格走第 3 行走廊，绕 3 个街区(+6)，长 m+n+6
        绕街区 = (c,k)→(c,k+1)→(c+1,k+1)→(c+1,k) 向上凸一格（+2）。
-       蓝凸起在列 3、绿在列 1 和 4、橙在列 1/3/5（同路线凸起隔 2 列避免重复边）。
+       ★ 凸起列由模板变量传入（c1 蓝 / c2 绿 / c3 橙），每个变式路线形状都不同：
+         蓝 1 个凸起在列 c1；绿 2 个在 c2、c2+2；橙 3 个在 c3、c3+2、c3+4。
+         （同路线凸起隔 2 列避免重复边；c1≤m-2、c2≤m-4、c3≤m-6 由模板约束保证，
+           图元内再做 clamp 兜底。）
        绿色方块 = 街区（原卷样式），路线画在方块之间的白色街道格线上。
-       字母钉在各自凸起内（红无凸起，钉在底行上方第 0 行街区中央），互不重叠。
+       ★ 底部图例：颜色线段 + 孩子全名（用户反馈「看不到哪条线是谁」），
+         凸起内仍钉首字母。红无凸起，钉在底行上方第 0 行街区中央。
        需 m ≥ 7（橙三个凸起占列 1..6 且不触右列）、n ≥ 5（橙走廊行 3，凸起到行 4）。 */
     gridroutes: function (spec, vars) {
       var m = Math.max(7, Math.min(8, Math.round(num(spec.m, vars))));
       var n = Math.max(5, Math.min(8, Math.round(num(spec.n, vars))));
       var kids = strSpec(spec.kids, vars).split(',').map(function (x) { return x.trim(); });
       var c = 46, x0 = 42, YB = 40;                 /* YB = 底行(y=0)的屏幕 y */
-      var W = x0 * 2 + m * c, H = YB + n * c + 34;
+      var W = x0 * 2 + m * c, H = YB + n * c + 78;  /* 底部留图例 */
 
       /* 数学坐标 → 屏幕：gy=0 是底行，向上递增 */
       function P(gx, gy) { return [x0 + gx * c, YB + (n - gy) * c]; }
@@ -2780,11 +2784,14 @@
         pts.push([m, k], [m, n]);
         return pts;
       }
+      var c1 = Math.max(1, Math.min(m - 2, Math.round(num(spec.c1, vars) || 3)));
+      var c2 = Math.max(1, Math.min(m - 4, Math.round(num(spec.c2, vars) || 1)));
+      var c3 = Math.max(1, Math.min(m - 6, Math.round(num(spec.c3, vars) || 1)));
       var paths = [
-        corridor(0, []),          /* 红：底行，无绕行 */
-        corridor(1, [3]),         /* 蓝 */
-        corridor(2, [1, 4]),      /* 绿 */
-        corridor(3, [1, 3, 5])    /* 橙 */
+        corridor(0, []),              /* 红：底行，无绕行 */
+        corridor(1, [c1]),            /* 蓝 */
+        corridor(2, [c2, c2 + 2]),    /* 绿 */
+        corridor(3, [c3, c3 + 2, c3 + 4])  /* 橙 */
       ];
 
       var s = svgOpen(W, H, 'street grid from S to F with four routes on the grid lines');
@@ -2809,9 +2816,9 @@
       /* 名字首字母钉在各自凸起内（红钉在底行上方第 0 行街区中央） */
       var letterAt = [
         P(m / 2, 0.5),
-        P(3.5, 1.5),
-        P(1.5, 2.5),
-        P(1.5, 3.5)
+        P(c1 + 0.5, 1.5),
+        P(c2 + 0.5, 2.5),
+        P(c3 + 0.5, 3.5)
       ];
       letterAt.forEach(function (lp, k) {
         var name = kids[k] || 'ABCD'[k];
@@ -2829,6 +2836,13 @@
       }
       s += '<polygon points="' + star + '" fill="' + INK + '"/>';
       s += '<text x="' + (fp[0] + 14) + '" y="' + (fp[1] + 6) + '" font-size="17" font-weight="bold" fill="' + INK + '">F</text>';
+      /* 底部图例：颜色线段 + 全名（红/蓝/绿/橙 = 谁的路线） */
+      var legendY = YB + n * c + 58, itemW = (W - x0) / 4;
+      kids.forEach(function (name, k) {
+        var lx = x0 + k * itemW;
+        s += '<line x1="' + lx + '" y1="' + legendY + '" x2="' + (lx + 30) + '" y2="' + legendY + '" stroke="' + cols[k] + '" stroke-width="4.5" stroke-linecap="round"/>';
+        s += '<text x="' + (lx + 38) + '" y="' + (legendY + 5.5) + '" font-size="15" font-weight="bold" fill="' + INK + '">' + esc(name) + '</text>';
+      });
       s += '</svg>';
       return s;
     }

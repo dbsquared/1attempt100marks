@@ -317,7 +317,7 @@
       var multi = Array.isArray(q.correctIndex);
       h += '<div class="opts">' + q.options.map(function (o, i) {
         var g = (q.optionsSvg && q.optionsSvg[i]) ? '<span class="opt-svg">' + q.optionsSvg[i] + '</span>' : '';
-        return '<div class="opt" data-i="' + i + '"><span class="k">' + 'ABCDEFGH'[i] + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
+        return '<div class="opt" data-i="' + i + '"><span class="k">' + optLetter(i) + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
       }).join('') + '</div>';
       if (multi) h += '<div class="small muted">本题为多选</div>';
       h += '<div class="row"><button class="btn primary" id="btnSubmit">提交答案</button></div>';
@@ -647,7 +647,7 @@
             if (isC) cls += ' correct'; else if (isS) cls += ' wrongsel';
           } else if (a && a.picked !== null && a.picked !== undefined && (Array.isArray(a.picked) ? a.picked.indexOf(k) >= 0 : a.picked === k)) cls += ' sel';
           var g = (q.optionsSvg && q.optionsSvg[k]) ? '<span class="opt-svg">' + q.optionsSvg[k] + '</span>' : '';
-          return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + 'ABCDEFGH'[k] + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
+          return '<div class="' + cls + '" data-q="' + q.key + '" data-i="' + k + '"><span class="k">' + optLetter(k) + '</span>' + (o ? '<span>' + o + '</span>' : '') + g + '</div>';
         }).join('') + '</div>';
       } else if (q.type === 'match') {
         h += matchWidgetHtml(q, q.key);
@@ -964,7 +964,18 @@
      原来的做法是「左原题截图 / 右一句题干 + 最多把选项图列出来」，看不出题目到底长什么样；
      现在每道题渲染成一张完整题卡：题号徽标 + 知识点 + 来源/难度/掌握状态 + 题干 + 自绘简化图
      + 选项网格（正确项打钩）+ 折叠解析，并保留「预览变式」按钮（可再出 3 例）。 */
-  var LETTERS = 'ABCDEFGH';
+  /* ★ 选项字母：不能写死 'ABCDEFGH'。十二生肖题（mm1t1-16）有 12 个选项，
+     写死会从第 9 项起显示 undefined。这里按序号生成 A..Z，超出后 AA AB AC… */
+  function optLetter(i) {
+    i = Math.floor(+i);
+    if (!(i >= 0) || !isFinite(i)) return '';
+    var s = '';
+    i += 1;
+    while (i > 0) { var r = (i - 1) % 26; s = String.fromCharCode(65 + r) + s; i = Math.floor((i - 1) / 26); }
+    return s;
+  }
+  var LETTERS = (function () { var a = []; for (var i = 0; i < 26; i++) a.push(optLetter(i)); return a; })();
+  function letterAt(i) { return optLetter(i); }
 
   function stemLangHtml(t) {
     var s = t && t.stem;
@@ -1485,9 +1496,9 @@
     if (q.type === 'match') {
       lines.push('配对（左→右）：' + computeCorrectLinks(q).map(function (lk) { return '左' + (lk[0] + 1) + '→右' + (lk[1] + 1); }).join('  '));
     } else if (q.type === 'choice') {
-      lines.push('选项：' + (q.options || []).map(function (o, k) { return 'ABCDEFGH'[k] + '. ' + o; }).join('  '));
+      lines.push('选项：' + (q.options || []).map(function (o, k) { return optLetter(k) + '. ' + o; }).join('  '));
       var ci = q.correctIndex;
-      lines.push('正确答案：' + (Array.isArray(ci) ? ci.map(function (i) { return 'ABCDEFGH'[i]; }).join('+') : 'ABCDEFGH'[ci]));
+      lines.push('正确答案：' + (Array.isArray(ci) ? ci.map(function (i) { return optLetter(i); }).join('+') : optLetter(ci)));
     } else {
       lines.push('正确答案：' + (q.display != null ? q.display : ''));
     }

@@ -66,18 +66,23 @@ function extractFn(src, name) {
 }
 
 const pieces = [
-  "var LETTERS = 'ABCDEFGH';",
+  // ★ 直接从 app.js 抠 optLetter + LETTERS，别再手写 'ABCDEFGH' 桩 ——
+  //   写死那个字符串曾让 12 选项的 mm1t1-16 从第 9 项起显示 undefined
+  extractFn(appSrc, 'optLetter'),
+  appSrc.match(/var LETTERS = \(function[\s\S]*?\}\)\(\);/)[0],
   'esc', 'stars', 'sourceSetOf', 'tplQNo', 'tplStemText',
   'stemLangHtml', 'variantHtml', 'tplInfoHtml', 'matchQuery', 'bankQuery',
-].map(n => (n.indexOf('var ') === 0 ? n : extractFn(appSrc, n))).join('\n');
+].map(n => (n.indexOf('var ') === 0 || n.indexOf('function ') === 0 ? n : extractFn(appSrc, n))).join('\n');
 
 const factory = new Function('Generator',
-  pieces + '\nreturn { esc: esc, tplQNo: tplQNo, variantHtml: variantHtml, tplInfoHtml: tplInfoHtml, matchQuery: matchQuery, stemLangHtml: stemLangHtml };');
+  pieces + '\nreturn { esc: esc, optLetter: optLetter, LETTERS: LETTERS, tplQNo: tplQNo, variantHtml: variantHtml, tplInfoHtml: tplInfoHtml, matchQuery: matchQuery, stemLangHtml: stemLangHtml };');
 
 /* 用来把真实的 renderBankList 也抠出来跑（做 --html 预览页时用），
    需要一个极小的"假 DOM"：只支持 $('#id') 取节点 + 记录 innerHTML。 */
 const renderFactory = new Function('Generator', 'Bank', 'Store', 'checkedSources', '$', '$$',
   pieces + '\n' + extractFn(appSrc, 'renderBankStats') + '\n' + extractFn(appSrc, 'renderBankList') +
+  '\nvar bankLang = {};\n' + extractFn(appSrc, 'origLangOf') + '\n' +
+  extractFn(appSrc, 'bankLangOf') + '\n' + extractFn(appSrc, 'isBilingual') +
   '\nreturn { renderBankList: renderBankList, renderBankStats: renderBankStats };');
 
 /* ---- 浏览器侧模块（expr / diagrams / generator） ---- */
@@ -99,6 +104,35 @@ function chk(ok, msg) { if (ok) { pass++; } else { fail++; console.log('  ✗ ' 
 
 console.log('题库：' + bankPath + '　模板数：' + list.length);
 console.log('='.repeat(70));
+
+/* ---- 0. 选项字母生成器（★ 曾写死 'ABCDEFGH' ⇒ 12 选项题从第 9 项起显示 undefined） ---- */
+console.log('0) 选项字母生成');
+const letterCases = [[0, 'A'], [1, 'B'], [7, 'H'], [8, 'I'], [11, 'L'], [25, 'Z'], [26, 'AA'], [27, 'AB'], [51, 'AZ'], [52, 'BA']];
+let letterBad = 0;
+letterCases.forEach(([n, want]) => {
+  const got = UI.optLetter(n);
+  if (got !== want) { letterBad++; console.log('  ✗ optLetter(' + n + ') = "' + got + '"，应为 "' + want + '"'); }
+});
+chk(letterBad === 0, '选项字母生成有 ' + letterBad + ' 处错');
+chk(UI.optLetter(-1) === '', 'optLetter(-1) 应为空串');
+chk(UI.optLetter(NaN) === '', 'optLetter(NaN) 应为空串');
+chk(UI.LETTERS.length === 26 && UI.LETTERS[7] === 'H' && UI.LETTERS[11] === 'L',
+  'LETTERS 表应含 26 项且第 8/12 项为 H/L');
+// 真实约束：全库最大选项数的末位字母必须算得出来（不能是 '' 或 'undefined'）
+let maxOptSeen = 0, maxOptTpl = '';
+list.forEach(t => {
+  for (let k = 0; k < 30; k++) {
+    const q = Generator.instantiate(t, [], {});
+    if (!q || !q.options) continue;
+    if (q.options.length > maxOptSeen) { maxOptSeen = q.options.length; maxOptTpl = t.id; }
+  }
+});
+const lastLetter = UI.optLetter(maxOptSeen - 1);
+chk(maxOptSeen > 0 && lastLetter !== '' && lastLetter !== 'undefined',
+  '全库最大选项数 ' + maxOptSeen + ' 的末位字母算不出（得到 "' + lastLetter + '"）');
+console.log('   选项字母 A..Z 及 AA 起续号正常；全库最大选项数 ' + maxOptSeen +
+  '（' + maxOptTpl + '），末位字母 "' + lastLetter + '"');
+console.log('');
 
 /* ---- 1. 题号识别 ---- */
 console.log('1) tplQNo 题号识别');
@@ -154,6 +188,14 @@ for (const tpl of list) {
       // 注意：不能写成 /class="bk-opt/ —— 那会把容器 .bk-opts / .bk-optxt / .bk-optsvg 一起算进来
       const optCount = (html.match(/class="bk-opt(?: hit)?"/g) || []).length;
       if (optCount !== q.options.length) problems.push('选项没渲染全：' + optCount + '/' + q.options.length);
+      // ★ 回归点：题卡里的选项字母不能出现空 / undefined（12 选项的 mm1t1-16 曾踩）
+      const gridLetters = [...html.matchAll(/<div class="bk-opt[^"]*"><b>([^<]*)<\/b>/g)].map(m => m[1]);
+      if (gridLetters.length !== q.options.length) {
+        problems.push('题卡选项字母数 ' + gridLetters.length + ' 与选项数 ' + q.options.length + ' 不符');
+      } else if (gridLetters.some((L, i) => L !== UI.optLetter(i))) {
+        problems.push('题卡选项字母不对：' + gridLetters.join(' ') + '（应为 ' +
+          q.options.map((_, i) => UI.optLetter(i)).join(' ') + '）');
+      }
       const hitCount = (html.match(/class="bk-opt hit"/g) || []).length;
       const wantHit = Array.isArray(q.correctIndex) ? q.correctIndex.length : 1;
       if (hitCount !== wantHit) problems.push('正确项打钩数不对：' + hitCount + '，应为 ' + wantHit);
@@ -167,8 +209,9 @@ for (const tpl of list) {
         if (/class="bk-optxt">[A-E甲乙丙丁戊]</.test(html)) problems.push('图形选项题仍在显示占位标签文字');
       }
       // 答案行必须写「正确项的字母」，且与打钩的字母一致（图形选项题的 display 只是占位标签，会对不上）
+      // ★ 用 optLetter 而不是 'ABCDEFGH'[i]：12 选项的 mm1t1-16 会从第 9 项起算出 undefined
       const wantLetters = (Array.isArray(q.correctIndex) ? q.correctIndex : [q.correctIndex])
-        .map(i => 'ABCDEFGH'[i]).join('、');
+        .map(i => UI.optLetter(i)).join('、');
       const ansM = /<p class="bk-ans"><b>答案：<\/b>([^<（]*)/.exec(html);
       if (!ansM) problems.push('答案行渲染不出来');
       else if (ansM[1] !== wantLetters) problems.push('答案字母「' + ansM[1] + '」与打钩项「' + wantLetters + '」不一致');

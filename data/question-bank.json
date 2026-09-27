@@ -9468,13 +9468,43 @@
       "source": "Mastering Mathematics Book 1 Test 1 Q25",
       "sourceSet": "Mastering Mathematics Book 1 Test 1",
       "stem": {
-        "en": "At a grocery store, jobs are recorded on a Venn diagram like the one below. If an employee only works as a checker and in the deli, in which region of the diagram does the employee belong?",
-        "zh": "一家超市用如图的韦恩图记录岗位。如果一名员工只做收银（Checker）又在熟食部（Deli）工作，不做理货（Stocker），他属于图中的哪个区域？"
+        "en": "At a grocery store, jobs are recorded on a Venn diagram like the one below. If an employee {roleEn}, in which region of the diagram does the employee belong?",
+        "zh": "一家超市用如图的韦恩图记录岗位。如果一名员工{roleZh}，他属于图中的哪个区域？"
       },
-      "vars": {},
+      "vars": {
+        "i": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        }
+      },
       "answer": {
         "type": "choice",
-        "correctIndex": 3,
+        "correctIndex": "sel(r, 1, 0, 3, 2)",
         "options": [
           {
             "en": "W",
@@ -9495,17 +9525,27 @@
         ]
       },
       "solution": {
-        "en": "The employee is in Checker and in Deli, but NOT in Stocker. Checker ∩ Deli without Stocker is the region labelled Z.",
-        "zh": "这名员工属于 Checker 和 Deli，但不属于 Stocker。Checker ∩ Deli 且不在 Stocker 内的区域是 Z。"
+        "en": "On the diagram: X = {lJ} & {rJ} only, W = {lJ} & {bJ} only, Z = {rJ} & {bJ} only, and Y is where all three overlap. The employee {roleEn}. That is exactly region {ansName}.",
+        "zh": "图中：X = 只属于{lJ}和{rJ}的区域，W = 只属于{lJ}和{bJ}的区域，Z = 只属于{rJ}和{bJ}的区域，Y = 三者交集。该员工{roleZh}，对应的正是{ansName}区。"
       },
       "diagram": {
         "type": "venn3",
         "labels": "Stocker,Checker,Deli"
       },
-      "noVariantReason": "定性读图题，答案不随数值变化；原卷即如此",
-      "original": {},
+      "original": {
+        "i": 2
+      },
       "originalAnswer": "D",
-      "noFigure": ""
+      "derived": {
+        "p": "floor(i/4)",
+        "r": "mod(i, 4)",
+        "lJ": "sel(p, 'Stocker', 'Stocker', 'Checker', 'Checker', 'Deli', 'Deli')",
+        "rJ": "sel(p, 'Checker', 'Deli', 'Stocker', 'Deli', 'Stocker', 'Checker')",
+        "bJ": "sel(p, 'Deli', 'Checker', 'Deli', 'Stocker', 'Checker', 'Stocker')",
+        "roleEn": "sel(i, 'only works as a Stocker and as a Checker', 'only works as a Stocker and in the Deli', 'only works as a Checker and in the Deli', 'works as a Stocker, as a Checker and in the Deli', 'only works as a Stocker and in the Deli', 'only works as a Stocker and as a Checker', 'only works in the Deli and as a Checker', 'works as a Stocker, in the Deli and as a Checker', 'only works as a Checker and as a Stocker', 'only works as a Checker and in the Deli', 'only works as a Stocker and in the Deli', 'works as a Checker, as a Stocker and in the Deli', 'only works as a Checker and in the Deli', 'only works as a Checker and as a Stocker', 'only works in the Deli and as a Stocker', 'works as a Checker, in the Deli and as a Stocker', 'only works in the Deli and as a Stocker', 'only works in the Deli and as a Checker', 'only works as a Stocker and as a Checker', 'works in the Deli, as a Stocker and as a Checker', 'only works in the Deli and as a Checker', 'only works in the Deli and as a Stocker', 'only works as a Checker and as a Stocker', 'works in the Deli, as a Checker and as a Stocker')",
+        "roleZh": "sel(i, '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '三个岗位都做（理货（Stocker）、收银（Checker）和熟食部（Deli））', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '三个岗位都做（理货（Stocker）、熟食部（Deli）和收银（Checker））', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '岗位只有理货（Stocker）和熟食部（Deli），不做收银（Checker）', '三个岗位都做（收银（Checker）、理货（Stocker）和熟食部（Deli））', '岗位只有收银（Checker）和熟食部（Deli），不做理货（Stocker）', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '三个岗位都做（收银（Checker）、熟食部（Deli）和理货（Stocker））', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '岗位只有理货（Stocker）和收银（Checker），不做熟食部（Deli）', '三个岗位都做（熟食部（Deli）、理货（Stocker）和收银（Checker））', '岗位只有熟食部（Deli）和收银（Checker），不做理货（Stocker）', '岗位只有熟食部（Deli）和理货（Stocker），不做收银（Checker）', '岗位只有收银（Checker）和理货（Stocker），不做熟食部（Deli）', '三个岗位都做（熟食部（Deli）、收银（Checker）和理货（Stocker））')",
+        "ansName": "sel(r, 'X', 'W', 'Z', 'Y')"
+      }
     },
     {
       "id": "mm1t1-26",
@@ -9686,32 +9726,44 @@
         "ci": {
           "type": "pick",
           "from": [
+            1,
             2,
+            3,
             4,
-            6
+            5,
+            6,
+            7
           ]
         },
         "fj": {
           "type": "pick",
           "from": [
+            2,
+            3,
+            4,
+            6,
             8
           ]
         }
       },
       "constraints": [
         "ci < fj",
-        "mod(ci, 2) == 0"
+        "mod(ci*8, fj*E) == 0",
+        "fj*E != 8"
       ],
       "derived": {
-        "cName": "sel(ci-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
-        "fName": "sel(fj-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
+        "step": "E/8",
+        "vC": "E*ci/8",
+        "vF": "E*fj/8",
+        "cName": "sel(ci - 1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
+        "fName": "sel(fj - 1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
         "q": "ci/fj",
-        "k": "ci/fj*8",
-        "kName": "sel(ci/fj*8-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')"
+        "k": "ci*8/(fj*E)",
+        "kName": "sel(k - 1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')"
       },
       "answer": {
         "type": "choice",
-        "correctIndex": "ci/fj*8-1",
+        "correctIndex": "k-1",
         "options": [
           {
             "en": "A",
@@ -9751,22 +9803,21 @@
         "positive": true
       },
       "solution": {
-        "en": "From 0 to {E}, the eight points A–H are each {E} ÷ 8 = {E/8} apart. {cName} is at {E} × {ci} ÷ 8 = {E*ci/8} and {fName} is at {E} × {fj} ÷ 8 = {E*fj/8}. So {cName} ÷ {fName} = {E*ci/8} ÷ {E*fj/8} = {q}. That value sits at the {ci/fj*8}th point from 0, which is {kName}.",
-        "zh": "0 到 {E} 之间的 A–H 八个点，每格是 {E} ÷ 8 = {E/8}。{cName} 在 {E} × {ci} ÷ 8 = {E*ci/8} 处，{fName} 在 {E} × {fj} ÷ 8 = {E*fj/8} 处。所以 {cName} ÷ {fName} = {E*ci/8} ÷ {E*fj/8} = {q}，正好落在从 0 数第 {ci/fj*8} 个点上，即 {kName}。"
+        "en": "The line runs from 0 to {E} in 8 equal parts, each {E} ÷ 8 = {step} apart. {cName} is the {ci}th letter, at {E} × {ci} ÷ 8 = {vC}; {fName} is the {fj}th, at {E} × {fj} ÷ 8 = {vF}. So {cName} ÷ {fName} = {vC} ÷ {vF} = {q}. On this line, {q} sits {k} letters from 0 — point {kName}.",
+        "zh": "数轴从 0 到 {E}，分成 8 等份，每份是 {E} ÷ 8 = {step}。{cName} 是第 {ci} 个字母，位置在 {E} × {ci} ÷ 8 = {vC}；{fName} 是第 {fj} 个，位置在 {E} × {fj} ÷ 8 = {vF}。所以 {cName} ÷ {fName} = {vC} ÷ {vF} = {q}。{q} 在数轴上落在从 0 数第 {k} 个字母处，即 {kName}。"
       },
       "diagram": {
         "type": "numberline",
         "E": "E",
-        "n": "E",
-        "k": "k"
+        "n": 8,
+        "letters": "A,B,C,D,E,F,G,H"
       },
       "original": {
         "E": 2,
-        "ci": 2,
-        "fj": 8
+        "ci": 3,
+        "fj": 6
       },
-      "originalAnswer": "B",
-      "noVariantReason": "数与形的选择题，考「商在数轴上的位置」，取值组合固定为可落在刻度点上的比"
+      "originalAnswer": "B"
     },
     {
       "id": "mm1t1-29",
@@ -10011,48 +10062,79 @@
       "source": "Mastering Mathematics Book 1 Test 1 Q33",
       "sourceSet": "Mastering Mathematics Book 1 Test 1",
       "stem": {
-        "en": "Four children Andy, Ben, Cathy and Daniel started at the same point S and walked to point F at the same speed. The picture shows the streets and square city blocks. Who finished last?",
-        "zh": "Andy、Ben、Cathy、Daniel 四个孩子同时从 S 出发、以相同速度走向 F。图中画出了街道和方形街区。谁最后到达？"
+        "en": "Four children — {ca}, {cb}, {cc} and {cd} — started at the same point S and walked to point F at the same speed. {ca} took the red route, {cb} the blue, {cc} the green and {cd} the orange. The picture shows the streets and square city blocks. Who finished last?",
+        "zh": "{ca}、{cb}、{cc}、{cd} 四个孩子同时从 S 出发、以相同速度走向 F。{ca} 走红线，{cb} 走蓝线，{cc} 走绿线，{cd} 走橙线。图中画出了街道和方形街区。谁最后到达？"
       },
       "vars": {
         "m": {
           "type": "int",
-          "min": 3,
+          "min": 5,
           "max": 8
         },
         "n": {
           "type": "int",
-          "min": 3,
+          "min": 4,
           "max": 8
         },
-        "ai": {
-          "type": "int",
-          "min": 0,
-          "max": 3
+        "p4": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
         }
       },
       "derived": {
-        "ans": "sel(ai, 'Andy','Ben','Cathy','Daniel')"
+        "ca": "sel(p4, 'Andy', 'Andy', 'Andy', 'Andy', 'Andy', 'Andy', 'Ben', 'Ben', 'Ben', 'Ben', 'Ben', 'Ben', 'Cathy', 'Cathy', 'Cathy', 'Cathy', 'Cathy', 'Cathy', 'Daniel', 'Daniel', 'Daniel', 'Daniel', 'Daniel', 'Daniel')",
+        "cb": "sel(p4, 'Ben', 'Ben', 'Cathy', 'Cathy', 'Daniel', 'Daniel', 'Andy', 'Andy', 'Cathy', 'Cathy', 'Daniel', 'Daniel', 'Andy', 'Andy', 'Ben', 'Ben', 'Daniel', 'Daniel', 'Andy', 'Andy', 'Ben', 'Ben', 'Cathy', 'Cathy')",
+        "cc": "sel(p4, 'Cathy', 'Daniel', 'Ben', 'Daniel', 'Ben', 'Cathy', 'Cathy', 'Daniel', 'Andy', 'Daniel', 'Andy', 'Cathy', 'Ben', 'Daniel', 'Andy', 'Daniel', 'Andy', 'Ben', 'Ben', 'Cathy', 'Andy', 'Cathy', 'Andy', 'Ben')",
+        "cd": "sel(p4, 'Daniel', 'Cathy', 'Daniel', 'Ben', 'Cathy', 'Ben', 'Daniel', 'Cathy', 'Daniel', 'Andy', 'Cathy', 'Andy', 'Daniel', 'Ben', 'Daniel', 'Andy', 'Ben', 'Andy', 'Cathy', 'Ben', 'Cathy', 'Andy', 'Ben', 'Andy')"
       },
       "answer": {
         "type": "choice",
-        "correctIndex": "ai",
+        "correctIndex": 4,
         "options": [
           {
-            "en": "Andy",
-            "zh": "Andy"
+            "en": "They all finished at the same time.",
+            "zh": "他们同时到达。"
           },
           {
-            "en": "Ben",
-            "zh": "Ben"
+            "en": "{ca}",
+            "zh": "{ca}"
           },
           {
-            "en": "Cathy",
-            "zh": "Cathy"
+            "en": "{cb}",
+            "zh": "{cb}"
           },
           {
-            "en": "Daniel",
-            "zh": "Daniel"
+            "en": "{cc}",
+            "zh": "{cc}"
+          },
+          {
+            "en": "{cd}",
+            "zh": "{cd}"
           }
         ]
       },
@@ -10061,23 +10143,23 @@
         "positive": true
       },
       "solution": {
-        "en": "Whoever walks the longest route finishes last. The red route goes straight across and straight up: {m} + {n} = {m+n} blocks — the shortest. Blue, green and orange each add extra detours (2, 4 and 6 blocks more), so orange is the longest. Orange is {ans}.",
-        "zh": "走得最长的人最后到达。红色路线先横穿再直上，共 {m} + {n} = {m+n} 格，是最短的。蓝、绿、橙各自多绕了 2、4、6 格，橙色最长。橙色是 {ans}。"
+        "en": "All four walk at the same speed, so the longest route finishes last. Counting blocks: the red route is the plain shortest path of {m} + {n} = {m+n} blocks; blue detours around one extra block ({m+n+2}), green around two ({m+n+4}), and orange around three ({m+n+6}) — the longest. The orange route belongs to {cd}.",
+        "zh": "四人速度相同，走最长路的人最后到达。数一数：红线是最短路径，共 {m} + {n} = {m+n} 格；蓝线多绕 1 个街区（{m+n+2}），绿线多绕 2 个（{m+n+4}），橙线多绕 3 个（{m+n+6}），最长。走橙线的是 {cd}。"
       },
       "diagram": {
         "type": "gridroutes",
         "m": "m",
-        "n": "n"
+        "n": "n",
+        "kids": "{ca},{cb},{cc},{cd}"
       },
       "original": {
-        "m": 4,
+        "m": 6,
         "n": 4,
-        "ai": 1
+        "p4": 3
       },
       "constraints": [
         "m + n >= 8"
       ],
-      "noVariantReason": "",
       "originalAnswer": "D"
     },
     {
@@ -10219,8 +10301,8 @@
       "source": "Mastering Mathematics Book 1 Test 1 Q36",
       "sourceSet": "Mastering Mathematics Book 1 Test 1",
       "stem": {
-        "en": "The sum of two numbers is 48. If the smaller number is equal to one fifth of the larger number, the numbers are",
-        "zh": "两个数的和是 48。如果较小的数等于较大数的五分之一，这两个数是"
+        "en": "The sum of two numbers is {S}. If the smaller number is equal to {fracEn} of the larger number, the numbers are",
+        "zh": "两个数的和是 {S}。如果较小的数等于较大数的{fracZh}，这两个数是"
       },
       "vars": {
         "k": {
@@ -10240,7 +10322,9 @@
       "derived": {
         "S": "(k+1)*base",
         "small": "base",
-        "big": "k*base"
+        "big": "k*base",
+        "fracEn": "sel(k, 'one half', 'one third', 'one fourth', 'one fifth', 'one sixth', 'one seventh', 'one eighth', 'one ninth')",
+        "fracZh": "sel(k, '一半', '三分之一', '四分之一', '五分之一', '六分之一', '七分之一', '八分之一', '九分之一')"
       },
       "answer": {
         "type": "choice",
@@ -10269,8 +10353,8 @@
         "positive": true
       },
       "solution": {
-        "en": "Let the larger be {k} parts and the smaller 1 part, so {k+1} parts in total = {S}. One part = {S} ÷ {k+1} = {small}. The numbers are {small} and {big}.",
-        "zh": "把大数看成 {k} 份、小数看成 1 份，共 {k+1} 份 = {S}。一份 = {S} ÷ {k+1} = {small}。所以两数是 {small} 和 {big}。"
+        "en": "Let the larger number be {k} parts and the smaller 1 part, making {k+1} parts in total = {S}. One part = {S} ÷ {k+1} = {small}, so the larger number is {k} × {small} = {big}. The two numbers are {small} and {big}.",
+        "zh": "把大数看成 {k} 份、小数看成 1 份，共 {k+1} 份 = {S}。一份 = {S} ÷ {k+1} = {small}，大数 = {k} × {small} = {big}。所以两数是 {small} 和 {big}。"
       },
       "noFigure": "原题为纯文字应用题，无图",
       "original": {

@@ -34,6 +34,15 @@
     var n = parseFloat(s);
     return isFinite(n) ? n : 0;
   }
+  /* 字符串 spec 里的 {占位符} 用 vars 解析（如 labels: "{lJ},{rJ},{bJ}"）。
+     为什么需要：图内文字要随变量变（韦恩图三个圆的岗位名随机互换），
+     而 num() 只处理数值。 */
+  function strSpec(v, vars) {
+    if (v === null || v === undefined) return '';
+    return String(v).replace(/\{(\w+)\}/g, function (m, k) {
+      return (vars && Object.prototype.hasOwnProperty.call(vars, k)) ? String(vars[k]) : m;
+    });
+  }
   function svgOpen(w, h, label) {
     return '<svg viewBox="0 0 ' + w + ' ' + h + '" class="diagram" role="img" aria-label="' + esc(label) + '" preserveAspectRatio="xMidYMid meet">';
   }
@@ -81,7 +90,9 @@
     /* 数轴：0..E 平均分成 n 格，箭头指从 0 数第 k 格（Q7） */
     numberline: function (spec, vars) {
       var E = num(spec.E, vars), n = Math.max(1, Math.min(30, Math.round(num(spec.n, vars))));
-      var k = Math.max(1, Math.min(n, Math.round(num(spec.k, vars))));
+      var k = (spec.k === undefined || spec.k === null) ? null : Math.max(1, Math.min(n, Math.round(num(spec.k, vars))));
+      var letters = strSpec(spec.letters, vars);
+      var labs = letters ? letters.split(',') : null;
       var W = 460, H = 106, x0 = 28, x1 = 432, y = 64, step = (x1 - x0) / n;
       var s = svgOpen(W, H, 'number line 0 to ' + E);
       s += '<line x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '" stroke="' + INK + '" stroke-width="2"/>';
@@ -89,12 +100,30 @@
         var x = x0 + i * step;
         s += '<line x1="' + x.toFixed(2) + '" y1="' + (y - 9) + '" x2="' + x.toFixed(2) + '" y2="' + (y + 9) + '" stroke="' + INK + '" stroke-width="1.5"/>';
       }
+      /* 刻度上方的字母（原卷 Q28：A–H 标在每个刻度上） */
+      if (labs) {
+        for (var li = 0; li < n && li < labs.length; li++) {
+          var lx = x0 + (li + 1) * step;
+          s += '<text x="' + lx.toFixed(2) + '" y="' + (y - 18) + '" font-size="15" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + esc(labs[li]) + '</text>';
+        }
+      }
       s += '<text x="' + x0 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">0</text>';
-      s += '<text x="' + x1 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + esc(E) + '</text>';
-      // 箭头必须「向下指」到数轴上的那个刻度（原来画成向上指，方向反了）
-      var kx = x0 + k * step;
-      s += '<line x1="' + kx.toFixed(2) + '" y1="' + (y - 48) + '" x2="' + kx.toFixed(2) + '" y2="' + (y - 20) + '" stroke="' + RED + '" stroke-width="3"/>';
-      s += '<polygon points="' + kx.toFixed(2) + ',' + (y - 8) + ' ' + (kx - 8).toFixed(2) + ',' + (y - 22) + ' ' + (kx + 8).toFixed(2) + ',' + (y - 22) + '" fill="' + RED + '"/>';
+      /* 每两格标一个数值（原卷：0.5 / 1.0 / 1.5 / 2.0），末格若已标就不再单独画 E */
+      var lastLabeled = false;
+      for (var vi = 2; vi <= n; vi += 2) {
+        var vx = x0 + vi * step;
+        var val = E * vi / n;
+        var vs = (Math.abs(val - Math.round(val)) < 1e-9) ? String(Math.round(val)) : String(+val.toFixed(2));
+        s += '<text x="' + vx.toFixed(2) + '" y="' + (y + 32) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(vs) + '</text>';
+        if (vi === n) lastLabeled = true;
+      }
+      if (!lastLabeled) s += '<text x="' + x1 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + esc(E) + '</text>';
+      /* 箭头可选：只有显式传 k 才画（Q28 这类「字母点」题不传，避免泄答案） */
+      if (k !== null) {
+        var kx = x0 + k * step;
+        s += '<line x1="' + kx.toFixed(2) + '" y1="' + (y - 48) + '" x2="' + kx.toFixed(2) + '" y2="' + (y - 20) + '" stroke="' + RED + '" stroke-width="3"/>';
+        s += '<polygon points="' + kx.toFixed(2) + ',' + (y - 8) + ' ' + (kx - 8).toFixed(2) + ',' + (y - 22) + ' ' + (kx + 8).toFixed(2) + ',' + (y - 22) + '" fill="' + RED + '"/>';
+      }
       s += '</svg>';
       return s;
     },
@@ -2597,10 +2626,12 @@
       return s;
     },
 
-    /* 正方形四角各剪去边长 s 的小正方形 */
+    /* 正方形四角各剪去边长 s 的小正方形
+       ★ 边长标签全部随变量走（曾因读错 spec 键导致剪角恒为 1cm）：
+         上 = S cm，左 = (S−c) cm，角 = c cm（与原卷一致） */
     cornercut: function (spec, vars) {
       var S = Math.max(3, Math.round(num(spec.S, vars)));
-      var s0 = Math.max(1, Math.round(num(spec.s, vars)));
+      var s0 = Math.max(1, Math.round(num(spec.c !== undefined ? spec.c : spec.s, vars)));
       var W = 360, H = 300, x0 = 50, y0 = 40, size = 220, px = size / S, k = s0 * px;
       var s = svgOpen(W, H, 'square of side ' + S + ' with four corners of side ' + s0 + ' removed');
       /* 外框（虚线，原大正方形） */
@@ -2621,51 +2652,74 @@
         s += '<rect x="' + cx + '" y="' + cy + '" width="' + k + '" height="' + k +
              '" fill="#ffffff" stroke="' + GREY + '" stroke-width="1.2" stroke-dasharray="4 4"/>';
       });
-      s += '<text x="' + (x0 + size / 2) + '" y="' + (y0 + size + 26) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + S + ' cm</text>';
+      /* 标注：上 S、左 S−c、右下角小正方形 c（都不写死数值） */
+      s += '<text x="' + (x0 + size / 2) + '" y="' + (y0 - 12) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + S + ' cm</text>';
+      s += '<text x="' + (x0 - 10) + '" y="' + (y0 + size / 2) + '" font-size="15" text-anchor="end" fill="' + INK + '">' + (S - s0) + ' cm</text>';
       s += '<text x="' + (x0 + k + 27) + '" y="' + (y0 + k + 18) + '" font-size="14" fill="' + INK + '">' + s0 + ' cm</text>';
       s += '</svg>';
       return s;
     },
 
-    /* 三圆韦恩图（岗位 / 集合） */
+    /* 三圆韦恩图（岗位 / 集合）
+       ★ 区域字母 W/X/Y/Z 必须画在图上（原卷就有）：
+         X = 左圆∩右圆（仅这两个）· W = 左圆∩下圆 · Z = 右圆∩下圆 · Y = 三者交集
+       ★ 圆的标签可随变量变（labels 里写 {占位符}，由 strSpec 解析）
+       ★ 不画任何「答案点」——原卷图上只有字母，答案靠学生自己读 */
     venn3: function (spec, vars) {
       var W = 420, H = 300;
-      var lab = String(spec.labels || 'S,C,D').split(',');
+      var lab = strSpec(spec.labels, vars).split(',');
+      if (lab.length < 3) lab = ['S', 'C', 'D'];
       var r = 78, cx = [170, 250, 210], cy = [110, 110, 178];
-      var s = svgOpen(W, H, 'three-circle Venn diagram');
+      var s = svgOpen(W, H, 'three-circle Venn diagram with regions W X Y Z');
       s += '<circle cx="' + cx[0] + '" cy="' + cy[0] + '" r="' + r + '" fill="#5b9bd5" fill-opacity="0.22" stroke="' + INK + '" stroke-width="2"/>';
       s += '<circle cx="' + cx[1] + '" cy="' + cy[1] + '" r="' + r + '" fill="#e5484d" fill-opacity="0.18" stroke="' + INK + '" stroke-width="2"/>';
       s += '<circle cx="' + cx[2] + '" cy="' + cy[2] + '" r="' + r + '" fill="#2ea043" fill-opacity="0.20" stroke="' + INK + '" stroke-width="2"/>';
       s += '<text x="' + (cx[0] - 46) + '" y="' + (cy[0] - 46) + '" font-size="17" font-weight="bold" fill="' + INK + '">' + esc(lab[0]) + '</text>';
       s += '<text x="' + (cx[1] + 30) + '" y="' + (cy[1] - 46) + '" font-size="17" font-weight="bold" fill="' + INK + '">' + esc(lab[1]) + '</text>';
       s += '<text x="' + (cx[2]) + '" y="' + (cy[2] + 66) + '" font-size="17" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + esc(lab[2]) + '</text>';
-      /* 标出 C∩D 且不在 S 的公共区域（供学生对照） */
-      s += '<circle cx="238" cy="152" r="5" fill="' + INK + '"/>';
+      /* 四个区域字母（位置都验算过：落在对应交集内、且不在第三个圆里） */
+      var regions = [['X', 210, 82], ['W', 148, 163], ['Z', 272, 163], ['Y', 210, 140]];
+      regions.forEach(function (rg) {
+        s += '<text x="' + rg[1] + '" y="' + rg[2] + '" font-size="18" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + esc(rg[0]) + '</text>';
+      });
       s += '</svg>';
       return s;
     },
 
-    /* 一面靠墙的长方形花园：画三边篱笆 + 墙 */
+    /* 一面靠墙（房子）的长方形花园：画房子 + 花园 + 「?」长度标记。
+       ★ 图上绝不标数值 —— 长度正是题目要求的答案，标出来就泄题了（原卷只画 ?） */
     gardenfence: function (spec, vars) {
       var L = Math.max(4, Math.round(num(spec.L, vars)));
       var Wd = Math.max(2, Math.round(num(spec.W, vars)));
-      var maxW = 380, maxH = 220;
+      var maxW = 300, maxH = 150;
       var scale = Math.min(maxW / L, maxH / Wd);
       var w = L * scale, h = Wd * scale;
-      var x0 = (440 - w) / 2, y0 = 60;
-      var s = svgOpen(440, y0 + h + 70, 'rectangular garden with one side fenced by a wall');
-      /* 墙（上边） */
-      s += '<rect x="' + x0 + '" y="' + (y0 - 16) + '" width="' + w + '" height="14" fill="#b0a89a" stroke="' + INK + '" stroke-width="1.5"/>';
-      s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 - 22) + '" font-size="14" text-anchor="middle" fill="' + INK + '">wall</text>';
-      /* 三边篱笆 */
-      s += '<polyline points="' + x0 + ',' + y0 + ' ' + x0 + ',' + (y0 + h) + ' ' + (x0 + w) + ',' + (y0 + h) + ' ' + (x0 + w) + ',' + y0 +
-           '" fill="none" stroke="' + GREEN + '" stroke-width="3.5"/>';
+      var x0 = (440 - w) / 2, y0 = 110;
+      var s = svgOpen(440, y0 + h + 78, 'rectangular garden beside a house, one side not fenced');
+      /* 房子（上边 = 不用围的那一侧） */
+      s += '<rect x="' + x0 + '" y="' + (y0 - 46) + '" width="' + w + '" height="42" fill="#7da7d9" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '<polygon points="' + x0 + ',' + (y0 - 46) + ' ' + (x0 + 18) + ',' + (y0 - 64) + ' ' + (x0 + w - 18) + ',' + (y0 - 64) + ' ' + (x0 + w) + ',' + (y0 - 46) +
+           '" fill="#5d88bd" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 - 19) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="#ffffff">House</text>';
+      /* 花园：与房子共边（墙侧不画篱笆） */
+      s += '<rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + h + '" fill="#d9f2d0" stroke="' + GREEN + '" stroke-width="2.5" stroke-dasharray="6 4"/>';
+      s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h / 2 + 6) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="' + GREEN + '">Garden</text>';
+      /* 三边篱笆短线（左、下、右） */
       for (var i = 0; i <= 10; i++) {
         var px = x0 + i * w / 10;
         s += '<line x1="' + px.toFixed(1) + '" y1="' + (y0 + h) + '" x2="' + px.toFixed(1) + '" y2="' + (y0 + h + 9) + '" stroke="' + GREEN + '" stroke-width="2"/>';
       }
-      s += '<text x="' + (x0 + w + 8) + '" y="' + (y0 + h / 2) + '" font-size="16" fill="' + INK + '">' + Wd + ' m</text>';
-      s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 32) + '" font-size="16" text-anchor="middle" fill="' + INK + '">' + L + ' m</text>';
+      for (var j = 1; j <= 4; j++) {
+        var py = y0 + j * h / 4;
+        s += '<line x1="' + x0 + '" y1="' + py.toFixed(1) + '" x2="' + (x0 - 9) + '" y2="' + py.toFixed(1) + '" stroke="' + GREEN + '" stroke-width="2"/>';
+        s += '<line x1="' + (x0 + w) + '" y1="' + py.toFixed(1) + '" x2="' + (x0 + w + 9) + '" y2="' + py.toFixed(1) + '" stroke="' + GREEN + '" stroke-width="2"/>';
+      }
+      /* 长度用「?」标注（原卷样式） */
+      var ay = y0 + h + 34;
+      s += '<line x1="' + x0 + '" y1="' + ay + '" x2="' + (x0 + w) + '" y2="' + ay + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '<polygon points="' + x0 + ',' + ay + ' ' + (x0 + 10) + ',' + (ay - 5) + ' ' + (x0 + 10) + ',' + (ay + 5) + '" fill="' + INK + '"/>';
+      s += '<polygon points="' + (x0 + w) + ',' + ay + ' ' + (x0 + w - 10) + ',' + (ay - 5) + ' ' + (x0 + w - 10) + ',' + (ay + 5) + '" fill="' + INK + '"/>';
+      s += '<text x="' + (x0 + w / 2) + '" y="' + (ay + 22) + '" font-size="17" font-weight="bold" text-anchor="middle" fill="' + INK + '">?</text>';
       s += '</svg>';
       return s;
     },
@@ -2694,50 +2748,47 @@
       return s;
     },
 
-    /* 方格街道 + S/F + 四条长度不同的路径。
-       几何要求（四条路长度必须**严格递增**，否则"谁最短"出现并列 ⇒ 题目无唯一解）：
-         R1 = m+n    （只走右、上，唯一最短）
-         R2 = m+n+2  （在横段某一格向下探一格再回来）
-         R3 = m+n+4  （两个不同位置各探一次）
-         R4 = m+n+6  （三个不同位置各探一次）
-       每条路径都必须**逐段连通**（相邻点只差 1 格），不能跳格或重复点。
-       S 在左下 (0,n)，F 在右上 (m,0)；基线沿最上行向右 m 步、再沿最右列向上 n 步。
-       插入回环时**从右往左**做，否则前面的插入会让后面的下标漂移。 */
+    /* 方格街道 + S/F + 四条长度严格递增的路径（Q33 专用，v2 重画）。
+       ★ 旧版用「原路下探一格再回来」的 spike —— 零宽度，画出来不可见，
+         四条线几乎重合 ⇒ 用户看到「配图全乱」。v2 改成**绕街区**的矩形凸起：
+           红（Andy·位0）：直走 L = m+n
+           蓝（位1）：绕深 1 格的街区，L = m+n+2
+           绿（位2）：绕深 2 格的街区，L = m+n+4
+           橙（位3）：绕深 3 格的街区，L = m+n+6
+         凸起放在不同列（mid / 2 / m−3），互不重叠、清晰可见。
+       ★ 孩子名由 spec.kids 传入（逗号分隔，可含 {占位符}），首字母标在各自绕道上。
+       ★ 需 m ≥ 5（保证深 3 凸起在内部）、n ≥ 4（凸起不出顶行）。 */
     gridroutes: function (spec, vars) {
-      var m = Math.max(3, Math.min(8, Math.round(num(spec.m, vars))));
-      var n = Math.max(3, Math.min(8, Math.round(num(spec.n, vars))));
+      var m = Math.max(5, Math.min(8, Math.round(num(spec.m, vars))));
+      var n = Math.max(4, Math.min(8, Math.round(num(spec.n, vars))));
+      var kids = strSpec(spec.kids, vars).split(',').map(function (x) { return x.trim(); });
       var c = 46, x0 = 40, y0 = 34;
-      var W = x0 * 2 + m * c, H = y0 + n * c + 58;
+      var W = x0 * 2 + m * c, H = y0 + n * c + 52;
 
-      /* 基线 */
+      /* 基线：S(0,n) 沿底行到 (m,n)，再沿右列上到 F(m,0) */
       var base = [], i, j;
       for (i = 0; i <= m; i++) base.push([i, n]);
       for (j = n - 1; j >= 0; j--) base.push([m, j]);
 
-      /* 在横段上 x=xAt 这一格处，向下探一格 (xAt, n-1) 再回来 ⇒ 长度 +2 */
-      function spike(pts, xAt) {
-        var p = -1;
-        for (var t = 0; t < pts.length; t++) { if (pts[t][0] === xAt && pts[t][1] === n) { p = t; break; } }
-        if (p < 0) return null;
-        return pts.slice(0, p + 1).concat([[xAt, n - 1]]).concat([pts[p]]).concat(pts.slice(p + 1));
-      }
-      /* 按 x 列表插入回环（从右往左，避免下标漂移） */
-      function withSpikes(xs) {
-        var cur = base, sorted = xs.slice().sort(function (a, b) { return b - a; });
-        for (var t = 0; t < sorted.length; t++) {
-          var nxt = spike(cur, sorted[t]);
-          if (nxt) cur = nxt;
+      /* 把基线上的水平段 [(x,n)→(x+1,n)] 换成向下绕深 d 格的矩形凸起：
+         (x,n)→(x,n-1)→…→(x,n-d)→(x+1,n-d)→…→(x+1,n)，长度 +2d */
+      function bump(pts, x, d) {
+        var p = -1, t;
+        for (t = 0; t < pts.length - 1; t++) {
+          if (pts[t][0] === x && pts[t][1] === n && pts[t + 1][0] === x + 1 && pts[t + 1][1] === n) { p = t; break; }
         }
-        return cur;
+        if (p < 0) return pts;
+        var ins = [pts[p]], r2;
+        for (r2 = 1; r2 <= d; r2++) ins.push([x, n - r2]);
+        for (r2 = d; r2 >= 0; r2--) ins.push([x + 1, n - r2]);
+        return pts.slice(0, p).concat(ins).concat(pts.slice(p + 2));
       }
-      var mid = Math.max(1, Math.floor(m / 2));
-      var t1 = Math.max(1, Math.floor(m / 3));
-      var t2 = Math.max(1, Math.floor(2 * m / 3));
+      var mid = Math.floor(m / 2);
       var paths = [
         base,
-        withSpikes([mid]),
-        withSpikes([t1, t2]),
-        withSpikes([1, mid, Math.max(1, m - 1)])
+        bump(base, mid, 1),
+        bump(base, 2, 2),
+        bump(base, m - 3, 3)
       ];
 
       var s = svgOpen(W, H, 'street grid from S to F with four routes');
@@ -2755,12 +2806,28 @@
         }).join(' ');
         s += '<path data-u="route" d="' + d + '" fill="none" stroke="' + cols[k] + '" stroke-width="2.4" stroke-linejoin="round"/>';
       });
-      s += '<circle cx="' + x0 + '" cy="' + (y0 + n * c) + '" r="7" fill="' + INK + '"/>';
-      s += '<text x="' + (x0 - 6) + '" y="' + (y0 + n * c + 24) + '" font-size="17" font-weight="bold" fill="' + INK + '">S</text>';
-      s += '<circle cx="' + (x0 + m * c) + '" cy="' + y0 + '" r="7" fill="' + RED + '"/>';
-      s += '<text x="' + (x0 + m * c + 12) + '" y="' + (y0 + 6) + '" font-size="17" font-weight="bold" fill="' + INK + '">F</text>';
-      s += '<text x="' + (W / 2) + '" y="' + (H - 10) + '" font-size="13" text-anchor="middle" fill="' + INK + '">' +
-           'red = Andy, blue = Ben, green = Cathy, orange = Daniel</text>';
+      /* 每条路线的首字母标在自己的凸起里（红无凸起，标在底行中段下方） */
+      var letterPos = [
+        [x0 + (m / 2) * c, y0 + n * c + 30 + dy[0]],
+        [x0 + (mid + 0.5) * c, y0 + (n - 0.5) * c + dy[1] + 5],
+        [x0 + 2.5 * c, y0 + (n - 1) * c + dy[2] + 5],
+        [x0 + (m - 2.5) * c, y0 + (n - 1.5) * c + dy[3] + 5]
+      ];
+      letterPos.forEach(function (lp, k) {
+        var name = kids[k] || 'ABCD'[k];
+        s += '<text x="' + lp[0].toFixed(1) + '" y="' + lp[1].toFixed(1) + '" font-size="15" font-weight="bold" text-anchor="middle" fill="' + cols[k] +
+             '" stroke="#ffffff" stroke-width="4" paint-order="stroke">' + esc(name.charAt(0).toUpperCase()) + '</text>';
+      });
+      /* S（左下）与 F（右上，原卷是星形） */
+      s += '<circle cx="' + x0 + '" cy="' + (y0 + n * c) + '" r="7" fill="' + BLUE + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '<text x="' + (x0 - 8) + '" y="' + (y0 + n * c + 26) + '" font-size="17" font-weight="bold" fill="' + INK + '">S</text>';
+      var fx = x0 + m * c, fy = y0, star = '';
+      for (var si = 0; si < 10; si++) {
+        var ang = -Math.PI / 2 + si * Math.PI / 5, rr = (si % 2 === 0) ? 11 : 4.8;
+        star += (fx + rr * Math.cos(ang)).toFixed(1) + ',' + (fy + rr * Math.sin(ang)).toFixed(1) + ' ';
+      }
+      s += '<polygon points="' + star + '" fill="' + INK + '"/>';
+      s += '<text x="' + (fx + 14) + '" y="' + (fy + 6) + '" font-size="17" font-weight="bold" fill="' + INK + '">F</text>';
       s += '</svg>';
       return s;
     }

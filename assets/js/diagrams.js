@@ -100,11 +100,12 @@
         var x = x0 + i * step;
         s += '<line x1="' + x.toFixed(2) + '" y1="' + (y - 9) + '" x2="' + x.toFixed(2) + '" y2="' + (y + 9) + '" stroke="' + INK + '" stroke-width="1.5"/>';
       }
-      /* 刻度上方的字母（原卷 Q28：A–H 标在每个刻度上） */
+      /* 刻度上方的字母（原卷 Q28：A–H 标在每个刻度上，紧贴刻度、醒目） */
       if (labs) {
         for (var li = 0; li < n && li < labs.length; li++) {
           var lx = x0 + (li + 1) * step;
-          s += '<text x="' + lx.toFixed(2) + '" y="' + (y - 18) + '" font-size="15" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + esc(labs[li]) + '</text>';
+          s += '<circle cx="' + lx.toFixed(2) + '" cy="' + (y - 20) + '" r="11" fill="#ffffff" stroke="' + INK + '" stroke-width="1.2"/>';
+          s += '<text x="' + lx.toFixed(2) + '" y="' + (y - 15) + '" font-size="14" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + esc(labs[li]) + '</text>';
         }
       }
       s += '<text x="' + x0 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">0</text>';
@@ -2627,8 +2628,9 @@
     },
 
     /* 正方形四角各剪去边长 s 的小正方形
-       ★ 边长标签全部随变量走（曾因读错 spec 键导致剪角恒为 1cm）：
-         上 = S cm，左 = (S−c) cm，角 = c cm（与原卷一致） */
+       ★ 只标「题干提及的数」：大正方形边长 S（顶）、小正方形边长 c（标在小正方形
+         底边正下方、紧贴那条边，一眼看出是小正方形的边长）。
+         ★ 绝不标 S−c 之类的中间量——那是留给考生自己算的（用户明确要求） */
     cornercut: function (spec, vars) {
       var S = Math.max(3, Math.round(num(spec.S, vars)));
       var s0 = Math.max(1, Math.round(num(spec.c !== undefined ? spec.c : spec.s, vars)));
@@ -2652,10 +2654,17 @@
         s += '<rect x="' + cx + '" y="' + cy + '" width="' + k + '" height="' + k +
              '" fill="#ffffff" stroke="' + GREY + '" stroke-width="1.2" stroke-dasharray="4 4"/>';
       });
-      /* 标注：上 S、左 S−c、右下角小正方形 c（都不写死数值） */
-      s += '<text x="' + (x0 + size / 2) + '" y="' + (y0 - 12) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + S + ' cm</text>';
-      s += '<text x="' + (x0 - 10) + '" y="' + (y0 + size / 2) + '" font-size="15" text-anchor="end" fill="' + INK + '">' + (S - s0) + ' cm</text>';
-      s += '<text x="' + (x0 + k + 27) + '" y="' + (y0 + k + 18) + '" font-size="14" fill="' + INK + '">' + s0 + ' cm</text>';
+      /* 标注一：大正方形边长 S（顶部，带端点箭头线） */
+      s += '<line x1="' + x0 + '" y1="' + (y0 - 16) + '" x2="' + (x0 + size) + '" y2="' + (y0 - 16) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      s += '<line x1="' + x0 + '" y1="' + (y0 - 21) + '" x2="' + x0 + '" y2="' + (y0 - 11) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      s += '<line x1="' + (x0 + size) + '" y1="' + (y0 - 21) + '" x2="' + (x0 + size) + '" y2="' + (y0 - 11) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      s += '<text x="' + (x0 + size / 2) + '" y="' + (y0 - 22) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + S + ' cm</text>';
+      /* 标注二：小正方形边长 c —— 紧贴右下角小正方形的底边正下方（一眼看出量的是这条边） */
+      var bx = x0 + (size - k), by = y0 + size;
+      s += '<line x1="' + bx + '" y1="' + (by + 12) + '" x2="' + (bx + k) + '" y2="' + (by + 12) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      s += '<line x1="' + bx + '" y1="' + (by + 7) + '" x2="' + bx + '" y2="' + (by + 17) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      s += '<line x1="' + (bx + k) + '" y1="' + (by + 7) + '" x2="' + (bx + k) + '" y2="' + (by + 17) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      s += '<text x="' + (bx + k / 2) + '" y="' + (by + 30) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + s0 + ' cm</text>';
       s += '</svg>';
       return s;
     },
@@ -2701,19 +2710,10 @@
       s += '<polygon points="' + x0 + ',' + (y0 - 46) + ' ' + (x0 + 18) + ',' + (y0 - 64) + ' ' + (x0 + w - 18) + ',' + (y0 - 64) + ' ' + (x0 + w) + ',' + (y0 - 46) +
            '" fill="#5d88bd" stroke="' + INK + '" stroke-width="1.5"/>';
       s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 - 19) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="#ffffff">House</text>';
-      /* 花园：与房子共边（墙侧不画篱笆） */
-      s += '<rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + h + '" fill="#d9f2d0" stroke="' + GREEN + '" stroke-width="2.5" stroke-dasharray="6 4"/>';
+      /* 花园：与房子共边（墙侧不画篱笆），三边篱笆就是这条虚线边框本身——
+         ★ 不加等分格短线（用户明确要求，原卷也没有） */
+      s += '<rect x="' + x0 + '" y="' + y0 + '" width="' + w + '" height="' + h + '" fill="#d9f2d0" stroke="' + GREEN + '" stroke-width="2.5" stroke-dasharray="7 5"/>';
       s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h / 2 + 6) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="' + GREEN + '">Garden</text>';
-      /* 三边篱笆短线（左、下、右） */
-      for (var i = 0; i <= 10; i++) {
-        var px = x0 + i * w / 10;
-        s += '<line x1="' + px.toFixed(1) + '" y1="' + (y0 + h) + '" x2="' + px.toFixed(1) + '" y2="' + (y0 + h + 9) + '" stroke="' + GREEN + '" stroke-width="2"/>';
-      }
-      for (var j = 1; j <= 4; j++) {
-        var py = y0 + j * h / 4;
-        s += '<line x1="' + x0 + '" y1="' + py.toFixed(1) + '" x2="' + (x0 - 9) + '" y2="' + py.toFixed(1) + '" stroke="' + GREEN + '" stroke-width="2"/>';
-        s += '<line x1="' + (x0 + w) + '" y1="' + py.toFixed(1) + '" x2="' + (x0 + w + 9) + '" y2="' + py.toFixed(1) + '" stroke="' + GREEN + '" stroke-width="2"/>';
-      }
       /* 长度用「?」标注（原卷样式） */
       var ay = y0 + h + 34;
       s += '<line x1="' + x0 + '" y1="' + ay + '" x2="' + (x0 + w) + '" y2="' + ay + '" stroke="' + INK + '" stroke-width="1.5"/>';
@@ -2748,86 +2748,87 @@
       return s;
     },
 
-    /* 方格街道 + S/F + 四条长度严格递增的路径（Q33 专用，v2 重画）。
-       ★ 旧版用「原路下探一格再回来」的 spike —— 零宽度，画出来不可见，
-         四条线几乎重合 ⇒ 用户看到「配图全乱」。v2 改成**绕街区**的矩形凸起：
-           红（Andy·位0）：直走 L = m+n
-           蓝（位1）：绕深 1 格的街区，L = m+n+2
-           绿（位2）：绕深 2 格的街区，L = m+n+4
-           橙（位3）：绕深 3 格的街区，L = m+n+6
-         凸起放在不同列（mid / 2 / m−3），互不重叠、清晰可见。
-       ★ 孩子名由 spec.kids 传入（逗号分隔，可含 {占位符}），首字母标在各自绕道上。
-       ★ 需 m ≥ 5（保证深 3 凸起在内部）、n ≥ 4（凸起不出顶行）。 */
+    /* 方格街道 + S/F + 四条长度严格递增的路径（Q33 专用，v3 · 四走廊设计）。
+       ★ 用户要求：路线必须**严格走在格线上**（v2 的 dy 平行偏移让线飘离格线，被否）。
+       v3 设计——四条路线各走一条水平走廊，只在左列/右列少量共享：
+         红（位0，最短）：底行(第0行) → 右列，长 m+n，无绕行
+         蓝（位1）：先上 1 格走第 1 行走廊，绕 1 个街区(+2)，长 m+n+2
+         绿（位2）：先上 2 格走第 2 行走廊，绕 2 个街区(+4)，长 m+n+4
+         橙（位3）：先上 3 格走第 3 行走廊，绕 3 个街区(+6)，长 m+n+6
+       绕街区 = (c,k)→(c,k+1)→(c+1,k+1)→(c+1,k) 向上凸一格（+2）。
+       蓝凸起在列 3、绿在列 1 和 4、橙在列 1/3/5（同路线凸起隔 2 列避免重复边）。
+       绿色方块 = 街区（原卷样式），路线画在方块之间的白色街道格线上。
+       字母钉在各自凸起内（红无凸起，钉在底行上方第 0 行街区中央），互不重叠。
+       需 m ≥ 7（橙三个凸起占列 1..6 且不触右列）、n ≥ 5（橙走廊行 3，凸起到行 4）。 */
     gridroutes: function (spec, vars) {
-      var m = Math.max(5, Math.min(8, Math.round(num(spec.m, vars))));
-      var n = Math.max(4, Math.min(8, Math.round(num(spec.n, vars))));
+      var m = Math.max(7, Math.min(8, Math.round(num(spec.m, vars))));
+      var n = Math.max(5, Math.min(8, Math.round(num(spec.n, vars))));
       var kids = strSpec(spec.kids, vars).split(',').map(function (x) { return x.trim(); });
-      var c = 46, x0 = 40, y0 = 34;
-      var W = x0 * 2 + m * c, H = y0 + n * c + 52;
+      var c = 46, x0 = 42, YB = 40;                 /* YB = 底行(y=0)的屏幕 y */
+      var W = x0 * 2 + m * c, H = YB + n * c + 34;
 
-      /* 基线：S(0,n) 沿底行到 (m,n)，再沿右列上到 F(m,0) */
-      var base = [], i, j;
-      for (i = 0; i <= m; i++) base.push([i, n]);
-      for (j = n - 1; j >= 0; j--) base.push([m, j]);
+      /* 数学坐标 → 屏幕：gy=0 是底行，向上递增 */
+      function P(gx, gy) { return [x0 + gx * c, YB + (n - gy) * c]; }
 
-      /* 把基线上的水平段 [(x,n)→(x+1,n)] 换成向下绕深 d 格的矩形凸起：
-         (x,n)→(x,n-1)→…→(x,n-d)→(x+1,n-d)→…→(x+1,n)，长度 +2d */
-      function bump(pts, x, d) {
-        var p = -1, t;
-        for (t = 0; t < pts.length - 1; t++) {
-          if (pts[t][0] === x && pts[t][1] === n && pts[t + 1][0] === x + 1 && pts[t + 1][1] === n) { p = t; break; }
+      /* 走廊路径：沿左列上到 k 层，沿第 k 行向右（含凸起），最后沿右列上到 F */
+      function corridor(k, bumps) {
+        var pts = [[0, 0], [0, k]];
+        for (var i = 0; i < bumps.length; i++) {
+          var bc = bumps[i];
+          pts.push([bc, k], [bc, k + 1], [bc + 1, k + 1], [bc + 1, k]);   /* 绕一格街区 +2 */
         }
-        if (p < 0) return pts;
-        var ins = [pts[p]], r2;
-        for (r2 = 1; r2 <= d; r2++) ins.push([x, n - r2]);
-        for (r2 = d; r2 >= 0; r2--) ins.push([x + 1, n - r2]);
-        return pts.slice(0, p).concat(ins).concat(pts.slice(p + 2));
+        pts.push([m, k], [m, n]);
+        return pts;
       }
-      var mid = Math.floor(m / 2);
       var paths = [
-        base,
-        bump(base, mid, 1),
-        bump(base, 2, 2),
-        bump(base, m - 3, 3)
+        corridor(0, []),          /* 红：底行，无绕行 */
+        corridor(1, [3]),         /* 蓝 */
+        corridor(2, [1, 4]),      /* 绿 */
+        corridor(3, [1, 3, 5])    /* 橙 */
       ];
 
-      var s = svgOpen(W, H, 'street grid from S to F with four routes');
-      for (i = 0; i <= m; i++) {
-        s += '<line x1="' + (x0 + i * c) + '" y1="' + y0 + '" x2="' + (x0 + i * c) + '" y2="' + (y0 + n * c) + '" stroke="' + GREY + '" stroke-width="1"/>';
+      var s = svgOpen(W, H, 'street grid from S to F with four routes on the grid lines');
+      /* 绿色街区（原卷样式）：格子间留白色街道缝，路线画在缝的格线上 */
+      for (var gi = 0; gi < m; gi++) {
+        for (var gj = 0; gj < n; gj++) {
+          var tl = P(gi, gj + 1);
+          s += '<rect x="' + (tl[0] + 3.5) + '" y="' + (tl[1] + 3.5) + '" width="' + (c - 7) + '" height="' + (c - 7) +
+               '" rx="3" fill="#a5d6a7" stroke="#7fbf82" stroke-width="1"/>';
+        }
       }
-      for (j = 0; j <= n; j++) {
-        s += '<line x1="' + x0 + '" y1="' + (y0 + j * c) + '" x2="' + (x0 + m * c) + '" y2="' + (y0 + j * c) + '" stroke="' + GREY + '" stroke-width="1"/>';
-      }
+      /* 路线（先画长的，短线盖在上层：红最短最后画最清晰） */
       var cols = [RED, BLUE, GREEN, '#d97706'];
-      var dy = [-13, -4.5, 4.5, 13];
-      paths.forEach(function (p, k) {
-        var d = p.map(function (pt, t) {
-          return (t ? 'L' : 'M') + (x0 + pt[0] * c) + ',' + (y0 + pt[1] * c + dy[k]).toFixed(1);
+      [3, 2, 1, 0].forEach(function (k) {
+        var d = paths[k].map(function (pt, t) {
+          var p = P(pt[0], pt[1]);
+          return (t ? 'L' : 'M') + p[0] + ',' + p[1];
         }).join(' ');
-        s += '<path data-u="route" d="' + d + '" fill="none" stroke="' + cols[k] + '" stroke-width="2.4" stroke-linejoin="round"/>';
+        s += '<path data-u="route" d="' + d + '" fill="none" stroke="' + cols[k] +
+             '" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>';
       });
-      /* 每条路线的首字母标在自己的凸起里（红无凸起，标在底行中段下方） */
-      var letterPos = [
-        [x0 + (m / 2) * c, y0 + n * c + 30 + dy[0]],
-        [x0 + (mid + 0.5) * c, y0 + (n - 0.5) * c + dy[1] + 5],
-        [x0 + 2.5 * c, y0 + (n - 1) * c + dy[2] + 5],
-        [x0 + (m - 2.5) * c, y0 + (n - 1.5) * c + dy[3] + 5]
+      /* 名字首字母钉在各自凸起内（红钉在底行上方第 0 行街区中央） */
+      var letterAt = [
+        P(m / 2, 0.5),
+        P(3.5, 1.5),
+        P(1.5, 2.5),
+        P(1.5, 3.5)
       ];
-      letterPos.forEach(function (lp, k) {
+      letterAt.forEach(function (lp, k) {
         var name = kids[k] || 'ABCD'[k];
-        s += '<text x="' + lp[0].toFixed(1) + '" y="' + lp[1].toFixed(1) + '" font-size="15" font-weight="bold" text-anchor="middle" fill="' + cols[k] +
+        s += '<text x="' + lp[0].toFixed(1) + '" y="' + (lp[1] + 5).toFixed(1) + '" font-size="15" font-weight="bold" text-anchor="middle" fill="' + cols[k] +
              '" stroke="#ffffff" stroke-width="4" paint-order="stroke">' + esc(name.charAt(0).toUpperCase()) + '</text>';
       });
-      /* S（左下）与 F（右上，原卷是星形） */
-      s += '<circle cx="' + x0 + '" cy="' + (y0 + n * c) + '" r="7" fill="' + BLUE + '" stroke="' + INK + '" stroke-width="1.5"/>';
-      s += '<text x="' + (x0 - 8) + '" y="' + (y0 + n * c + 26) + '" font-size="17" font-weight="bold" fill="' + INK + '">S</text>';
-      var fx = x0 + m * c, fy = y0, star = '';
+      /* S（左下，蓝点）与 F（右上，原卷星形） */
+      var sp = P(0, 0), fp = P(m, n);
+      s += '<circle cx="' + sp[0] + '" cy="' + sp[1] + '" r="7" fill="' + BLUE + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '<text x="' + (sp[0] - 10) + '" y="' + (sp[1] + 24) + '" font-size="17" font-weight="bold" fill="' + INK + '">S</text>';
+      var star = '';
       for (var si = 0; si < 10; si++) {
         var ang = -Math.PI / 2 + si * Math.PI / 5, rr = (si % 2 === 0) ? 11 : 4.8;
-        star += (fx + rr * Math.cos(ang)).toFixed(1) + ',' + (fy + rr * Math.sin(ang)).toFixed(1) + ' ';
+        star += (fp[0] + rr * Math.cos(ang)).toFixed(1) + ',' + (fp[1] + rr * Math.sin(ang)).toFixed(1) + ' ';
       }
       s += '<polygon points="' + star + '" fill="' + INK + '"/>';
-      s += '<text x="' + (fx + 14) + '" y="' + (fy + 6) + '" font-size="17" font-weight="bold" fill="' + INK + '">F</text>';
+      s += '<text x="' + (fp[0] + 14) + '" y="' + (fp[1] + 6) + '" font-size="17" font-weight="bold" fill="' + INK + '">F</text>';
       s += '</svg>';
       return s;
     }

@@ -10068,12 +10068,12 @@
       "vars": {
         "m": {
           "type": "int",
-          "min": 5,
+          "min": 7,
           "max": 8
         },
         "n": {
           "type": "int",
-          "min": 4,
+          "min": 5,
           "max": 8
         },
         "p4": {
@@ -10143,8 +10143,8 @@
         "positive": true
       },
       "solution": {
-        "en": "All four walk at the same speed, so the longest route finishes last. Counting blocks: the red route is the plain shortest path of {m} + {n} = {m+n} blocks; blue detours around one extra block ({m+n+2}), green around two ({m+n+4}), and orange around three ({m+n+6}) — the longest. The orange route belongs to {cd}.",
-        "zh": "四人速度相同，走最长路的人最后到达。数一数：红线是最短路径，共 {m} + {n} = {m+n} 格；蓝线多绕 1 个街区（{m+n+2}），绿线多绕 2 个（{m+n+4}），橙线多绕 3 个（{m+n+6}），最长。走橙线的是 {cd}。"
+        "en": "All four walk at the same speed, so the longest route finishes last. Counting blocks: the red route keeps to the bottom row and the right column ({m} + {n} = {m+n} blocks). Blue climbs one extra block and comes back down ({m+n+2}), green does that twice ({m+n+4}), and orange three times ({m+n+6}) — the longest. The orange route belongs to {cd}.",
+        "zh": "四人速度相同，走最长路的人最后到达。数一数：红线沿底行和右列直走（{m} + {n} = {m+n} 格）；蓝线多向上绕 1 个街区再折回（{m+n+2}），绿线绕了 2 个（{m+n+4}），橙线绕了 3 个（{m+n+6}），最长。走橙线的是 {cd}。"
       },
       "diagram": {
         "type": "gridroutes",
@@ -10153,8 +10153,8 @@
         "kids": "{ca},{cb},{cc},{cd}"
       },
       "original": {
-        "m": 6,
-        "n": 4,
+        "m": 7,
+        "n": 5,
         "p4": 3
       },
       "constraints": [

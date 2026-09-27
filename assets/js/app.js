@@ -963,7 +963,7 @@
   /* ---------------- 题库管理：题卡渲染（仿 papers/*.html 整卷归档页的表现方式） ----------------
      原来的做法是「左原题截图 / 右一句题干 + 最多把选项图列出来」，看不出题目到底长什么样；
      现在每道题渲染成一张完整题卡：题号徽标 + 知识点 + 来源/难度/掌握状态 + 题干 + 自绘简化图
-     + 选项网格（正确项打钩）+ 折叠解析，并保留「预览变式」按钮（可再出 3 例）。 */
+     + 选项网格（正确项打钩）+ 折叠解析，并保留「再出 3 例」按钮（可重复点，不重复出）。 */
   /* ★ 选项字母：不能写死 'ABCDEFGH'。十二生肖题（mm1t1-16）有 12 个选项，
      写死会从第 9 项起显示 undefined。这里按序号生成 A..Z，超出后 AA AB AC… */
   function optLetter(i) {
@@ -989,7 +989,7 @@
   }
 
   /* 把一道「实例化后的变式」画成归档页那样的题卡主体。q 为 null 表示生成失败。
-     外层套 .bk-v，这样「预览变式」追加多例时彼此之间有虚线分隔。 */
+     外层套 .bk-v，这样「再出 3 例」追加的多例彼此之间有虚线分隔。 */
   function variantHtml(q, label) {
     if (!q) return '<section class="bk-v"><p class="bk-flag">⚠ 这个模板暂时生成不出变式，请检查 vars 范围与 constraints 是否过紧。</p></section>';
     var h = '';
@@ -1104,6 +1104,12 @@
       rows + '</tbody></table></details>';
   }
 
+  /* 「再出 3 例」的可重复点状态：每次点都应避开已显示过的数值，别让学生连看三道一模一样的题。
+     bankShown[id] = 已经显示过的变式 sig 集合（初始那 1 例也会记进去）。
+     注意：按钮不再 disabled —— 变式是现抽的，理论上想看多少看多少；
+     撞车说明这题真抽不出新东西了（固定题或 sel 表只有几行），此时如实说明而不是假装失败。 */
+  var bankShown = {};
+
   function bankQuery() {
     var el = $('#bankSearch');
     return el ? String(el.value || '').trim().toLowerCase() : '';
@@ -1137,6 +1143,7 @@
     renderBankStats();
     if (!all.length) { $('#bankList').innerHTML = '<p class="muted">没有符合条件的题型。</p>'; return; }
     var p = Store.progress();
+    bankShown = {};   // 重绘列表时清掉「已显示变式」记录，避免下次复用旧的
     $('#bankList').innerHTML = all.map(function (t) {
       var st = p[t.id] || {};
       var qno = tplQNo(t);
@@ -1146,6 +1153,11 @@
         : '<span class="bk-no bk-nox" title="示例模板，不对应原卷题号">—</span>';
       var qq;
       try { qq = Generator.instantiate(t, null, { lang: lang }); } catch (e) { qq = null; }
+      // 初始那 1 例也算「已显示」，否则第一次点「再出 3 例」会把它又抽一遍
+      if (qq && qq.sig) {
+        if (!bankShown[t.id]) bankShown[t.id] = {};
+        bankShown[t.id][qq.sig] = 1;
+      }
       var state = st.mastered ? '<span class="pill ok">已掌握</span>'
         : (st.seen ? '<span class="pill">练过 ' + st.seen + ' 次</span>' : '<span class="pill new">未练</span>');
       return '<article class="bk-card" id="bk-' + esc(t.id) + '">' +
@@ -1160,26 +1172,46 @@
         '<details class="bk-tpl"><summary>模板信息 · 原题对照</summary><div class="bk-tplbody">' + tplInfoHtml(t) + '</div></details>' +
         '<div class="row bk-actions">' +
         (isBilingual(t) ? '<button class="btn sm" data-langtoggle="' + esc(t.id) + '">🌐 ' + (lang === 'en' ? 'EN' : '中文') + '</button>' : '') +
-        '<button class="btn sm" data-preview="' + esc(t.id) + '">预览变式（再出 3 例）</button>' +
+        '<button class="btn sm" data-preview="' + esc(t.id) + '">再出 3 例</button>' +
         (t.original ? '<button class="btn sm" data-orig="' + esc(t.id) + '">看原题数值</button>' : '') +
         (custom.indexOf(t.id) >= 0 ? '<button class="btn sm" data-del="' + esc(t.id) + '">删除</button>' : '') +
         '<span class="spacer"></span><code class="small muted">' + esc(t.id) + '</code>' +
         '</div></article>';
     }).join('');
     $$('#bankList [data-preview]').forEach(function (b) {
+      var id = b.dataset.preview;
       b.addEventListener('click', function () {
-        var tpl = Bank.byId(b.dataset.preview);
-        var box = $('.bk-var[data-var="' + b.dataset.preview + '"]');
+        var tpl = Bank.byId(id);
+        var box = $('.bk-var[data-var="' + id + '"]');
         if (!tpl || !box) return;
-        var out = '';
+        if (!bankShown[id]) bankShown[id] = {};
+        var shown = bankShown[id];
+        var before = Object.keys(shown).length;   // 本批之前已显示的题数（含初始那 1 例）
+        var n = 0, out = '';
         for (var i = 0; i < 3; i++) {
           var qq;
-          try { qq = Generator.instantiate(tpl, null, { lang: bankLangOf(tpl) }); } catch (e) { qq = null; }
-          out += variantHtml(qq, '变式 ' + (i + 2));
+          try {
+            qq = Generator.instantiate(tpl, { count: shown }, { lang: bankLangOf(tpl) });
+          } catch (e) { qq = null; }
+          if (!qq || shown[qq.sig]) continue;     // 撞车（只有固定题会）或生成失败，跳过
+          shown[qq.sig] = 1;
+          out += variantHtml(qq, '变式 ' + (before + ++n));
         }
-        box.insertAdjacentHTML('beforeend', out);
-        b.disabled = true;
-        b.textContent = '已再出 3 例';
+        if (out) {
+          box.insertAdjacentHTML('beforeend', out);
+        } else if (tpl.noVariantReason) {
+          /* 明确标了 noVariantReason ⇒ 是 vars:{} 的固定题，如实说明 */
+          box.insertAdjacentHTML('beforeend',
+            '<section class="bk-v"><p class="bk-flag">这题是固定题，没有更多变式：'
+            + esc(tpl.noVariantReason) + '</p></section>');
+        } else {
+          /* 没标 noVariantReason 却抽不出新的 ⇒ 变式空间太小（不是固定题），说清楚已全部列出 */
+          box.insertAdjacentHTML('beforeend',
+            '<section class="bk-v"><p class="bk-flag">变式已全部列出（共 '
+            + Object.keys(shown).length + ' 例）。这题能变的数值就这些，'
+            + '想练同类更多花样请换一个题型。</p></section>');
+        }
+        b.textContent = '再出 3 例 · 已显示 ' + Object.keys(shown).length + ' 例';
       });
     });
     $$('#bankList [data-langtoggle]').forEach(function (b) {
@@ -1195,10 +1227,14 @@
         var qq = null;
         try { qq = Generator.instantiate(tpl, null, { lang: next }); } catch (e) { qq = null; }
         box.innerHTML = variantHtml(qq, '变式示例');
-        /* 切换语言后，重置「预览变式」按钮，让它按新语言再出例 */
+        /* 切换语言后，重置「再出 3 例」按钮与已显示记录，让它按新语言重新来 */
         var card = box.closest('.bk-card');
         var prev = card && card.querySelector('[data-preview]');
-        if (prev) { prev.disabled = false; prev.textContent = '预览变式（再出 3 例）'; }
+        if (prev) {
+          prev.textContent = '再出 3 例';
+          if (bankShown[id]) bankShown[id] = {};
+          if (qq && qq.sig) bankShown[id][qq.sig] = 1;   // 新语言下这 1 例算已显示
+        }
         b.textContent = '🌐 ' + (next === 'en' ? 'EN' : '中文');
       });
     });

@@ -120,7 +120,7 @@ const EXPECT = {
   'mm1t1-14': '132',   // 卷 C
   'mm1t1-15': '160',   // 卷 A
   'mm1t1-16': 'snake',   // 卷 B
-  'mm1t1-17': 'When dividing a positive number by a negative number, the result is negative.',   // 卷 C
+  'mm1t1-17': 'The quotient of a positive number and a negative number is negative.',   // 卷 C（正÷负=负；参数化后正确项固定放在 options[0]）
   'mm1t1-18': '4:7',   // 卷 B
   'mm1t1-19': '-19',   // 卷 D
   'mm1t1-20': '7',   // 卷 B

@@ -1065,36 +1065,97 @@
     "en": "Which of the following is a true statement?",
     "zh": "下面哪句话是正确的？"
    },
-   "vars": {},
+   "vars": {
+    "w1": {
+     "type": "pick",
+     "from": [
+      0,
+      1
+     ]
+    },
+    "w2": {
+     "type": "pick",
+     "from": [
+      0,
+      1
+     ]
+    },
+    "wop": {
+     "type": "pick",
+     "from": [
+      0,
+      1
+     ]
+    }
+   },
+   "derived": {
+    "s1": "sel(w1, -1, 1)",
+    "s2": "sel(w2, -1, 1)",
+    "n1": "s1 * 24",
+    "n2": "s2 * 6",
+    "P": "n1 * n2",
+    "Q": "n1 / n2",
+    "zb": "sel(wop, '积', '商')",
+    "tb": "sel(wop, 'product', 'quotient')",
+    "t1": "sel(w1, 'negative', 'positive')",
+    "t2": "sel(w2, 'negative', 'positive')",
+    "zm": "sel(w1 == w2, '负', '正')",
+    "tn": "sel(w1 == w2, 'negative', 'positive')",
+    "zma": "sel(w1 != w2, '负', '正')",
+    "tna": "sel(w1 != w2, 'negative', 'positive')",
+    "zmb": "sel(w1 != w2, '负', '正')",
+    "tnb": "sel(w1 != w2, 'negative', 'positive')",
+    "zmc": "sel(w1 != w2, '负', '正')",
+    "tnc": "sel(w1 != w2, 'negative', 'positive')",
+    "t1z": "sel(w1, '负', '正')",
+    "t2z": "sel(w2, '负', '正')",
+    "zop": "sel(wop, '乘', '除')",
+    "top": "sel(wop, 'multiplying', 'dividing')",
+    "tz": "sel(wop, '积', '商')",
+    "te": "sel(wop, 'product', 'quotient')"
+   },
+   "constraints": [
+    "w1 != w2"
+   ],
    "answer": {
     "type": "choice",
-    "correctIndex": 2,
+    "correctIndex": 0,
     "options": [
      {
-      "en": "The product of two negative numbers is negative.",
-      "zh": "两个负数相乘，积是负数。"
+      "en": "The {tb} of a {t1} number and a {t2} number is {tn}.",
+      "zh": "一个{t1z}数和一个{t2z}数的{zb}是{zm}。"
      },
      {
-      "en": "The product of one negative and one positive number is positive.",
-      "zh": "一个负数乘一个正数，积是正数。"
+      "en": "A {t1} number {top} a {t2} number gives a {tna} result.",
+      "zh": "一个{t1z}数{zop}一个{t2z}数，结果为{zma}。"
      },
      {
-      "en": "When dividing a positive number by a negative number, the result is negative.",
-      "zh": "正数除以负数，商是负数。"
+      "en": "The {te} of a {t1} number and a {t2} number is {tnb}.",
+      "zh": "一个{t1z}数和一个{t2z}数的{tz}是{zmb}。"
      },
      {
-      "en": "When dividing a negative number by a positive number, the result is positive.",
-      "zh": "负数除以正数，商是正数。"
+      "en": "A {t1} number times or divided by a {t2} number always gives a {tnc} result.",
+      "zh": "一个{t1z}数无论{zop}一个{t2z}数，结果总是{zmc}。"
      }
     ]
    },
+   "sanity": {
+    "integer": true
+   },
    "solution": {
-    "en": "Check each one: (A) negative × negative is POSITIVE, so false. (B) negative × positive is NEGATIVE, so false. (C) positive ÷ negative is negative — TRUE. (D) negative ÷ positive is negative, not positive, so false.",
-    "zh": "逐条验证：(A) 负×负 = 正，错。(B) 负×正 = 负，错。(C) 正÷负 = 负，正确。(D) 负÷正 = 负（不是正），错。"
+    "en": "Work out the sign rule first: a {t1} number and a {t2} number have DIFFERENT signs, and multiplying or dividing numbers of different signs always gives a NEGATIVE result. Confirm it with real numbers: ({n1}) × ({n2}) = {P} and ({n1}) ÷ ({n2}) = {Q}. So the answer must state {tn}, which only (A) does. (B), (C) and (D) all claim the result is {tna}, but a {t1} number with a {t2} number can never give that sign.",
+    "zh": "先抓符号规律：{t1z}数与{t2z}数**异号**，异号两数相乘或相除，结果一定是负数。用实际数字确认：({n1}) × ({n2}) = {P}，({n1}) ÷ ({n2}) = {Q}。所以正确说法必须写{zm}，只有 (A) 是这样。(B)(C)(D) 都说结果是{zma}，而{t1z}数与{t2z}数运算绝对得不到这个符号。"
+   },
+   "hint": {
+    "en": "Check the sign rule first: like signs give a positive result, unlike signs give a negative result.",
+    "zh": "先看符号规律：同号得正，异号得负。"
    },
    "noFigure": "原题为纯文字概念判断题，无图",
-   "noVariantReason": "概念辨析选择题，选项与答案不随数值变化；原卷即如此",
-   "original": {},
+   "original": {
+    "w1": 1,
+    "w2": 0,
+    "wop": 1
+   },
    "originalAnswer": "C"
   },
   {
@@ -1111,35 +1172,42 @@
    "source": "Mastering Mathematics Book 1 Test 1 Q18",
    "sourceSet": "Mastering Mathematics Book 1 Test 1",
    "stem": {
-    "en": "A men's basketball team won {w} games and lost {l} games. What is the ratio of games lost to the number of games played, in simplest form?",
-    "zh": "一支男子篮球队赢了 {w} 场、输了 {l} 场。负场数与总场数的最简整数比是多少？"
+    "en": "A men's basketball team won {w0} games and lost {l0} games. What is the ratio of games lost to the number of games played, in simplest form?",
+    "zh": "一支男子篮球队赢了 {w0} 场、输了 {l0} 场。负场数与总场数的最简整数比是多少？"
    },
    "vars": {
-    "i": {
-     "type": "pick",
-     "from": [
-      0,
-      1,
-      2,
-      3
-     ]
+    "a": {
+     "type": "int",
+     "min": 1,
+     "max": 9
+    },
+    "b": {
+     "type": "int",
+     "min": 1,
+     "max": 9
+    },
+    "k": {
+     "type": "int",
+     "min": 2,
+     "max": 12
     }
    },
    "derived": {
-    "w": "sel(i, 30, 40, 20, 40)",
-    "l": "sel(i, 40, 60, 80, 50)",
-    "tot": "sel(i, 70, 100, 100, 90)",
-    "cs": "sel(i, 4, 3, 4, 5)",
-    "ct": "sel(i, 7, 5, 5, 9)",
-    "wA": "sel(i, 3, 2, 1, 4)",
-    "wB": "sel(i, 3, 2, 1, 4)",
-    "wC": "sel(i, 7, 5, 5, 9)",
-    "kL": "sel(i, 10, 20, 20, 10)"
+    "w0": "a * k",
+    "l0": "b * k",
+    "tot": "w0 + l0",
+    "d": "gcd(l0, tot)",
+    "cs": "l0 / d",
+    "ct": "tot / d",
+    "p1": "1",
+    "cs2": "cs + p1",
+    "cs3": "cs + 2",
+    "ct2": "ct + p1"
    },
    "constraints": [
-    "w + l == tot",
-    "cs * kL == l",
-    "ct * kL == tot"
+    "a != b",
+    "gcd(a, b) == 1",
+    "cs3 != ct"
    ],
    "answer": {
     "type": "choice",
@@ -1150,16 +1218,16 @@
       "zh": "{cs}:{ct}"
      },
      {
-      "en": "{wB}:{ct}",
-      "zh": "{wB}:{ct}"
-     },
-     {
-      "en": "{wA}:{cs}",
-      "zh": "{wA}:{cs}"
-     },
-     {
       "en": "{ct}:{cs}",
       "zh": "{ct}:{cs}"
+     },
+     {
+      "en": "{cs2}:{ct}",
+      "zh": "{cs2}:{ct}"
+     },
+     {
+      "en": "{cs3}:{ct}",
+      "zh": "{cs3}:{ct}"
      }
     ]
    },
@@ -1168,12 +1236,14 @@
     "positive": true
    },
    "solution": {
-    "en": "Number of games played = {w} + {l} = {tot}. Ratio lost : played = {l} : {tot}, and dividing both numbers by their highest common factor {kL} gives {cs}:{ct}.",
-    "zh": "总场数 = {w} + {l} = {tot}（场）。负场 : 总场数 = {l} : {tot}，两边同除以最大公因数 {kL}，化简得 {cs}:{ct}。"
+    "en": "Number of games played = {w0} + {l0} = {tot}. Ratio lost : played = {l0} : {tot}. The highest common factor of {l0} and {tot} is {d}, so divide both parts by {d}: {l0} ÷ {d} = {cs} and {tot} ÷ {d} = {ct}, giving {cs}:{ct}.",
+    "zh": "总场数 = {w0} + {l0} = {tot}（场）。负场 : 总场数 = {l0} : {tot}。{l0} 与 {tot} 的最大公因数是 {d}，两边同除以 {d}：{l0} ÷ {d} = {cs}，{tot} ÷ {d} = {ct}，化简得 {cs}:{ct}。"
    },
    "noFigure": "原题为纯文字比的应用题，无图",
    "original": {
-    "i": 0
+    "a": 3,
+    "b": 4,
+    "k": 10
    },
    "originalAnswer": "B"
   },

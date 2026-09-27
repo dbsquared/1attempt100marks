@@ -949,11 +949,15 @@
      方便对照「请你复验 Q9 / Q13 / Q20…」这类指名。
        · SEAMO 一批：seamo25a-q07 → 7
        · ICAS 两批：icas21y2m-09 → 9；icas22y2m-13a / 13b 是同一题的两个变体 → 都取 13
-     示例模板（m6-frac-add 之类）没有原卷题号，返回 null（列表里不显示徽标）。 */
+       · MMB1 三套：mm1t1-07 / mm1t2-40 / mm1t3-01 → 7 / 40 / 1（无 q 前缀，需单独匹配）
+     示例模板（m6-frac-add 之类）没有原卷题号，返回 null（列表里不显示徽标）。
+     ★ 新增卷次时必须同步扩这里的正则，否则整批题卡都没有 Q 号徽标。 */
   function tplQNo(t) {
     if (!t || !t.id) return null;
     var id = String(t.id);
-    var m = id.match(/-q(\d+)/i) || id.match(/^icas\d{2}y2m-(\d+)/);
+    var m = id.match(/-q(\d+)/i)          // seamo25a-q07 / xxx-q12
+      || id.match(/^icas\d{2}y2m-(\d+)/)  // icas21y2m-09 / icas22y2m-13a
+      || id.match(/^mm\d+t\d+-(\d+)/i);   // mm1t1-07 / mm1t2-40 / mm1t3-01
     return m ? parseInt(m[1], 10) : null;
   }
   /* ---------------- 题库管理：题卡渲染（仿 papers/*.html 整卷归档页的表现方式） ----------------

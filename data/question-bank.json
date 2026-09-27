@@ -7851,8 +7851,8 @@
       "source": "Mastering Mathematics Book 1 Test 1 Q1",
       "sourceSet": "Mastering Mathematics Book 1 Test 1",
       "stem": {
-        "en": "If {k} millimetres equal 1 centimetre, how many square centimetres does 1 square millimetre equal?",
-        "zh": "如果 {k} 毫米 = 1 厘米，那么 1 平方毫米等于多少平方厘米？"
+        "en": "If {k} millimetres equal {a} {uA}, how many square centimetres does {b} square {uB} equal?",
+        "zh": "如果 {k} 毫米 = {a} 厘米，那么 {b} 平方毫米等于多少平方厘米？"
       },
       "vars": {
         "k": {
@@ -7861,34 +7861,65 @@
             10,
             100
           ]
+        },
+        "a": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            5
+          ]
+        },
+        "b": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            4,
+            10,
+            25,
+            50,
+            100
+          ]
         }
       },
       "derived": {
-        "dec": "1/(k*k)",
-        "digits": "sel(k, 4, 2)"
+        "kk": "k*k",
+        "aa": "a*a",
+        "sq": "aa/kk",
+        "ans": "b*sq",
+        "plA": "a==1",
+        "plB": "b==1",
+        "uA": "sel(plA, 'centimetres', 'centimetre')",
+        "uB": "sel(plB, 'millimetres', 'millimetre')"
       },
       "answer": {
         "type": "number",
-        "expr": "dec",
+        "expr": "ans",
         "digits": 4
       },
       "sanity": {
         "positive": true,
-        "min": 0.00001
+        "min": 0.01
       },
       "solution": {
-        "en": "1 cm = {k} mm, so 1 cm² = {k*k} mm². Then 1 mm² = 1 ÷ {k*k} = {dec} cm².",
-        "zh": "1 厘米 = {k} 毫米，所以 1 平方厘米 = {k*k} 平方毫米；反过来 1 平方毫米 = 1 ÷ {k*k} = {dec} 平方厘米。"
+        "en": "{k} mm = {a} cm, so 1 mm = {a}/{k} cm and 1 mm^2 = ({a}/{k})^2 = {sq} cm^2. Then {b} mm^2 = {b} × {sq} = {ans} cm^2.",
+        "zh": "{k} 毫米 = {a} 厘米，所以 1 毫米 = {a}/{k} 厘米，1 平方毫米 = ({a}/{k})^2 = {sq} 平方厘米。因此 {b} 平方毫米 = {b} × {sq} = {ans} 平方厘米。"
       },
       "hint": {
-        "en": "Area units scale by the square of the length unit.",
-        "zh": "面积单位的进率是长度进率的平方。"
+        "en": "First work out how many centimetres 1 millimetre equals, then square that number, then multiply by the number of square millimetres.",
+        "zh": "先算出 1 毫米等于多少厘米，再把这个进率平方（面积是长度的平方），最后乘平方毫米的个数。"
       },
       "noFigure": "原题为纯文字换算题，无图",
       "original": {
-        "k": 10
+        "k": 10,
+        "a": 1,
+        "b": 1
       },
-      "originalAnswer": "A"
+      "originalAnswer": "A",
+      "constraints": [
+        "ans >= 0.01"
+      ]
     },
     {
       "id": "mm1t1-02",

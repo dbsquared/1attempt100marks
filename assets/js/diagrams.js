@@ -412,6 +412,9 @@
     if (typeof v === 'number') return fmt(v);
     var s = String(v);
     if (vars && Object.prototype.hasOwnProperty.call(vars, s)) return fmt(vars[s]);
+    /* 也接受 {a} 占位写法（与 stem 里的占位符一致），按 vars['a'] 取值 */
+    var m = s.match(/^\s*\{([A-Za-z_][A-Za-z0-9_]*)\}\s*$/);
+    if (m && vars && Object.prototype.hasOwnProperty.call(vars, m[1])) return fmt(vars[m[1]]);
     if (/^\s*-?[\d.]+\s*$/.test(s)) return fmt(parseFloat(s));
     return s;
   }
@@ -2465,26 +2468,49 @@
        图上每条线段都写 data-h/data-v 与 data-row/data-col，自检脚本据此独立重算正方形总数：
        一个 k x k 正方形存在 ⇔ 它的 4k 条单位线段全部存在。 */
     squarecount: function (spec, vars) {
-      var n = Math.max(2, Math.min(6, Math.round(num(spec.n, vars) || 4)));
-      var u = 56, pad = 18;
-      var W = pad * 2 + n * u, H = pad * 2 + n * u;
+      /* 支持矩形网格：cols 列 × rows 行（缺省为正方形 n×n）。
+         missH/missV 用「端点坐标索引」：水平线 r 取 0..rows、c 取 0..cols-1；
+         竖直线 c 取 0..cols、r 取 0..rows-1。 */
+      var cols = Math.max(2, Math.min(6, Math.round(num(spec.cols, vars) || num(spec.n, vars) || 4)));
+      var rows = Math.max(2, Math.min(6, Math.round(num(spec.rows, vars) || num(spec.n, vars) || 4)));
+      var u = spec.u ? num(spec.u, vars) : 56, pad = 18;
+      var W = pad * 2 + cols * u, H = pad * 2 + rows * u;
+      /* 缺线支持两种写法：
+         (a) 直接给数组：missH: [[r,c],…]（静态图用）
+         (b) 给「槽位」标量，便于随变量变化：
+             kH 条缺水平线，用 (mH1,mHc1) (mH2,mHc2) … 描述；行索引 -1 表示该槽位不用
+             kV 条缺竖线，用 (mV1,mVc1) (mV2,mVc2) … 描述；行索引 -1 表示该槽位不用 */
       var missH = spec.missH || [], missV = spec.missV || [];
+      if (!Array.isArray(missH)) missH = [];
+      if (!Array.isArray(missV)) missV = [];
+      var kH = Math.round(num(spec.kH, vars)), kV = Math.round(num(spec.kV, vars));
+      var si;
+      for (si = 1; si <= kH; si++) {
+        var hr = Math.round(num(spec['mH' + si], vars));
+        var hc = Math.round(num(spec['mHc' + si], vars));
+        if (hr >= 0 && hr <= rows && hc >= 0 && hc < cols) missH = missH.concat([[hr, hc]]);
+      }
+      for (si = 1; si <= kV; si++) {
+        var vr2 = Math.round(num(spec['mV' + si], vars));
+        var vc2 = Math.round(num(spec['mVc' + si], vars));
+        if (vr2 >= 0 && vr2 < rows && vc2 >= 0 && vc2 <= cols) missV = missV.concat([[vr2, vc2]]);
+      }
       function hMissing(r, c) { return missH.some(function (m) { return m[0] === r && m[1] === c; }); }
       function vMissing(r, c) { return missV.some(function (m) { return m[0] === r && m[1] === c; }); }
       var s = svgOpen(W, H, 'grid figure for counting squares');
-      s += '<g data-u="sqgrid" data-n="' + n + '">';
+      s += '<g data-u="sqgrid" data-n="' + Math.max(cols, rows) + '" data-cols="' + cols + '" data-rows="' + rows + '">';
       var r, c;
-      /* 水平线段：第 r 条线（0..n），第 c 段（0..n-1） */
-      for (r = 0; r <= n; r++) {
-        for (c = 0; c < n; c++) {
+      /* 水平线段：第 r 条线（0..rows），第 c 段（0..cols-1） */
+      for (r = 0; r <= rows; r++) {
+        for (c = 0; c < cols; c++) {
           if (hMissing(r, c)) continue;
           s += '<line data-h="1" data-row="' + r + '" data-col="' + c + '" x1="' + (pad + c * u) + '" y1="' + (pad + r * u) +
                '" x2="' + (pad + (c + 1) * u) + '" y2="' + (pad + r * u) + '" stroke="' + INK + '" stroke-width="2"/>';
         }
       }
-      /* 竖直线段：第 c 条线（0..n），第 r 段（0..n-1） */
-      for (c = 0; c <= n; c++) {
-        for (r = 0; r < n; r++) {
+      /* 竖直线段：第 c 条线（0..cols），第 r 段（0..rows-1） */
+      for (c = 0; c <= cols; c++) {
+        for (r = 0; r < rows; r++) {
           if (vMissing(r, c)) continue;
           s += '<line data-v="1" data-row="' + r + '" data-col="' + c + '" x1="' + (pad + c * u) + '" y1="' + (pad + r * u) +
                '" x2="' + (pad + c * u) + '" y2="' + (pad + (r + 1) * u) + '" stroke="' + INK + '" stroke-width="2"/>';

@@ -15052,19 +15052,19 @@
         "rows": [
           [
             "0",
-            "{a}"
+            "a"
           ],
           [
-            "{t1}",
-            "{b}"
+            "t1",
+            "b"
           ],
           [
-            "{t2}",
-            "{c}"
+            "t2",
+            "c"
           ],
           [
-            "{t3}",
-            "{d}"
+            "t3",
+            "d"
           ]
         ],
         "panels": [
@@ -15999,7 +15999,6 @@
       "grade": "六年级",
       "sourceSet": "Mastering Mathematics Book 1 Test 3",
       "source": "Mastering Mathematics Book 1 Test 3 Q40",
-      "figureTodo": "原卷「数图中有几个正方形」的图是带缺口的非标准网格（官方解为 10 个 1x1 + 2 个 2x2 + 2 个 3x3 = 14）。穷举验证：3x3/4x4/5x5 的轴对齐单位网格无论擦掉哪几条内部线段，都无法得到 10/2/2 这个拆分（擦线只会让大正方形成对减少），说明原图不是简单单位网格，无法在不臆造图形的前提下参数化。待拿到清晰原图后照原样重绘再入库。",
       "topic": "数正方形",
       "difficulty": 4,
       "title": "数出图中所有尺寸的正方形个数",
@@ -16007,26 +16006,72 @@
         "计数",
         "图形"
       ],
-      "vars": {},
+      "vars": {
+        "i": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "derived": {
+        "sq1": "sel(i, 10, 9, 8, 8)",
+        "sq2": "sel(i, 2, 0, 4, 4)",
+        "sq3": "sel(i, 2, 1, 0, 1)",
+        "tot": "sel(i, 14, 10, 12, 13)",
+        "wA": "sel(i, 12, 12, 10, 10)",
+        "wB": "sel(i, 16, 14, 14, 14)",
+        "wC": "sel(i, 13, 13, 13, 12)",
+        "kH": "sel(i, 1, 2, 2, 2)",
+        "mH1": "sel(i, 2, 1, 1, 1)",
+        "mHc1": "sel(i, 1, 1, 1, 0)",
+        "mH2": "sel(i, 0, 2, 3, 1)",
+        "mHc2": "sel(i, 0, 1, 1, 1)",
+        "kV": "0"
+      },
+      "constraints": [
+        "wA != tot",
+        "wB != tot",
+        "wC != tot",
+        "wA != wB",
+        "wA != wC",
+        "wB != wC",
+        "sq1 != sq2",
+        "tot > sq1"
+      ],
+      "diagram": {
+        "type": "squarecount",
+        "cols": "3",
+        "rows": "4",
+        "kH": "kH",
+        "mH1": "mH1",
+        "mHc1": "mHc1",
+        "mH2": "mH2",
+        "mHc2": "mHc2",
+        "kV": "kV"
+      },
       "answer": {
         "type": "choice",
         "correctIndex": 1,
         "options": [
           {
-            "en": "10",
-            "zh": "10"
+            "en": "{wA}",
+            "zh": "{wA}"
           },
           {
-            "en": "14",
-            "zh": "14"
+            "en": "{tot}",
+            "zh": "{tot}"
           },
           {
-            "en": "12",
-            "zh": "12"
+            "en": "{wC}",
+            "zh": "{wC}"
           },
           {
-            "en": "16",
-            "zh": "16"
+            "en": "{wB}",
+            "zh": "{wB}"
           }
         ]
       },
@@ -16035,10 +16080,12 @@
         "zh": "下面的图形中一共有多少个正方形（各种大小都算）？"
       },
       "solution": {
-        "en": "Count by size: the figure contains 10 squares of the smallest size, 2 squares of the next size up and 2 larger squares, giving 10 + 2 + 2 = 14 squares altogether.",
-        "zh": "按大小分类数：图中有 10 个最小的正方形、2 个次大的正方形和 2 个更大的正方形，共 10 + 2 + 2 = 14 个。"
+        "en": "Count by size. Smallest squares: {sq1}. Next size up: {sq2}. Largest size present: {sq3}. Total = {sq1} + {sq2} + {sq3} = {tot}.",
+        "zh": "按大小分类数：最小的正方形有 {sq1} 个，次大的有 {sq2} 个，更大的有 {sq3} 个，所以一共 {sq1} + {sq2} + {sq3} = {tot} 个。"
       },
-      "noVariantReason": "图形固定、答案由图唯一决定，无法参数化（见 figureTodo）",
+      "original": {
+        "i": 0
+      },
       "originalAnswer": "B"
     }
   ]

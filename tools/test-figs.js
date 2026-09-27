@@ -1916,28 +1916,42 @@ function triGeoCount(lines) {
      与图元自己标注的线段集合必须一致 —— 顺便验证「缺线」确实被擦掉了 */
   function countFromSvg(svg) {
     const n = parseInt((svg.match(/data-n="(\d+)"/) || [])[1], 10);
-    const h = {}, v = {};   // "r,c" -> 1
+    const cols = parseInt((svg.match(/data-cols="(\d+)"/) || [])[1], 10) || n;
+    const rows = parseInt((svg.match(/data-rows="(\d+)"/) || [])[1], 10) || n;
+    /* 逐条 <line> 解析（不能对整个串用 x1="(\d+)"，贪婪会跨标签误配） */
+    const hl = [], vl = [];
     (svg.match(/<line[^>]*data-h="1"[^>]*>/g) || []).forEach((t) => {
-      h[t.match(/data-row="(\d+)"/)[1] + ',' + t.match(/data-col="(\d+)"/)[1]] = 1;
+      hl.push({ x1: +t.match(/x1="([\d.-]+)"/)[1], y1: +t.match(/y1="([\d.-]+)"/)[1], x2: +t.match(/x2="([\d.-]+)"/)[1] });
     });
     (svg.match(/<line[^>]*data-v="1"[^>]*>/g) || []).forEach((t) => {
-      v[t.match(/data-row="(\d+)"/)[1] + ',' + t.match(/data-col="(\d+)"/)[1]] = 1;
+      vl.push({ y1: +t.match(/y1="([\d.-]+)"/)[1], y2: +t.match(/y2="([\d.-]+)"/)[1], x1: +t.match(/x1="([\d.-]+)"/)[1] });
     });
+    const xs = [], ys = [];
+    const push = (arr, q) => { if (arr.indexOf(q) < 0) arr.push(q); };
+    hl.forEach((l) => { push(xs, l.x1); push(xs, l.x2); push(ys, l.y1); });
+    vl.forEach((l) => { push(ys, l.y1); push(ys, l.y2); push(xs, l.x1); });
+    xs.sort((a, b) => a - b); ys.sort((a, b) => a - b);
+    const nmax = Math.min(xs.length - 1, ys.length - 1);
+    /* 端点 -> 存在标记 */
+    const h = {}, v = {};
+    hl.forEach((l) => { h[l.y1 + ',' + Math.min(l.x1, l.x2)] = 1; });
+    vl.forEach((l) => { v[Math.min(l.y1, l.y2) + ',' + l.x1] = 1; });
     const res = {};
-    for (let k = 1; k <= n; k++) {
+    for (let k = 1; k <= nmax; k++) {
       let c = 0;
-      for (let r = 0; r + k <= n; r++) {
-        for (let cc = 0; cc + k <= n; cc++) {
+      for (let r = 0; r + k < ys.length; r++) {
+        for (let cc = 0; cc + k < xs.length; cc++) {
           let ok = true;
           for (let i = 0; i < k; i++) {
-            if (!h[r + ',' + (cc + i)] || !h[(r + k) + ',' + (cc + i)]) ok = false;
-            if (!v[(r + i) + ',' + cc] || !v[(r + i) + ',' + (cc + k)]) ok = false;
+            if (!h[ys[r] + ',' + xs[cc + i]] || !h[ys[r + k] + ',' + xs[cc + i]]) ok = false;
+            if (!v[ys[r + i] + ',' + xs[cc]] || !v[ys[r + i] + ',' + xs[cc + k]]) ok = false;
           }
           if (ok) c++;
         }
       }
       res[k] = c;
     }
+    res.__cols = cols; res.__rows = rows;
     return res;
   }
   {
@@ -1946,16 +1960,35 @@ function triGeoCount(lines) {
     const rf = countFromSvg(full);
     chk(rf[1] === 16 && rf[2] === 9 && rf[3] === 4 && rf[4] === 1,
       'squarecount 完整 4×4 计数错误：' + JSON.stringify(rf));
-    /* 擦掉中间竖线中段 2 条 + 中间横线中段 2 条：抄掉单位线段数应恰好减少 4 条 */
+    /* 擦掉「中间横线中段 2 段 + 中间竖线中段 2 段」：单位线段总数恰好减少 4 条 */
     const lines = (svg) => (svg.match(/data-[hv]="1"/g) || []).length;
     const cut = ctx.Diagrams.render({ type: 'squarecount', n: 4, missH: [[2, 1], [2, 2]], missV: [[1, 2], [2, 2]] }, {});
     chk(lines(full) - lines(cut) === 4,
       'squarecount 擦线数 ' + (lines(full) - lines(cut)) + ' ≠ 4');
     const rc = countFromSvg(cut);
-    chk(rc[1] < rf[1] && rc[4] === 0, 'squarecount 擦线后 1x1 未减少或 4x4 仍存在：' + JSON.stringify(rc));
+    /* 独立穷举核对（逐条线段判存，见下方理由）：
+       1x1=12（第 1、2 行第 1-3 列那 6 个被中间横线截断；另 2 个被中间竖线截断）
+       2x2=1（只剩 (1,1)）；3x3=4；4x4=1 —— 注意擦「中段」不必然消除大正方形 */
+    chk(rc[1] === 12 && rc[2] === 1 && rc[3] === 4 && rc[4] === 1,
+      'squarecount 擦线后计数 ' + JSON.stringify(rc) + ' ≠ 穷举 {1:12,2:1,3:4,4:1}');
     /* 3×3 完整：1x1=9, 2x2=4, 3x3=1 */
     const r3 = countFromSvg(ctx.Diagrams.render({ type: 'squarecount', n: 3 }, {}));
     chk(r3[1] === 9 && r3[2] === 4 && r3[3] === 1, 'squarecount 完整 3×3 计数错误：' + JSON.stringify(r3));
+    /* n 变化必须真的改变线段数（防写死） */
+    const l3 = (ctx.Diagrams.render({ type: 'squarecount', n: 3 }, {}).match(/data-[hv]="1"/g) || []).length;
+    chk(l3 === 24 && lines(full) === 40, 'squarecount n=3/n=4 线段数 ' + l3 + '/' + lines(full) + ' ≠ 24/40');
+
+    /* === TEST4 Q40 原图：3 列 × 4 行，仅缺 1 条水平单位线段（row=2, col=1）===
+       官方答案 14 = 10 个 1x1 + 2 个 2x2 + 2 个 3x3，必须由图独立重算得出 */
+    const q40 = ctx.Diagrams.render({ type: 'squarecount', cols: 3, rows: 4, missH: [[2, 1]] }, {});
+    const rq = countFromSvg(q40);
+    chk(rq[1] === 10 && rq[2] === 2 && rq[3] === 2,
+      'squarecount Q40(3x4 缺1条) 计数 ' + JSON.stringify(rq) + ' ≠ 原卷 {1:10,2:2,3:2}');
+    chk(rq[1] + rq[2] + rq[3] === 14, 'squarecount Q40 总数 ' + (rq[1] + rq[2] + rq[3]) + ' ≠ 14');
+    /* 完整 3×4（不擦线）应为 1x1=12, 2x2=6, 3x3=2，用于确认「擦 1 条」真起作用 */
+    const rq0 = countFromSvg(ctx.Diagrams.render({ type: 'squarecount', cols: 3, rows: 4 }, {}));
+    chk(rq0[1] === 12 && rq0[2] === 6 && rq0[3] === 2,
+      'squarecount Q40 完整 3×4 计数 ' + JSON.stringify(rq0) + ' ≠ {1:12,2:6,3:2}');
   }
 }
 

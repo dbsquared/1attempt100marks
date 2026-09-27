@@ -1,2624 +1,2660 @@
 {
-  "v": 1,
-  "batch": "Mastering Mathematics Selective & Scholarship Book 1 · TEST 1（40 题·中英双语）",
-  "templates": [
-    {
-      "id": "mm1t1-01",
-      "subject": "数学",
-      "topic": "单位换算",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "平方单位换算（毫米↔厘米）",
-      "tags": [
-        "单位换算",
-        "面积单位"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q1",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "If {k} millimetres equal 1 centimetre, how many square centimetres does 1 square millimetre equal?",
-        "zh": "如果 {k} 毫米 = 1 厘米，那么 1 平方毫米等于多少平方厘米？"
-      },
-      "vars": {
-        "k": {
-          "type": "pick",
-          "from": [
-            10,
-            100
-          ]
-        }
-      },
-      "derived": {
-        "dec": "1/(k*k)",
-        "digits": "sel(k, 4, 2)"
-      },
-      "answer": {
-        "type": "number",
-        "expr": "dec",
-        "digits": 4
-      },
-      "sanity": {
-        "positive": true,
-        "min": 0.00001
-      },
-      "solution": {
-        "en": "1 cm = {k} mm, so 1 cm² = {k*k} mm². Then 1 mm² = 1 ÷ {k*k} = {dec} cm².",
-        "zh": "1 厘米 = {k} 毫米，所以 1 平方厘米 = {k*k} 平方毫米；反过来 1 平方毫米 = 1 ÷ {k*k} = {dec} 平方厘米。"
-      },
-      "hint": {
-        "en": "Area units scale by the square of the length unit.",
-        "zh": "面积单位的进率是长度进率的平方。"
-      },
-      "noFigure": "原题为纯文字换算题，无图",
-      "original": {
-        "k": 10
-      },
-      "originalAnswer": "A"
-    },
-    {
-      "id": "mm1t1-02",
-      "subject": "数学",
-      "topic": "和差问题",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "三人分钱后相等，求原有钱数",
-      "tags": [
-        "方程",
-        "和差"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q2",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "If John gives Allen {a} dollars and Allen gives Frank {b} dollars, the three boys will have the same amount of money. How much more money does John have than Allen?",
-        "zh": "如果 John 给 Allen {a} 元、Allen 给 Frank {b} 元之后，三个人的钱就一样多了。John 比 Allen 多多少元？"
-      },
-      "vars": {
-        "a": {
-          "type": "int",
-          "min": 3,
-          "max": 12
-        },
-        "b": {
-          "type": "int",
-          "min": 2,
-          "max": 8
-        }
-      },
-      "derived": {
-        "diff": "2*a - b"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "diff"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Whatever Frank had, in the end he has his original amount + {b}. Allen ends with his original + {a} − {b}, and John ends with {a} less. Working through it, John − Allen = 2×{a} − {b} = {diff}.",
-        "zh": "不管 Frank 原来有多少，最后他比原来多 {b} 元。Allen 最后比原来多 {a} − {b} 元，John 最后比原来少 {a} 元。相减得 John − Allen = 2×{a} − {b} = {diff}。"
-      },
-      "noFigure": "原题为纯文字应用题，无图",
-      "original": {
-        "a": 5,
-        "b": 2
-      },
-      "originalAnswer": "D",
-      "constraints": [
-        "2*a - b > 0"
-      ],
-      "unit": "元",
-      "noVariantReason": ""
-    },
-    {
-      "id": "mm1t1-03",
-      "subject": "数学",
-      "topic": "位值",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "由各位上的数写出小数",
-      "tags": [
-        "位值",
-        "小数"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q3",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "What is the numeral value of {T} tens, {O} ones, {t} tenths, {h} hundredths and {th} thousandths?",
-        "zh": "{T} 个十、{O} 个一、{t} 个十分之一、{h} 个百分之一、{th} 个千分之一组成的数是多少？"
-      },
-      "vars": {
-        "T": {
-          "type": "int",
-          "min": 1,
-          "max": 9
-        },
-        "O": {
-          "type": "int",
-          "min": 0,
-          "max": 9
-        },
-        "t": {
-          "type": "int",
-          "min": 1,
-          "max": 9
-        },
-        "h": {
-          "type": "int",
-          "min": 0,
-          "max": 9
-        },
-        "th": {
-          "type": "int",
-          "min": 1,
-          "max": 9
-        }
-      },
-      "derived": {
-        "val": "T*10 + O + t/10 + h/100 + th/1000"
-      },
-      "answer": {
-        "type": "number",
-        "expr": "val",
-        "digits": 3
-      },
-      "sanity": {
-        "positive": true
-      },
-      "solution": {
-        "en": "Work out the whole-number part first: {T} tens = {T*10}, plus {O} ones → {T*10+O}. The fraction part reads off the digits in order: {t} tenths, {h} hundredths, {th} thousandths, giving .{t}{h}{th}. So the number is {val}.",
-        "zh": "先算整数部分：{T} 个十 = {T*10}，再加 {O} 个一得 {T*10+O}。小数部分按顺序读：{t} 个十分之一、{h} 个百分之一、{th} 个千分之一，即 .{t}{h}{th}。所以这个数是 {val}。"
-      },
-      "noFigure": "原题为纯文字位值题，无图",
-      "original": {
-        "T": 5,
-        "O": 7,
-        "t": 3,
-        "h": 6,
-        "th": 5
-      },
-      "originalAnswer": "D"
-    },
-    {
-      "id": "mm1t1-04",
-      "subject": "数学",
-      "topic": "量的估测",
-      "grade": "六年级",
-      "difficulty": 1,
-      "title": "选择合适的容积单位",
-      "tags": [
-        "单位",
-        "估测"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q4",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Of the following units, which would be more likely used to measure the amount of water in a bathtub?",
-        "zh": "下面哪个单位最适合用来量一个浴缸里的水量？"
-      },
-      "vars": {},
-      "answer": {
-        "type": "choice",
-        "options": [
-          {
-            "en": "millilitres",
-            "zh": "毫升"
-          },
-          {
-            "en": "litres",
-            "zh": "升"
-          },
-          {
-            "en": "centilitres",
-            "zh": "厘升"
-          },
-          {
-            "en": "kilolitres",
-            "zh": "千升"
-          }
-        ],
-        "correctIndex": 1
-      },
-      "solution": {
-        "en": "A bathtub holds roughly 100–200 litres. Millilitres are far too small and kilolitres far too large, so litres is the sensible unit.",
-        "zh": "浴缸大约能装 100~200 升水。毫升太小、千升太大，所以用「升」最合适。"
-      },
-      "noFigure": "原题为纯文字单位选择题，无图",
-      "noVariantReason": "常识型单位选择题，选项与答案不随数值变化；原卷即如此",
-      "original": {},
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-05",
-      "subject": "数学",
-      "topic": "连续整数求和",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "连续偶数之和（已知平均数）",
-      "tags": [
-        "数列",
-        "平均数"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q5",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "What is the sum of the {n} consecutive even numbers whose average is {avg}?",
-        "zh": "{n} 个连续偶数的平均数是 {avg}，它们的和是多少？"
-      },
-      "vars": {
-        "n": {
-          "type": "pick",
-          "from": [
-            3,
-            5
-          ]
-        },
-        "avg": {
-          "type": "int",
-          "min": 3,
-          "max": 30
-        }
-      },
-      "derived": {
-        "sum": "n*avg"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "sum"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Sum = number of terms × average = {n} × {avg} = {sum}. (The fact they are even and consecutive only guarantees the average is the middle term.)",
-        "zh": "总和 = 项数 × 平均数 = {n} × {avg} = {sum}。（是「连续偶数」只是保证平均数正好是中间那个数。）"
-      },
-      "noFigure": "原题为纯文字数列题，无图",
-      "original": {
-        "n": 5,
-        "avg": 12
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-06",
-      "subject": "数学",
-      "topic": "百分数与分数",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "把百分数化成最简分数",
-      "tags": [
-        "百分数",
-        "分数"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q6",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Which of the following fractions is the equivalent of {p}%?",
-        "zh": "下面哪个分数等于 {p}%？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
-        }
-      },
-      "derived": {
-        "p": "sel(i, 0.5, 2.5, 5, 12.5, 25, 50)",
-        "k": "sel(i, 5, 25, 50, 125, 250, 500)",
-        "n": "sel(i, 1, 1, 1, 1, 1, 1)",
-        "d": "sel(i, 200, 40, 20, 8, 4, 2)",
-        "base": "sel(i, 1000, 1000, 1000, 1000, 1000, 1000)",
-        "dn1": "sel(i, 500, 500, 500, 500, 500, 500)",
-        "dn2": "sel(i, 1000, 1000, 1000, 1000, 1000, 1000)",
-        "dn3": "sel(i, 50, 50, 50, 50, 50, 50)"
-      },
-      "constraints": [],
-      "answer": {
-        "type": "choice",
-        "correctIndex": 0,
-        "options": [
-          {
-            "en": "[[{n}/{d}]]",
-            "zh": "[[{n}/{d}]]"
-          },
-          {
-            "en": "[[{k}/{dn1}]]",
-            "zh": "[[{k}/{dn1}]]"
-          },
-          {
-            "en": "[[{k}/{dn2}]]",
-            "zh": "[[{k}/{dn2}]]"
-          },
-          {
-            "en": "[[{k}/{dn3}]]",
-            "zh": "[[{k}/{dn3}]]"
-          }
-        ]
-      },
-      "sanity": {
-        "maxDen": 1000
-      },
-      "solution": {
-        "en": "{p}% means {p} parts out of 100, which is the same as [[{k}/{base}]]. In its simplest form, divide the top and bottom by their highest common factor: [[{k}/{base}]] = [[{n}/{d}]].",
-        "zh": "{p}% 就是 100 份里取 {p} 份，即 [[{k}/{base}]]。把它化成最简分数，分子分母同除以最大公因数，得 [[{n}/{d}]]。"
-      },
-      "noFigure": "原题为纯文字分数选择题，无图",
-      "noVariantReason": "百分数化最简分数，共 6 个固定取值（0.5%/2.5%/5%/12.5%/25%/50%），正确答案依次为 1/200、1/40、1/20、1/8、1/4、1/2",
-      "original": {
-        "i": 0
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-07",
-      "subject": "数学",
-      "topic": "按比例分配",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "按比例分配总量求差",
-      "tags": [
-        "比",
-        "按比例分配"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q7",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The weights of two ships are in the ratio of {m} : {n}. If together they weigh {T} tonnes, how many more tonnes does the larger ship weigh?",
-        "zh": "两艘船的重量比是 {m} : {n}，两艘船共重 {T} 吨。较大的那艘船比小的一艘重多少吨？"
-      },
-      "vars": {
-        "m": {
-          "type": "int",
-          "min": 2,
-          "max": 9
-        },
-        "n": {
-          "type": "int",
-          "min": 2,
-          "max": 12
-        },
-        "T": {
-          "type": "int",
-          "min": 100,
-          "max": 9000
-        }
-      },
-      "constraints": [
-        "m != n",
-        "T*abs(m-n) % (m+n) == 0"
-      ],
-      "derived": {
-        "diff": "T*abs(n-m)/(m+n)"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "diff"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Total parts = {m} + {n} = {m+n}. One part = {T} ÷ {m+n}. The difference is ({n} − {m}) = {abs(n-m)} parts, so {abs(n-m)} × {T} ÷ {m+n} = {diff} tonnes.",
-        "zh": "总份数 = {m} + {n} = {m+n}。一份 = {T} ÷ {m+n}。差 {n} − {m} = {abs(n-m)} 份，所以相差 {abs(n-m)} × {T} ÷ {m+n} = {diff} 吨。"
-      },
-      "noFigure": "原题为纯文字比例应用题，无图",
-      "original": {
-        "m": 5,
-        "n": 9,
-        "T": 5600
-      },
-      "originalAnswer": "D"
-    },
-    {
-      "id": "mm1t1-08",
-      "subject": "数学",
-      "topic": "最优化（分组）",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "人数固定，组越小组数越多",
-      "tags": [
-        "整除",
-        "最优化"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q8",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "A class of {N} students is to be divided into smaller groups. If each group is to contain 3, 4, or 5 people, what is the largest number of groups possible?",
-        "zh": "一个 {N} 人的班要分成若干小组。每组只能有 3 人、4 人或 5 人，最多能分成多少个组？"
-      },
-      "vars": {
-        "N": {
-          "type": "int",
-          "min": 30,
-          "max": 80
-        }
-      },
-      "constraints": [
-        "N >= 6"
-      ],
-      "derived": {
-        "q": "floor(N/3)",
-        "r": "N - 3*floor(N/3)",
-        "ans": "floor(N/3)"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "ans"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "To get the MOST groups, make the groups as small as possible. Using groups of 3 gives {q} groups, using {3*q} students. The remaining {r} {r} student(s) can be absorbed by turning some groups of 3 into groups of 4 or 5 (a group of 3 + 1 → 4, a group of 3 + 2 → 5), so the number of groups stays {ans}.",
-        "zh": "要组数最多，每组就尽量小。用 3 人组可以分成 {q} 组，用掉 {3*q} 人。剩下的 {r} 人可以并入已有的组（3+1 变 4 人组、3+2 变 5 人组），组数不变，所以最多 {ans} 组。"
-      },
-      "noFigure": "原题为纯文字应用题，无图",
-      "original": {
-        "N": 40
-      },
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-09",
-      "subject": "数学",
-      "topic": "用字母表示数",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "由速度求更长时间行驶的路程",
-      "tags": [
-        "用字母表示",
-        "速度"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q9",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "If a train travels n kilometres in {t1} hours, how many kilometres will it travel in {t2} hours?",
-        "zh": "一列火车 {t1} 小时行驶 n 千米，那么 {t2} 小时能行驶多少千米？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
-        }
-      },
-      "constraints": [
-        "t2 != t1",
-        "k > 1"
-      ],
-      "derived": {
-        "t1": "sel(i, 5, 4, 3, 6, 2, 8)",
-        "k": "sel(i, 5, 6, 4, 3, 7, 9)",
-        "t2": "t1 * k",
-        "mult": "k"
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": 0,
-        "options": [
-          {
-            "en": "{mult} × n",
-            "zh": "{mult} × n"
-          },
-          {
-            "en": "n ÷ {mult}",
-            "zh": "n ÷ {mult}"
-          },
-          {
-            "en": "n + {mult}",
-            "zh": "n + {mult}"
-          },
-          {
-            "en": "n − {mult}",
-            "zh": "n − {mult}"
-          }
-        ]
-      },
-      "solution": {
-        "en": "In {t1} hours it covers n km, so in 1 hour it covers n ÷ {t1} km. In {t2} hours it covers {t2} ÷ {t1} = {mult} times as far, that is {mult} × n km.",
-        "zh": "{t1} 小时行驶 n 千米，所以每小时行 n ÷ {t1} 千米。{t2} 小时是 {t1} 小时的 {mult} 倍，因此共行 {mult} × n 千米。"
-      },
-      "noFigure": "原题为纯文字用字母表示数题，无图",
-      "original": {
-        "i": 0
-      },
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-10",
-      "subject": "数学",
-      "topic": "速度变化",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "减速后时间变长，求原速度",
-      "tags": [
-        "速度",
-        "方程"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q10",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Steven travels from Shanghai to Beijing by car in {t1} hours. If he reduces the speed of his car by {d} km/h, then he takes {t2} hours for the same distance. Find the distance between the two towns, in kilometres.",
-        "zh": "Steven 开车从上海到北京用了 {t1} 小时。如果他把车速每小时降低 {d} 千米，那么同样的路程要用 {t2} 小时。求两城之间的距离（千米）。"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
-        }
-      },
-      "constraints": [
-        "t2 > t1",
-        "(t2*d) % (t2 - t1) == 0",
-        "(t1*t2*d) % (t2 - t1) == 0"
-      ],
-      "derived": {
-        "t1": "sel(i, 4, 3, 2, 4, 1, 3)",
-        "d": "sel(i, 25, 20, 15, 25, 40, 12)",
-        "t2": "sel(i, 5, 4, 3, 5, 2, 4)",
-        "v": "sel(i, 5, 4, 3, 5, 2, 4)*sel(i, 25, 20, 15, 25, 40, 12)/(sel(i, 5, 4, 3, 5, 2, 4) - sel(i, 4, 3, 2, 4, 1, 3))",
-        "dist": "sel(i, 4, 3, 2, 4, 1, 3)*sel(i, 5, 4, 3, 5, 2, 4)*sel(i, 25, 20, 15, 25, 40, 12)/(sel(i, 5, 4, 3, 5, 2, 4) - sel(i, 4, 3, 2, 4, 1, 3))"
-      },
-      "answer": {
-        "type": "number",
-        "expr": "dist",
-        "digits": 1
-      },
-      "sanity": {
-        "positive": true
-      },
-      "solution": {
-        "en": "Let the original speed be v. The distance is the same both times, so {t1}v = {t2}(v − {d}). Expanding: {t1}v = {t2}v − {t2*d}. Hence ({t2} − {t1})v = {t2*d}, so v = {v} km/h. Distance = {t1} × {v} = {dist} km.",
-        "zh": "设原速为 v。两次路程相同，所以 {t1}v = {t2}(v − {d})，展开得 {t1}v = {t2}v − {t2*d}，即 ({t2} − {t1})v = {t2*d}，解得 v = {v} 千米/时。距离 = {t1} × {v} = {dist} 千米。"
-      },
-      "noFigure": "原题为纯文字行程题，无图",
-      "originalAnswer": "A",
-      "unit": "km",
-      "original": {
-        "i": 0
-      }
-    },
-    {
-      "id": "mm1t1-11",
-      "subject": "数学",
-      "topic": "三角形面积",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "面积固定时判断哪组底高不可能",
-      "tags": [
-        "三角形面积",
-        "判断"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q11",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Look at the triangle. The area of the triangle is {A} cm². Which pair of base and height is NOT possible?",
-        "zh": "看下图。这个三角形的面积是 {A} 平方厘米。下面哪一对「底 × 高」是不可能的？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
-        }
-      },
-      "derived": {
-        "A": "sel(i, 40, 30, 36, 24, 60, 45)",
-        "twoA": "2*A",
-        "b0": "sel(i, 8, 6, 8, 6, 10, 9)",
-        "h0": "twoA/sel(i, 8, 6, 8, 6, 10, 9)",
-        "b1": "sel(i, 10, 10, 12, 8, 12, 10)",
-        "h1": "twoA/sel(i, 10, 10, 12, 8, 12, 10)",
-        "b2": "sel(i, 4, 4, 6, 4, 6, 6)",
-        "h2": "twoA/sel(i, 4, 4, 6, 4, 6, 6)",
-        "b3": "sel(i, 5, 5, 5, 5, 7, 7)",
-        "h3": "sel(i, 6, 7, 6, 7, 6, 5)",
-        "b3h3": "sel(i, 5, 5, 5, 5, 7, 7)*sel(i, 6, 7, 6, 7, 6, 5)"
-      },
-      "constraints": [
-        "sel(i, 8, 6, 8, 6, 10, 9)*twoA/sel(i, 8, 6, 8, 6, 10, 9) == twoA",
-        "sel(i, 10, 10, 12, 8, 12, 10)*twoA/sel(i, 10, 10, 12, 8, 12, 10) == twoA",
-        "sel(i, 4, 4, 6, 4, 6, 6)*twoA/sel(i, 4, 4, 6, 4, 6, 6) == twoA",
-        "twoA % sel(i, 8, 6, 8, 6, 10, 9) == 0",
-        "twoA % sel(i, 10, 10, 12, 8, 12, 10) == 0",
-        "twoA % sel(i, 4, 4, 6, 4, 6, 6) == 0",
-        "sel(i, 5, 5, 5, 5, 7, 7)*sel(i, 6, 7, 6, 7, 6, 5) != twoA",
-        "sel(i, 8, 6, 8, 6, 10, 9) != sel(i, 10, 10, 12, 8, 12, 10)",
-        "sel(i, 10, 10, 12, 8, 12, 10) != sel(i, 4, 4, 6, 4, 6, 6)",
-        "sel(i, 8, 6, 8, 6, 10, 9) != sel(i, 4, 4, 6, 4, 6, 6)",
-        "sel(i, 5, 5, 5, 5, 7, 7) != sel(i, 8, 6, 8, 6, 10, 9)",
-        "sel(i, 5, 5, 5, 5, 7, 7) != sel(i, 10, 10, 12, 8, 12, 10)",
-        "sel(i, 5, 5, 5, 5, 7, 7) != sel(i, 4, 4, 6, 4, 6, 6)"
-      ],
-      "answer": {
-        "type": "choice",
-        "correctIndex": 3,
-        "options": [
-          {
-            "en": "base {b0} cm, height {h0} cm",
-            "zh": "底 {b0} 厘米，高 {h0} 厘米"
-          },
-          {
-            "en": "base {b1} cm, height {h1} cm",
-            "zh": "底 {b1} 厘米，高 {h1} 厘米"
-          },
-          {
-            "en": "base {b2} cm, height {h2} cm",
-            "zh": "底 {b2} 厘米，高 {h2} 厘米"
-          },
-          {
-            "en": "base {b3} cm, height {h3} cm",
-            "zh": "底 {b3} 厘米，高 {h3} 厘米"
-          }
-        ]
-      },
-      "solution": {
-        "en": "Area = ½ × base × height = {A}, so base × height must equal {2*A}. The first three options multiply to {2*A}: {b0}×{h0} = {b0*h0}, {b1}×{h1} = {b1*h1}, {b2}×{h2} = {b2*h2}. But {b3} × {h3} = {b3h3} ≠ {2*A}. Answer D.",
-        "zh": "面积 = ½ × 底 × 高 = {A}，所以「底 × 高」必须等于 {2*A}。前三项相乘都得 {2*A}：{b0}×{h0} = {b0*h0}，{b1}×{h1} = {b1*h1}，{b2}×{h2} = {b2*h2}。但 {b3} × {h3} = {b3h3} ≠ {2*A}，所以选 D。"
-      },
-      "diagram": {
-        "type": "triangleareagiven",
-        "A": "A"
-      },
-      "original": {
-        "i": 0
-      },
-      "originalAnswer": "A"
-    },
-    {
-      "id": "mm1t1-12",
-      "subject": "数学",
-      "topic": "平行四边形等积",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "平行四边形被分成两部分，判断哪个结论一定成立",
-      "tags": [
-        "平行四边形",
-        "面积"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q12",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "A parallelogram is divided into two parts, P1 and P2, by the line shown in the picture. Which of the following statements is SURELY true?",
-        "zh": "如下图，一个平行四边形被图中这条线分成 P1 和 P2 两部分。下面哪个说法一定成立？"
-      },
-      "vars": {},
-      "answer": {
-        "type": "choice",
-        "correctIndex": 1,
-        "options": [
-          {
-            "en": "P2 has a greater perimeter than P1",
-            "zh": "P2 的周长比 P1 大"
-          },
-          {
-            "en": "P1 and P2 have the same perimeter",
-            "zh": "P1 和 P2 的周长相等"
-          },
-          {
-            "en": "P2 has a smaller perimeter than P1",
-            "zh": "P2 的周长比 P1 小"
-          },
-          {
-            "en": "P2 has a smaller area than P1",
-            "zh": "P2 的面积比 P1 小"
-          }
-        ]
-      },
-      "solution": {
-        "en": "Both parts share the whole edge of the zig-zag cut, and both are bounded by the same top and bottom sides of the parallelogram. Adding up the four sides, P1 and P2 use exactly the same total length of boundary — so their perimeters are equal. (Their areas are equal too, but the question asks about perimeter.)",
-        "zh": "两块都沿着同一条锯齿形切边，又各自由平行四边形同样的上边和下边围成。把四条边加起来，P1 和 P2 用到的边界长度完全一样，所以周长相等。（面积也确实相等，但本题问的是周长。）"
-      },
-      "diagram": {
-        "type": "parabiset"
-      },
-      "original": {},
-      "noVariantReason": "定性判断选择题，结论不随数值变化；原卷即如此",
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-13",
-      "subject": "数学",
-      "topic": "代数式",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "长宽各增加后新的面积",
-      "tags": [
-        "代数式",
-        "面积"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q13",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Michelle wants to expand her flowerbed by increasing the length and width each by {d} metres. What will the new area of the flowerbed be, if L and W represent the original length and width?",
-        "zh": "Michelle 想把花圃的长和宽各增加 {d} 米。如果原来的长是 L、宽是 W，新的面积是多少？"
-      },
-      "vars": {
-        "d": {
-          "type": "int",
-          "min": 2,
-          "max": 6
-        }
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": 3,
-        "options": [
-          {
-            "en": "{dd} × L × W",
-            "zh": "{dd} × L × W"
-          },
-          {
-            "en": "{dd} × (L + W)",
-            "zh": "{dd} × (L + W)"
-          },
-          {
-            "en": "{dd} × L + {dd} × W",
-            "zh": "{dd} × L + {dd} × W"
-          },
-          {
-            "en": "(L + {d}) × (W + {d})",
-            "zh": "(L + {d}) × (W + {d})"
-          }
-        ]
-      },
-      "solution": {
-        "en": "The new length is L + {d} and the new width is W + {d}. New area = (L + {d})(W + {d}) = L×W + {d}L + {d}W + {d}×{d} = LW + {d}L + {d}W + {d2}.",
-        "zh": "新的长是 L + {d}，新的宽是 W + {d}。新面积 = (L + {d})(W + {d}) = L×W + {d}L + {d}W + {d}×{d} = LW + {d}L + {d}W + {d2}。"
-      },
-      "noFigure": "原题为纯文字代数题，无图",
-      "original": {
-        "d": 2
-      },
-      "originalAnswer": "D",
-      "derived": {
-        "d2": "d*d",
-        "dd": "2*d"
-      }
-    },
-    {
-      "id": "mm1t1-14",
-      "subject": "数学",
-      "topic": "平均数",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "三个常识量的平均数",
-      "tags": [
-        "平均数",
-        "常识"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q14",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "What is the mathematical average of the number of days in a year ({D}), the number of days in a week ({W}), and the number of hours in a day ({H})?",
-        "zh": "一年的天数（{D}）、一周的天数（{W}）、一天的小时数（{H}）这三个数的平均数是多少？"
-      },
-      "vars": {
-        "D": {
-          "type": "pick",
-          "from": [
-            365,
-            366
-          ]
-        },
-        "W": {
-          "type": "pick",
-          "from": [
-            7
-          ]
-        },
-        "H": {
-          "type": "pick",
-          "from": [
-            24
-          ]
-        }
-      },
-      "derived": {
-        "s": "D + W + H",
-        "avg": "(D + W + H)/3"
-      },
-      "constraints": [
-        "(D + W + H) % 3 == 0"
-      ],
-      "answer": {
-        "type": "integer",
-        "expr": "avg"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Average = ({D} + {W} + {H}) ÷ 3 = {s} ÷ 3 = {avg}.",
-        "zh": "平均数 = ({D} + {W} + {H}) ÷ 3 = {s} ÷ 3 = {avg}。"
-      },
-      "noFigure": "原题为纯文字平均数题，无图",
-      "noVariantReason": "三个量都是常识固定值（闰年 366/平年 365 两种），变式只有 2 种；原卷即如此",
-      "original": {
-        "D": 365,
-        "W": 7,
-        "H": 24
-      },
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-15",
-      "subject": "数学",
-      "topic": "百分数求整体",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "已知百分之几是多少，求这个数",
-      "tags": [
-        "百分数"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q15",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "{p}% of what number is {v}?",
-        "zh": "{p}% 的多少等于 {v}？"
-      },
-      "vars": {
-        "p": {
-          "type": "pick",
-          "from": [
-            10,
-            20,
-            25,
-            40,
-            50,
-            60,
-            75,
-            80,
-            85
-          ]
-        },
-        "k": {
-          "type": "int",
-          "min": 1,
-          "max": 40
-        }
-      },
-      "constraints": [],
-      "derived": {
-        "v": "p*k",
-        "N": "100*k"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "N"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "{p}% of the number equals {v}, so 1% is {v} ÷ {p}, and 100% is {v} × 100 ÷ {p} = {N}.",
-        "zh": "某数的 {p}% 是 {v}，所以 1% 是 {v} ÷ {p}，100% 就是 {v} × 100 ÷ {p} = {N}。"
-      },
-      "noFigure": "原题为纯文字百分数题，无图",
-      "original": {
-        "p": 85,
-        "k": 1.6
-      },
-      "originalAnswer": "A"
-    },
-    {
-      "id": "mm1t1-16",
-      "subject": "数学",
-      "topic": "周期问题",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "十二生肖循环求年份的生肖",
-      "tags": [
-        "周期",
-        "余数"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q16",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The Chinese Calendar is based on a twelve-year cycle. Each year in the cycle corresponds to an animal: tiger, rabbit, dragon, snake, horse, sheep (or goat), monkey, rooster, dog, pig, rat and ox. The order of the animals never changes. The year {y0} in the Chinese Calendar is the Year of the {a0} (number {i0} in the cycle). Which animal will mark the year {y1}?",
-        "zh": "中国农历以十二年为一轮，依次为：虎、兔、龙、蛇、马、羊、猴、鸡、狗、猪、鼠、牛，顺序永不改变。已知 {y0} 年是{a0}年（第 {i0} 位），那么 {y1} 年是什么年？"
-      },
-      "vars": {
-        "y0": {
-          "type": "int",
-          "min": 2000,
-          "max": 2030
-        },
-        "y1": {
-          "type": "int",
-          "min": 2050,
-          "max": 2200
-        },
-        "i0": {
-          "type": "int",
-          "min": 1,
-          "max": 12
-        }
-      },
-      "constraints": [
-        "y1 > y0",
-        "mod(y1 - y0, 12) != 0"
-      ],
-      "derived": {
-        "idx": "mod(i0 - 1 + (y1 - y0), 12) + 1",
-        "a0": "sel(i0-1, 'tiger','rabbit','dragon','snake','horse','sheep','monkey','rooster','dog','pig','rat','ox')",
-        "ans": "sel(idx-1, 'tiger','rabbit','dragon','snake','horse','sheep','monkey','rooster','dog','pig','rat','ox')"
-      },
-      "answer": {
-        "type": "choice",
-        "options": [
-          {
-            "en": "rat",
-            "zh": "鼠"
-          },
-          {
-            "en": "ox",
-            "zh": "牛"
-          },
-          {
-            "en": "tiger",
-            "zh": "虎"
-          },
-          {
-            "en": "rabbit",
-            "zh": "兔"
-          },
-          {
-            "en": "dragon",
-            "zh": "龙"
-          },
-          {
-            "en": "snake",
-            "zh": "蛇"
-          },
-          {
-            "en": "horse",
-            "zh": "马"
-          },
-          {
-            "en": "goat",
-            "zh": "羊"
-          },
-          {
-            "en": "monkey",
-            "zh": "猴"
-          },
-          {
-            "en": "rooster",
-            "zh": "鸡"
-          },
-          {
-            "en": "dog",
-            "zh": "狗"
-          },
-          {
-            "en": "pig",
-            "zh": "猪"
-          }
-        ],
-        "correctIndex": "idx - 1"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "From {y0} to {y1} is {y1-y0} years, and {y1-y0} ÷ 12 leaves remainder {mod(y1-y0,12)}. Moving {mod(y1-y0,12)} places on from position {i0} lands on position {idx}, the year of the {ans}.",
-        "zh": "{y0} 到 {y1} 相隔 {y1-y0} 年，{y1-y0} ÷ 12 余 {mod(y1-y0,12)}。从第 {i0} 位再往后数 {mod(y1-y0,12)} 位，落在第 {idx} 位，即{ans}年。"
-      },
-      "noFigure": "原题为纯文字周期题，无图",
-      "original": {
-        "y0": 2010,
-        "y1": 2111,
-        "i0": 1
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-17",
-      "subject": "数学",
-      "topic": "概念判断",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "判断哪句关于数的说法正确",
-      "tags": [
-        "数概念",
-        "判断"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q17",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Which of the following is a true statement?",
-        "zh": "下面哪句话是正确的？"
-      },
-      "vars": {},
-      "answer": {
-        "type": "choice",
-        "correctIndex": 2,
-        "options": [
-          {
-            "en": "The product of two negative numbers is negative.",
-            "zh": "两个负数相乘，积是负数。"
-          },
-          {
-            "en": "The product of one negative and one positive number is positive.",
-            "zh": "一个负数乘一个正数，积是正数。"
-          },
-          {
-            "en": "When dividing a positive number by a negative number, the result is negative.",
-            "zh": "正数除以负数，商是负数。"
-          },
-          {
-            "en": "When dividing a negative number by a positive number, the result is positive.",
-            "zh": "负数除以正数，商是正数。"
-          }
-        ]
-      },
-      "solution": {
-        "en": "Check each one: (A) negative × negative is POSITIVE, so false. (B) negative × positive is NEGATIVE, so false. (C) positive ÷ negative is negative — TRUE. (D) negative ÷ positive is negative, not positive, so false.",
-        "zh": "逐条验证：(A) 负×负 = 正，错。(B) 负×正 = 负，错。(C) 正÷负 = 负，正确。(D) 负÷正 = 负（不是正），错。"
-      },
-      "noFigure": "原题为纯文字概念判断题，无图",
-      "noVariantReason": "概念辨析选择题，选项与答案不随数值变化；原卷即如此",
-      "original": {},
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-18",
-      "subject": "数学",
-      "topic": "比与比值",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "求「负场 : 总场数」并化简",
-      "tags": [
-        "比",
-        "化简"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q18",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "A men's basketball team won {w} games and lost {l} games. What is the ratio of games lost to the number of games played, in simplest form?",
-        "zh": "一支男子篮球队赢了 {w} 场、输了 {l} 场。负场数与总场数的最简整数比是多少？"
-      },
-      "vars": {
-        "k": {
-          "type": "int",
-          "min": 5,
-          "max": 15
-        }
-      },
-      "constraints": [
-        "w != l",
-        "gcd(l, w+l) > 1"
-      ],
-      "derived": {
-        "w": "3*k",
-        "l": "4*k",
-        "tot": "7*k"
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": 1,
-        "options": [
-          {
-            "en": "3:7",
-            "zh": "3:7"
-          },
-          {
-            "en": "4:7",
-            "zh": "4:7"
-          },
-          {
-            "en": "7:4",
-            "zh": "7:4"
-          },
-          {
-            "en": "3:4",
-            "zh": "3:4"
-          }
-        ]
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Games played = {w} + {l} = {tot}. Ratio lost : played = {l} : {tot}. Divide both by {l} ÷ 4 × 4 = {l}: the common factor is {l} ÷ 4 = {l/4} × ... simplifying {l}:{tot} gives 4:7.",
-        "zh": "总场数 = {w} + {l} = {tot}。负场 : 总场数 = {l} : {tot}，同除以它们的最大公因数，化简得 4:7。"
-      },
-      "noFigure": "原题为纯文字比的应用题，无图",
-      "original": {
-        "k": 10
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-19",
-      "subject": "数学",
-      "topic": "剩余量推算",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "赛季进行一半时推算最终胜场差",
-      "tags": [
-        "方程",
-        "推理"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q19",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "In a baseball league each team plays {G} games. After playing half of their games, team A has won {a} games and team B has won {b} games. If team B wins all of its remaining games and team A loses all of its remaining games, how many more games has team B won than team A at the end of the season?",
-        "zh": "某棒球联盟每队要打 {G} 场。赛程过半时，A 队胜了 {a} 场、B 队胜了 {b} 场。如果后半程 B 队全胜、A 队全负，赛季结束时 B 队比 A 队多胜多少场？"
-      },
-      "vars": {
-        "G": {
-          "type": "pick",
-          "from": [
-            120,
-            140,
-            160,
-            180,
-            200
-          ]
-        },
-        "a": {
-          "type": "int",
-          "min": 40,
-          "max": 80
-        },
-        "b": {
-          "type": "int",
-          "min": 30,
-          "max": 70
-        }
-      },
-      "constraints": [
-        "mod(G, 2) == 0",
-        "(G/2 + b) - (G/2 + a) != 0"
-      ],
-      "derived": {
-        "diff": "(G/2 + b) - (G/2 + a)"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "diff"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "There are {G}/2 = {G/2} games left. Team A finishes with {a} wins; team B finishes with {b} + {G/2} = {b+G/2} wins. The difference is {b+G/2} − {a} = {diff}.",
-        "zh": "还剩 {G}/2 = {G/2} 场。A 队最终 {a} 胜；B 队最终 {b} + {G/2} = {b+G/2} 胜。相差 {b+G/2} − {a} = {diff} 场。"
-      },
-      "noFigure": "原题为纯文字应用题，无图",
-      "original": {
-        "G": 140,
-        "a": 62,
-        "b": 43
-      },
-      "originalAnswer": "D"
-    },
-    {
-      "id": "mm1t1-20",
-      "subject": "数学",
-      "topic": "周长与等腰三角形",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "等腰三角形周长等于等边三角形周长，求边长",
-      "tags": [
-        "周长",
-        "三角形"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q20",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "An isosceles triangle has two sides of {p} cm and {q} cm. An equilateral triangle has the same perimeter. What is the length, in centimetres, of each side of the equilateral triangle?",
-        "zh": "一个等腰三角形的边长分别是 {p} 厘米和 {q} 厘米（等边的两边相等）。另一个等边三角形的周长与它相同，这个等边三角形的边长是多少厘米？"
-      },
-      "vars": {
-        "p": {
-          "type": "int",
-          "min": 4,
-          "max": 12
-        },
-        "q": {
-          "type": "int",
-          "min": 3,
-          "max": 14
-        }
-      },
-      "constraints": [
-        "p != q",
-        "(2*p + q) % 3 == 0",
-        "2*p > q",
-        "p + q > p"
-      ],
-      "derived": {
-        "per": "2*p + q",
-        "side": "(2*p + q)/3"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "side"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "The equal sides are the shorter ones, so the perimeter is {p} + {p} + {q} = {per} cm. The equilateral triangle's side is {per} ÷ 3 = {side} cm.",
-        "zh": "等腰两边是较短的那组，所以周长 = {p} + {p} + {q} = {per} 厘米。等边三角形边长 = {per} ÷ 3 = {side} 厘米。"
-      },
-      "noFigure": "原题为纯文字几何题，无图",
-      "original": {
-        "p": 6,
-        "q": 9
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-21",
-      "subject": "数学",
-      "topic": "百分数应用",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "由部分人数求百分比（注意干扰信息）",
-      "tags": [
-        "百分数",
-        "干扰信息"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q21",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "There are {N} pupils in a school. Exactly half of the {N} pupils in the school are boys. From this information, what percentage of boys in this school wear glasses?",
-        "zh": "一所学校有 {N} 名学生，其中恰好一半是男生。根据这些信息，男生中戴眼镜的占百分之几？"
-      },
-      "vars": {
-        "N": {
-          "type": "pick",
-          "from": [
-            40,
-            50,
-            60,
-            80,
-            100,
-            120
-          ]
-        }
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": 3,
-        "options": [
-          {
-            "en": "10%",
-            "zh": "10%"
-          },
-          {
-            "en": "50%",
-            "zh": "50%"
-          },
-          {
-            "en": "20%",
-            "zh": "20%"
-          },
-          {
-            "en": "cannot be determined",
-            "zh": "无法确定"
-          }
-        ]
-      },
-      "solution": {
-        "en": "The question asks about the percentage of BOYS who wear glasses, but we are never told how many pupils (let alone boys) wear glasses. There is not enough information, so the answer is \"cannot be determined\".",
-        "zh": "题目问的是「男生中」戴眼镜的百分比，但全文根本没给出戴眼镜的人数，更没给出男生里戴眼镜的人数。信息不足，所以答案是「无法确定」。"
-      },
-      "noFigure": "原题为纯文字信息题，无图",
-      "original": {
-        "N": 60
-      },
-      "originalAnswer": "D",
-      "noVariantReason": "考查「信息是否足够」的判断题，答案恒为 cannot be determined"
-    },
-    {
-      "id": "mm1t1-22",
-      "subject": "数学",
-      "topic": "百分数应用",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "按百分比分类计数求差",
-      "tags": [
-        "百分数",
-        "求差"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q22",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "On a farm {S} sheep gave birth. {p}% of the sheep gave birth to two lambs each. The rest of the sheep gave birth to just one lamb each. How many sheep are there altogether?",
-        "zh": "农场里有 {S} 只母羊生产。其中 {p}% 的母羊各生了 2 只小羊，其余的母羊各生了 1 只小羊。农场一共养了多少只羊？"
-      },
-      "vars": {
-        "S": {
-          "type": "pick",
-          "from": [
-            80,
-            100,
-            60,
-            120,
-            40,
-            200
-          ]
-        },
-        "p": {
-          "type": "pick",
-          "from": [
-            30,
-            25,
-            40,
-            50,
-            20,
-            10
-          ]
-        }
-      },
-      "constraints": [
-        "(S*p) % 100 == 0"
-      ],
-      "derived": {
-        "twoG": "S*p/100",
-        "oneG": "S - S*p/100",
-        "lambs": "S + S*p/100",
-        "total": "S + S*p/100"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "total"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "The {S} mothers themselves are {S} sheep. The extra lambs are the second ones: {p}% of {S} = {twoG} sheep had a second lamb. So the total is {S} + {twoG} = {total}.",
-        "zh": "{S} 只母羊本身就有 {S} 只；额外多出来的只是「第二只小羊」：{S} 的 {p}% = {twoG} 只母羊多生了 1 只。所以一共 {S} + {twoG} = {total} 只。"
-      },
-      "noFigure": "原题为纯文字百分数应用题，无图",
-      "original": {
-        "S": 80,
-        "p": 30
-      },
-      "originalAnswer": "D",
-      "unit": "只"
-    },
-    {
-      "id": "mm1t1-23",
-      "subject": "数学",
-      "topic": "买赠最优化",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "买几送一，求最多能买几个",
-      "tags": [
-        "最优化",
-        "除法"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q23",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "A team has ${M}.00 to buy balls. One ball costs ${c}. The team is given 1 free ball for every {k} balls it buys. What is the largest number of balls the team can get?",
-        "zh": "一支队伍有 {M} 元买球，每个球 {c} 元。每买 {k-1} 个球就赠送 1 个球。他们最多能拿到多少个球？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 7
-        }
-      },
-      "constraints": [
-        "M % c == 0",
-        "floor(M/c) >= k",
-        "k > 2"
-      ],
-      "derived": {
-        "M": "sel(i, 70, 90, 100, 80, 120, 150, 60, 96)",
-        "c": "sel(i, 5, 6, 5, 8, 6, 10, 4, 8)",
-        "k": "sel(i, 3, 3, 4, 3, 4, 5, 3, 4)",
-        "paid": "floor(M/c)",
-        "free": "floor(floor(M/c)/(k-1))",
-        "total": "floor(M/c) + floor(floor(M/c)/(k-1))"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "total"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "\"1 free for every {k} bought\" means every batch of {k} costs only {k}−1 paid balls. With ${M} at ${c} each the team can pay for {paid} balls. Each {k-1} paid balls earns 1 free one: {paid} ÷ {k-1} = {free} free balls. Total = {paid} + {free} = {total} balls.",
-        "zh": "“每买 {k-1} 个送 1 个”意味着每 {k} 个球只付 {k}−1 个的钱。{M} 元每个 {c} 元，能付 {paid} 个。每 {k-1} 个付钱的球得 1 个赠球：{paid} ÷ {k-1} = {free} 个。共 {paid} + {free} = {total} 个球。"
-      },
-      "noFigure": "原题为纯文字最优化题，无图",
-      "original": {
-        "i": 0
-      },
-      "originalAnswer": "A",
-      "unit": "个"
-    },
-    {
-      "id": "mm1t1-24",
-      "subject": "数学",
-      "topic": "面积（去角正方形）",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "正方形四角各去掉一个小正方形后的面积",
-      "tags": [
-        "面积",
-        "图形"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q24",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The following is a {S} cm square. Four {c} cm squares are removed from each of the four corners. What is the area of the remaining shaded part of the figure, in cm²?",
-        "zh": "下图是一个边长 {S} 厘米的正方形，从四个角各剪去一个边长 {c} 厘米的小正方形。剩下部分（阴影）的面积是多少平方厘米？"
-      },
-      "vars": {
-        "S": {
-          "type": "int",
-          "min": 5,
-          "max": 14
-        },
-        "c": {
-          "type": "int",
-          "min": 2,
-          "max": 5
-        }
-      },
-      "constraints": [
-        "2*c < S"
-      ],
-      "derived": {
-        "area": "S*S - 4*c*c"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "area"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "unit": "平方厘米",
-      "solution": {
-        "en": "The whole square is {S} × {S} = {S*S} cm². Four corners of {c} × {c} = {c*c} cm² are removed, that is 4 × {c*c} = {4*c*c} cm². Shaded area = {S*S} − {4*c*c} = {area} cm².",
-        "zh": "整个正方形 {S} × {S} = {S*S} 平方厘米。四个角各去掉 {c} × {c} = {c*c} 平方厘米，共 4 × {c*c} = {4*c*c} 平方厘米。阴影面积 = {S*S} − {4*c*c} = {area} 平方厘米。"
-      },
-      "diagram": {
-        "type": "cornercut",
-        "S": "S",
-        "c": "c"
-      },
-      "original": {
-        "S": 5,
-        "c": 2
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-25",
-      "subject": "数学",
-      "topic": "韦恩图",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "读韦恩图找出只做两件事的人所在区域",
-      "tags": [
-        "韦恩图",
-        "集合"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q25",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "At a grocery store, jobs are recorded on a Venn diagram like the one below. If an employee only works as a checker and in the deli, in which region of the diagram does the employee belong?",
-        "zh": "一家超市用如图的韦恩图记录岗位。如果一名员工只做收银（Checker）又在熟食部（Deli）工作，不做理货（Stocker），他属于图中的哪个区域？"
-      },
-      "vars": {},
-      "answer": {
-        "type": "choice",
-        "correctIndex": 3,
-        "options": [
-          {
-            "en": "W",
-            "zh": "W"
-          },
-          {
-            "en": "X",
-            "zh": "X"
-          },
-          {
-            "en": "Y",
-            "zh": "Y"
-          },
-          {
-            "en": "Z",
-            "zh": "Z"
-          }
-        ]
-      },
-      "solution": {
-        "en": "The employee is in Checker and in Deli, but NOT in Stocker. Checker ∩ Deli without Stocker is the region labelled Z.",
-        "zh": "这名员工属于 Checker 和 Deli，但不属于 Stocker。Checker ∩ Deli 且不在 Stocker 内的区域是 Z。"
-      },
-      "diagram": {
-        "type": "venn3",
-        "labels": "Stocker,Checker,Deli"
-      },
-      "noVariantReason": "定性读图题，答案不随数值变化；原卷即如此",
-      "original": {},
-      "originalAnswer": "D",
-      "noFigure": ""
-    },
-    {
-      "id": "mm1t1-26",
-      "subject": "数学",
-      "topic": "路程问题",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "两人竞速求领先距离",
-      "tags": [
-        "速度",
-        "距离"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q26",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Jane and Kate are ski racing. They both start at the same place, at the same time, and follow the same path. Jane is travelling at {v1} m/s and Kate is travelling at {v2} m/s. How many metres ahead is Kate after {t} seconds?",
-        "zh": "Jane 和 Kate 比赛滑雪，同时同地出发、走同一条路。Jane 的速度是 {v1} 米/秒，Kate 的速度是 {v2} 米/秒。{t} 秒后 Kate 领先多少米？"
-      },
-      "vars": {
-        "v1": {
-          "type": "int",
-          "min": 3,
-          "max": 12
-        },
-        "v2": {
-          "type": "int",
-          "min": 4,
-          "max": 15
-        },
-        "t": {
-          "type": "pick",
-          "from": [
-            30,
-            40,
-            50,
-            60,
-            90,
-            120
-          ]
-        }
-      },
-      "constraints": [
-        "v2 > v1"
-      ],
-      "derived": {
-        "gap": "(v2 - v1)*t"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "gap"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "unit": "米",
-      "solution": {
-        "en": "Kate gains on Jane at {v2} − {v1} = {v2-v1} m every second. After {t} seconds she is {v2-v1} × {t} = {gap} metres ahead.",
-        "zh": "Kate 每秒比 Jane 多走 {v2} − {v1} = {v2-v1} 米。{t} 秒后领先 {v2-v1} × {t} = {gap} 米。"
-      },
-      "noFigure": "原题为纯文字行程题，无图",
-      "original": {
-        "v1": 5,
-        "v2": 8,
-        "t": 60
-      },
-      "originalAnswer": "A"
-    },
-    {
-      "id": "mm1t1-27",
-      "subject": "数学",
-      "topic": "连环百分数",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "百分数的百分数的百分数",
-      "tags": [
-        "百分数",
-        "连乘"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q27",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "What is {p1}% of {p2}% of {p3}% of ${M}?",
-        "zh": "{M} 元的 {p3}% 的 {p2}% 的 {p1}% 是多少元？"
-      },
-      "vars": {
-        "p1": {
-          "type": "pick",
-          "from": [
-            1,
-            2,
-            5,
-            10,
-            20,
-            25
-          ]
-        },
-        "p2": {
-          "type": "pick",
-          "from": [
-            10,
-            20,
-            50,
-            100
-          ]
-        },
-        "p3": {
-          "type": "pick",
-          "from": [
-            10,
-            50,
-            100
-          ]
-        },
-        "M": {
-          "type": "pick",
-          "from": [
-            100,
-            500,
-            1000,
-            2000,
-            5000
-          ]
-        }
-      },
-      "derived": {
-        "v": "M*p1*p2*p3/1000000"
-      },
-      "constraints": [
-        "(M*p1*p2*p3) % 1000000 == 0"
-      ],
-      "answer": {
-        "type": "number",
-        "expr": "v",
-        "digits": 2
-      },
-      "sanity": {
-        "positive": true
-      },
-      "solution": {
-        "en": "{p3}% of ${M} = ${M*p3/100}; {p2}% of that = ${M*p3*p2/10000}; {p1}% of that = ${v}.",
-        "zh": "{M} 的 {p3}% = {M*p3/100} 元；它的 {p2}% = {M*p3*p2/10000} 元；再取它的 {p1}% = {v} 元。"
-      },
-      "noFigure": "原题为纯文字百分数题，无图",
-      "original": {
-        "p1": 1,
-        "p2": 10,
-        "p3": 100,
-        "M": 1000
-      },
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-28",
-      "subject": "数学",
-      "topic": "数轴与比例",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "在数轴上确定两数相除结果的近似位置",
-      "tags": [
-        "数轴",
-        "估算"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q28",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The number line below runs from 0 to {E}. Which lettered point best represents the value of {cName} divided by {fName}?",
-        "zh": "下面的数轴从 0 标到 {E}，A 到 H 是 8 个等分点。哪个字母表示的点最接近「{cName} 除以 {fName}」的值？"
-      },
-      "vars": {
-        "E": {
-          "type": "pick",
-          "from": [
-            1,
-            2
-          ]
-        },
-        "ci": {
-          "type": "pick",
-          "from": [
-            2,
-            4,
-            6
-          ]
-        },
-        "fj": {
-          "type": "pick",
-          "from": [
-            8
-          ]
-        }
-      },
-      "constraints": [
-        "ci < fj",
-        "mod(ci, 2) == 0"
-      ],
-      "derived": {
-        "cName": "sel(ci-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
-        "fName": "sel(fj-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
-        "q": "ci/fj",
-        "k": "ci/fj*8",
-        "kName": "sel(ci/fj*8-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')"
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": "ci/fj*8-1",
-        "options": [
-          {
-            "en": "A",
-            "zh": "A"
-          },
-          {
-            "en": "B",
-            "zh": "B"
-          },
-          {
-            "en": "C",
-            "zh": "C"
-          },
-          {
-            "en": "D",
-            "zh": "D"
-          },
-          {
-            "en": "E",
-            "zh": "E"
-          },
-          {
-            "en": "F",
-            "zh": "F"
-          },
-          {
-            "en": "G",
-            "zh": "G"
-          },
-          {
-            "en": "H",
-            "zh": "H"
-          }
-        ]
-      },
-      "sanity": {
-        "positive": true
-      },
-      "solution": {
-        "en": "From 0 to {E}, the eight points A–H are each {E} ÷ 8 = {E/8} apart. {cName} is at {E} × {ci} ÷ 8 = {E*ci/8} and {fName} is at {E} × {fj} ÷ 8 = {E*fj/8}. So {cName} ÷ {fName} = {E*ci/8} ÷ {E*fj/8} = {q}. That value sits at the {ci/fj*8}th point from 0, which is {kName}.",
-        "zh": "0 到 {E} 之间的 A–H 八个点，每格是 {E} ÷ 8 = {E/8}。{cName} 在 {E} × {ci} ÷ 8 = {E*ci/8} 处，{fName} 在 {E} × {fj} ÷ 8 = {E*fj/8} 处。所以 {cName} ÷ {fName} = {E*ci/8} ÷ {E*fj/8} = {q}，正好落在从 0 数第 {ci/fj*8} 个点上，即 {kName}。"
-      },
-      "diagram": {
-        "type": "numberline",
-        "E": "E",
-        "n": "E",
-        "k": "k"
-      },
-      "original": {
-        "E": 2,
-        "ci": 2,
-        "fj": 8
-      },
-      "originalAnswer": "B",
-      "noVariantReason": "数与形的选择题，考「商在数轴上的位置」，取值组合固定为可落在刻度点上的比"
-    },
-    {
-      "id": "mm1t1-29",
-      "subject": "数学",
-      "topic": "因数分解",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "三个大于 1 的整数相乘等于给定数",
-      "tags": [
-        "因数",
-        "质因数分解"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q29",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "I multiply three positive integers that are all greater than 1 and get {N}. Find the smallest of the three numbers.",
-        "zh": "我把三个都大于 1 的正整数相乘，积是 {N}。这三个数中最小的是多少？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 7
-        }
-      },
-      "derived": {
-        "f": "sel(i, 3, 5, 7, 7, 3, 5, 3, 5)",
-        "m": "sel(i, 5, 11, 11, 13, 3, 11, 37, 13)",
-        "g": "sel(i, 7, 3, 3, 3, 37, 7, 3, 7)",
-        "N": "sel(i, 105, 165, 231, 273, 333, 385, 333, 455)"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "f"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Write {N} as a product of three whole numbers, each greater than 1: {N} = {f} × {m} × {g}. The smallest of the three is {f}.",
-        "zh": "把 {N} 写成三个都大于 1 的整数相乘：{N} = {f} × {m} × {g}。这三个数中最小的是 {f}。"
-      },
-      "noFigure": "原题为纯文字因数题，无图",
-      "noVariantReason": "因数分解题，{N} 取 8 个可唯一分解为三因子（且最小因子各不相同）的固定值",
-      "original": {
-        "i": 4
-      },
-      "originalAnswer": "A"
-    },
-    {
-      "id": "mm1t1-30",
-      "subject": "数学",
-      "topic": "乘法简算",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "一个数比某乘积少多少（提公因数）",
-      "tags": [
-        "运算律",
-        "简算"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q30",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "What is {k} less than the product of {a} and {k}?",
-        "zh": "{a} 与 {k} 的乘积，比它少 {k} 的数是多少？"
-      },
-      "vars": {
-        "a": {
-          "type": "int",
-          "min": 20,
-          "max": 90
-        },
-        "k": {
-          "type": "int",
-          "min": 100,
-          "max": 900,
-          "step": 1
-        }
-      },
-      "derived": {
-        "prod": "a*k",
-        "v": "a*k - k"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "v"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "The product is {a} × {k} = {prod}. Subtracting {k} gives {prod} − {k} = {v}. (Equivalently, {a*k} − {k} = {a-1} × {k} = {v}.)",
-        "zh": "乘积 = {a} × {k} = {prod}；再减去 {k} 得 {prod} − {k} = {v}。（也可以这样看：{a*k} − {k} = {a-1} × {k} = {v}。）"
-      },
-      "noFigure": "原题为纯文字计算题，无图",
-      "original": {
-        "a": 30001,
-        "k": 54321
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-31",
-      "subject": "数学",
-      "topic": "最优化（组合购买）",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "两种包装混合购买，求最少花多少钱",
-      "tags": [
-        "最优化",
-        "枚举"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q31",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "At a stationery shop, a pack of {a} notebooks costs ${c1} and a pack of {b} notebooks costs ${c2}. What is the least amount of money needed to buy {T} notebooks?",
-        "zh": "文具店里 {a} 本一包的本子卖 {c1} 元，{b} 本一包的本子卖 {c2} 元。要买 {T} 本，最少花多少钱？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
-        }
-      },
-      "derived": {
-        "a": "sel(i, 5, 5, 6, 7, 5, 7)",
-        "b": "sel(i, 9, 9, 9, 9, 9, 9)",
-        "c1": "sel(i, 5, 5, 6, 7, 5, 7)",
-        "c2": "sel(i, 8, 8, 8, 8, 8, 8)",
-        "T": "sel(i, 77, 50, 60, 70, 32, 43)",
-        "x": "sel(i, 1, 1, 1, 1, 1, 1)",
-        "y": "sel(i, 8, 5, 6, 7, 3, 4)",
-        "best": "sel(i, 69, 45, 54, 63, 29, 39)"
-      },
-      "constraints": [
-        "a*x + b*y == T",
-        "best == c1*x + c2*y",
-        "c2*a < c1*b"
-      ],
-      "answer": {
-        "type": "integer",
-        "expr": "best"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Compare price per notebook: ${c1} ÷ {a} vs ${c2} ÷ {b}. The {b}-pack is better value. To get exactly {T} notebooks: {x} packs of {a} plus {y} packs of {b} gives {a}×{x} + {b}×{y} = {T}. Cost = {x}×${c1} + {y}×${c2} = ${best}.",
-        "zh": "先比每本单价：{c1} ÷ {a} 与 {c2} ÷ {b}，{b} 本装更划算。要正好买 {T} 本：{a} 本装 {x} 包 + {b} 本装 {y} 包 = {a}×{x} + {b}×{y} = {T} 本。花费 = {x}×{c1} + {y}×{c2} = {best} 元。"
-      },
-      "noFigure": "原题为纯文字最优化题，无图",
-      "noVariantReason": "组合购买最优化，固定为「小包装 + 大包装」两档价格，最优组合由枚举确定",
-      "originalAnswer": "D",
-      "original": {
-        "i": 0
-      }
-    },
-    {
-      "id": "mm1t1-32",
-      "subject": "数学",
-      "topic": "平均数（分球）",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "每名队员上场时间相同，求每人上场分钟数",
-      "tags": [
-        "平均数",
-        "除法"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q32",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "There are {N} men on a basketball team, and in a game {k} of them play at any one time. If the game is {T} minutes long and each man plays exactly the same number of minutes, how many minutes does each man play?",
-        "zh": "一支篮球队有 {N} 名队员，场上同时有 {k} 人。一场比赛 {T} 分钟，如果每人上场时间完全相同，每人上场多少分钟？"
-      },
-      "vars": {
-        "N": {
-          "type": "int",
-          "min": 8,
-          "max": 20
-        },
-        "k": {
-          "type": "int",
-          "min": 4,
-          "max": 8
-        },
-        "T": {
-          "type": "pick",
-          "from": [
-            24,
-            32,
-            36,
-            40,
-            48,
-            56,
-            60
-          ]
-        }
-      },
-      "constraints": [
-        "(k*T) % N == 0"
-      ],
-      "derived": {
-        "tot": "k*T",
-        "each": "k*T/N"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "each"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "unit": "分钟",
-      "solution": {
-        "en": "Every minute {k} men are on court, so total player-minutes = {k} × {T} = {tot}. Shared equally among {N} men: {tot} ÷ {N} = {each} minutes each.",
-        "zh": "每分钟场上有 {k} 人，所以总上场人次 = {k} × {T} = {tot}。平分给 {N} 人：{tot} ÷ {N} = {each} 分钟。"
-      },
-      "noFigure": "原题为纯文字应用题，无图",
-      "original": {
-        "N": 15,
-        "k": 5,
-        "T": 48
-      },
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-33",
-      "subject": "数学",
-      "topic": "网格最短路（等长路径）",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "在方格街道上找等长的不同走法",
-      "tags": [
-        "网格",
-        "路径"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q33",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Four children Andy, Ben, Cathy and Daniel started at the same point S and walked to point F at the same speed. The picture shows the streets and square city blocks. Who finished last?",
-        "zh": "Andy、Ben、Cathy、Daniel 四个孩子同时从 S 出发、以相同速度走向 F。图中画出了街道和方形街区。谁最后到达？"
-      },
-      "vars": {
-        "m": {
-          "type": "int",
-          "min": 3,
-          "max": 8
-        },
-        "n": {
-          "type": "int",
-          "min": 3,
-          "max": 8
-        },
-        "ai": {
-          "type": "int",
-          "min": 0,
-          "max": 3
-        }
-      },
-      "derived": {
-        "ans": "sel(ai, 'Andy','Ben','Cathy','Daniel')"
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": "ai",
-        "options": [
-          {
-            "en": "Andy",
-            "zh": "Andy"
-          },
-          {
-            "en": "Ben",
-            "zh": "Ben"
-          },
-          {
-            "en": "Cathy",
-            "zh": "Cathy"
-          },
-          {
-            "en": "Daniel",
-            "zh": "Daniel"
-          }
-        ]
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Whoever walks the longest route finishes last. The red route goes straight across and straight up: {m} + {n} = {m+n} blocks — the shortest. Blue, green and orange each add extra detours (2, 4 and 6 blocks more), so orange is the longest. Orange is {ans}.",
-        "zh": "走得最长的人最后到达。红色路线先横穿再直上，共 {m} + {n} = {m+n} 格，是最短的。蓝、绿、橙各自多绕了 2、4、6 格，橙色最长。橙色是 {ans}。"
-      },
-      "diagram": {
-        "type": "gridroutes",
-        "m": "m",
-        "n": "n"
-      },
-      "original": {
-        "m": 4,
-        "n": 4,
-        "ai": 1
-      },
-      "constraints": [
-        "m + n >= 8"
-      ],
-      "noVariantReason": "",
-      "originalAnswer": "D"
-    },
-    {
-      "id": "mm1t1-34",
-      "subject": "数学",
-      "topic": "三角形性质",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "等腰直角三角形的性质",
-      "tags": [
-        "三角形",
-        "性质"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q34",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "A right-angled isosceles triangle must have",
-        "zh": "一个等腰直角三角形一定具有下面哪个特征？"
-      },
-      "vars": {},
-      "answer": {
-        "type": "choice",
-        "correctIndex": 2,
-        "options": [
-          {
-            "en": "two right angles and two equal sides",
-            "zh": "两个直角和两条相等的边"
-          },
-          {
-            "en": "three right angles and different sides",
-            "zh": "三个直角且三边互不相等"
-          },
-          {
-            "en": "two equal sides and one right angle",
-            "zh": "两条相等的边和一个直角"
-          },
-          {
-            "en": "one right angle and different sides",
-            "zh": "一个直角且三边互不相等"
-          }
-        ]
-      },
-      "solution": {
-        "en": "A right-angled isosceles triangle has one 90° angle and the two sides forming it (the legs) equal. So it must have two equal sides and one right angle.",
-        "zh": "等腰直角三角形有一个 90° 角，且夹这个直角的两条边（直角边）相等。所以它一定有「两条相等的边和一个直角」。"
-      },
-      "noFigure": "原题为纯文字几何概念题，无图",
-      "noVariantReason": "几何概念选择题，选项与答案不随数值变化；原卷即如此",
-      "original": {},
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-35",
-      "subject": "数学",
-      "topic": "工程问题",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "水管抽水：管数变化后的时间",
-      "tags": [
-        "工程问题",
-        "反比"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q35",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "{p1} identical pipes fill {T} identical tanks in {t} minutes. How many minutes will {p2} of the same pipes take to fill one of these tanks?",
-        "zh": "{p1} 根相同的水管 {t} 分钟可以灌满 {T} 个相同的水箱。用 {p2} 根同样的水管灌满其中 1 个水箱需要多少分钟？"
-      },
-      "vars": {
-        "p1": {
-          "type": "int",
-          "min": 3,
-          "max": 9
-        },
-        "T": {
-          "type": "int",
-          "min": 2,
-          "max": 5
-        },
-        "t": {
-          "type": "pick",
-          "from": [
-            20,
-            30,
-            40,
-            45,
-            60,
-            90
-          ]
-        },
-        "p2": {
-          "type": "int",
-          "min": 2,
-          "max": 9
-        }
-      },
-      "constraints": [
-        "(t*p1) % T == 0",
-        "(t*p1/T) % p2 == 0",
-        "p1 != p2"
-      ],
-      "derived": {
-        "oneTank1Pipe": "t*p1/T",
-        "ans": "t*p1/T/p2"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "ans"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "unit": "分钟",
-      "solution": {
-        "en": "{p1} pipes fill {T} tanks in {t} min, so one pipe fills one tank in {t} × {p1} ÷ {T} = {oneTank1Pipe} min. With {p2} pipes working together: {oneTank1Pipe} ÷ {p2} = {ans} minutes.",
-        "zh": "{p1} 根管 {t} 分钟灌 {T} 箱，所以 1 根管灌 1 箱要 {t} × {p1} ÷ {T} = {oneTank1Pipe} 分钟。{p2} 根管一起：{oneTank1Pipe} ÷ {p2} = {ans} 分钟。"
-      },
-      "noFigure": "原题为纯文字工程问题，无图",
-      "original": {
-        "p1": 7,
-        "T": 3,
-        "t": 45,
-        "p2": 5
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-36",
-      "subject": "数学",
-      "topic": "和倍问题",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "两数和与倍数关系求两数",
-      "tags": [
-        "方程",
-        "和倍"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q36",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The sum of two numbers is 48. If the smaller number is equal to one fifth of the larger number, the numbers are",
-        "zh": "两个数的和是 48。如果较小的数等于较大数的五分之一，这两个数是"
-      },
-      "vars": {
-        "k": {
-          "type": "int",
-          "min": 2,
-          "max": 9
-        },
-        "base": {
-          "type": "int",
-          "min": 4,
-          "max": 20
-        }
-      },
-      "constraints": [
-        "S % (k+1) == 0"
-      ],
-      "derived": {
-        "S": "(k+1)*base",
-        "small": "base",
-        "big": "k*base"
-      },
-      "answer": {
-        "type": "choice",
-        "correctIndex": 0,
-        "options": [
-          {
-            "en": "{small} and {big}",
-            "zh": "{small} 和 {big}"
-          },
-          {
-            "en": "{small+1} and {big-1}",
-            "zh": "{small+1} 和 {big-1}"
-          },
-          {
-            "en": "{small-1} and {big+1}",
-            "zh": "{small-1} 和 {big+1}"
-          },
-          {
-            "en": "{small+2} and {big-2}",
-            "zh": "{small+2} 和 {big-2}"
-          }
-        ]
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Let the larger be {k} parts and the smaller 1 part, so {k+1} parts in total = {S}. One part = {S} ÷ {k+1} = {small}. The numbers are {small} and {big}.",
-        "zh": "把大数看成 {k} 份、小数看成 1 份，共 {k+1} 份 = {S}。一份 = {S} ÷ {k+1} = {small}。所以两数是 {small} 和 {big}。"
-      },
-      "noFigure": "原题为纯文字应用题，无图",
-      "original": {
-        "k": 5,
-        "base": 8
-      },
-      "originalAnswer": "D"
-    },
-    {
-      "id": "mm1t1-37",
-      "subject": "数学",
-      "topic": "百分数求总数",
-      "grade": "六年级",
-      "difficulty": 3,
-      "title": "已知两类书的差求总册数",
-      "tags": [
-        "百分数",
-        "求整体"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q37",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "In a public library, {p}% of the books are classified as fiction and the remainder as non-fiction. There are {d} more non-fiction books than fiction books. The number of books in the fiction category is",
-        "zh": "图书馆里 {p}% 的书是小说类，其余是非小说类。非小说类比小说类多 {d} 本。小说类有多少本？"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 7
-        }
-      },
-      "constraints": [
-        "(d*100) % (100 - 2*p) == 0",
-        "p < 50",
-        "d > 0"
-      ],
-      "derived": {
-        "p": "sel(i, 30, 20, 40, 25, 10, 15, 35, 45)",
-        "d": "sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)",
-        "diff": "100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45)",
-        "onePct": "sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)/(100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45))",
-        "fic": "sel(i, 30, 20, 40, 25, 10, 15, 35, 45)*sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)/(100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45))",
-        "nonfic": "(100 - sel(i, 30, 20, 40, 25, 10, 15, 35, 45))*sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)/(100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45))"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "fic"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Fiction is {p}%, so non-fiction is {100-p}%. The gap between them is {100-p}% − {p}% = {100-2*p}%, and that equals {d} books. So 1% = {d} ÷ {100-2*p}, and fiction = {p}% → {p} × that = {fic} books.",
-        "zh": "小说占 {p}%，非小说占 {100-p}%。两者相差 {100-p}% − {p}% = {100-2*p}%，正好是 {d} 本。所以 1% = {d} ÷ {100-2*p}，小说占 {p}% → {p} × 这个数 = {fic} 本。"
-      },
-      "noFigure": "原题为纯文字百分数题，无图",
-      "original": {
-        "i": 0
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-38",
-      "subject": "数学",
-      "topic": "周长与长方形",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "一面靠墙围花园，求篱笆长度与面积",
-      "tags": [
-        "周长",
-        "长方形"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q38",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Gary has {F} metres of fence to enclose his garden. One side of the garden does not need to be fenced. The width of the garden is {k}/{m} of the length. How long is the garden, in metres?",
-        "zh": "Gary 有 {F} 米篱笆要围住花园，花园的一边不需要围。花园的宽是长的 {k}/{m}。花园的长是多少米？"
-      },
-      "vars": {
-        "F": {
-          "type": "pick",
-          "from": [
-            30,
-            40,
-            50,
-            56,
-            60,
-            70,
-            80
-          ]
-        },
-        "k": {
-          "type": "pick",
-          "from": [
-            2,
-            3,
-            4
-          ]
-        },
-        "m": {
-          "type": "pick",
-          "from": [
-            3,
-            4,
-            5
-          ]
-        }
-      },
-      "constraints": [
-        "k < m",
-        "(F*m) % (m + 2*k) == 0"
-      ],
-      "derived": {
-        "L": "F*m/(m + 2*k)",
-        "W": "F*k/(m + 2*k)",
-        "A": "F*m/(m + 2*k)*F*k/(m + 2*k)"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "L"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "unit": "米",
-      "solution": {
-        "en": "Only three sides are fenced: two widths and one length. Width = {k}/{m} of the length, so 长度 + 2 × ({k}/{m} × 长) = {F}. That is 长 × (1 + {2*k}/{m}) = {F}, so 长 × {m+2*k}/{m} = {F} and 长 = {F} × {m} ÷ {m+2*k} = {L} metres.",
-        "zh": "只围三边：两个宽 + 一个长。宽 = 长的 {k}/{m}，所以 长 + 2 × ({k}/{m} × 长) = {F}，即 长 × (1 + {2*k}/{m}) = {F}，长 × {m+2*k}/{m} = {F}，长 = {F} × {m} ÷ {m+2*k} = {L} 米。"
-      },
-      "diagram": {
-        "type": "gardenfence",
-        "L": "L",
-        "W": "W"
-      },
-      "original": {
-        "F": 56,
-        "k": 2,
-        "m": 3
-      },
-      "originalAnswer": "B"
-    },
-    {
-      "id": "mm1t1-39",
-      "subject": "数学",
-      "topic": "三角形面积",
-      "grade": "六年级",
-      "difficulty": 4,
-      "title": "两个全等三角形拼成菱形，求边长",
-      "tags": [
-        "三角形",
-        "面积"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q39",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The triangles ABD and BCD have the same area. The length of AB is one {k}th of the length of BD. If the total area of the two triangles is {total} cm², find the length of AB, in centimetres.",
-        "zh": "三角形 ABD 与 BCD 面积相同。AB 的长度是 BD 的 {k} 分之一。两个三角形的面积之和是 {total} 平方厘米，求 AB 的长度（厘米）。"
-      },
-      "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
-        }
-      },
-      "derived": {
-        "k": "sel(i, 2, 3, 2, 4, 5, 2)",
-        "x": "sel(i, 14, 6, 8, 4, 4, 20)",
-        "BD": "k*x",
-        "total": "k*x*x"
-      },
-      "constraints": [],
-      "answer": {
-        "type": "integer",
-        "expr": "x"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "unit": "厘米",
-      "solution": {
-        "en": "Each triangle is right-angled with legs AB and BD, and they have equal areas, so each is half the total. Let AB = x, then BD = {k}x. One triangle = ½ × x × {k}x = {k}x²/2, so the two together = {k}x². Given {k}x² = {total}, x² = {x*x}, so x = {x}. AB = {x} cm.",
-        "zh": "两个三角形都是直角边为 AB、BD 的直角三角形，且面积相同，所以各占总面积的一半。设 AB = x，则 BD = {k}x。一个三角形面积 = ½ × x × {k}x = {k}x²/2，两个合计 = {k}x²。由 {k}x² = {total} 得 x² = {x*x}，所以 x = {x}。AB = {x} 厘米。"
-      },
-      "diagram": {
-        "type": "rhombustri",
-        "A": "total"
-      },
-      "original": {
-        "i": 0
-      },
-      "noVariantReason": "",
-      "originalAnswer": "C"
-    },
-    {
-      "id": "mm1t1-40",
-      "subject": "数学",
-      "topic": "因数分解",
-      "grade": "六年级",
-      "difficulty": 2,
-      "title": "三个不同正整数之积为定值，求和",
-      "tags": [
-        "因数",
-        "枚举"
-      ],
-      "source": "Mastering Mathematics Book 1 Test 1 Q40",
-      "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "The product of three different positive integers is {N}. What is their sum?",
-        "zh": "三个不同的正整数相乘，积是 {N}。它们的和是多少？"
-      },
-      "vars": {
-        "N": {
-          "type": "pick",
-          "from": [
-            15,
-            24,
-            30,
-            42,
-            60,
-            105
-          ]
-        },
-        "a": {
-          "type": "pick",
-          "from": [
-            1,
-            2,
-            2,
-            2,
-            3,
-            3
-          ]
-        },
-        "b": {
-          "type": "pick",
-          "from": [
-            3,
-            3,
-            3,
-            3,
-            4,
-            5
-          ]
-        },
-        "c": {
-          "type": "pick",
-          "from": [
-            5,
-            4,
-            5,
-            7,
-            5,
-            7
-          ]
-        }
-      },
-      "constraints": [
-        "N == a*b*c",
-        "a < b",
-        "b < c"
-      ],
-      "derived": {
-        "s": "a + b + c"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "s"
-      },
-      "sanity": {
-        "integer": true,
-        "positive": true
-      },
-      "solution": {
-        "en": "Write {N} as a product of three different whole numbers: {N} = {a} × {b} × {c}. Their sum is {a} + {b} + {c} = {s}.",
-        "zh": "把 {N} 写成三个不同正整数的乘积：{N} = {a} × {b} × {c}，它们的和是 {a} + {b} + {c} = {s}。"
-      },
-      "noFigure": "原题为纯文字因数题，无图",
-      "original": {
-        "N": 15,
-        "a": 1,
-        "b": 3,
-        "c": 5
-      },
-      "originalAnswer": "B"
+ "v": 1,
+ "batch": "Mastering Mathematics Selective & Scholarship Book 1 · TEST 1（40 题·中英双语）",
+ "templates": [
+  {
+   "id": "mm1t1-01",
+   "subject": "数学",
+   "topic": "单位换算",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "平方单位换算（毫米↔厘米）",
+   "tags": [
+    "单位换算",
+    "面积单位"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q1",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "If {k} millimetres equal 1 centimetre, how many square centimetres does 1 square millimetre equal?",
+    "zh": "如果 {k} 毫米 = 1 厘米，那么 1 平方毫米等于多少平方厘米？"
+   },
+   "vars": {
+    "k": {
+     "type": "pick",
+     "from": [
+      10,
+      100
+     ]
     }
-  ]
+   },
+   "derived": {
+    "dec": "1/(k*k)",
+    "digits": "sel(k, 4, 2)"
+   },
+   "answer": {
+    "type": "number",
+    "expr": "dec",
+    "digits": 4
+   },
+   "sanity": {
+    "positive": true,
+    "min": 0.00001
+   },
+   "solution": {
+    "en": "1 cm = {k} mm, so 1 cm² = {k*k} mm². Then 1 mm² = 1 ÷ {k*k} = {dec} cm².",
+    "zh": "1 厘米 = {k} 毫米，所以 1 平方厘米 = {k*k} 平方毫米；反过来 1 平方毫米 = 1 ÷ {k*k} = {dec} 平方厘米。"
+   },
+   "hint": {
+    "en": "Area units scale by the square of the length unit.",
+    "zh": "面积单位的进率是长度进率的平方。"
+   },
+   "noFigure": "原题为纯文字换算题，无图",
+   "original": {
+    "k": 10
+   },
+   "originalAnswer": "A"
+  },
+  {
+   "id": "mm1t1-02",
+   "subject": "数学",
+   "topic": "和差问题",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "三人分钱后相等，求原有钱数",
+   "tags": [
+    "方程",
+    "和差"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q2",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "If John gives Allen {a} dollars and Allen gives Frank {b} dollars, the three boys will have the same amount of money. How much more money does John have than Allen?",
+    "zh": "如果 John 给 Allen {a} 元、Allen 给 Frank {b} 元之后，三个人的钱就一样多了。John 比 Allen 多多少元？"
+   },
+   "vars": {
+    "a": {
+     "type": "int",
+     "min": 3,
+     "max": 12
+    },
+    "b": {
+     "type": "int",
+     "min": 2,
+     "max": 8
+    }
+   },
+   "derived": {
+    "diff": "2*a - b"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "diff"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Whatever Frank had, in the end he has his original amount + {b}. Allen ends with his original + {a} − {b}, and John ends with {a} less. Working through it, John − Allen = 2×{a} − {b} = {diff}.",
+    "zh": "不管 Frank 原来有多少，最后他比原来多 {b} 元。Allen 最后比原来多 {a} − {b} 元，John 最后比原来少 {a} 元。相减得 John − Allen = 2×{a} − {b} = {diff}。"
+   },
+   "noFigure": "原题为纯文字应用题，无图",
+   "original": {
+    "a": 5,
+    "b": 2
+   },
+   "originalAnswer": "D",
+   "constraints": [
+    "2*a - b > 0"
+   ],
+   "unit": "元",
+   "noVariantReason": ""
+  },
+  {
+   "id": "mm1t1-03",
+   "subject": "数学",
+   "topic": "位值",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "由各位上的数写出小数",
+   "tags": [
+    "位值",
+    "小数"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q3",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "What is the numeral value of {T} tens, {O} ones, {t} tenths, {h} hundredths and {th} thousandths?",
+    "zh": "{T} 个十、{O} 个一、{t} 个十分之一、{h} 个百分之一、{th} 个千分之一组成的数是多少？"
+   },
+   "vars": {
+    "T": {
+     "type": "int",
+     "min": 1,
+     "max": 9
+    },
+    "O": {
+     "type": "int",
+     "min": 0,
+     "max": 9
+    },
+    "t": {
+     "type": "int",
+     "min": 1,
+     "max": 9
+    },
+    "h": {
+     "type": "int",
+     "min": 0,
+     "max": 9
+    },
+    "th": {
+     "type": "int",
+     "min": 1,
+     "max": 9
+    }
+   },
+   "derived": {
+    "val": "T*10 + O + t/10 + h/100 + th/1000"
+   },
+   "answer": {
+    "type": "number",
+    "expr": "val",
+    "digits": 3
+   },
+   "sanity": {
+    "positive": true
+   },
+   "solution": {
+    "en": "Work out the whole-number part first: {T} tens = {T*10}, plus {O} ones → {T*10+O}. The fraction part reads off the digits in order: {t} tenths, {h} hundredths, {th} thousandths, giving .{t}{h}{th}. So the number is {val}.",
+    "zh": "先算整数部分：{T} 个十 = {T*10}，再加 {O} 个一得 {T*10+O}。小数部分按顺序读：{t} 个十分之一、{h} 个百分之一、{th} 个千分之一，即 .{t}{h}{th}。所以这个数是 {val}。"
+   },
+   "noFigure": "原题为纯文字位值题，无图",
+   "original": {
+    "T": 5,
+    "O": 7,
+    "t": 3,
+    "h": 6,
+    "th": 5
+   },
+   "originalAnswer": "D"
+  },
+  {
+   "id": "mm1t1-04",
+   "subject": "数学",
+   "topic": "量的估测",
+   "grade": "六年级",
+   "difficulty": 1,
+   "title": "选择合适的容积单位",
+   "tags": [
+    "单位",
+    "估测"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q4",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "vars": {
+    "i": {
+     "type": "pick",
+     "from": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    }
+   },
+   "derived": {
+    "cU": "sel(i, 'the amount of water in a bathtub', 'the amount of medicine in an eye dropper', 'the amount of water in a large swimming pool', 'the amount of drink in a can of soft drink', 'the amount of water in a bucket', 'the amount of water in a large water storage tank')",
+    "cUz": "sel(i, '一个浴缸里的水量', '一支滴管里的药水量', '一个大游泳池里的水量', '一罐汽水里的饮料量', '一只水桶里的水量', '一个大储水罐里的水量')",
+    "uU": "sel(i, 'litres', 'millilitres', 'kilolitres', 'millilitres', 'litres', 'kilolitres')",
+    "uUz": "sel(i, '升', '毫升', '千升', '毫升', '升', '千升')",
+    "wU0": "sel(i, 'millilitres', 'litres', 'millilitres', 'litres', 'millilitres', 'millilitres')",
+    "wUz0": "sel(i, '毫升', '升', '毫升', '升', '毫升', '毫升')",
+    "wU1": "sel(i, 'centilitres', 'kilolitres', 'centilitres', 'kilolitres', 'kilolitres', 'litres')",
+    "wUz1": "sel(i, '厘升', '千升', '厘升', '千升', '千升', '升')",
+    "wU2": "sel(i, 'kilolitres', 'hectolitres', 'litres', 'decilitres', 'centilitres', 'centilitres')",
+    "wUz2": "sel(i, '千升', '百升', '升', '分升', '厘升', '厘升')",
+    "whyU": "sel(i, 'A bathtub holds roughly 100–200 litres. Millilitres are far too small and kilolitres far too large, so litres is the sensible unit.', 'A single drop is only a fraction of a millilitre, so a whole dropper holds just a few millilitres.', 'A large pool holds millions of litres, that is thousands of kilolitres.', 'A standard can holds about 375 millilitres, so millilitres is the practical unit.', 'A bucket holds roughly 10 litres. Millilitres would give a clumsy four-digit number.', 'A storage tank holds many thousands of litres, so kilolitres gives the most manageable number.')",
+    "whyUz": "sel(i, '浴缸大约能装 100~200 升水。毫升太小、千升太大，所以用「升」最合适。', '一滴只有零点几毫升，一整支滴管也就几毫升，所以用「毫升」。', '大泳池能装几百万升，也就是几千千升，用「千升」数字最简洁。', '常见的一罐约 375 毫升，所以用「毫升」最实用。', '水桶大约装 10 升；用毫升会得到笨重的四位数，所以用「升」。', '储水罐能装几千升，用「千升」得到的数字最好读。')"
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": 0,
+    "options": [
+     {
+      "en": "{uU}",
+      "zh": "{uUz}"
+     },
+     {
+      "en": "{wU0}",
+      "zh": "{wUz0}"
+     },
+     {
+      "en": "{wU1}",
+      "zh": "{wUz1}"
+     },
+     {
+      "en": "{wU2}",
+      "zh": "{wUz2}"
+     }
+    ]
+   },
+   "stem": {
+    "en": "Of the following units, which would be more likely used to measure {cU}?",
+    "zh": "下面哪个单位最适合用来量{cUz}？"
+   },
+   "solution": {
+    "en": "{whyU}",
+    "zh": "{whyUz}"
+   },
+   "noFigure": "原题为纯文字单位选择题，无图",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-05",
+   "subject": "数学",
+   "topic": "连续整数求和",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "连续偶数之和（已知平均数）",
+   "tags": [
+    "数列",
+    "平均数"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q5",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "What is the sum of the {n} consecutive even numbers whose average is {avg}?",
+    "zh": "{n} 个连续偶数的平均数是 {avg}，它们的和是多少？"
+   },
+   "vars": {
+    "n": {
+     "type": "pick",
+     "from": [
+      3,
+      5
+     ]
+    },
+    "avg": {
+     "type": "int",
+     "min": 3,
+     "max": 30
+    }
+   },
+   "derived": {
+    "sum": "n*avg"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "sum"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Sum = number of terms × average = {n} × {avg} = {sum}. (The fact they are even and consecutive only guarantees the average is the middle term.)",
+    "zh": "总和 = 项数 × 平均数 = {n} × {avg} = {sum}。（是「连续偶数」只是保证平均数正好是中间那个数。）"
+   },
+   "noFigure": "原题为纯文字数列题，无图",
+   "original": {
+    "n": 5,
+    "avg": 12
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-06",
+   "subject": "数学",
+   "topic": "百分数与分数",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "把百分数化成最简分数",
+   "tags": [
+    "百分数",
+    "分数"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q6",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Which of the following fractions is the equivalent of {p}%?",
+    "zh": "下面哪个分数等于 {p}%？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 5
+    }
+   },
+   "derived": {
+    "p": "sel(i, 0.5, 2.5, 5, 12.5, 25, 50)",
+    "k": "sel(i, 5, 25, 50, 125, 250, 500)",
+    "n": "sel(i, 1, 1, 1, 1, 1, 1)",
+    "d": "sel(i, 200, 40, 20, 8, 4, 2)",
+    "base": "sel(i, 1000, 1000, 1000, 1000, 1000, 1000)",
+    "dn1": "sel(i, 500, 500, 500, 500, 500, 500)",
+    "dn2": "sel(i, 1000, 1000, 1000, 1000, 1000, 1000)",
+    "dn3": "sel(i, 50, 50, 50, 50, 50, 50)"
+   },
+   "constraints": [],
+   "answer": {
+    "type": "choice",
+    "correctIndex": 0,
+    "options": [
+     {
+      "en": "[[{n}/{d}]]",
+      "zh": "[[{n}/{d}]]"
+     },
+     {
+      "en": "[[{k}/{dn1}]]",
+      "zh": "[[{k}/{dn1}]]"
+     },
+     {
+      "en": "[[{k}/{dn2}]]",
+      "zh": "[[{k}/{dn2}]]"
+     },
+     {
+      "en": "[[{k}/{dn3}]]",
+      "zh": "[[{k}/{dn3}]]"
+     }
+    ]
+   },
+   "sanity": {
+    "maxDen": 1000
+   },
+   "solution": {
+    "en": "{p}% means {p} parts out of 100, which is the same as [[{k}/{base}]]. In its simplest form, divide the top and bottom by their highest common factor: [[{k}/{base}]] = [[{n}/{d}]].",
+    "zh": "{p}% 就是 100 份里取 {p} 份，即 [[{k}/{base}]]。把它化成最简分数，分子分母同除以最大公因数，得 [[{n}/{d}]]。"
+   },
+   "noFigure": "原题为纯文字分数选择题，无图",
+   "noVariantReason": "百分数化最简分数，共 6 个固定取值（0.5%/2.5%/5%/12.5%/25%/50%），正确答案依次为 1/200、1/40、1/20、1/8、1/4、1/2",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-07",
+   "subject": "数学",
+   "topic": "按比例分配",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "按比例分配总量求差",
+   "tags": [
+    "比",
+    "按比例分配"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q7",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The weights of two ships are in the ratio of {m} : {n}. If together they weigh {T} tonnes, how many more tonnes does the larger ship weigh?",
+    "zh": "两艘船的重量比是 {m} : {n}，两艘船共重 {T} 吨。较大的那艘船比小的一艘重多少吨？"
+   },
+   "vars": {
+    "m": {
+     "type": "int",
+     "min": 2,
+     "max": 9
+    },
+    "n": {
+     "type": "int",
+     "min": 2,
+     "max": 12
+    },
+    "T": {
+     "type": "int",
+     "min": 100,
+     "max": 9000
+    }
+   },
+   "constraints": [
+    "m != n",
+    "T*abs(m-n) % (m+n) == 0"
+   ],
+   "derived": {
+    "diff": "T*abs(n-m)/(m+n)"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "diff"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Total parts = {m} + {n} = {m+n}. One part = {T} ÷ {m+n}. The difference is ({n} − {m}) = {abs(n-m)} parts, so {abs(n-m)} × {T} ÷ {m+n} = {diff} tonnes.",
+    "zh": "总份数 = {m} + {n} = {m+n}。一份 = {T} ÷ {m+n}。差 {n} − {m} = {abs(n-m)} 份，所以相差 {abs(n-m)} × {T} ÷ {m+n} = {diff} 吨。"
+   },
+   "noFigure": "原题为纯文字比例应用题，无图",
+   "original": {
+    "m": 5,
+    "n": 9,
+    "T": 5600
+   },
+   "originalAnswer": "D"
+  },
+  {
+   "id": "mm1t1-08",
+   "subject": "数学",
+   "topic": "最优化（分组）",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "人数固定，组越小组数越多",
+   "tags": [
+    "整除",
+    "最优化"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q8",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "A class of {N} students is to be divided into smaller groups. If each group is to contain 3, 4, or 5 people, what is the largest number of groups possible?",
+    "zh": "一个 {N} 人的班要分成若干小组。每组只能有 3 人、4 人或 5 人，最多能分成多少个组？"
+   },
+   "vars": {
+    "N": {
+     "type": "int",
+     "min": 30,
+     "max": 80
+    }
+   },
+   "constraints": [
+    "N >= 6"
+   ],
+   "derived": {
+    "q": "floor(N/3)",
+    "r": "N - 3*floor(N/3)",
+    "ans": "floor(N/3)"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "ans"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "To get the MOST groups, make the groups as small as possible. Using groups of 3 gives {q} groups, using {3*q} students. The remaining {r} {r} student(s) can be absorbed by turning some groups of 3 into groups of 4 or 5 (a group of 3 + 1 → 4, a group of 3 + 2 → 5), so the number of groups stays {ans}.",
+    "zh": "要组数最多，每组就尽量小。用 3 人组可以分成 {q} 组，用掉 {3*q} 人。剩下的 {r} 人可以并入已有的组（3+1 变 4 人组、3+2 变 5 人组），组数不变，所以最多 {ans} 组。"
+   },
+   "noFigure": "原题为纯文字应用题，无图",
+   "original": {
+    "N": 40
+   },
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-09",
+   "subject": "数学",
+   "topic": "用字母表示数",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "由速度求更长时间行驶的路程",
+   "tags": [
+    "用字母表示",
+    "速度"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q9",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "If a train travels n kilometres in {t1} hours, how many kilometres will it travel in {t2} hours?",
+    "zh": "一列火车 {t1} 小时行驶 n 千米，那么 {t2} 小时能行驶多少千米？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 5
+    }
+   },
+   "constraints": [
+    "t2 != t1",
+    "k > 1"
+   ],
+   "derived": {
+    "t1": "sel(i, 5, 4, 3, 6, 2, 8)",
+    "k": "sel(i, 5, 6, 4, 3, 7, 9)",
+    "t2": "t1 * k",
+    "mult": "k"
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": 0,
+    "options": [
+     {
+      "en": "{mult} × n",
+      "zh": "{mult} × n"
+     },
+     {
+      "en": "n ÷ {mult}",
+      "zh": "n ÷ {mult}"
+     },
+     {
+      "en": "n + {mult}",
+      "zh": "n + {mult}"
+     },
+     {
+      "en": "n − {mult}",
+      "zh": "n − {mult}"
+     }
+    ]
+   },
+   "solution": {
+    "en": "In {t1} hours it covers n km, so in 1 hour it covers n ÷ {t1} km. In {t2} hours it covers {t2} ÷ {t1} = {mult} times as far, that is {mult} × n km.",
+    "zh": "{t1} 小时行驶 n 千米，所以每小时行 n ÷ {t1} 千米。{t2} 小时是 {t1} 小时的 {mult} 倍，因此共行 {mult} × n 千米。"
+   },
+   "noFigure": "原题为纯文字用字母表示数题，无图",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-10",
+   "subject": "数学",
+   "topic": "速度变化",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "减速后时间变长，求原速度",
+   "tags": [
+    "速度",
+    "方程"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q10",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Steven travels from Shanghai to Beijing by car in {t1} hours. If he reduces the speed of his car by {d} km/h, then he takes {t2} hours for the same distance. Find the distance between the two towns, in kilometres.",
+    "zh": "Steven 开车从上海到北京用了 {t1} 小时。如果他把车速每小时降低 {d} 千米，那么同样的路程要用 {t2} 小时。求两城之间的距离（千米）。"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 5
+    }
+   },
+   "constraints": [
+    "t2 > t1",
+    "(t2*d) % (t2 - t1) == 0",
+    "(t1*t2*d) % (t2 - t1) == 0"
+   ],
+   "derived": {
+    "t1": "sel(i, 4, 3, 2, 4, 1, 3)",
+    "d": "sel(i, 25, 20, 15, 25, 40, 12)",
+    "t2": "sel(i, 5, 4, 3, 5, 2, 4)",
+    "v": "sel(i, 5, 4, 3, 5, 2, 4)*sel(i, 25, 20, 15, 25, 40, 12)/(sel(i, 5, 4, 3, 5, 2, 4) - sel(i, 4, 3, 2, 4, 1, 3))",
+    "dist": "sel(i, 4, 3, 2, 4, 1, 3)*sel(i, 5, 4, 3, 5, 2, 4)*sel(i, 25, 20, 15, 25, 40, 12)/(sel(i, 5, 4, 3, 5, 2, 4) - sel(i, 4, 3, 2, 4, 1, 3))"
+   },
+   "answer": {
+    "type": "number",
+    "expr": "dist",
+    "digits": 1
+   },
+   "sanity": {
+    "positive": true
+   },
+   "solution": {
+    "en": "Let the original speed be v. The distance is the same both times, so {t1}v = {t2}(v − {d}). Expanding: {t1}v = {t2}v − {t2*d}. Hence ({t2} − {t1})v = {t2*d}, so v = {v} km/h. Distance = {t1} × {v} = {dist} km.",
+    "zh": "设原速为 v。两次路程相同，所以 {t1}v = {t2}(v − {d})，展开得 {t1}v = {t2}v − {t2*d}，即 ({t2} − {t1})v = {t2*d}，解得 v = {v} 千米/时。距离 = {t1} × {v} = {dist} 千米。"
+   },
+   "noFigure": "原题为纯文字行程题，无图",
+   "originalAnswer": "A",
+   "unit": "km",
+   "original": {
+    "i": 0
+   }
+  },
+  {
+   "id": "mm1t1-11",
+   "subject": "数学",
+   "topic": "三角形面积",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "面积固定时判断哪组底高不可能",
+   "tags": [
+    "三角形面积",
+    "判断"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q11",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Look at the triangle. The area of the triangle is {A} cm². Which pair of base and height is NOT possible?",
+    "zh": "看下图。这个三角形的面积是 {A} 平方厘米。下面哪一对「底 × 高」是不可能的？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 5
+    }
+   },
+   "derived": {
+    "A": "sel(i, 40, 30, 36, 24, 60, 45)",
+    "twoA": "2*A",
+    "b0": "sel(i, 8, 6, 8, 6, 10, 9)",
+    "h0": "twoA/sel(i, 8, 6, 8, 6, 10, 9)",
+    "b1": "sel(i, 10, 10, 12, 8, 12, 10)",
+    "h1": "twoA/sel(i, 10, 10, 12, 8, 12, 10)",
+    "b2": "sel(i, 4, 4, 6, 4, 6, 6)",
+    "h2": "twoA/sel(i, 4, 4, 6, 4, 6, 6)",
+    "b3": "sel(i, 5, 5, 5, 5, 7, 7)",
+    "h3": "sel(i, 6, 7, 6, 7, 6, 5)",
+    "b3h3": "sel(i, 5, 5, 5, 5, 7, 7)*sel(i, 6, 7, 6, 7, 6, 5)"
+   },
+   "constraints": [
+    "sel(i, 8, 6, 8, 6, 10, 9)*twoA/sel(i, 8, 6, 8, 6, 10, 9) == twoA",
+    "sel(i, 10, 10, 12, 8, 12, 10)*twoA/sel(i, 10, 10, 12, 8, 12, 10) == twoA",
+    "sel(i, 4, 4, 6, 4, 6, 6)*twoA/sel(i, 4, 4, 6, 4, 6, 6) == twoA",
+    "twoA % sel(i, 8, 6, 8, 6, 10, 9) == 0",
+    "twoA % sel(i, 10, 10, 12, 8, 12, 10) == 0",
+    "twoA % sel(i, 4, 4, 6, 4, 6, 6) == 0",
+    "sel(i, 5, 5, 5, 5, 7, 7)*sel(i, 6, 7, 6, 7, 6, 5) != twoA",
+    "sel(i, 8, 6, 8, 6, 10, 9) != sel(i, 10, 10, 12, 8, 12, 10)",
+    "sel(i, 10, 10, 12, 8, 12, 10) != sel(i, 4, 4, 6, 4, 6, 6)",
+    "sel(i, 8, 6, 8, 6, 10, 9) != sel(i, 4, 4, 6, 4, 6, 6)",
+    "sel(i, 5, 5, 5, 5, 7, 7) != sel(i, 8, 6, 8, 6, 10, 9)",
+    "sel(i, 5, 5, 5, 5, 7, 7) != sel(i, 10, 10, 12, 8, 12, 10)",
+    "sel(i, 5, 5, 5, 5, 7, 7) != sel(i, 4, 4, 6, 4, 6, 6)"
+   ],
+   "answer": {
+    "type": "choice",
+    "correctIndex": 3,
+    "options": [
+     {
+      "en": "base {b0} cm, height {h0} cm",
+      "zh": "底 {b0} 厘米，高 {h0} 厘米"
+     },
+     {
+      "en": "base {b1} cm, height {h1} cm",
+      "zh": "底 {b1} 厘米，高 {h1} 厘米"
+     },
+     {
+      "en": "base {b2} cm, height {h2} cm",
+      "zh": "底 {b2} 厘米，高 {h2} 厘米"
+     },
+     {
+      "en": "base {b3} cm, height {h3} cm",
+      "zh": "底 {b3} 厘米，高 {h3} 厘米"
+     }
+    ]
+   },
+   "solution": {
+    "en": "Area = ½ × base × height = {A}, so base × height must equal {2*A}. The first three options multiply to {2*A}: {b0}×{h0} = {b0*h0}, {b1}×{h1} = {b1*h1}, {b2}×{h2} = {b2*h2}. But {b3} × {h3} = {b3h3} ≠ {2*A}. Answer D.",
+    "zh": "面积 = ½ × 底 × 高 = {A}，所以「底 × 高」必须等于 {2*A}。前三项相乘都得 {2*A}：{b0}×{h0} = {b0*h0}，{b1}×{h1} = {b1*h1}，{b2}×{h2} = {b2*h2}。但 {b3} × {h3} = {b3h3} ≠ {2*A}，所以选 D。"
+   },
+   "diagram": {
+    "type": "triangleareagiven",
+    "A": "A"
+   },
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "A"
+  },
+  {
+   "id": "mm1t1-12",
+   "subject": "数学",
+   "topic": "平行四边形等积",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "平行四边形被分成两部分，判断哪个结论一定成立",
+   "tags": [
+    "平行四边形",
+    "面积"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q12",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "A parallelogram is divided into two parts, P1 and P2, by the line shown in the picture. Which of the following statements is SURELY true?",
+    "zh": "如下图，一个平行四边形被图中这条线分成 P1 和 P2 两部分。下面哪个说法一定成立？"
+   },
+   "vars": {},
+   "answer": {
+    "type": "choice",
+    "correctIndex": 1,
+    "options": [
+     {
+      "en": "P2 has a greater perimeter than P1",
+      "zh": "P2 的周长比 P1 大"
+     },
+     {
+      "en": "P1 and P2 have the same perimeter",
+      "zh": "P1 和 P2 的周长相等"
+     },
+     {
+      "en": "P2 has a smaller perimeter than P1",
+      "zh": "P2 的周长比 P1 小"
+     },
+     {
+      "en": "P2 has a smaller area than P1",
+      "zh": "P2 的面积比 P1 小"
+     }
+    ]
+   },
+   "solution": {
+    "en": "Both parts share the whole edge of the zig-zag cut, and both are bounded by the same top and bottom sides of the parallelogram. Adding up the four sides, P1 and P2 use exactly the same total length of boundary — so their perimeters are equal. (Their areas are equal too, but the question asks about perimeter.)",
+    "zh": "两块都沿着同一条锯齿形切边，又各自由平行四边形同样的上边和下边围成。把四条边加起来，P1 和 P2 用到的边界长度完全一样，所以周长相等。（面积也确实相等，但本题问的是周长。）"
+   },
+   "diagram": {
+    "type": "parabiset"
+   },
+   "original": {},
+   "noVariantReason": "定性判断选择题，结论不随数值变化；原卷即如此",
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-13",
+   "subject": "数学",
+   "topic": "代数式",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "长宽各增加后新的面积",
+   "tags": [
+    "代数式",
+    "面积"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q13",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Michelle wants to expand her flowerbed by increasing the length and width each by {d} metres. What will the new area of the flowerbed be, if L and W represent the original length and width?",
+    "zh": "Michelle 想把花圃的长和宽各增加 {d} 米。如果原来的长是 L、宽是 W，新的面积是多少？"
+   },
+   "vars": {
+    "d": {
+     "type": "int",
+     "min": 2,
+     "max": 6
+    }
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": 3,
+    "options": [
+     {
+      "en": "{dd} × L × W",
+      "zh": "{dd} × L × W"
+     },
+     {
+      "en": "{dd} × (L + W)",
+      "zh": "{dd} × (L + W)"
+     },
+     {
+      "en": "{dd} × L + {dd} × W",
+      "zh": "{dd} × L + {dd} × W"
+     },
+     {
+      "en": "(L + {d}) × (W + {d})",
+      "zh": "(L + {d}) × (W + {d})"
+     }
+    ]
+   },
+   "solution": {
+    "en": "The new length is L + {d} and the new width is W + {d}. New area = (L + {d})(W + {d}) = L×W + {d}L + {d}W + {d}×{d} = LW + {d}L + {d}W + {d2}.",
+    "zh": "新的长是 L + {d}，新的宽是 W + {d}。新面积 = (L + {d})(W + {d}) = L×W + {d}L + {d}W + {d}×{d} = LW + {d}L + {d}W + {d2}。"
+   },
+   "noFigure": "原题为纯文字代数题，无图",
+   "original": {
+    "d": 2
+   },
+   "originalAnswer": "D",
+   "derived": {
+    "d2": "d*d",
+    "dd": "2*d"
+   }
+  },
+  {
+   "id": "mm1t1-14",
+   "subject": "数学",
+   "topic": "平均数",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "三个常识量的平均数",
+   "tags": [
+    "平均数",
+    "常识"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q14",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "What is the mathematical average of {w1} ({n1}), {w2} ({n2}) and {w3} ({n3})?",
+    "zh": "{z1}（{n1}）、{z2}（{n2}）、{z3}（{n3}）这三个数的平均数是多少？"
+   },
+   "vars": {
+    "i": {
+     "type": "pick",
+     "from": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    }
+   },
+   "derived": {
+    "n1": "365",
+    "n2": "7",
+    "n3": "sel(i, 24, 30, 60, 12, 15, 9)",
+    "w1": "'the number of days in a year'",
+    "w2": "'the number of days in a week'",
+    "w3": "sel(i, 'the number of hours in a day', 'the number of days in a month', 'the number of seconds in a minute', 'the number of items in a dozen', 'the number of players in a netball team', 'the number of players in a baseball team')",
+    "z1": "'一年的天数'",
+    "z2": "'一周的天数'",
+    "z3": "sel(i, '一天的小时数', '一个月的天数', '一分钟的秒数', '一打的数量', '一支无板篮球队的人数', '一支棒球队的人数')",
+    "s": "n1 + n2 + n3",
+    "avg": "(n1 + n2 + n3)/3"
+   },
+   "constraints": [
+    "mod(s, 3) == 0"
+   ],
+   "answer": {
+    "type": "integer",
+    "expr": "avg"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Average = ({n1} + {n2} + {n3}) ÷ 3 = {s} ÷ 3 = {avg}.",
+    "zh": "平均数 = ({n1} + {n2} + {n3}) ÷ 3 = {s} ÷ 3 = {avg}。"
+   },
+   "noFigure": "原题为纯文字平均数题，无图",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-15",
+   "subject": "数学",
+   "topic": "百分数求整体",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "已知百分之几是多少，求这个数",
+   "tags": [
+    "百分数"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q15",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "{p}% of what number is {v}?",
+    "zh": "{p}% 的多少等于 {v}？"
+   },
+   "vars": {
+    "p": {
+     "type": "pick",
+     "from": [
+      10,
+      20,
+      25,
+      40,
+      50,
+      60,
+      75,
+      80,
+      85
+     ]
+    },
+    "k": {
+     "type": "int",
+     "min": 1,
+     "max": 40
+    }
+   },
+   "constraints": [],
+   "derived": {
+    "v": "p*k",
+    "N": "100*k"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "N"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "{p}% of the number equals {v}, so 1% is {v} ÷ {p}, and 100% is {v} × 100 ÷ {p} = {N}.",
+    "zh": "某数的 {p}% 是 {v}，所以 1% 是 {v} ÷ {p}，100% 就是 {v} × 100 ÷ {p} = {N}。"
+   },
+   "noFigure": "原题为纯文字百分数题，无图",
+   "original": {
+    "p": 85,
+    "k": 1.6
+   },
+   "originalAnswer": "A"
+  },
+  {
+   "id": "mm1t1-16",
+   "subject": "数学",
+   "topic": "周期问题",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "十二生肖循环求年份的生肖",
+   "tags": [
+    "周期",
+    "余数"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q16",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The Chinese Calendar is based on a twelve-year cycle. Each year in the cycle corresponds to an animal: tiger, rabbit, dragon, snake, horse, sheep (or goat), monkey, rooster, dog, pig, rat and ox. The order of the animals never changes. The year {y0} in the Chinese Calendar is the Year of the {a0} (number {i0} in the cycle). Which animal will mark the year {y1}?",
+    "zh": "中国农历以十二年为一轮，依次为：虎、兔、龙、蛇、马、羊、猴、鸡、狗、猪、鼠、牛，顺序永不改变。已知 {y0} 年是{a0}年（第 {i0} 位），那么 {y1} 年是什么年？"
+   },
+   "vars": {
+    "y0": {
+     "type": "int",
+     "min": 2000,
+     "max": 2030
+    },
+    "y1": {
+     "type": "int",
+     "min": 2050,
+     "max": 2200
+    },
+    "i0": {
+     "type": "int",
+     "min": 1,
+     "max": 12
+    }
+   },
+   "constraints": [
+    "y1 > y0",
+    "mod(y1 - y0, 12) != 0"
+   ],
+   "derived": {
+    "idx": "mod(i0 - 1 + (y1 - y0), 12) + 1",
+    "a0": "sel(i0-1, 'tiger','rabbit','dragon','snake','horse','sheep','monkey','rooster','dog','pig','rat','ox')",
+    "ans": "sel(idx-1, 'tiger','rabbit','dragon','snake','horse','sheep','monkey','rooster','dog','pig','rat','ox')"
+   },
+   "answer": {
+    "type": "choice",
+    "options": [
+     {
+      "en": "rat",
+      "zh": "鼠"
+     },
+     {
+      "en": "ox",
+      "zh": "牛"
+     },
+     {
+      "en": "tiger",
+      "zh": "虎"
+     },
+     {
+      "en": "rabbit",
+      "zh": "兔"
+     },
+     {
+      "en": "dragon",
+      "zh": "龙"
+     },
+     {
+      "en": "snake",
+      "zh": "蛇"
+     },
+     {
+      "en": "horse",
+      "zh": "马"
+     },
+     {
+      "en": "goat",
+      "zh": "羊"
+     },
+     {
+      "en": "monkey",
+      "zh": "猴"
+     },
+     {
+      "en": "rooster",
+      "zh": "鸡"
+     },
+     {
+      "en": "dog",
+      "zh": "狗"
+     },
+     {
+      "en": "pig",
+      "zh": "猪"
+     }
+    ],
+    "correctIndex": "idx - 1"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "From {y0} to {y1} is {y1-y0} years, and {y1-y0} ÷ 12 leaves remainder {mod(y1-y0,12)}. Moving {mod(y1-y0,12)} places on from position {i0} lands on position {idx}, the year of the {ans}.",
+    "zh": "{y0} 到 {y1} 相隔 {y1-y0} 年，{y1-y0} ÷ 12 余 {mod(y1-y0,12)}。从第 {i0} 位再往后数 {mod(y1-y0,12)} 位，落在第 {idx} 位，即{ans}年。"
+   },
+   "noFigure": "原题为纯文字周期题，无图",
+   "original": {
+    "y0": 2010,
+    "y1": 2111,
+    "i0": 1
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-17",
+   "subject": "数学",
+   "topic": "概念判断",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "判断哪句关于数的说法正确",
+   "tags": [
+    "数概念",
+    "判断"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q17",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Which of the following is a true statement?",
+    "zh": "下面哪句话是正确的？"
+   },
+   "vars": {},
+   "answer": {
+    "type": "choice",
+    "correctIndex": 2,
+    "options": [
+     {
+      "en": "The product of two negative numbers is negative.",
+      "zh": "两个负数相乘，积是负数。"
+     },
+     {
+      "en": "The product of one negative and one positive number is positive.",
+      "zh": "一个负数乘一个正数，积是正数。"
+     },
+     {
+      "en": "When dividing a positive number by a negative number, the result is negative.",
+      "zh": "正数除以负数，商是负数。"
+     },
+     {
+      "en": "When dividing a negative number by a positive number, the result is positive.",
+      "zh": "负数除以正数，商是正数。"
+     }
+    ]
+   },
+   "solution": {
+    "en": "Check each one: (A) negative × negative is POSITIVE, so false. (B) negative × positive is NEGATIVE, so false. (C) positive ÷ negative is negative — TRUE. (D) negative ÷ positive is negative, not positive, so false.",
+    "zh": "逐条验证：(A) 负×负 = 正，错。(B) 负×正 = 负，错。(C) 正÷负 = 负，正确。(D) 负÷正 = 负（不是正），错。"
+   },
+   "noFigure": "原题为纯文字概念判断题，无图",
+   "noVariantReason": "概念辨析选择题，选项与答案不随数值变化；原卷即如此",
+   "original": {},
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-18",
+   "subject": "数学",
+   "topic": "比与比值",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "求「负场 : 总场数」并化简",
+   "tags": [
+    "比",
+    "化简"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q18",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "A men's basketball team won {w} games and lost {l} games. What is the ratio of games lost to the number of games played, in simplest form?",
+    "zh": "一支男子篮球队赢了 {w} 场、输了 {l} 场。负场数与总场数的最简整数比是多少？"
+   },
+   "vars": {
+    "i": {
+     "type": "pick",
+     "from": [
+      0,
+      1,
+      2,
+      3
+     ]
+    }
+   },
+   "derived": {
+    "w": "sel(i, 30, 40, 20, 40)",
+    "l": "sel(i, 40, 60, 80, 50)",
+    "tot": "sel(i, 70, 100, 100, 90)",
+    "cs": "sel(i, 4, 3, 4, 5)",
+    "ct": "sel(i, 7, 5, 5, 9)",
+    "wA": "sel(i, 3, 2, 1, 4)",
+    "wB": "sel(i, 3, 2, 1, 4)",
+    "wC": "sel(i, 7, 5, 5, 9)",
+    "kL": "sel(i, 10, 20, 20, 10)"
+   },
+   "constraints": [
+    "w + l == tot",
+    "cs * kL == l",
+    "ct * kL == tot"
+   ],
+   "answer": {
+    "type": "choice",
+    "correctIndex": 0,
+    "options": [
+     {
+      "en": "{cs}:{ct}",
+      "zh": "{cs}:{ct}"
+     },
+     {
+      "en": "{wB}:{ct}",
+      "zh": "{wB}:{ct}"
+     },
+     {
+      "en": "{wA}:{cs}",
+      "zh": "{wA}:{cs}"
+     },
+     {
+      "en": "{ct}:{cs}",
+      "zh": "{ct}:{cs}"
+     }
+    ]
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Number of games played = {w} + {l} = {tot}. Ratio lost : played = {l} : {tot}, and dividing both numbers by their highest common factor {kL} gives {cs}:{ct}.",
+    "zh": "总场数 = {w} + {l} = {tot}（场）。负场 : 总场数 = {l} : {tot}，两边同除以最大公因数 {kL}，化简得 {cs}:{ct}。"
+   },
+   "noFigure": "原题为纯文字比的应用题，无图",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-19",
+   "subject": "数学",
+   "topic": "剩余量推算",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "赛季进行一半时推算最终胜场差",
+   "tags": [
+    "方程",
+    "推理"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q19",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "In a baseball league each team plays {G} games. After playing half of their games, team A has won {a} games and team B has won {b} games. If team B wins all of its remaining games and team A loses all of its remaining games, how many more games has team B won than team A at the end of the season?",
+    "zh": "某棒球联盟每队要打 {G} 场。赛程过半时，A 队胜了 {a} 场、B 队胜了 {b} 场。如果后半程 B 队全胜、A 队全负，赛季结束时 B 队比 A 队多胜多少场？"
+   },
+   "vars": {
+    "G": {
+     "type": "pick",
+     "from": [
+      120,
+      140,
+      160,
+      180,
+      200
+     ]
+    },
+    "a": {
+     "type": "int",
+     "min": 40,
+     "max": 80
+    },
+    "b": {
+     "type": "int",
+     "min": 30,
+     "max": 70
+    }
+   },
+   "constraints": [
+    "mod(G, 2) == 0",
+    "(G/2 + b) - (G/2 + a) != 0"
+   ],
+   "derived": {
+    "diff": "(G/2 + b) - (G/2 + a)"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "diff"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "There are {G}/2 = {G/2} games left. Team A finishes with {a} wins; team B finishes with {b} + {G/2} = {b+G/2} wins. The difference is {b+G/2} − {a} = {diff}.",
+    "zh": "还剩 {G}/2 = {G/2} 场。A 队最终 {a} 胜；B 队最终 {b} + {G/2} = {b+G/2} 胜。相差 {b+G/2} − {a} = {diff} 场。"
+   },
+   "noFigure": "原题为纯文字应用题，无图",
+   "original": {
+    "G": 140,
+    "a": 62,
+    "b": 43
+   },
+   "originalAnswer": "D"
+  },
+  {
+   "id": "mm1t1-20",
+   "subject": "数学",
+   "topic": "周长与等腰三角形",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "等腰三角形周长等于等边三角形周长，求边长",
+   "tags": [
+    "周长",
+    "三角形"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q20",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "An isosceles triangle has two sides of {p} cm and {q} cm. An equilateral triangle has the same perimeter. What is the length, in centimetres, of each side of the equilateral triangle?",
+    "zh": "一个等腰三角形的边长分别是 {p} 厘米和 {q} 厘米（等边的两边相等）。另一个等边三角形的周长与它相同，这个等边三角形的边长是多少厘米？"
+   },
+   "vars": {
+    "p": {
+     "type": "int",
+     "min": 4,
+     "max": 12
+    },
+    "q": {
+     "type": "int",
+     "min": 3,
+     "max": 14
+    }
+   },
+   "constraints": [
+    "p != q",
+    "(2*p + q) % 3 == 0",
+    "2*p > q",
+    "p + q > p"
+   ],
+   "derived": {
+    "per": "2*p + q",
+    "side": "(2*p + q)/3"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "side"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "The equal sides are the shorter ones, so the perimeter is {p} + {p} + {q} = {per} cm. The equilateral triangle's side is {per} ÷ 3 = {side} cm.",
+    "zh": "等腰两边是较短的那组，所以周长 = {p} + {p} + {q} = {per} 厘米。等边三角形边长 = {per} ÷ 3 = {side} 厘米。"
+   },
+   "noFigure": "原题为纯文字几何题，无图",
+   "original": {
+    "p": 6,
+    "q": 9
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-21",
+   "subject": "数学",
+   "topic": "百分数应用",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "由部分人数求百分比（注意干扰信息）",
+   "tags": [
+    "百分数",
+    "干扰信息"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q21",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "There are {N} pupils in a school. Exactly half of the {N} pupils in the school are boys. From this information, what percentage of boys in this school wear glasses?",
+    "zh": "一所学校有 {N} 名学生，其中恰好一半是男生。根据这些信息，男生中戴眼镜的占百分之几？"
+   },
+   "vars": {
+    "N": {
+     "type": "pick",
+     "from": [
+      40,
+      50,
+      60,
+      80,
+      100,
+      120
+     ]
+    }
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": 3,
+    "options": [
+     {
+      "en": "10%",
+      "zh": "10%"
+     },
+     {
+      "en": "50%",
+      "zh": "50%"
+     },
+     {
+      "en": "20%",
+      "zh": "20%"
+     },
+     {
+      "en": "cannot be determined",
+      "zh": "无法确定"
+     }
+    ]
+   },
+   "solution": {
+    "en": "The question asks about the percentage of BOYS who wear glasses, but we are never told how many pupils (let alone boys) wear glasses. There is not enough information, so the answer is \"cannot be determined\".",
+    "zh": "题目问的是「男生中」戴眼镜的百分比，但全文根本没给出戴眼镜的人数，更没给出男生里戴眼镜的人数。信息不足，所以答案是「无法确定」。"
+   },
+   "noFigure": "原题为纯文字信息题，无图",
+   "original": {
+    "N": 60
+   },
+   "originalAnswer": "D",
+   "noVariantReason": "考查「信息是否足够」的判断题，答案恒为 cannot be determined"
+  },
+  {
+   "id": "mm1t1-22",
+   "subject": "数学",
+   "topic": "百分数应用",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "按百分比分类计数求差",
+   "tags": [
+    "百分数",
+    "求差"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q22",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "On a farm {S} sheep gave birth. {p}% of the sheep gave birth to two lambs each. The rest of the sheep gave birth to just one lamb each. How many sheep are there altogether?",
+    "zh": "农场里有 {S} 只母羊生产。其中 {p}% 的母羊各生了 2 只小羊，其余的母羊各生了 1 只小羊。农场一共养了多少只羊？"
+   },
+   "vars": {
+    "S": {
+     "type": "pick",
+     "from": [
+      80,
+      100,
+      60,
+      120,
+      40,
+      200
+     ]
+    },
+    "p": {
+     "type": "pick",
+     "from": [
+      30,
+      25,
+      40,
+      50,
+      20,
+      10
+     ]
+    }
+   },
+   "constraints": [
+    "(S*p) % 100 == 0"
+   ],
+   "derived": {
+    "twoG": "S*p/100",
+    "oneG": "S - S*p/100",
+    "lambs": "S + S*p/100",
+    "total": "S + S*p/100"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "total"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "The {S} mothers themselves are {S} sheep. The extra lambs are the second ones: {p}% of {S} = {twoG} sheep had a second lamb. So the total is {S} + {twoG} = {total}.",
+    "zh": "{S} 只母羊本身就有 {S} 只；额外多出来的只是「第二只小羊」：{S} 的 {p}% = {twoG} 只母羊多生了 1 只。所以一共 {S} + {twoG} = {total} 只。"
+   },
+   "noFigure": "原题为纯文字百分数应用题，无图",
+   "original": {
+    "S": 80,
+    "p": 30
+   },
+   "originalAnswer": "D",
+   "unit": "只"
+  },
+  {
+   "id": "mm1t1-23",
+   "subject": "数学",
+   "topic": "买赠最优化",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "买几送一，求最多能买几个",
+   "tags": [
+    "最优化",
+    "除法"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q23",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "A team has ${M}.00 to buy balls. One ball costs ${c}. The team is given 1 free ball for every {k} balls it buys. What is the largest number of balls the team can get?",
+    "zh": "一支队伍有 {M} 元买球，每个球 {c} 元。每买 {k-1} 个球就赠送 1 个球。他们最多能拿到多少个球？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 7
+    }
+   },
+   "constraints": [
+    "M % c == 0",
+    "floor(M/c) >= k",
+    "k > 2"
+   ],
+   "derived": {
+    "M": "sel(i, 70, 90, 100, 80, 120, 150, 60, 96)",
+    "c": "sel(i, 5, 6, 5, 8, 6, 10, 4, 8)",
+    "k": "sel(i, 3, 3, 4, 3, 4, 5, 3, 4)",
+    "paid": "floor(M/c)",
+    "free": "floor(floor(M/c)/(k-1))",
+    "total": "floor(M/c) + floor(floor(M/c)/(k-1))"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "total"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "\"1 free for every {k} bought\" means every batch of {k} costs only {k}−1 paid balls. With ${M} at ${c} each the team can pay for {paid} balls. Each {k-1} paid balls earns 1 free one: {paid} ÷ {k-1} = {free} free balls. Total = {paid} + {free} = {total} balls.",
+    "zh": "“每买 {k-1} 个送 1 个”意味着每 {k} 个球只付 {k}−1 个的钱。{M} 元每个 {c} 元，能付 {paid} 个。每 {k-1} 个付钱的球得 1 个赠球：{paid} ÷ {k-1} = {free} 个。共 {paid} + {free} = {total} 个球。"
+   },
+   "noFigure": "原题为纯文字最优化题，无图",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "A",
+   "unit": "个"
+  },
+  {
+   "id": "mm1t1-24",
+   "subject": "数学",
+   "topic": "面积（去角正方形）",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "正方形四角各去掉一个小正方形后的面积",
+   "tags": [
+    "面积",
+    "图形"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q24",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The following is a {S} cm square. Four {c} cm squares are removed from each of the four corners. What is the area of the remaining shaded part of the figure, in cm²?",
+    "zh": "下图是一个边长 {S} 厘米的正方形，从四个角各剪去一个边长 {c} 厘米的小正方形。剩下部分（阴影）的面积是多少平方厘米？"
+   },
+   "vars": {
+    "S": {
+     "type": "int",
+     "min": 5,
+     "max": 14
+    },
+    "c": {
+     "type": "int",
+     "min": 2,
+     "max": 5
+    }
+   },
+   "constraints": [
+    "2*c < S"
+   ],
+   "derived": {
+    "area": "S*S - 4*c*c"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "area"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "unit": "平方厘米",
+   "solution": {
+    "en": "The whole square is {S} × {S} = {S*S} cm². Four corners of {c} × {c} = {c*c} cm² are removed, that is 4 × {c*c} = {4*c*c} cm². Shaded area = {S*S} − {4*c*c} = {area} cm².",
+    "zh": "整个正方形 {S} × {S} = {S*S} 平方厘米。四个角各去掉 {c} × {c} = {c*c} 平方厘米，共 4 × {c*c} = {4*c*c} 平方厘米。阴影面积 = {S*S} − {4*c*c} = {area} 平方厘米。"
+   },
+   "diagram": {
+    "type": "cornercut",
+    "S": "S",
+    "c": "c"
+   },
+   "original": {
+    "S": 5,
+    "c": 2
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-25",
+   "subject": "数学",
+   "topic": "韦恩图",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "读韦恩图找出只做两件事的人所在区域",
+   "tags": [
+    "韦恩图",
+    "集合"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q25",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "At a grocery store, jobs are recorded on a Venn diagram like the one below. If an employee only works as a checker and in the deli, in which region of the diagram does the employee belong?",
+    "zh": "一家超市用如图的韦恩图记录岗位。如果一名员工只做收银（Checker）又在熟食部（Deli）工作，不做理货（Stocker），他属于图中的哪个区域？"
+   },
+   "vars": {},
+   "answer": {
+    "type": "choice",
+    "correctIndex": 3,
+    "options": [
+     {
+      "en": "W",
+      "zh": "W"
+     },
+     {
+      "en": "X",
+      "zh": "X"
+     },
+     {
+      "en": "Y",
+      "zh": "Y"
+     },
+     {
+      "en": "Z",
+      "zh": "Z"
+     }
+    ]
+   },
+   "solution": {
+    "en": "The employee is in Checker and in Deli, but NOT in Stocker. Checker ∩ Deli without Stocker is the region labelled Z.",
+    "zh": "这名员工属于 Checker 和 Deli，但不属于 Stocker。Checker ∩ Deli 且不在 Stocker 内的区域是 Z。"
+   },
+   "diagram": {
+    "type": "venn3",
+    "labels": "Stocker,Checker,Deli"
+   },
+   "noVariantReason": "定性读图题，答案不随数值变化；原卷即如此",
+   "original": {},
+   "originalAnswer": "D",
+   "noFigure": ""
+  },
+  {
+   "id": "mm1t1-26",
+   "subject": "数学",
+   "topic": "路程问题",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "两人竞速求领先距离",
+   "tags": [
+    "速度",
+    "距离"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q26",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Jane and Kate are ski racing. They both start at the same place, at the same time, and follow the same path. Jane is travelling at {v1} m/s and Kate is travelling at {v2} m/s. How many metres ahead is Kate after {t} seconds?",
+    "zh": "Jane 和 Kate 比赛滑雪，同时同地出发、走同一条路。Jane 的速度是 {v1} 米/秒，Kate 的速度是 {v2} 米/秒。{t} 秒后 Kate 领先多少米？"
+   },
+   "vars": {
+    "v1": {
+     "type": "int",
+     "min": 3,
+     "max": 12
+    },
+    "v2": {
+     "type": "int",
+     "min": 4,
+     "max": 15
+    },
+    "t": {
+     "type": "pick",
+     "from": [
+      30,
+      40,
+      50,
+      60,
+      90,
+      120
+     ]
+    }
+   },
+   "constraints": [
+    "v2 > v1"
+   ],
+   "derived": {
+    "gap": "(v2 - v1)*t"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "gap"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "unit": "米",
+   "solution": {
+    "en": "Kate gains on Jane at {v2} − {v1} = {v2-v1} m every second. After {t} seconds she is {v2-v1} × {t} = {gap} metres ahead.",
+    "zh": "Kate 每秒比 Jane 多走 {v2} − {v1} = {v2-v1} 米。{t} 秒后领先 {v2-v1} × {t} = {gap} 米。"
+   },
+   "noFigure": "原题为纯文字行程题，无图",
+   "original": {
+    "v1": 5,
+    "v2": 8,
+    "t": 60
+   },
+   "originalAnswer": "A"
+  },
+  {
+   "id": "mm1t1-27",
+   "subject": "数学",
+   "topic": "连环百分数",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "百分数的百分数的百分数",
+   "tags": [
+    "百分数",
+    "连乘"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q27",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "What is {p1}% of {p2}% of {p3}% of ${M}?",
+    "zh": "{M} 元的 {p3}% 的 {p2}% 的 {p1}% 是多少元？"
+   },
+   "vars": {
+    "p1": {
+     "type": "pick",
+     "from": [
+      1,
+      2,
+      5,
+      10,
+      20,
+      25
+     ]
+    },
+    "p2": {
+     "type": "pick",
+     "from": [
+      10,
+      20,
+      50,
+      100
+     ]
+    },
+    "p3": {
+     "type": "pick",
+     "from": [
+      10,
+      50,
+      100
+     ]
+    },
+    "M": {
+     "type": "pick",
+     "from": [
+      100,
+      500,
+      1000,
+      2000,
+      5000
+     ]
+    }
+   },
+   "derived": {
+    "v": "M*p1*p2*p3/1000000"
+   },
+   "constraints": [
+    "(M*p1*p2*p3) % 1000000 == 0"
+   ],
+   "answer": {
+    "type": "number",
+    "expr": "v",
+    "digits": 2
+   },
+   "sanity": {
+    "positive": true
+   },
+   "solution": {
+    "en": "{p3}% of ${M} = ${M*p3/100}; {p2}% of that = ${M*p3*p2/10000}; {p1}% of that = ${v}.",
+    "zh": "{M} 的 {p3}% = {M*p3/100} 元；它的 {p2}% = {M*p3*p2/10000} 元；再取它的 {p1}% = {v} 元。"
+   },
+   "noFigure": "原题为纯文字百分数题，无图",
+   "original": {
+    "p1": 1,
+    "p2": 10,
+    "p3": 100,
+    "M": 1000
+   },
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-28",
+   "subject": "数学",
+   "topic": "数轴与比例",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "在数轴上确定两数相除结果的近似位置",
+   "tags": [
+    "数轴",
+    "估算"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q28",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The number line below runs from 0 to {E}. Which lettered point best represents the value of {cName} divided by {fName}?",
+    "zh": "下面的数轴从 0 标到 {E}，A 到 H 是 8 个等分点。哪个字母表示的点最接近「{cName} 除以 {fName}」的值？"
+   },
+   "vars": {
+    "E": {
+     "type": "pick",
+     "from": [
+      1,
+      2
+     ]
+    },
+    "ci": {
+     "type": "pick",
+     "from": [
+      2,
+      4,
+      6
+     ]
+    },
+    "fj": {
+     "type": "pick",
+     "from": [
+      8
+     ]
+    }
+   },
+   "constraints": [
+    "ci < fj",
+    "mod(ci, 2) == 0"
+   ],
+   "derived": {
+    "cName": "sel(ci-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
+    "fName": "sel(fj-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')",
+    "q": "ci/fj",
+    "k": "ci/fj*8",
+    "kName": "sel(ci/fj*8-1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')"
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": "ci/fj*8-1",
+    "options": [
+     {
+      "en": "A",
+      "zh": "A"
+     },
+     {
+      "en": "B",
+      "zh": "B"
+     },
+     {
+      "en": "C",
+      "zh": "C"
+     },
+     {
+      "en": "D",
+      "zh": "D"
+     },
+     {
+      "en": "E",
+      "zh": "E"
+     },
+     {
+      "en": "F",
+      "zh": "F"
+     },
+     {
+      "en": "G",
+      "zh": "G"
+     },
+     {
+      "en": "H",
+      "zh": "H"
+     }
+    ]
+   },
+   "sanity": {
+    "positive": true
+   },
+   "solution": {
+    "en": "From 0 to {E}, the eight points A–H are each {E} ÷ 8 = {E/8} apart. {cName} is at {E} × {ci} ÷ 8 = {E*ci/8} and {fName} is at {E} × {fj} ÷ 8 = {E*fj/8}. So {cName} ÷ {fName} = {E*ci/8} ÷ {E*fj/8} = {q}. That value sits at the {ci/fj*8}th point from 0, which is {kName}.",
+    "zh": "0 到 {E} 之间的 A–H 八个点，每格是 {E} ÷ 8 = {E/8}。{cName} 在 {E} × {ci} ÷ 8 = {E*ci/8} 处，{fName} 在 {E} × {fj} ÷ 8 = {E*fj/8} 处。所以 {cName} ÷ {fName} = {E*ci/8} ÷ {E*fj/8} = {q}，正好落在从 0 数第 {ci/fj*8} 个点上，即 {kName}。"
+   },
+   "diagram": {
+    "type": "numberline",
+    "E": "E",
+    "n": "E",
+    "k": "k"
+   },
+   "original": {
+    "E": 2,
+    "ci": 2,
+    "fj": 8
+   },
+   "originalAnswer": "B",
+   "noVariantReason": "数与形的选择题，考「商在数轴上的位置」，取值组合固定为可落在刻度点上的比"
+  },
+  {
+   "id": "mm1t1-29",
+   "subject": "数学",
+   "topic": "因数分解",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "三个大于 1 的整数相乘等于给定数",
+   "tags": [
+    "因数",
+    "质因数分解"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q29",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "I multiply three positive integers that are all greater than 1 and get {N}. Find the smallest of the three numbers.",
+    "zh": "我把三个都大于 1 的正整数相乘，积是 {N}。这三个数中最小的是多少？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 7
+    }
+   },
+   "derived": {
+    "f": "sel(i, 3, 5, 7, 7, 3, 5, 3, 5)",
+    "m": "sel(i, 5, 11, 11, 13, 3, 11, 37, 13)",
+    "g": "sel(i, 7, 3, 3, 3, 37, 7, 3, 7)",
+    "N": "sel(i, 105, 165, 231, 273, 333, 385, 333, 455)"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "f"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Write {N} as a product of three whole numbers, each greater than 1: {N} = {f} × {m} × {g}. The smallest of the three is {f}.",
+    "zh": "把 {N} 写成三个都大于 1 的整数相乘：{N} = {f} × {m} × {g}。这三个数中最小的是 {f}。"
+   },
+   "noFigure": "原题为纯文字因数题，无图",
+   "noVariantReason": "因数分解题，{N} 取 8 个可唯一分解为三因子（且最小因子各不相同）的固定值",
+   "original": {
+    "i": 4
+   },
+   "originalAnswer": "A"
+  },
+  {
+   "id": "mm1t1-30",
+   "subject": "数学",
+   "topic": "乘法简算",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "一个数比某乘积少多少（提公因数）",
+   "tags": [
+    "运算律",
+    "简算"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q30",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "What is {k} less than the product of {a} and {k}?",
+    "zh": "{a} 与 {k} 的乘积，比它少 {k} 的数是多少？"
+   },
+   "vars": {
+    "a": {
+     "type": "int",
+     "min": 20,
+     "max": 90
+    },
+    "k": {
+     "type": "int",
+     "min": 100,
+     "max": 900,
+     "step": 1
+    }
+   },
+   "derived": {
+    "prod": "a*k",
+    "v": "a*k - k"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "v"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "The product is {a} × {k} = {prod}. Subtracting {k} gives {prod} − {k} = {v}. (Equivalently, {a*k} − {k} = {a-1} × {k} = {v}.)",
+    "zh": "乘积 = {a} × {k} = {prod}；再减去 {k} 得 {prod} − {k} = {v}。（也可以这样看：{a*k} − {k} = {a-1} × {k} = {v}。）"
+   },
+   "noFigure": "原题为纯文字计算题，无图",
+   "original": {
+    "a": 30001,
+    "k": 54321
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-31",
+   "subject": "数学",
+   "topic": "最优化（组合购买）",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "两种包装混合购买，求最少花多少钱",
+   "tags": [
+    "最优化",
+    "枚举"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q31",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "At a stationery shop, a pack of {a} notebooks costs ${c1} and a pack of {b} notebooks costs ${c2}. What is the least amount of money needed to buy {T} notebooks?",
+    "zh": "文具店里 {a} 本一包的本子卖 {c1} 元，{b} 本一包的本子卖 {c2} 元。要买 {T} 本，最少花多少钱？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 5
+    }
+   },
+   "derived": {
+    "a": "sel(i, 5, 5, 6, 7, 5, 7)",
+    "b": "sel(i, 9, 9, 9, 9, 9, 9)",
+    "c1": "sel(i, 5, 5, 6, 7, 5, 7)",
+    "c2": "sel(i, 8, 8, 8, 8, 8, 8)",
+    "T": "sel(i, 77, 50, 60, 70, 32, 43)",
+    "x": "sel(i, 1, 1, 1, 1, 1, 1)",
+    "y": "sel(i, 8, 5, 6, 7, 3, 4)",
+    "best": "sel(i, 69, 45, 54, 63, 29, 39)"
+   },
+   "constraints": [
+    "a*x + b*y == T",
+    "best == c1*x + c2*y",
+    "c2*a < c1*b"
+   ],
+   "answer": {
+    "type": "integer",
+    "expr": "best"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Compare price per notebook: ${c1} ÷ {a} vs ${c2} ÷ {b}. The {b}-pack is better value. To get exactly {T} notebooks: {x} packs of {a} plus {y} packs of {b} gives {a}×{x} + {b}×{y} = {T}. Cost = {x}×${c1} + {y}×${c2} = ${best}.",
+    "zh": "先比每本单价：{c1} ÷ {a} 与 {c2} ÷ {b}，{b} 本装更划算。要正好买 {T} 本：{a} 本装 {x} 包 + {b} 本装 {y} 包 = {a}×{x} + {b}×{y} = {T} 本。花费 = {x}×{c1} + {y}×{c2} = {best} 元。"
+   },
+   "noFigure": "原题为纯文字最优化题，无图",
+   "noVariantReason": "组合购买最优化，固定为「小包装 + 大包装」两档价格，最优组合由枚举确定",
+   "originalAnswer": "D",
+   "original": {
+    "i": 0
+   }
+  },
+  {
+   "id": "mm1t1-32",
+   "subject": "数学",
+   "topic": "平均数（分球）",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "每名队员上场时间相同，求每人上场分钟数",
+   "tags": [
+    "平均数",
+    "除法"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q32",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "There are {N} men on a basketball team, and in a game {k} of them play at any one time. If the game is {T} minutes long and each man plays exactly the same number of minutes, how many minutes does each man play?",
+    "zh": "一支篮球队有 {N} 名队员，场上同时有 {k} 人。一场比赛 {T} 分钟，如果每人上场时间完全相同，每人上场多少分钟？"
+   },
+   "vars": {
+    "N": {
+     "type": "int",
+     "min": 8,
+     "max": 20
+    },
+    "k": {
+     "type": "int",
+     "min": 4,
+     "max": 8
+    },
+    "T": {
+     "type": "pick",
+     "from": [
+      24,
+      32,
+      36,
+      40,
+      48,
+      56,
+      60
+     ]
+    }
+   },
+   "constraints": [
+    "(k*T) % N == 0"
+   ],
+   "derived": {
+    "tot": "k*T",
+    "each": "k*T/N"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "each"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "unit": "分钟",
+   "solution": {
+    "en": "Every minute {k} men are on court, so total player-minutes = {k} × {T} = {tot}. Shared equally among {N} men: {tot} ÷ {N} = {each} minutes each.",
+    "zh": "每分钟场上有 {k} 人，所以总上场人次 = {k} × {T} = {tot}。平分给 {N} 人：{tot} ÷ {N} = {each} 分钟。"
+   },
+   "noFigure": "原题为纯文字应用题，无图",
+   "original": {
+    "N": 15,
+    "k": 5,
+    "T": 48
+   },
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-33",
+   "subject": "数学",
+   "topic": "网格最短路（等长路径）",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "在方格街道上找等长的不同走法",
+   "tags": [
+    "网格",
+    "路径"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q33",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Four children Andy, Ben, Cathy and Daniel started at the same point S and walked to point F at the same speed. The picture shows the streets and square city blocks. Who finished last?",
+    "zh": "Andy、Ben、Cathy、Daniel 四个孩子同时从 S 出发、以相同速度走向 F。图中画出了街道和方形街区。谁最后到达？"
+   },
+   "vars": {
+    "m": {
+     "type": "int",
+     "min": 3,
+     "max": 8
+    },
+    "n": {
+     "type": "int",
+     "min": 3,
+     "max": 8
+    },
+    "ai": {
+     "type": "int",
+     "min": 0,
+     "max": 3
+    }
+   },
+   "derived": {
+    "ans": "sel(ai, 'Andy','Ben','Cathy','Daniel')"
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": "ai",
+    "options": [
+     {
+      "en": "Andy",
+      "zh": "Andy"
+     },
+     {
+      "en": "Ben",
+      "zh": "Ben"
+     },
+     {
+      "en": "Cathy",
+      "zh": "Cathy"
+     },
+     {
+      "en": "Daniel",
+      "zh": "Daniel"
+     }
+    ]
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Whoever walks the longest route finishes last. The red route goes straight across and straight up: {m} + {n} = {m+n} blocks — the shortest. Blue, green and orange each add extra detours (2, 4 and 6 blocks more), so orange is the longest. Orange is {ans}.",
+    "zh": "走得最长的人最后到达。红色路线先横穿再直上，共 {m} + {n} = {m+n} 格，是最短的。蓝、绿、橙各自多绕了 2、4、6 格，橙色最长。橙色是 {ans}。"
+   },
+   "diagram": {
+    "type": "gridroutes",
+    "m": "m",
+    "n": "n"
+   },
+   "original": {
+    "m": 4,
+    "n": 4,
+    "ai": 1
+   },
+   "constraints": [
+    "m + n >= 8"
+   ],
+   "noVariantReason": "",
+   "originalAnswer": "D"
+  },
+  {
+   "id": "mm1t1-34",
+   "subject": "数学",
+   "topic": "三角形性质",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "等腰直角三角形的性质",
+   "tags": [
+    "三角形",
+    "性质"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q34",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "A right-angled isosceles triangle must have",
+    "zh": "一个等腰直角三角形一定具有下面哪个特征？"
+   },
+   "vars": {},
+   "answer": {
+    "type": "choice",
+    "correctIndex": 2,
+    "options": [
+     {
+      "en": "two right angles and two equal sides",
+      "zh": "两个直角和两条相等的边"
+     },
+     {
+      "en": "three right angles and different sides",
+      "zh": "三个直角且三边互不相等"
+     },
+     {
+      "en": "two equal sides and one right angle",
+      "zh": "两条相等的边和一个直角"
+     },
+     {
+      "en": "one right angle and different sides",
+      "zh": "一个直角且三边互不相等"
+     }
+    ]
+   },
+   "solution": {
+    "en": "A right-angled isosceles triangle has one 90° angle and the two sides forming it (the legs) equal. So it must have two equal sides and one right angle.",
+    "zh": "等腰直角三角形有一个 90° 角，且夹这个直角的两条边（直角边）相等。所以它一定有「两条相等的边和一个直角」。"
+   },
+   "noFigure": "原题为纯文字几何概念题，无图",
+   "noVariantReason": "几何概念选择题，选项与答案不随数值变化；原卷即如此",
+   "original": {},
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-35",
+   "subject": "数学",
+   "topic": "工程问题",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "水管抽水：管数变化后的时间",
+   "tags": [
+    "工程问题",
+    "反比"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q35",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "{p1} identical pipes fill {T} identical tanks in {t} minutes. How many minutes will {p2} of the same pipes take to fill one of these tanks?",
+    "zh": "{p1} 根相同的水管 {t} 分钟可以灌满 {T} 个相同的水箱。用 {p2} 根同样的水管灌满其中 1 个水箱需要多少分钟？"
+   },
+   "vars": {
+    "p1": {
+     "type": "int",
+     "min": 3,
+     "max": 9
+    },
+    "T": {
+     "type": "int",
+     "min": 2,
+     "max": 5
+    },
+    "t": {
+     "type": "pick",
+     "from": [
+      20,
+      30,
+      40,
+      45,
+      60,
+      90
+     ]
+    },
+    "p2": {
+     "type": "int",
+     "min": 2,
+     "max": 9
+    }
+   },
+   "constraints": [
+    "(t*p1) % T == 0",
+    "(t*p1/T) % p2 == 0",
+    "p1 != p2"
+   ],
+   "derived": {
+    "oneTank1Pipe": "t*p1/T",
+    "ans": "t*p1/T/p2"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "ans"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "unit": "分钟",
+   "solution": {
+    "en": "{p1} pipes fill {T} tanks in {t} min, so one pipe fills one tank in {t} × {p1} ÷ {T} = {oneTank1Pipe} min. With {p2} pipes working together: {oneTank1Pipe} ÷ {p2} = {ans} minutes.",
+    "zh": "{p1} 根管 {t} 分钟灌 {T} 箱，所以 1 根管灌 1 箱要 {t} × {p1} ÷ {T} = {oneTank1Pipe} 分钟。{p2} 根管一起：{oneTank1Pipe} ÷ {p2} = {ans} 分钟。"
+   },
+   "noFigure": "原题为纯文字工程问题，无图",
+   "original": {
+    "p1": 7,
+    "T": 3,
+    "t": 45,
+    "p2": 5
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-36",
+   "subject": "数学",
+   "topic": "和倍问题",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "两数和与倍数关系求两数",
+   "tags": [
+    "方程",
+    "和倍"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q36",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The sum of two numbers is 48. If the smaller number is equal to one fifth of the larger number, the numbers are",
+    "zh": "两个数的和是 48。如果较小的数等于较大数的五分之一，这两个数是"
+   },
+   "vars": {
+    "k": {
+     "type": "int",
+     "min": 2,
+     "max": 9
+    },
+    "base": {
+     "type": "int",
+     "min": 4,
+     "max": 20
+    }
+   },
+   "constraints": [
+    "S % (k+1) == 0"
+   ],
+   "derived": {
+    "S": "(k+1)*base",
+    "small": "base",
+    "big": "k*base"
+   },
+   "answer": {
+    "type": "choice",
+    "correctIndex": 0,
+    "options": [
+     {
+      "en": "{small} and {big}",
+      "zh": "{small} 和 {big}"
+     },
+     {
+      "en": "{small+1} and {big-1}",
+      "zh": "{small+1} 和 {big-1}"
+     },
+     {
+      "en": "{small-1} and {big+1}",
+      "zh": "{small-1} 和 {big+1}"
+     },
+     {
+      "en": "{small+2} and {big-2}",
+      "zh": "{small+2} 和 {big-2}"
+     }
+    ]
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Let the larger be {k} parts and the smaller 1 part, so {k+1} parts in total = {S}. One part = {S} ÷ {k+1} = {small}. The numbers are {small} and {big}.",
+    "zh": "把大数看成 {k} 份、小数看成 1 份，共 {k+1} 份 = {S}。一份 = {S} ÷ {k+1} = {small}。所以两数是 {small} 和 {big}。"
+   },
+   "noFigure": "原题为纯文字应用题，无图",
+   "original": {
+    "k": 5,
+    "base": 8
+   },
+   "originalAnswer": "D"
+  },
+  {
+   "id": "mm1t1-37",
+   "subject": "数学",
+   "topic": "百分数求总数",
+   "grade": "六年级",
+   "difficulty": 3,
+   "title": "已知两类书的差求总册数",
+   "tags": [
+    "百分数",
+    "求整体"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q37",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "In a public library, {p}% of the books are classified as fiction and the remainder as non-fiction. There are {d} more non-fiction books than fiction books. The number of books in the fiction category is",
+    "zh": "图书馆里 {p}% 的书是小说类，其余是非小说类。非小说类比小说类多 {d} 本。小说类有多少本？"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 7
+    }
+   },
+   "constraints": [
+    "(d*100) % (100 - 2*p) == 0",
+    "p < 50",
+    "d > 0"
+   ],
+   "derived": {
+    "p": "sel(i, 30, 20, 40, 25, 10, 15, 35, 45)",
+    "d": "sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)",
+    "diff": "100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45)",
+    "onePct": "sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)/(100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45))",
+    "fic": "sel(i, 30, 20, 40, 25, 10, 15, 35, 45)*sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)/(100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45))",
+    "nonfic": "(100 - sel(i, 30, 20, 40, 25, 10, 15, 35, 45))*sel(i, 2400, 2400, 1200, 2000, 4000, 2100, 900, 500)/(100 - 2*sel(i, 30, 20, 40, 25, 10, 15, 35, 45))"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "fic"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Fiction is {p}%, so non-fiction is {100-p}%. The gap between them is {100-p}% − {p}% = {100-2*p}%, and that equals {d} books. So 1% = {d} ÷ {100-2*p}, and fiction = {p}% → {p} × that = {fic} books.",
+    "zh": "小说占 {p}%，非小说占 {100-p}%。两者相差 {100-p}% − {p}% = {100-2*p}%，正好是 {d} 本。所以 1% = {d} ÷ {100-2*p}，小说占 {p}% → {p} × 这个数 = {fic} 本。"
+   },
+   "noFigure": "原题为纯文字百分数题，无图",
+   "original": {
+    "i": 0
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-38",
+   "subject": "数学",
+   "topic": "周长与长方形",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "一面靠墙围花园，求篱笆长度与面积",
+   "tags": [
+    "周长",
+    "长方形"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q38",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "Gary has {F} metres of fence to enclose his garden. One side of the garden does not need to be fenced. The width of the garden is {k}/{m} of the length. How long is the garden, in metres?",
+    "zh": "Gary 有 {F} 米篱笆要围住花园，花园的一边不需要围。花园的宽是长的 {k}/{m}。花园的长是多少米？"
+   },
+   "vars": {
+    "F": {
+     "type": "pick",
+     "from": [
+      30,
+      40,
+      50,
+      56,
+      60,
+      70,
+      80
+     ]
+    },
+    "k": {
+     "type": "pick",
+     "from": [
+      2,
+      3,
+      4
+     ]
+    },
+    "m": {
+     "type": "pick",
+     "from": [
+      3,
+      4,
+      5
+     ]
+    }
+   },
+   "constraints": [
+    "k < m",
+    "(F*m) % (m + 2*k) == 0"
+   ],
+   "derived": {
+    "L": "F*m/(m + 2*k)",
+    "W": "F*k/(m + 2*k)",
+    "A": "F*m/(m + 2*k)*F*k/(m + 2*k)"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "L"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "unit": "米",
+   "solution": {
+    "en": "Only three sides are fenced: two widths and one length. Width = {k}/{m} of the length, so 长度 + 2 × ({k}/{m} × 长) = {F}. That is 长 × (1 + {2*k}/{m}) = {F}, so 长 × {m+2*k}/{m} = {F} and 长 = {F} × {m} ÷ {m+2*k} = {L} metres.",
+    "zh": "只围三边：两个宽 + 一个长。宽 = 长的 {k}/{m}，所以 长 + 2 × ({k}/{m} × 长) = {F}，即 长 × (1 + {2*k}/{m}) = {F}，长 × {m+2*k}/{m} = {F}，长 = {F} × {m} ÷ {m+2*k} = {L} 米。"
+   },
+   "diagram": {
+    "type": "gardenfence",
+    "L": "L",
+    "W": "W"
+   },
+   "original": {
+    "F": 56,
+    "k": 2,
+    "m": 3
+   },
+   "originalAnswer": "B"
+  },
+  {
+   "id": "mm1t1-39",
+   "subject": "数学",
+   "topic": "三角形面积",
+   "grade": "六年级",
+   "difficulty": 4,
+   "title": "两个全等三角形拼成菱形，求边长",
+   "tags": [
+    "三角形",
+    "面积"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q39",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The triangles ABD and BCD have the same area. The length of AB is one {k}th of the length of BD. If the total area of the two triangles is {total} cm², find the length of AB, in centimetres.",
+    "zh": "三角形 ABD 与 BCD 面积相同。AB 的长度是 BD 的 {k} 分之一。两个三角形的面积之和是 {total} 平方厘米，求 AB 的长度（厘米）。"
+   },
+   "vars": {
+    "i": {
+     "type": "int",
+     "min": 0,
+     "max": 5
+    }
+   },
+   "derived": {
+    "k": "sel(i, 2, 3, 2, 4, 5, 2)",
+    "x": "sel(i, 14, 6, 8, 4, 4, 20)",
+    "BD": "k*x",
+    "total": "k*x*x"
+   },
+   "constraints": [],
+   "answer": {
+    "type": "integer",
+    "expr": "x"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "unit": "厘米",
+   "solution": {
+    "en": "Each triangle is right-angled with legs AB and BD, and they have equal areas, so each is half the total. Let AB = x, then BD = {k}x. One triangle = ½ × x × {k}x = {k}x²/2, so the two together = {k}x². Given {k}x² = {total}, x² = {x*x}, so x = {x}. AB = {x} cm.",
+    "zh": "两个三角形都是直角边为 AB、BD 的直角三角形，且面积相同，所以各占总面积的一半。设 AB = x，则 BD = {k}x。一个三角形面积 = ½ × x × {k}x = {k}x²/2，两个合计 = {k}x²。由 {k}x² = {total} 得 x² = {x*x}，所以 x = {x}。AB = {x} 厘米。"
+   },
+   "diagram": {
+    "type": "rhombustri",
+    "A": "total"
+   },
+   "original": {
+    "i": 0
+   },
+   "noVariantReason": "",
+   "originalAnswer": "C"
+  },
+  {
+   "id": "mm1t1-40",
+   "subject": "数学",
+   "topic": "因数分解",
+   "grade": "六年级",
+   "difficulty": 2,
+   "title": "三个不同正整数之积为定值，求和",
+   "tags": [
+    "因数",
+    "枚举"
+   ],
+   "source": "Mastering Mathematics Book 1 Test 1 Q40",
+   "sourceSet": "Mastering Mathematics Book 1 Test 1",
+   "stem": {
+    "en": "The product of three different positive integers is {N}. What is their sum?",
+    "zh": "三个不同的正整数相乘，积是 {N}。它们的和是多少？"
+   },
+   "vars": {
+    "N": {
+     "type": "pick",
+     "from": [
+      15,
+      24,
+      30,
+      42,
+      60,
+      105
+     ]
+    },
+    "a": {
+     "type": "pick",
+     "from": [
+      1,
+      2,
+      2,
+      2,
+      3,
+      3
+     ]
+    },
+    "b": {
+     "type": "pick",
+     "from": [
+      3,
+      3,
+      3,
+      3,
+      4,
+      5
+     ]
+    },
+    "c": {
+     "type": "pick",
+     "from": [
+      5,
+      4,
+      5,
+      7,
+      5,
+      7
+     ]
+    }
+   },
+   "constraints": [
+    "N == a*b*c",
+    "a < b",
+    "b < c"
+   ],
+   "derived": {
+    "s": "a + b + c"
+   },
+   "answer": {
+    "type": "integer",
+    "expr": "s"
+   },
+   "sanity": {
+    "integer": true,
+    "positive": true
+   },
+   "solution": {
+    "en": "Write {N} as a product of three different whole numbers: {N} = {a} × {b} × {c}. Their sum is {a} + {b} + {c} = {s}.",
+    "zh": "把 {N} 写成三个不同正整数的乘积：{N} = {a} × {b} × {c}，它们的和是 {a} + {b} + {c} = {s}。"
+   },
+   "noFigure": "原题为纯文字因数题，无图",
+   "original": {
+    "N": 15,
+    "a": 1,
+    "b": 3,
+    "c": 5
+   },
+   "originalAnswer": "B"
+  }
+ ]
 }

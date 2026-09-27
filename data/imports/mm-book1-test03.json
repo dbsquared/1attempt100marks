@@ -84,7 +84,6 @@
    "grade": "六年级",
    "sourceSet": "Mastering Mathematics Book 1 Test 3",
    "source": "Mastering Mathematics Book 1 Test 3 Q02",
-   "noVariantReason": "四个加数固定为 0.125/0.25/0.375/0.75（原卷原样），答案恒为 1 1/2",
    "topic": "小数连加化分数",
    "difficulty": 2,
    "title": "四个八分族小数相加",
@@ -93,26 +92,71 @@
     "分数"
    ],
    "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 5
+    "k1": {
+     "type": "pick",
+     "from": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    },
+    "k2": {
+     "type": "pick",
+     "from": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    },
+    "k3": {
+     "type": "pick",
+     "from": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    },
+    "k4": {
+     "type": "pick",
+     "from": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
     }
    },
    "derived": {
-    "s": "sel(i, 12, 10, 14, 9, 11, 13)",
-    "ans8": "sel(i, 12, 10, 14, 9, 11, 13)/8",
-    "wa": "sel(i, 11, 9, 13, 10, 10, 12)/8",
-    "wb": "sel(i, 13, 11, 15, 8, 12, 14)/8",
-    "wc": "sel(i, 10, 12, 12, 11, 9, 15)/8"
+    "d1": "sel(k1, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+    "d2": "sel(k2, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+    "d3": "sel(k3, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+    "d4": "sel(k4, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+    "s": "k1 + k2 + k3 + k4",
+    "rem": "mod(s, 8)",
+    "wa": "s - 1",
+    "wb": "s + 1",
+    "wc": "s + 3"
    },
    "constraints": [
-    "s != 8",
-    "mod(s, 4) == 0"
+    "s >= 8",
+    "s <= 20",
+    "rem != 0",
+    "k1 != k2"
    ],
    "stem": {
-    "en": "0.125 + 0.25 + 0.375 + 0.75 =",
-    "zh": "0.125 + 0.25 + 0.375 + 0.75 ="
+    "en": "{d1} + {d2} + {d3} + {d4} =",
+    "zh": "{d1} + {d2} + {d3} + {d4} ="
    },
    "answer": {
     "type": "choice",
@@ -123,26 +167,29 @@
       "zh": "[[{s}/8]]"
      },
      {
-      "en": "[[{wa}]]",
-      "zh": "[[{wa}]]"
+      "en": "[[{wa}/8]]",
+      "zh": "[[{wa}/8]]"
      },
      {
-      "en": "[[{wb}]]",
-      "zh": "[[{wb}]]"
+      "en": "[[{wb}/8]]",
+      "zh": "[[{wb}/8]]"
      },
      {
-      "en": "[[{wc}]]",
-      "zh": "[[{wc}]]"
+      "en": "[[{wc}/8]]",
+      "zh": "[[{wc}/8]]"
      }
     ]
    },
    "solution": {
-    "en": "Write all four over 8: 0.125 = 1/8, 0.25 = 2/8, 0.375 = 3/8, 0.75 = 6/8. Sum = 12/8 = 3/2 = 1 1/2.",
-    "zh": "四个数都化成分母 8：0.125 = 1/8，0.25 = 2/8，0.375 = 3/8，0.75 = 6/8。相加得 12/8 = 3/2 = 1 1/2。"
+    "en": "Write every decimal over 8: {d1} = {k1}/8, {d2} = {k2}/8, {d3} = {k3}/8, {d4} = {k4}/8. Adding the numerators gives {k1} + {k2} + {k3} + {k4} = {s}, so the sum is {s}/8.",
+    "zh": "把每个小数都化成分母 8 的分数：{d1} = {k1}/8，{d2} = {k2}/8，{d3} = {k3}/8，{d4} = {k4}/8。分子相加得 {k1} + {k2} + {k3} + {k4} = {s}，所以和是 {s}/8。"
    },
    "noFigure": "原题为纯计算题，无图",
    "original": {
-    "i": 0
+    "k1": 1,
+    "k2": 2,
+    "k3": 3,
+    "k4": 6
    },
    "originalAnswer": "B"
   },
@@ -2860,7 +2907,6 @@
    "grade": "六年级",
    "sourceSet": "Mastering Mathematics Book 1 Test 3",
    "source": "Mastering Mathematics Book 1 Test 3 Q39",
-   "noVariantReason": "",
    "topic": "内接正方形·面积比",
    "difficulty": 4,
    "title": "正方形各边中点连成内接正方形求面积比",
@@ -2870,30 +2916,47 @@
    ],
    "vars": {
     "i": {
-     "type": "int",
-     "min": 0,
-     "max": 2
+     "type": "pick",
+     "from": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
     }
    },
    "derived": {
-    "s": "sel(i, 10, 12, 8)",
-    "bigA": "sel(i, 100, 144, 64)",
-    "smA": "sel(i, 50, 72, 32)",
-    "correctIndex": "sel(i, 3, 3, 3)"
+    "s": "sel(i, 10, 12, 8, 14, 16, 20)",
+    "bigA": "s*s",
+    "smA": "s*s/2",
+    "quarter": "s*s/4",
+    "third": "s*s/3",
+    "sixth": "s*s/6",
+    "eighth": "s*s/8",
+    "half": "s/2"
    },
    "constraints": [
-    "bigA == s*s",
-    "smA == bigA/2",
-    "mod(bigA, 2) == 0"
+    "mod(bigA, 2) == 0",
+    "mod(s, 2) == 0"
    ],
    "stem": {
-    "en": "The midpoints of the sides of square ABCD are connected to form square EFGH. What fraction is the area of square ABCD of the area of square EFGH?",
+    "en": "The midpoints of the sides of square ABCD are joined to form square EFGH. What fraction is the area of square ABCD of the area of square EFGH?",
     "zh": "连接正方形 ABCD 各边的中点，得到正方形 EFGH。正方形 ABCD 的面积是正方形 EFGH 面积的几分之几？"
    },
    "answer": {
     "type": "choice",
-    "correctIndex": "correctIndex",
+    "correctIndex": 0,
     "options": [
+     {
+      "en": "2",
+      "zh": "2"
+     },
+     {
+      "en": "1/2",
+      "zh": "1/2"
+     },
      {
       "en": "1/4",
       "zh": "1/4"
@@ -2903,18 +2966,18 @@
       "zh": "1/3"
      },
      {
-      "en": "1/2",
-      "zh": "1/2"
+      "en": "4",
+      "zh": "4"
      },
      {
-      "en": "2/1",
-      "zh": "2/1"
+      "en": "1/6",
+      "zh": "1/6"
      }
     ]
    },
    "solution": {
-    "en": "Take square ABCD with side {s} cm: its area is {bigA} cm². The four corner triangles cut off by EFGH are right-angled with legs {s}/2 = {s/2} cm each, so each has area (1/2) x {s/2} x {s/2} = {s*s/8} cm². The four together are {s*s/2} cm², so EFGH has area {bigA} - {s*s/2} = {smA} cm². Hence ABCD is {bigA} / {smA} = 2 times EFGH, i.e. 2/1.",
-    "zh": "取边长为 {s} 厘米的正方形 ABCD，面积为 {bigA} 平方厘米。EFGH 切下的四个角都是直角等腰三角形，直角边各为 {s} ÷ 2 = {s/2} 厘米，每个面积 (1/2) × {s/2} × {s/2} = {s*s/8} 平方厘米，四个共 {s*s/2} 平方厘米。所以 EFGH 的面积是 {bigA} − {s*s/2} = {smA} 平方厘米。于是 ABCD 是 EFGH 的 {bigA} ÷ {smA} = 2 倍，即 2/1。"
+    "en": "Take square ABCD with side {s} cm, so its area is {bigA} cm². The four corner triangles cut off by EFGH are right-angled isosceles triangles with legs {s}/2 = {half} cm each, so each has area (1/2) x {half} x {half} = {eighth} cm². The four together take up {bigA} - {smA} = {smA} cm², leaving EFGH with area {smA} cm². Hence area ABCD / area EFGH = {bigA} / {smA} = 2, i.e. ABCD is 2 times EFGH.",
+    "zh": "取边长为 {s} 厘米的正方形 ABCD，面积为 {bigA} 平方厘米。EFGH 切下的四个角都是等腰直角三角形，直角边各为 {s} ÷ 2 = {half} 厘米，每个面积 (1/2) × {half} × {half} = {eighth} 平方厘米，四个共占 {bigA} − {smA} = {smA} 平方厘米，剩下 EFGH 的面积就是 {smA} 平方厘米。所以 ABCD 的面积 ÷ EFGH 的面积 = {bigA} ÷ {smA} = 2，即 ABCD 是 EFGH 的 2 倍。"
    },
    "diagram": {
     "type": "midsquare",

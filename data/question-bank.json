@@ -8028,40 +8028,67 @@
       ],
       "source": "Mastering Mathematics Book 1 Test 1 Q4",
       "sourceSet": "Mastering Mathematics Book 1 Test 1",
-      "stem": {
-        "en": "Of the following units, which would be more likely used to measure the amount of water in a bathtub?",
-        "zh": "下面哪个单位最适合用来量一个浴缸里的水量？"
+      "vars": {
+        "i": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
       },
-      "vars": {},
+      "derived": {
+        "cU": "sel(i, 'the amount of water in a bathtub', 'the amount of medicine in an eye dropper', 'the amount of water in a large swimming pool', 'the amount of drink in a can of soft drink', 'the amount of water in a bucket', 'the amount of water in a large water storage tank')",
+        "cUz": "sel(i, '一个浴缸里的水量', '一支滴管里的药水量', '一个大游泳池里的水量', '一罐汽水里的饮料量', '一只水桶里的水量', '一个大储水罐里的水量')",
+        "uU": "sel(i, 'litres', 'millilitres', 'kilolitres', 'millilitres', 'litres', 'kilolitres')",
+        "uUz": "sel(i, '升', '毫升', '千升', '毫升', '升', '千升')",
+        "wU0": "sel(i, 'millilitres', 'litres', 'millilitres', 'litres', 'millilitres', 'millilitres')",
+        "wUz0": "sel(i, '毫升', '升', '毫升', '升', '毫升', '毫升')",
+        "wU1": "sel(i, 'centilitres', 'kilolitres', 'centilitres', 'kilolitres', 'kilolitres', 'litres')",
+        "wUz1": "sel(i, '厘升', '千升', '厘升', '千升', '千升', '升')",
+        "wU2": "sel(i, 'kilolitres', 'hectolitres', 'litres', 'decilitres', 'centilitres', 'centilitres')",
+        "wUz2": "sel(i, '千升', '百升', '升', '分升', '厘升', '厘升')",
+        "whyU": "sel(i, 'A bathtub holds roughly 100–200 litres. Millilitres are far too small and kilolitres far too large, so litres is the sensible unit.', 'A single drop is only a fraction of a millilitre, so a whole dropper holds just a few millilitres.', 'A large pool holds millions of litres, that is thousands of kilolitres.', 'A standard can holds about 375 millilitres, so millilitres is the practical unit.', 'A bucket holds roughly 10 litres. Millilitres would give a clumsy four-digit number.', 'A storage tank holds many thousands of litres, so kilolitres gives the most manageable number.')",
+        "whyUz": "sel(i, '浴缸大约能装 100~200 升水。毫升太小、千升太大，所以用「升」最合适。', '一滴只有零点几毫升，一整支滴管也就几毫升，所以用「毫升」。', '大泳池能装几百万升，也就是几千千升，用「千升」数字最简洁。', '常见的一罐约 375 毫升，所以用「毫升」最实用。', '水桶大约装 10 升；用毫升会得到笨重的四位数，所以用「升」。', '储水罐能装几千升，用「千升」得到的数字最好读。')"
+      },
       "answer": {
         "type": "choice",
+        "correctIndex": 0,
         "options": [
           {
-            "en": "millilitres",
-            "zh": "毫升"
+            "en": "{uU}",
+            "zh": "{uUz}"
           },
           {
-            "en": "litres",
-            "zh": "升"
+            "en": "{wU0}",
+            "zh": "{wUz0}"
           },
           {
-            "en": "centilitres",
-            "zh": "厘升"
+            "en": "{wU1}",
+            "zh": "{wUz1}"
           },
           {
-            "en": "kilolitres",
-            "zh": "千升"
+            "en": "{wU2}",
+            "zh": "{wUz2}"
           }
-        ],
-        "correctIndex": 1
+        ]
+      },
+      "stem": {
+        "en": "Of the following units, which would be more likely used to measure {cU}?",
+        "zh": "下面哪个单位最适合用来量{cUz}？"
       },
       "solution": {
-        "en": "A bathtub holds roughly 100–200 litres. Millilitres are far too small and kilolitres far too large, so litres is the sensible unit.",
-        "zh": "浴缸大约能装 100~200 升水。毫升太小、千升太大，所以用「升」最合适。"
+        "en": "{whyU}",
+        "zh": "{whyUz}"
       },
       "noFigure": "原题为纯文字单位选择题，无图",
-      "noVariantReason": "常识型单位选择题，选项与答案不随数值变化；原卷即如此",
-      "original": {},
+      "original": {
+        "i": 0
+      },
       "originalAnswer": "B"
     },
     {
@@ -8632,36 +8659,37 @@
       "source": "Mastering Mathematics Book 1 Test 1 Q14",
       "sourceSet": "Mastering Mathematics Book 1 Test 1",
       "stem": {
-        "en": "What is the mathematical average of the number of days in a year ({D}), the number of days in a week ({W}), and the number of hours in a day ({H})?",
-        "zh": "一年的天数（{D}）、一周的天数（{W}）、一天的小时数（{H}）这三个数的平均数是多少？"
+        "en": "What is the mathematical average of {w1} ({n1}), {w2} ({n2}) and {w3} ({n3})?",
+        "zh": "{z1}（{n1}）、{z2}（{n2}）、{z3}（{n3}）这三个数的平均数是多少？"
       },
       "vars": {
-        "D": {
+        "i": {
           "type": "pick",
           "from": [
-            365,
-            366
-          ]
-        },
-        "W": {
-          "type": "pick",
-          "from": [
-            7
-          ]
-        },
-        "H": {
-          "type": "pick",
-          "from": [
-            24
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
           ]
         }
       },
       "derived": {
-        "s": "D + W + H",
-        "avg": "(D + W + H)/3"
+        "n1": "365",
+        "n2": "7",
+        "n3": "sel(i, 24, 30, 60, 12, 15, 9)",
+        "w1": "'the number of days in a year'",
+        "w2": "'the number of days in a week'",
+        "w3": "sel(i, 'the number of hours in a day', 'the number of days in a month', 'the number of seconds in a minute', 'the number of items in a dozen', 'the number of players in a netball team', 'the number of players in a baseball team')",
+        "z1": "'一年的天数'",
+        "z2": "'一周的天数'",
+        "z3": "sel(i, '一天的小时数', '一个月的天数', '一分钟的秒数', '一打的数量', '一支无板篮球队的人数', '一支棒球队的人数')",
+        "s": "n1 + n2 + n3",
+        "avg": "(n1 + n2 + n3)/3"
       },
       "constraints": [
-        "(D + W + H) % 3 == 0"
+        "mod(s, 3) == 0"
       ],
       "answer": {
         "type": "integer",
@@ -8672,15 +8700,12 @@
         "positive": true
       },
       "solution": {
-        "en": "Average = ({D} + {W} + {H}) ÷ 3 = {s} ÷ 3 = {avg}.",
-        "zh": "平均数 = ({D} + {W} + {H}) ÷ 3 = {s} ÷ 3 = {avg}。"
+        "en": "Average = ({n1} + {n2} + {n3}) ÷ 3 = {s} ÷ 3 = {avg}.",
+        "zh": "平均数 = ({n1} + {n2} + {n3}) ÷ 3 = {s} ÷ 3 = {avg}。"
       },
       "noFigure": "原题为纯文字平均数题，无图",
-      "noVariantReason": "三个量都是常识固定值（闰年 366/平年 365 两种），变式只有 2 种；原卷即如此",
       "original": {
-        "D": 365,
-        "W": 7,
-        "H": 24
+        "i": 0
       },
       "originalAnswer": "C"
     },
@@ -8925,40 +8950,51 @@
         "zh": "一支男子篮球队赢了 {w} 场、输了 {l} 场。负场数与总场数的最简整数比是多少？"
       },
       "vars": {
-        "k": {
-          "type": "int",
-          "min": 5,
-          "max": 15
+        "i": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
         }
       },
-      "constraints": [
-        "w != l",
-        "gcd(l, w+l) > 1"
-      ],
       "derived": {
-        "w": "3*k",
-        "l": "4*k",
-        "tot": "7*k"
+        "w": "sel(i, 30, 40, 20, 40)",
+        "l": "sel(i, 40, 60, 80, 50)",
+        "tot": "sel(i, 70, 100, 100, 90)",
+        "cs": "sel(i, 4, 3, 4, 5)",
+        "ct": "sel(i, 7, 5, 5, 9)",
+        "wA": "sel(i, 3, 2, 1, 4)",
+        "wB": "sel(i, 3, 2, 1, 4)",
+        "wC": "sel(i, 7, 5, 5, 9)",
+        "kL": "sel(i, 10, 20, 20, 10)"
       },
+      "constraints": [
+        "w + l == tot",
+        "cs * kL == l",
+        "ct * kL == tot"
+      ],
       "answer": {
         "type": "choice",
-        "correctIndex": 1,
+        "correctIndex": 0,
         "options": [
           {
-            "en": "3:7",
-            "zh": "3:7"
+            "en": "{cs}:{ct}",
+            "zh": "{cs}:{ct}"
           },
           {
-            "en": "4:7",
-            "zh": "4:7"
+            "en": "{wB}:{ct}",
+            "zh": "{wB}:{ct}"
           },
           {
-            "en": "7:4",
-            "zh": "7:4"
+            "en": "{wA}:{cs}",
+            "zh": "{wA}:{cs}"
           },
           {
-            "en": "3:4",
-            "zh": "3:4"
+            "en": "{ct}:{cs}",
+            "zh": "{ct}:{cs}"
           }
         ]
       },
@@ -8967,12 +9003,12 @@
         "positive": true
       },
       "solution": {
-        "en": "Games played = {w} + {l} = {tot}. Ratio lost : played = {l} : {tot}. Divide both by {l} ÷ 4 × 4 = {l}: the common factor is {l} ÷ 4 = {l/4} × ... simplifying {l}:{tot} gives 4:7.",
-        "zh": "总场数 = {w} + {l} = {tot}。负场 : 总场数 = {l} : {tot}，同除以它们的最大公因数，化简得 4:7。"
+        "en": "Number of games played = {w} + {l} = {tot}. Ratio lost : played = {l} : {tot}, and dividing both numbers by their highest common factor {kL} gives {cs}:{ct}.",
+        "zh": "总场数 = {w} + {l} = {tot}（场）。负场 : 总场数 = {l} : {tot}，两边同除以最大公因数 {kL}，化简得 {cs}:{ct}。"
       },
       "noFigure": "原题为纯文字比的应用题，无图",
       "original": {
-        "k": 10
+        "i": 0
       },
       "originalAnswer": "B"
     },
@@ -13152,7 +13188,6 @@
       "grade": "六年级",
       "sourceSet": "Mastering Mathematics Book 1 Test 3",
       "source": "Mastering Mathematics Book 1 Test 3 Q02",
-      "noVariantReason": "四个加数固定为 0.125/0.25/0.375/0.75（原卷原样），答案恒为 1 1/2",
       "topic": "小数连加化分数",
       "difficulty": 2,
       "title": "四个八分族小数相加",
@@ -13161,26 +13196,71 @@
         "分数"
       ],
       "vars": {
-        "i": {
-          "type": "int",
-          "min": 0,
-          "max": 5
+        "k1": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "k2": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "k3": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "k4": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
         }
       },
       "derived": {
-        "s": "sel(i, 12, 10, 14, 9, 11, 13)",
-        "ans8": "sel(i, 12, 10, 14, 9, 11, 13)/8",
-        "wa": "sel(i, 11, 9, 13, 10, 10, 12)/8",
-        "wb": "sel(i, 13, 11, 15, 8, 12, 14)/8",
-        "wc": "sel(i, 10, 12, 12, 11, 9, 15)/8"
+        "d1": "sel(k1, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "d2": "sel(k2, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "d3": "sel(k3, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "d4": "sel(k4, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "s": "k1 + k2 + k3 + k4",
+        "rem": "mod(s, 8)",
+        "wa": "s - 1",
+        "wb": "s + 1",
+        "wc": "s + 3"
       },
       "constraints": [
-        "s != 8",
-        "mod(s, 4) == 0"
+        "s >= 8",
+        "s <= 20",
+        "rem != 0",
+        "k1 != k2"
       ],
       "stem": {
-        "en": "0.125 + 0.25 + 0.375 + 0.75 =",
-        "zh": "0.125 + 0.25 + 0.375 + 0.75 ="
+        "en": "{d1} + {d2} + {d3} + {d4} =",
+        "zh": "{d1} + {d2} + {d3} + {d4} ="
       },
       "answer": {
         "type": "choice",
@@ -13191,26 +13271,29 @@
             "zh": "[[{s}/8]]"
           },
           {
-            "en": "[[{wa}]]",
-            "zh": "[[{wa}]]"
+            "en": "[[{wa}/8]]",
+            "zh": "[[{wa}/8]]"
           },
           {
-            "en": "[[{wb}]]",
-            "zh": "[[{wb}]]"
+            "en": "[[{wb}/8]]",
+            "zh": "[[{wb}/8]]"
           },
           {
-            "en": "[[{wc}]]",
-            "zh": "[[{wc}]]"
+            "en": "[[{wc}/8]]",
+            "zh": "[[{wc}/8]]"
           }
         ]
       },
       "solution": {
-        "en": "Write all four over 8: 0.125 = 1/8, 0.25 = 2/8, 0.375 = 3/8, 0.75 = 6/8. Sum = 12/8 = 3/2 = 1 1/2.",
-        "zh": "四个数都化成分母 8：0.125 = 1/8，0.25 = 2/8，0.375 = 3/8，0.75 = 6/8。相加得 12/8 = 3/2 = 1 1/2。"
+        "en": "Write every decimal over 8: {d1} = {k1}/8, {d2} = {k2}/8, {d3} = {k3}/8, {d4} = {k4}/8. Adding the numerators gives {k1} + {k2} + {k3} + {k4} = {s}, so the sum is {s}/8.",
+        "zh": "把每个小数都化成分母 8 的分数：{d1} = {k1}/8，{d2} = {k2}/8，{d3} = {k3}/8，{d4} = {k4}/8。分子相加得 {k1} + {k2} + {k3} + {k4} = {s}，所以和是 {s}/8。"
       },
       "noFigure": "原题为纯计算题，无图",
       "original": {
-        "i": 0
+        "k1": 1,
+        "k2": 2,
+        "k3": 3,
+        "k4": 6
       },
       "originalAnswer": "B"
     },
@@ -15928,7 +16011,6 @@
       "grade": "六年级",
       "sourceSet": "Mastering Mathematics Book 1 Test 3",
       "source": "Mastering Mathematics Book 1 Test 3 Q39",
-      "noVariantReason": "",
       "topic": "内接正方形·面积比",
       "difficulty": 4,
       "title": "正方形各边中点连成内接正方形求面积比",
@@ -15938,30 +16020,47 @@
       ],
       "vars": {
         "i": {
-          "type": "int",
-          "min": 0,
-          "max": 2
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
         }
       },
       "derived": {
-        "s": "sel(i, 10, 12, 8)",
-        "bigA": "sel(i, 100, 144, 64)",
-        "smA": "sel(i, 50, 72, 32)",
-        "correctIndex": "sel(i, 3, 3, 3)"
+        "s": "sel(i, 10, 12, 8, 14, 16, 20)",
+        "bigA": "s*s",
+        "smA": "s*s/2",
+        "quarter": "s*s/4",
+        "third": "s*s/3",
+        "sixth": "s*s/6",
+        "eighth": "s*s/8",
+        "half": "s/2"
       },
       "constraints": [
-        "bigA == s*s",
-        "smA == bigA/2",
-        "mod(bigA, 2) == 0"
+        "mod(bigA, 2) == 0",
+        "mod(s, 2) == 0"
       ],
       "stem": {
-        "en": "The midpoints of the sides of square ABCD are connected to form square EFGH. What fraction is the area of square ABCD of the area of square EFGH?",
+        "en": "The midpoints of the sides of square ABCD are joined to form square EFGH. What fraction is the area of square ABCD of the area of square EFGH?",
         "zh": "连接正方形 ABCD 各边的中点，得到正方形 EFGH。正方形 ABCD 的面积是正方形 EFGH 面积的几分之几？"
       },
       "answer": {
         "type": "choice",
-        "correctIndex": "correctIndex",
+        "correctIndex": 0,
         "options": [
+          {
+            "en": "2",
+            "zh": "2"
+          },
+          {
+            "en": "1/2",
+            "zh": "1/2"
+          },
           {
             "en": "1/4",
             "zh": "1/4"
@@ -15971,18 +16070,18 @@
             "zh": "1/3"
           },
           {
-            "en": "1/2",
-            "zh": "1/2"
+            "en": "4",
+            "zh": "4"
           },
           {
-            "en": "2/1",
-            "zh": "2/1"
+            "en": "1/6",
+            "zh": "1/6"
           }
         ]
       },
       "solution": {
-        "en": "Take square ABCD with side {s} cm: its area is {bigA} cm². The four corner triangles cut off by EFGH are right-angled with legs {s}/2 = {s/2} cm each, so each has area (1/2) x {s/2} x {s/2} = {s*s/8} cm². The four together are {s*s/2} cm², so EFGH has area {bigA} - {s*s/2} = {smA} cm². Hence ABCD is {bigA} / {smA} = 2 times EFGH, i.e. 2/1.",
-        "zh": "取边长为 {s} 厘米的正方形 ABCD，面积为 {bigA} 平方厘米。EFGH 切下的四个角都是直角等腰三角形，直角边各为 {s} ÷ 2 = {s/2} 厘米，每个面积 (1/2) × {s/2} × {s/2} = {s*s/8} 平方厘米，四个共 {s*s/2} 平方厘米。所以 EFGH 的面积是 {bigA} − {s*s/2} = {smA} 平方厘米。于是 ABCD 是 EFGH 的 {bigA} ÷ {smA} = 2 倍，即 2/1。"
+        "en": "Take square ABCD with side {s} cm, so its area is {bigA} cm². The four corner triangles cut off by EFGH are right-angled isosceles triangles with legs {s}/2 = {half} cm each, so each has area (1/2) x {half} x {half} = {eighth} cm². The four together take up {bigA} - {smA} = {smA} cm², leaving EFGH with area {smA} cm². Hence area ABCD / area EFGH = {bigA} / {smA} = 2, i.e. ABCD is 2 times EFGH.",
+        "zh": "取边长为 {s} 厘米的正方形 ABCD，面积为 {bigA} 平方厘米。EFGH 切下的四个角都是等腰直角三角形，直角边各为 {s} ÷ 2 = {half} 厘米，每个面积 (1/2) × {half} × {half} = {eighth} 平方厘米，四个共占 {bigA} − {smA} = {smA} 平方厘米，剩下 EFGH 的面积就是 {smA} 平方厘米。所以 ABCD 的面积 ÷ EFGH 的面积 = {bigA} ÷ {smA} = 2，即 ABCD 是 EFGH 的 2 倍。"
       },
       "diagram": {
         "type": "midsquare",

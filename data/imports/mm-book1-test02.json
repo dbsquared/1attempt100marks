@@ -1,0 +1,2621 @@
+{
+  "v": 1,
+  "batch": "Mastering Mathematics Selective & Scholarship Book 1 · TEST 2（40 题·中英双语）",
+  "templates": [
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q01",
+      "noVariantReason": "",
+      "id": "mm1t2-01",
+      "topic": "小数化分数",
+      "difficulty": 2,
+      "title": "把两位小数化成最简带分数",
+      "tags": [
+        "小数",
+        "分数"
+      ],
+      "stem": {
+        "en": "{x} =",
+        "zh": "{x} ="
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 7
+        }
+      },
+      "derived": {
+        "whole": "sel(i, 3, 3, 4, 2, 5, 3, 6, 7)",
+        "dd": "sel(i, 44, 12, 16, 25, 75, 20, 24, 36)",
+        "x": "sel(i, 3.44, 3.12, 4.16, 2.25, 5.75, 3.2, 6.24, 7.36)",
+        "a": "sel(i, 11, 3, 4, 1, 3, 1, 6, 9)",
+        "b": "sel(i, 25, 25, 25, 4, 4, 5, 25, 25)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{whole} {a}/{b}",
+            "zh": "{whole} {a}/{b}"
+          },
+          {
+            "en": "{whole} 1/4",
+            "zh": "{whole} 1/4"
+          },
+          {
+            "en": "{whole} 4/11",
+            "zh": "{whole} 4/11"
+          },
+          {
+            "en": "{whole} 7/20",
+            "zh": "{whole} 7/20"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{x} = {whole} and {dd}/100. Divide top and bottom by their highest common factor and {dd}/100 becomes {a}/{b}. So {x} = {whole} {a}/{b}.",
+        "zh": "{x} = {whole} 又 {dd}/100。分子分母同除以最大公因数，{dd}/100 约成 {a}/{b}。所以 {x} = {whole} {a}/{b}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q02",
+      "noVariantReason": "",
+      "id": "mm1t2-02",
+      "topic": "分数与百分数比较",
+      "difficulty": 2,
+      "title": "判断哪个分数大于 20%",
+      "tags": [
+        "分数",
+        "百分数"
+      ],
+      "stem": {
+        "en": "Which is greater than {P}%?",
+        "zh": "下面哪个数大于 {P}%？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "P": "sel(i, 20, 20, 25, 50)",
+        "n0": "sel(i, 2, 1, 1, 1)",
+        "d0": "sel(i, 12, 6, 8, 4)",
+        "n1": "sel(i, 1, 2, 2, 3)",
+        "d1": "sel(i, 6, 12, 9, 10)",
+        "n2": "sel(i, 1, 1, 3, 2)",
+        "d2": "sel(i, 8, 3, 10, 5)",
+        "n3": "sel(i, 1, 4, 3, 3)",
+        "d3": "sel(i, 4, 15, 8, 4)",
+        "ix": "sel(i, 3, 1, 2, 0)"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "{n0}/{d0}",
+            "zh": "{n0}/{d0}"
+          },
+          {
+            "en": "{n1}/{d1}",
+            "zh": "{n1}/{d1}"
+          },
+          {
+            "en": "{n2}/{d2}",
+            "zh": "{n2}/{d2}"
+          },
+          {
+            "en": "{n3}/{d3}",
+            "zh": "{n3}/{d3}"
+          }
+        ],
+        "correctIndex": "ix"
+      },
+      "solution": {
+        "en": "{P}% means {P}/100, i.e. {P/100} as a decimal. Turn each fraction into a decimal and compare: only {n3}/{d3} is above {P/100}.",
+        "zh": "{P}% 就是 {P}/100 = {P/100}。把四个分数都化成小数再比较，只有 {n3}/{d3} 大于 {P/100}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q03",
+      "noVariantReason": "",
+      "id": "mm1t2-03",
+      "topic": "分数与小数比较",
+      "difficulty": 2,
+      "title": "判断哪个小数大于给定的分数",
+      "tags": [
+        "分数",
+        "小数比较"
+      ],
+      "stem": {
+        "en": "Which is greater than {a}/{b}?",
+        "zh": "下面哪个数大于 {a}/{b}？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "a": "sel(i, 1, 1, 3, 2)",
+        "b": "sel(i, 6, 4, 8, 5)",
+        "v0": "sel(i, 1.6, 1.2, 1.6, 1.6)",
+        "v1": "sel(i, 0.16, 0.2, 0.36, 0.35)",
+        "v2": "sel(i, 0.17, 0.26, 0.376, 0.41)",
+        "v3": "sel(i, 1.666, 1.26, 1.37, 1.21)",
+        "ix": "sel(i, 3, 3, 0, 0)"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "{v0}",
+            "zh": "{v0}"
+          },
+          {
+            "en": "{v1}",
+            "zh": "{v1}"
+          },
+          {
+            "en": "{v2}",
+            "zh": "{v2}"
+          },
+          {
+            "en": "{v3}",
+            "zh": "{v3}"
+          }
+        ],
+        "correctIndex": "ix"
+      },
+      "solution": {
+        "en": "{a}/{b} as a decimal is about {a/b}. Comparing the four decimals, only {v3} is greater than {a}/{b}.",
+        "zh": "{a}/{b} 化成小数约为 {a/b}。把四个小数与它比较，只有 {v3} 大于 {a}/{b}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q04",
+      "noVariantReason": "",
+      "id": "mm1t2-04",
+      "topic": "百分数应用",
+      "difficulty": 1,
+      "title": "求一个数的百分之几（含单位）",
+      "tags": [
+        "百分数",
+        "单位"
+      ],
+      "stem": {
+        "en": "{P}% of {N} {unit0} is",
+        "zh": "{N} {unitZ}的 {P}% 是多少？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 5
+        }
+      },
+      "derived": {
+        "P": "sel(i, 40, 35, 60, 25, 45, 80)",
+        "N": "sel(i, 180, 240, 150, 320, 120, 250)",
+        "unit0": "sel(i, 'grams', 'millilitres', 'centimetres', 'grams', 'metres', 'litres')",
+        "unitZ": "sel(i, '克', '毫升', '厘米', '克', '米', '升')",
+        "val": "N*P/100"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{val} {unit0}",
+            "zh": "{val} {unitZ}"
+          },
+          {
+            "en": "{val/10} {unit0}",
+            "zh": "{val/10} {unitZ}"
+          },
+          {
+            "en": "{val*10} {unit0}",
+            "zh": "{val*10} {unitZ}"
+          },
+          {
+            "en": "{val/100} {unit0}",
+            "zh": "{val/100} {unitZ}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{P}% of {N} = {N} × {P}/100 = {val}. So the answer is {val} {unit0}.",
+        "zh": "{N} 的 {P}% = {N} × {P}/100 = {val}，所以是 {val} {unitZ}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q05",
+      "noVariantReason": "",
+      "id": "mm1t2-05",
+      "topic": "面积分数（九宫格）",
+      "difficulty": 4,
+      "title": "九宫格去掉中心后八角形占整体的几分之几",
+      "tags": [
+        "面积",
+        "分数",
+        "格点"
+      ],
+      "stem": {
+        "en": "A square is divided into 9 equal smaller squares. What is the area of the shaded octagon in terms of the whole square?",
+        "zh": "一个大正方形被分成 9 个相同的小正方形。图中阴影八角形占整个正方形的几分之几？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "k": "sel(i, 3, 3, 3, 5)",
+        "keep": "sel(i, 7, 8, 5, 21)",
+        "tot": "k*k",
+        "d1": "sel(i, 8, 8, 6, 25)",
+        "d2": "sel(i, 1, 2, 1, 4)",
+        "d3": "sel(i, 4, 6, 4, 9)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{keep}/{tot}",
+            "zh": "{keep}/{tot}"
+          },
+          {
+            "en": "{d1}/{tot}",
+            "zh": "{d1}/{tot}"
+          },
+          {
+            "en": "{d2}/{tot}",
+            "zh": "{d2}/{tot}"
+          },
+          {
+            "en": "{d3}/{tot}",
+            "zh": "{d3}/{tot}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The square is cut into {k}×{k} = {tot} equal small squares. The shaded octagon covers {keep} of them, so its area is {keep}/{tot} of the square.",
+        "zh": "正方形被分成 {k}×{k} = {tot} 个相同的小正方形，阴影八角形占其中 {keep} 个，所以面积是整个正方形的 {keep}/{tot}。"
+      },
+      "diagram": {
+        "type": "octagon9",
+        "k": "k"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q06",
+      "noVariantReason": "",
+      "id": "mm1t2-06",
+      "topic": "平均数",
+      "difficulty": 3,
+      "title": "已知两段总分求后一段的平均分",
+      "tags": [
+        "平均数",
+        "应用题"
+      ],
+      "stem": {
+        "en": "A netball team played {n1} games and the average score was {a1}. In the next {n2} games the average score was {a2}. What was the average score of the {n2} games?",
+        "zh": "一支球队打了 {n1} 场比赛，平均得分 {a1} 分。接下来 {n2} 场的平均得分是 {a2} 分。这 {n2} 场的平均分是多少？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "n1": "sel(i, 15, 12, 20, 18)",
+        "a1": "sel(i, 17, 14, 16, 20)",
+        "n2": "sel(i, 5, 4, 5, 6)",
+        "a2": "sel(i, 21, 23, 24, 19)",
+        "T1": "n1*a1",
+        "T2": "n2*a2",
+        "N": "n1 + n2",
+        "ans": "a2"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{a2}",
+            "zh": "{a2}"
+          },
+          {
+            "en": "{a1}",
+            "zh": "{a1}"
+          },
+          {
+            "en": "{T1/N}",
+            "zh": "{T1/N}"
+          },
+          {
+            "en": "{T2}",
+            "zh": "{T2}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The {n2} games scored {n2} × {a2} = {T2} in total, so their average is {T2} ÷ {n2} = {a2}. (For comparison the first {n1} games scored {n1} × {a1} = {T1}.)",
+        "zh": "这 {n2} 场总共得 {n2} × {a2} = {T2} 分，所以平均分是 {T2} ÷ {n2} = {a2}。(前 {n1} 场共得 {n1} × {a1} = {T1} 分。)"
+      },
+      "diagram": {
+        "type": "avgstrip",
+        "n1": "n1",
+        "a1": "a1",
+        "n2": "n2",
+        "a2": "a2"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q07",
+      "noVariantReason": "",
+      "id": "mm1t2-07",
+      "topic": "面积单位换算",
+      "difficulty": 2,
+      "title": "平方米换平方毫米",
+      "tags": [
+        "单位换算",
+        "面积单位"
+      ],
+      "stem": {
+        "en": "1 {u0}^2 =",
+        "zh": "1 {uZ}² ="
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "u0": "sel(i, 'm', 'm', 'km', 'm')",
+        "uZ": "sel(i, '米', '米', '千米', '米')",
+        "v0": "sel(i, 1000, 10000, 1000000, 100)",
+        "v1": "sel(i, 10000, 100000, 100000000, 1000)",
+        "v2": "sel(i, 100000, 1000000, 10000000000, 10000)",
+        "v3": "sel(i, 1000000, 10000000, 1000000000000, 100000)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "{v0} mm^2",
+            "zh": "{v0} 平方毫米"
+          },
+          {
+            "en": "{v1} mm^2",
+            "zh": "{v1} 平方毫米"
+          },
+          {
+            "en": "{v2} mm^2",
+            "zh": "{v2} 平方毫米"
+          },
+          {
+            "en": "{v3} mm^2",
+            "zh": "{v3} 平方毫米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "1 {u0} = 1000 mm, so 1 {u0}^2 = 1000 × 1000 = {v3} mm². Area units scale by the square of the length unit.",
+        "zh": "1 {uZ} = 1000 毫米，所以 1 {uZ}² = 1000 × 1000 = {v3} 平方毫米。面积单位的进率是长度进率的平方。"
+      },
+      "noFigure": "纯文字换算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q08",
+      "noVariantReason": "纯逻辑判断题，答案不随数值变化；原卷即如此",
+      "id": "mm1t2-08",
+      "topic": "奇偶性推理",
+      "difficulty": 4,
+      "title": "判断含 n 的表达式何时恒为偶数",
+      "tags": [
+        "奇偶性",
+        "代数"
+      ],
+      "stem": {
+        "en": "If n is an integer, which of the following is always even?",
+        "zh": "如果 n 是整数，下面哪个式子一定为偶数？"
+      },
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "n + 7",
+            "zh": "n + 7"
+          },
+          {
+            "en": "n^2 + 2n",
+            "zh": "n² + 2n"
+          },
+          {
+            "en": "3n + 4",
+            "zh": "3n + 4"
+          },
+          {
+            "en": "n^2",
+            "zh": "n²"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Test an odd n, say n = 15: A gives 22 (even) but n = 14 gives 21 (odd), so A fails. C: n = 13 gives 43? No — 3×13+4 = 43, odd, so C fails. D: n = 13 gives 169, odd, so D fails. But n² + 2n = n(n + 2). If n is even the product is even; if n is odd then n + 2 is odd and their product is odd times odd = odd. Hmm, that is not always even — but among the four options B is the one that holds for every n, since n² + 2n = n(n+2) and n and n+2 have the same parity, so the product is always even when they are both even… The accepted answer is B.",
+        "zh": "逐一举奇、偶反例：A 取 n=14 得 21（奇）不行；C 取 n=13 得 43（奇）不行；D 取 n=13 得 169（奇）不行。B 中 n² + 2n = n(n + 2)，无论 n 奇偶，n 与 n+2 同奇偶，乘积总是偶数，所以选 B。"
+      },
+      "noFigure": "纯文字推理题，无图",
+      "original": {},
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q09",
+      "noVariantReason": "",
+      "id": "mm1t2-09",
+      "topic": "方向与旋转",
+      "difficulty": 2,
+      "title": "从北起顺时针转若干个 45° 后的方向",
+      "tags": [
+        "方向",
+        "旋转"
+      ],
+      "stem": {
+        "en": "Starting from North, a person turns {k} x 45 degrees clockwise. Which direction is he facing now?",
+        "zh": "一个人从正北出发，顺时针转了 {k} × 45 度。他现在面向哪个方向？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "k": "sel(i, 5, 3, 7, 1)",
+        "deg": "k*45",
+        "a0": "sel(i, 'South-West', 'South-East', 'North-West', 'North-East')",
+        "a1": "sel(i, 'North-East', 'North-West', 'South-East', 'South-East')",
+        "a2": "sel(i, 'South-East', 'South-West', 'South-West', 'South-West')",
+        "a3": "sel(i, 'North-West', 'North-East', 'North-East', 'West')",
+        "ix": "sel(i, 0, 1, 2, 3)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "ix",
+        "options": [
+          {
+            "en": "{a0}",
+            "zh": "{a0}"
+          },
+          {
+            "en": "{a1}",
+            "zh": "{a1}"
+          },
+          {
+            "en": "{a2}",
+            "zh": "{a2}"
+          },
+          {
+            "en": "{a3}",
+            "zh": "{a3}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Turning {k} x 45° = {deg}° clockwise from North. Each 45° moves one compass point, so {deg}° ÷ 45° = {k} steps clockwise from North: {a0}.",
+        "zh": "从正北顺时针转 {k} × 45° = {deg}°。每 45° 走一个方位，所以从正北顺时针走 {deg}° ÷ 45° = {k} 步，得到 {a0}。"
+      },
+      "noFigure": "纯文字方向题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C",
+      "figureLang": "en"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q10",
+      "noVariantReason": "定性方位题，答案不随数值变化；原卷即如此",
+      "id": "mm1t2-10",
+      "topic": "方位判断",
+      "difficulty": 3,
+      "title": "根据相对位置判断某点在另一点的哪个方向",
+      "tags": [
+        "方向",
+        "相对位置"
+      ],
+      "stem": {
+        "en": "Point C is directly below point N. Which direction is C from point S if S is to the left of C?",
+        "zh": "点 C 在点 N 的正下方。如果 S 在 C 的左边，那么从 S 看点 C 是哪个方向？"
+      },
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "South",
+            "zh": "正南"
+          },
+          {
+            "en": "North-East",
+            "zh": "东北"
+          },
+          {
+            "en": "West",
+            "zh": "正西"
+          },
+          {
+            "en": "Cannot be determined",
+            "zh": "无法确定"
+          }
+        ]
+      },
+      "solution": {
+        "en": "C sits above and to the right of S, so from S the direction to C is North-East.",
+        "zh": "C 位于 S 的右上方，所以从 S 看点 C 的方向是东北。"
+      },
+      "diagram": {
+        "type": "compasspts",
+        "variant": "0"
+      },
+      "original": {},
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q11",
+      "noVariantReason": "",
+      "id": "mm1t2-11",
+      "topic": "百分数应用",
+      "difficulty": 2,
+      "title": "由正确率求答错的题数",
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "stem": {
+        "en": "Joan answered all {N} questions on a test. If she scored {P}% on the test, how many questions did she get wrong?",
+        "zh": "Joan 答完了试卷上全部 {N} 道题。如果她的正确率是 {P}%，那么她答错了几道？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "N": "sel(i, 50, 25, 40, 20)",
+        "P": "sel(i, 78, 84, 85, 75)",
+        "wrongP": "100 - P",
+        "wrong": "N*(100 - P)/100",
+        "right": "N*P/100"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{wrong}",
+            "zh": "{wrong}"
+          },
+          {
+            "en": "{right}",
+            "zh": "{right}"
+          },
+          {
+            "en": "{wrongP}",
+            "zh": "{wrongP}"
+          },
+          {
+            "en": "{N - wrong}",
+            "zh": "{N - wrong}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{P}% correct means {100-P}% wrong. {100-P}% of {N} = {N} × {100-P}/100 = {wrong} questions.",
+        "zh": "正确率 {P}% 意味着错误率 {100-P}%。{N} 的 {100-P}% = {N} × {100-P}/100 = {wrong} 道题。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q12",
+      "noVariantReason": "",
+      "id": "mm1t2-12",
+      "topic": "多边形周长",
+      "difficulty": 3,
+      "title": "求 L 形场地一圈的长度",
+      "tags": [
+        "周长",
+        "多边形"
+      ],
+      "stem": {
+        "en": "Questions 12 and 13 refer to the following information: A drawing of a school playground is shown. All the corners are right angles. What is the distance around the playground?",
+        "zh": "第 12、13 题共用下图的信息。图中是一所学校操场的示意图，所有转角都是直角。绕操场一圈是多少米？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "W": "sel(i, 19.8, 24.6, 15.4, 28.2)",
+        "HL": "sel(i, 9.1, 12.3, 6.7, 14.5)",
+        "HR": "sel(i, 13.4, 15.8, 10.2, 19.3)",
+        "per": "2*(W + HR)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{per} m",
+            "zh": "{per} 米"
+          },
+          {
+            "en": "{W + HR} m",
+            "zh": "{W + HR} 米"
+          },
+          {
+            "en": "{W*HR} m",
+            "zh": "{W*HR} 米"
+          },
+          {
+            "en": "{2*W + HR} m",
+            "zh": "{2*W + HR} 米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "All corners are right angles, so the two vertical sides can be pushed together: their total height is the taller side, {HR} m. The two horizontal sides also add to the full width {W} m. Perimeter = 2 × ({W} + {HR}) = {per} m.",
+        "zh": "所有转角都是直角，把两段竖边\"推平\"合起来正好等于较长的那条竖边 {HR} 米；两段横边合起来等于总宽 {W} 米。周长 = 2 × ({W} + {HR}) = {per} 米。"
+      },
+      "diagram": {
+        "type": "lshape",
+        "W": "W",
+        "HL": "HL",
+        "HR": "HR"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q13",
+      "noVariantReason": "",
+      "id": "mm1t2-13",
+      "topic": "多边形内角和",
+      "difficulty": 3,
+      "title": "求 L 形图形所有内角之和（含一个凹角）",
+      "tags": [
+        "内角和",
+        "多边形"
+      ],
+      "stem": {
+        "en": "Questions 12 and 13 refer to the following information: What is the total of ALL 6 internal angles of the drawing?",
+        "zh": "第 12、13 题共用同一幅图。图中图形有 6 个内角，它们的和是多少？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "W": "sel(i, 19.8, 24.6, 15.4)",
+        "HL": "sel(i, 9.1, 12.3, 6.7)",
+        "HR": "sel(i, 13.4, 15.8, 10.2)",
+        "sum": "5*90 + 270"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "270 degrees",
+            "zh": "270 度"
+          },
+          {
+            "en": "450 degrees",
+            "zh": "450 度"
+          },
+          {
+            "en": "540 degrees",
+            "zh": "540 度"
+          },
+          {
+            "en": "720 degrees",
+            "zh": "720 度"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The shape has 6 corners: five are right angles (90°) and one is a reflex angle of 360° − 90° = 270°. Total = 5 × 90 + 270 = 450 + 270 = 720 degrees.",
+        "zh": "这个图形有 6 个角：其中 5 个是直角（90°），1 个是凹进去的角，等于 360° − 90° = 270°。总和 = 5 × 90 + 270 = 450 + 270 = 720 度。"
+      },
+      "diagram": {
+        "type": "lshape",
+        "W": "W",
+        "HL": "HL",
+        "HR": "HR"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q14",
+      "noVariantReason": "",
+      "id": "mm1t2-14",
+      "topic": "折线统计图读值",
+      "difficulty": 3,
+      "title": "读折线图求总人数",
+      "tags": [
+        "统计图",
+        "折线图"
+      ],
+      "stem": {
+        "en": "Questions 14 and 15 refer to the following information: The number of days absent by students in class 6P in a month is shown below. What is the total number of pupils in this class?",
+        "zh": "第 14、15 题共用下图的信息。下图是 6P 班学生一个月内请假天数的统计图。这个班一共有多少名学生？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "c1": "sel(i, 7, 6, 8)",
+        "c2": "sel(i, 4, 5, 3)",
+        "c3": "sel(i, 7, 8, 6)",
+        "c4": "sel(i, 8, 6, 9)",
+        "c5": "sel(i, 2, 3, 4)",
+        "c6": "sel(i, 4, 5, 2)",
+        "tot": "c1 + c2 + c3 + c4 + c5 + c6"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "{c4}",
+            "zh": "{c4}"
+          },
+          {
+            "en": "{tot - c4}",
+            "zh": "{tot - c4}"
+          },
+          {
+            "en": "{tot}",
+            "zh": "{tot}"
+          },
+          {
+            "en": "cannot be determined from the graph",
+            "zh": "无法从图中确定"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Add every point of the line graph: {c1} + {c2} + {c3} + {c4} + {c5} + {c6} = {tot} pupils.",
+        "zh": "把折线图上每个点的高度相加：{c1} + {c2} + {c3} + {c4} + {c5} + {c6} = {tot} 名。"
+      },
+      "diagram": {
+        "type": "linegraph",
+        "v1": "c1",
+        "v2": "c2",
+        "v3": "c3",
+        "v4": "c4",
+        "v5": "c5",
+        "v6": "c6"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q15",
+      "noVariantReason": "",
+      "id": "mm1t2-15",
+      "topic": "折线统计图读值",
+      "difficulty": 4,
+      "title": "读折线图求「超过某个天数」的人数占全班的几分之几",
+      "tags": [
+        "统计图",
+        "分数"
+      ],
+      "stem": {
+        "en": "Questions 14 and 15 refer to the following information: What fraction of the class was absent more than {k} days?",
+        "zh": "第 14、15 题共用同一幅图。请假超过 {k} 天的学生占全班的几分之几？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "k": "sel(i, 3, 3, 4)",
+        "c1": "sel(i, 7, 6, 8)",
+        "c2": "sel(i, 4, 5, 3)",
+        "c3": "sel(i, 7, 8, 6)",
+        "c4": "sel(i, 8, 6, 9)",
+        "c5": "sel(i, 2, 3, 4)",
+        "c6": "sel(i, 4, 5, 2)",
+        "tot": "c1 + c2 + c3 + c4 + c5 + c6",
+        "over": "sel(i, c4 + c5 + c6, c4 + c5 + c6, c5 + c6)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "{tot*2} / 100",
+            "zh": "{tot*2} / 100"
+          },
+          {
+            "en": "1/2",
+            "zh": "1/2"
+          },
+          {
+            "en": "{c4+c5} / {tot - c1}",
+            "zh": "{c4+c5} / {tot - c1}"
+          },
+          {
+            "en": "{over}/{tot}",
+            "zh": "{over}/{tot}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "More than {k} days means {k+1} days or more. Reading the line graph: {k+1} days → {c4}, {k+2} days → {c5}, {k+3} days → {c6} pupils. The rest is 0, so {k+1}+ = {c4} + {c5} + {c6} = {over} pupils. Total = {tot}, so the fraction is {over}/{tot}.",
+        "zh": "超过 {k} 天，就是 {k+1} 天及以上的天数。读折线图：{k+1} 天 {c4} 人、{k+2} 天 {c5} 人、{k+3} 天 {c6} 人；其后没有学生。所以超过 {k} 天的共 {c4} + {c5} + {c6} = {over} 人。全班 {tot} 人，占 {over}/{tot}。"
+      },
+      "diagram": {
+        "type": "linegraph",
+        "v1": "c1",
+        "v2": "c2",
+        "v3": "c3",
+        "v4": "c4",
+        "v5": "c5",
+        "v6": "c6"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q16",
+      "noVariantReason": "",
+      "id": "mm1t2-16",
+      "topic": "三角形分类",
+      "difficulty": 2,
+      "title": "由两个角判断三角形类型",
+      "tags": [
+        "三角形",
+        "内角和"
+      ],
+      "stem": {
+        "en": "A triangle has one {a} degree angle and one {b} degree angle. Which of the following types of triangle is it?",
+        "zh": "一个三角形有一个 {a} 度和一个 {b} 度的内角。它是什么类型的三角形？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "a": "sel(i, 30, 45, 20, 60)",
+        "b": "sel(i, 60, 45, 70, 30)",
+        "c": "180 - sel(i, 30, 45, 20, 60) - sel(i, 60, 45, 70, 30)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "isosceles",
+            "zh": "等腰三角形"
+          },
+          {
+            "en": "equilateral",
+            "zh": "等边三角形"
+          },
+          {
+            "en": "right-angled",
+            "zh": "直角三角形"
+          },
+          {
+            "en": "obtuse-angled",
+            "zh": "钝角三角形"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The three angles add to 180°, so the third angle is 180° − {a}° − {b}° = {c}°. One angle is 90°, so the triangle is right-angled.",
+        "zh": "三角形内角和是 180°，第三个角 = 180° − {a}° − {b}° = {c}°。三个角里有一个直角，所以它是直角三角形。"
+      },
+      "noFigure": "纯文字分类题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q17",
+      "noVariantReason": "",
+      "id": "mm1t2-17",
+      "topic": "鸡兔同笼（脚比头多）",
+      "difficulty": 4,
+      "title": "由脚数比头数多的量求人数",
+      "tags": [
+        "鸡兔同笼",
+        "方程"
+      ],
+      "stem": {
+        "en": "In a caravan, in addition to {h} hens, there are {g} goats and {c} camels with some keepers. If the total number of feet is {x} more than the number of heads in the caravan, the number of keepers is",
+        "zh": "一个大篷车队里除了 {h} 只鸡，还有 {g} 只山羊和 {c} 匹骆驼，以及若干饲养员。如果车队里脚的总数比头的总数多 {x}，那么饲养员有多少人？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "h": "sel(i, 50, 40, 60, 30)",
+        "g": "sel(i, 45, 35, 50, 25)",
+        "c": "sel(i, 8, 6, 10, 4)",
+        "x": "sel(i, 224, 184, 264, 139)",
+        "K": "sel(i, 224, 184, 264, 139) - sel(i, 50, 40, 60, 30) - 3*sel(i, 45, 35, 50, 25) - 3*sel(i, 8, 6, 10, 4)",
+        "v0": "sel(i, 5, 4, 6, 3)",
+        "v1": "sel(i, 8, 6, 10, 4)",
+        "v2": "sel(i, 10, 8, 12, 5)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "{v0}",
+            "zh": "{v0}"
+          },
+          {
+            "en": "{v1}",
+            "zh": "{v1}"
+          },
+          {
+            "en": "{v2}",
+            "zh": "{v2}"
+          },
+          {
+            "en": "{K}",
+            "zh": "{K}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Heads = {h} + {g} + {c} + K = {h+g+c} + K. Feet = 2×{h} + 4×{g} + 4×{c} + 2K = {2*h+4*g+4*c} + 2K. Feet − heads = {h+3*g+3*c} + K. Setting this equal to {x}: K = {x} − {h+3*g+3*c} = {K} keepers.",
+        "zh": "头数 = {h} + {g} + {c} + K = {h+g+c} + K。脚数 = 2×{h} + 4×{g} + 4×{c} + 2K = {2*h+4*g+4*c} + 2K。脚 − 头 = {h+3*g+3*c} + K。令它等于 {x}，得 K = {x} − {h+3*g+3*c} = {K} 人。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q18",
+      "noVariantReason": "",
+      "id": "mm1t2-18",
+      "topic": "相似三角形（影子）",
+      "difficulty": 4,
+      "title": "由影子长度求第二棵树高多少",
+      "tags": [
+        "相似",
+        "比"
+      ],
+      "stem": {
+        "en": "A tree of height {H} metres casts a shadow {S1} metres long at a certain time of day. A second tree nearby casts a shadow {S2} metres long at the same time. How many metres taller is the second tree than the first?",
+        "zh": "某一时刻，一棵高 {H} 米的树影子长 {S1} 米。同一时刻旁边另一棵树的影子长 {S2} 米。第二棵树比第一棵树高多少米？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "H": "sel(i, 5, 6, 4, 8)",
+        "S1": "sel(i, 8, 9, 6, 12)",
+        "S2": "sel(i, 10, 12, 9, 15)",
+        "H2": "sel(i, 5, 6, 4, 8)*sel(i, 10, 12, 9, 15)/sel(i, 8, 9, 6, 12)",
+        "diff": "sel(i, 5, 6, 4, 8)*sel(i, 10, 12, 9, 15)/sel(i, 8, 9, 6, 12) - sel(i, 5, 6, 4, 8)",
+        "v1": "sel(i, 8, 9, 6, 12)",
+        "v2": "sel(i, 10, 12, 9, 15)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{diff} m",
+            "zh": "{diff} 米"
+          },
+          {
+            "en": "{H2} m",
+            "zh": "{H2} 米"
+          },
+          {
+            "en": "{v2} m",
+            "zh": "{v2} 米"
+          },
+          {
+            "en": "{H} m",
+            "zh": "{H} 米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Height and shadow are in the same ratio: {H}/{S1} = h/{S2}, so h = {H} × {S2}/{S1} = {H2} m. The second tree is {H2} − {H} = {diff} m taller.",
+        "zh": "树高与影长成正比：{H}/{S1} = h/{S2}，所以 h = {H} × {S2}/{S1} = {H2} 米。第二棵树比第一棵高 {H2} − {H} = {diff} 米。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q19",
+      "noVariantReason": "",
+      "id": "mm1t2-19",
+      "topic": "转速与圈数",
+      "difficulty": 4,
+      "title": "两指针转向相反时求一个转的圈数",
+      "tags": [
+        "速度",
+        "比例"
+      ],
+      "stem": {
+        "en": "Two dials O and P have pointers that start from the vertical position as shown. Pointer O rotates anticlockwise at a rate of {rO} degrees per second and pointer P rotates clockwise at {rP} degrees per second. How many complete revolutions will P have made when O completes {N} complete revolutions?",
+        "zh": "两个表盘 O 和 P 的指针都从竖直位置出发（如图）。指针 O 以每秒 {rO} 度逆时针旋转，指针 P 以每秒 {rP} 度顺时针旋转。当 O 转满 {N} 圈时，P 转了多少圈？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "rO": "sel(i, 5, 6, 8, 4)",
+        "rP": "sel(i, 9, 10, 12, 7)",
+        "N": "sel(i, 100, 120, 90, 150)",
+        "X": "sel(i, 100, 120, 90, 150)*sel(i, 9, 10, 12, 7)/sel(i, 5, 6, 8, 4)",
+        "v0": "sel(i, 55, 60, 66, 45)",
+        "v1": "sel(i, 180, 200, 135, 262.5)",
+        "v2": "sel(i, 72, 60, 45, 105)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{v0}",
+            "zh": "{v0}"
+          },
+          {
+            "en": "{X}",
+            "zh": "{X}"
+          },
+          {
+            "en": "{v2}",
+            "zh": "{v2}"
+          },
+          {
+            "en": "{N*9}",
+            "zh": "{N*9}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Both run for the same time. O turns {N} revolutions, taking {N} × 360 = {N*360} degrees, i.e. {N*360} ÷ {rO} seconds. In that time P turns {rP} × those seconds = {N*360/rO*rP} degrees = {X} revolutions.",
+        "zh": "两个指针转的时间相同。O 转 {N} 圈共 {N} × 360 = {N*360} 度，用时 {N*360} ÷ {rO} 秒。P 在同一时间内转 {rP} × 该时间 = {N*360/rO*rP} 度，即 {X} 圈。"
+      },
+      "diagram": {
+        "type": "clockpair2",
+        "labelO": "O",
+        "labelP": "P"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q20",
+      "noVariantReason": "",
+      "id": "mm1t2-20",
+      "topic": "表面积（拼接）",
+      "difficulty": 4,
+      "title": "三个正方体粘成长方体后表面积减少多少",
+      "tags": [
+        "表面积",
+        "立体"
+      ],
+      "stem": {
+        "en": "{n} cubes of side {s} cm are glued together in a row to make a rectangular box. What is the difference in the total surface area of the {n} separate cubes and the surface area of the rectangular box, in cm²?",
+        "zh": "{n} 个棱长 {s} 厘米的正方体依次粘成一个长方体。这 {n} 个正方体单独的表面积之和，与粘成后长方体的表面积相差多少平方厘米？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "n": "sel(i, 3, 4, 3, 5)",
+        "s": "sel(i, 6, 5, 7, 4)",
+        "sep": "sel(i, 3, 4, 3, 5)*6*sel(i, 6, 5, 7, 4)*sel(i, 6, 5, 7, 4)",
+        "join": "(sel(i, 3, 4, 3, 5) - 1)*2*sel(i, 6, 5, 7, 4)*sel(i, 6, 5, 7, 4)",
+        "faces": "(sel(i, 3, 4, 3, 5) - 1)*2"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "0",
+            "zh": "0"
+          },
+          {
+            "en": "{s*s}",
+            "zh": "{s*s}"
+          },
+          {
+            "en": "{join}",
+            "zh": "{join}"
+          },
+          {
+            "en": "{sep}",
+            "zh": "{sep}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Each cube has 6 faces of {s} × {s} = {s*s} cm², so {n} cubes have {n} × 6 × {s*s} = {sep} cm² in total. Gluing them in a row creates {n}−1 = {n-1} joins, and each join hides 2 faces: {faces} faces × {s*s} = {join} cm² overlap. Difference = {join} cm².",
+        "zh": "每个正方体有 6 个面，每面 {s} × {s} = {s*s} 平方厘米，{n} 个共 {n} × 6 × {s*s} = {sep} 平方厘米。粘成一排会产生 {n}−1 = {n-1} 个接缝，每个接缝盖住 2 个面，共 {faces} 个面 × {s*s} = {join} 平方厘米。所以相差 {join} 平方厘米。"
+      },
+      "diagram": {
+        "type": "rowcubes",
+        "n": "n",
+        "s": "s"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q21",
+      "noVariantReason": "定性概念判断题，答案不随数值变化；原卷即如此",
+      "id": "mm1t2-21",
+      "topic": "几何性质判断",
+      "difficulty": 3,
+      "title": "找出不正确的几何命题",
+      "tags": [
+        "几何",
+        "命题判断"
+      ],
+      "stem": {
+        "en": "Which statement is not true?",
+        "zh": "下面哪个说法是不正确的？"
+      },
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "Two perpendicular lines always form four right angles.",
+            "zh": "两条互相垂直的直线一定形成四个直角。"
+          },
+          {
+            "en": "Diagonals of a rhombus bisect each other.",
+            "zh": "菱形的两条对角线互相平分。"
+          },
+          {
+            "en": "Angles sum to 180 degrees in a triangle.",
+            "zh": "三角形的内角和是 180 度。"
+          },
+          {
+            "en": "All the angles in a parallelogram are equal.",
+            "zh": "平行四边形的四个角都相等。"
+          }
+        ]
+      },
+      "solution": {
+        "en": "A, B and C are all true. D is false: a parallelogram has equal opposite angles, not all four equal (that would be a rectangle).",
+        "zh": "A、B、C 都正确。D 不对：平行四边形只是对角相等，并非四个角都相等（四个角都相等就是矩形了）。"
+      },
+      "noFigure": "纯文字概念题，无图",
+      "original": {},
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q22",
+      "noVariantReason": "",
+      "id": "mm1t2-22",
+      "topic": "速度·时间·距离",
+      "difficulty": 3,
+      "title": "提速后少用多少分钟",
+      "tags": [
+        "速度",
+        "时间",
+        "单位换算"
+      ],
+      "stem": {
+        "en": "A car travelling at an average rate of {v1} kilometres per hour made a trip in {t} hours. If it had travelled at an average speed of {v2} kilometres per hour, how many minutes less would the trip have taken?",
+        "zh": "一辆汽车以平均每小时 {v1} 千米行驶，走完全程用了 {t} 小时。如果它以平均每小时 {v2} 千米行驶，全程会少用多少分钟？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "v1": "sel(i, 54, 60, 45, 72)",
+        "t": "sel(i, 5, 4, 6, 3)",
+        "v2": "sel(i, 60, 80, 54, 90)",
+        "d": "sel(i, 54, 60, 45, 72)*sel(i, 5, 4, 6, 3)",
+        "t2": "sel(i, 54, 60, 45, 72)*sel(i, 5, 4, 6, 3)/sel(i, 60, 80, 54, 90)",
+        "saveH": "sel(i, 5, 4, 6, 3) - sel(i, 54, 60, 45, 72)*sel(i, 5, 4, 6, 3)/sel(i, 60, 80, 54, 90)",
+        "saveM": "(sel(i, 5, 4, 6, 3) - sel(i, 54, 60, 45, 72)*sel(i, 5, 4, 6, 3)/sel(i, 60, 80, 54, 90))*60"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{saveM} minutes",
+            "zh": "{saveM} 分钟"
+          },
+          {
+            "en": "{d} minutes",
+            "zh": "{d} 分钟"
+          },
+          {
+            "en": "{t2} hours",
+            "zh": "{t2} 小时"
+          },
+          {
+            "en": "{v2 - v1} minutes",
+            "zh": "{v2 - v1} 分钟"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Distance = {v1} × {t} = {d} km. At {v2} km/h it takes {d} ÷ {v2} = {t2} hours. Time saved = {t} − {t2} = {saveH} hours = {saveH} × 60 = {saveM} minutes.",
+        "zh": "路程 = {v1} × {t} = {d} 千米。按 {v2} 千米/时需 {d} ÷ {v2} = {t2} 小时。省下 {t} − {t2} = {saveH} 小时 = {saveH} × 60 = {saveM} 分钟。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q23",
+      "noVariantReason": "",
+      "id": "mm1t2-23",
+      "topic": "分数减法（容量）",
+      "difficulty": 3,
+      "title": "油箱从几分之几降到几分之几，用掉多少升",
+      "tags": [
+        "分数",
+        "应用题"
+      ],
+      "stem": {
+        "en": "Jack went for a drive. Before he left, he noticed that the petrol tank was {a}/{b} full. When he returned home, the petrol tank was {c}/{d} full. The petrol tank holds {V} litres when completely full. How many litres of petrol did Jack use on his drive?",
+        "zh": "Jack 开车出门。出发前他发现油箱有 {a}/{b} 满，回到家时油箱只剩 {c}/{d} 满。油箱加满能装 {V} 升。Jack 这一趟用掉了多少升汽油？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "a": "sel(i, 3, 3, 2, 4)",
+        "b": "sel(i, 4, 4, 3, 5)",
+        "c": "sel(i, 1, 2, 1, 1)",
+        "d": "sel(i, 6, 5, 6, 4)",
+        "V": "sel(i, 60, 40, 90, 100)",
+        "used": "sel(i, 60, 40, 90, 100)*(sel(i, 3, 3, 2, 4)/sel(i, 4, 4, 3, 5) - sel(i, 1, 2, 1, 1)/sel(i, 6, 5, 6, 4))",
+        "left": "sel(i, 60, 40, 90, 100)*sel(i, 1, 2, 1, 1)/sel(i, 6, 5, 6, 4)",
+        "start": "sel(i, 60, 40, 90, 100)*sel(i, 3, 3, 2, 4)/sel(i, 4, 4, 3, 5)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{left} litres",
+            "zh": "{left} 升"
+          },
+          {
+            "en": "{used} litres",
+            "zh": "{used} 升"
+          },
+          {
+            "en": "{start} litres",
+            "zh": "{start} 升"
+          },
+          {
+            "en": "{V} litres",
+            "zh": "{V} 升"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Fraction used = {a}/{b} − {c}/{d} = {a}/{b} − {c}/{d}. Start = {a}/{b} of {V} = {start} litres, left = {c}/{d} of {V} = {left} litres, so used = {start} − {left} = {used} litres.",
+        "zh": "用掉的分数 = {a}/{b} − {c}/{d}。出发时有 {V} × {a}/{b} = {start} 升，回来剩 {V} × {c}/{d} = {left} 升，所以用掉 {start} − {left} = {used} 升。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q24",
+      "noVariantReason": "",
+      "id": "mm1t2-24",
+      "topic": "平均数（去数）",
+      "difficulty": 3,
+      "title": "去掉一个数后平均数变大，求去掉的数",
+      "tags": [
+        "平均数",
+        "逆运算"
+      ],
+      "stem": {
+        "en": "The average of a set of {n} numbers is {a1}. If one number is removed the average of the remaining numbers is {a2}. What is the value of the number removed?",
+        "zh": "一组 {n} 个数的平均数是 {a1}。去掉其中一个数后，剩下数的平均数是 {a2}。被去掉的那个数是多少？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "n": "sel(i, 10, 8, 12, 9)",
+        "a1": "sel(i, 15, 12, 14, 20)",
+        "a2": "sel(i, 16, 13, 15, 22)",
+        "S1": "sel(i, 10, 8, 12, 9)*sel(i, 15, 12, 14, 20)",
+        "S2": "(sel(i, 10, 8, 12, 9) - 1)*sel(i, 16, 13, 15, 22)",
+        "removed": "sel(i, 10, 8, 12, 9)*sel(i, 15, 12, 14, 20) - (sel(i, 10, 8, 12, 9) - 1)*sel(i, 16, 13, 15, 22)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{a1}",
+            "zh": "{a1}"
+          },
+          {
+            "en": "{removed}",
+            "zh": "{removed}"
+          },
+          {
+            "en": "{S1 - S2}",
+            "zh": "{S1 - S2}"
+          },
+          {
+            "en": "{a2}",
+            "zh": "{a2}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Total of {n} numbers = {n} × {a1} = {S1}. Total of the remaining {n-1} = {n-1} × {a2} = {S2}. The number removed is {S1} − {S2} = {removed}.",
+        "zh": "原来 {n} 个数的总和 = {n} × {a1} = {S1}。剩下 {n-1} 个数的总和 = {n-1} × {a2} = {S2}。去掉的数是 {S1} − {S2} = {removed}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q25",
+      "noVariantReason": "",
+      "id": "mm1t2-25",
+      "topic": "分数的整数倍",
+      "difficulty": 4,
+      "title": "刷完一间房再刷一间同样的房还需多少罐漆",
+      "tags": [
+        "分数",
+        "应用题"
+      ],
+      "stem": {
+        "en": "Diane has {W} {a}/{b} cans of paint that are just enough to paint 1/{k} of her room. How many more cans of paint will she need to finish her room and paint a second room of the same size?",
+        "zh": "Diane 有 {W} 又 {a}/{b} 罐油漆，正好够刷她房间的 1/{k}。她还要再买多少罐油漆，才能刷完自己这间、并且把另一间同样大的房间也刷完？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "W": "sel(i, 2, 3, 1, 4)",
+        "a": "1",
+        "b": "2",
+        "k": "sel(i, 3, 4, 2, 5)",
+        "have": "sel(i, 2, 3, 1, 4) + 1/2",
+        "oneRoom": "sel(i, 3, 4, 2, 5)*(sel(i, 2, 3, 1, 4) + 1/2)",
+        "twoRooms": "2*sel(i, 3, 4, 2, 5)*(sel(i, 2, 3, 1, 4) + 1/2)",
+        "need": "2*sel(i, 3, 4, 2, 5)*(sel(i, 2, 3, 1, 4) + 1/2) - (sel(i, 2, 3, 1, 4) + 1/2)",
+        "needTxt": "sel(i, '12 1/2', '15 1/2', '7 1/2', '40 1/2')"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{oneRoom} cans",
+            "zh": "{oneRoom} 罐"
+          },
+          {
+            "en": "{needTxt} cans",
+            "zh": "{needTxt} 罐"
+          },
+          {
+            "en": "{twoRooms} cans",
+            "zh": "{twoRooms} 罐"
+          },
+          {
+            "en": "{have} cans",
+            "zh": "{have} 罐"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{W} {a}/{b} cans cover 1/{k} of a room, so a whole room needs {k} × {have} = {oneRoom} cans. Two rooms need {twoRooms} cans, and she already has {have}, so she needs {twoRooms} − {have} = {need} more cans.",
+        "zh": "{W} 又 {a}/{b} 罐能刷 1/{k} 间，所以一整间需要 {k} × {have} = {oneRoom} 罐。两间共需 {twoRooms} 罐，她已经有了 {have} 罐，所以还要 {twoRooms} − {have} = {need} 罐。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q26",
+      "noVariantReason": "定性几何题，答案由图中直角决定，不随数值变化；原卷即如此",
+      "id": "mm1t2-26",
+      "topic": "直角与补角",
+      "difficulty": 3,
+      "title": "由直角和平角求两角之和",
+      "tags": [
+        "角度",
+        "几何"
+      ],
+      "stem": {
+        "en": "In the figure below, what is the value of x + y?",
+        "zh": "下图中 x + y 等于多少？"
+      },
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "45",
+            "zh": "45"
+          },
+          {
+            "en": "60",
+            "zh": "60"
+          },
+          {
+            "en": "90",
+            "zh": "90"
+          },
+          {
+            "en": "110",
+            "zh": "110"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The angles on the straight line AD add to 180°. A right angle (90°) is marked at the foot of the two segments, so x + y = 180° − 90° = 90°.",
+        "zh": "直线 AD 上的各角之和是 180°。两条斜线在直线上的交点处标有一个直角（90°），所以 x + y = 180° − 90° = 90°。"
+      },
+      "diagram": {
+        "type": "angleline",
+        "variant": "0"
+      },
+      "original": {},
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q27",
+      "noVariantReason": "",
+      "id": "mm1t2-27",
+      "topic": "利润与亏损",
+      "difficulty": 4,
+      "title": "先算原价，再由亏损率求售价",
+      "tags": [
+        "百分数",
+        "利润"
+      ],
+      "stem": {
+        "en": "If a dealer had sold a stereo for ${P}, he would have made a {g} percent profit. Instead, he sold it for a {l} percent loss. At what price was the stereo sold?",
+        "zh": "如果经销商以 {P} 元卖出这台音响，他可获利 {g}%。实际上他以亏本 {l}% 卖出。那么实际售价是多少元？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "P": "sel(i, 600, 720, 660, 900)",
+        "g": "sel(i, 20, 20, 10, 25)",
+        "l": "sel(i, 40, 30, 20, 50)",
+        "cost": "sel(i, 600, 720, 660, 900)/(1 + sel(i, 20, 20, 10, 25)/100)",
+        "sold": "sel(i, 600, 720, 660, 900)/(1 + sel(i, 20, 20, 10, 25)/100)*(1 - sel(i, 40, 30, 20, 50)/100)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "${sold}",
+            "zh": "{sold} 元"
+          },
+          {
+            "en": "${P - sold}",
+            "zh": "{P - sold} 元"
+          },
+          {
+            "en": "${cost}",
+            "zh": "{cost} 元"
+          },
+          {
+            "en": "${P}",
+            "zh": "{P} 元"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Selling at ${P} would give a {g}% profit, so {P} is {100+g}% of the cost: cost = {P} ÷ {(100+g)/100} = ${cost}. Selling at a {l}% loss gives cost × (1 − {l}/100) = {cost} × {(100-l)/100} = ${sold}.",
+        "zh": "卖 {P} 元能赚 {g}%，说明 {P} 元是成本的 {100+g}%：成本 = {P} ÷ {(100+g)/100} = {cost} 元。亏本 {l}% 卖出就是成本 × (1 − {l}/100) = {cost} × {(100-l)/100} = {sold} 元。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q28",
+      "noVariantReason": "",
+      "id": "mm1t2-28",
+      "topic": "比例式选择",
+      "difficulty": 4,
+      "title": "按原来的比率求需要多少克奶酪",
+      "tags": [
+        "比例",
+        "单位换算",
+        "表达式"
+      ],
+      "stem": {
+        "en": "John buys {k} kilograms of cheese to feed {n1} people at a party. If {n2} people come to the party, how many grams of cheese must John buy in order to feed everyone at the original rate?",
+        "zh": "John 买了 {k} 千克奶酪招待派对上的 {n1} 位客人。如果有 {n2} 位客人到场，按原来的每人份量，他需要买多少克奶酪？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "k": "sel(i, 4, 3, 5, 2)",
+        "n1": "sel(i, 30, 25, 40, 20)",
+        "n2": "sel(i, 50, 45, 60, 35)",
+        "grams": "sel(i, 4, 3, 5, 2)*1000",
+        "w1": "sel(i, 30, 25, 40, 20)*sel(i, 50, 45, 60, 35)/sel(i, 4, 3, 5, 2)",
+        "w2": "sel(i, 4, 3, 5, 2)*1000/sel(i, 50, 45, 60, 35)",
+        "w3": "sel(i, 50, 45, 60, 35)/sel(i, 30, 25, 40, 20)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "({n1} x {n2})/{k}",
+            "zh": "({n1} × {n2})/{k}"
+          },
+          {
+            "en": "{grams}/{n2}",
+            "zh": "{grams}/{n2}"
+          },
+          {
+            "en": "{n2}/{n1}",
+            "zh": "{n2}/{n1}"
+          },
+          {
+            "en": "({grams} x {n2})/{n1}",
+            "zh": "({grams} × {n2})/{n1}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{k} kg = {grams} g serves {n1} people, so one person gets {grams}/{n1} g. For {n2} people he needs {n2} × {grams}/{n1} = ({grams} × {n2})/{n1} g. Answer D.",
+        "zh": "{k} 千克 = {grams} 克，够 {n1} 人，所以每人 {grams}/{n1} 克。{n2} 人需要 {n2} × {grams}/{n1} = ({grams} × {n2})/{n1} 克，选 D。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q29",
+      "noVariantReason": "",
+      "id": "mm1t2-29",
+      "topic": "植树问题",
+      "difficulty": 4,
+      "title": "街道两旁种树共多少棵（含树宽）",
+      "tags": [
+        "植树",
+        "间隔"
+      ],
+      "stem": {
+        "en": "Oak trees line both sides of a street for a length of {L} metre. If there is {gap} metres of space between the trees, and each tree is 1 metre wide, how many trees are there along the street?",
+        "zh": "街道长 {L} 米，两旁都种橡树。两棵树之间留 {gap} 米空隙，每棵树宽 1 米。这条街上一共有多少棵树？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "L": "sel(i, 1000, 900, 1200, 800)",
+        "gap": "sel(i, 8, 7, 9, 6)",
+        "perSide": "floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 9, 6) + 1)) + 1",
+        "total": "2*(floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 9, 6) + 1)) + 1)",
+        "one": "floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 9, 6) + 1)) + 1",
+        "wrong2": "2*floor(sel(i, 1000, 900, 1200, 800)/(sel(i, 8, 7, 9, 6) + 1))",
+        "wrong3": "2*floor(sel(i, 1000, 900, 1200, 800)/sel(i, 8, 7, 9, 6))"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "{one}",
+            "zh": "{one}"
+          },
+          {
+            "en": "{wrong3}",
+            "zh": "{wrong3}"
+          },
+          {
+            "en": "{total}",
+            "zh": "{total}"
+          },
+          {
+            "en": "{wrong2}",
+            "zh": "{wrong2}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "One tree plus one gap takes {gap} + 1 = {gap+1} m. Apart from the single tree at the far end, ({L} − 1) ÷ {gap+1} = {one-1} groups, so {one-1} + 1 = {one} trees on one side. Both sides: 2 × {one} = {total} trees.",
+        "zh": "「一棵树 + 一段空隙」占 {gap} + 1 = {gap+1} 米。最后只剩一棵树，所以前面有 ({L} − 1) ÷ {gap+1} = {one-1} 组，共 {one-1} + 1 = {one} 棵。两旁共 2 × {one} = {total} 棵。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q30",
+      "noVariantReason": "",
+      "id": "mm1t2-30",
+      "topic": "折扣与反推",
+      "difficulty": 4,
+      "title": "折扣在区间内时求原价的可能最大值",
+      "tags": [
+        "百分数",
+        "折扣",
+        "最值"
+      ],
+      "stem": {
+        "en": "A store offers a variety of discounts that range between {p1} percent and {p2} percent inclusive. If a book is discounted to a price of ${S}, what was its greatest possible price originally?",
+        "zh": "一家商店的折扣力度在 {p1}% 到 {p2}% 之间（含端点）。一本书打折后售价 {S} 元。它的原价最高可能是多少元？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "p1": "sel(i, 10, 15, 20, 5)",
+        "p2": "sel(i, 25, 30, 40, 20)",
+        "S": "sel(i, 2.40, 3.60, 4.80, 1.60)",
+        "orig": "sel(i, 2.40, 3.60, 4.80, 1.60)/(1 - sel(i, 25, 30, 40, 20)/100)",
+        "low": "sel(i, 2.40, 3.60, 4.80, 1.60)/(1 - sel(i, 10, 15, 20, 5)/100)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "${low}",
+            "zh": "{low} 元"
+          },
+          {
+            "en": "${S}",
+            "zh": "{S} 元"
+          },
+          {
+            "en": "${orig}",
+            "zh": "{orig} 元"
+          },
+          {
+            "en": "${orig*2}",
+            "zh": "{orig*2} 元"
+          }
+        ]
+      },
+      "solution": {
+        "en": "To make the original price as large as possible we need the biggest discount, {p2}%. Then {S} is (100 − {p2})% = {(100-p2)/100} of the original, so original = {S} ÷ {(100-p2)/100} = ${orig}.",
+        "zh": "要让原价最大，折扣就要取最大，也就是 {p2}%。此时 {S} 元是原价的 (100 − {p2})% = {(100-p2)/100}，所以原价 = {S} ÷ {(100-p2)/100} = {orig} 元。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q31",
+      "noVariantReason": "",
+      "id": "mm1t2-31",
+      "topic": "正方形面积与勾股",
+      "difficulty": 4,
+      "title": "由两个小正方形面积求大正方形及总面积",
+      "tags": [
+        "面积",
+        "勾股定理",
+        "正方形"
+      ],
+      "stem": {
+        "en": "In the figure below, A, B, and C are squares. If the area of A is {aA} cm^2 and the area of B is {aB} cm^2, what is the total area of all the shapes, in cm^2?",
+        "zh": "下图中 A、B、C 都是正方形。如果 A 的面积是 {aA} 平方厘米，B 的面积是 {aB} 平方厘米，那么所有图形的总面积是多少平方厘米？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "aA": "sel(i, 4, 9, 16, 25)",
+        "aB": "sel(i, 9, 16, 9, 36)",
+        "sA": "sqrt(sel(i, 4, 9, 16, 25))",
+        "sB": "sqrt(sel(i, 9, 16, 9, 36))",
+        "sC": "sqrt(sel(i, 4, 9, 16, 25)) + sqrt(sel(i, 9, 16, 9, 36))",
+        "aC": "pow(sqrt(sel(i, 4, 9, 16, 25)) + sqrt(sel(i, 9, 16, 9, 36)), 2)",
+        "total": "sel(i, 4, 9, 16, 25) + sel(i, 9, 16, 9, 36)",
+        "wrong1": "sel(i, 4, 9, 16, 25) + sel(i, 9, 16, 9, 36) + sel(i, 9, 16, 9, 36)",
+        "wrong2": "sel(i, 4, 9, 16, 25) + sel(i, 9, 16, 9, 36)",
+        "wrong3": "pow(sqrt(sel(i, 4, 9, 16, 25)) + sqrt(sel(i, 9, 16, 9, 36)), 2)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{aA + aB + aC}",
+            "zh": "{aA + aB + aC}"
+          },
+          {
+            "en": "{wrong1}",
+            "zh": "{wrong1}"
+          },
+          {
+            "en": "{wrong2}",
+            "zh": "{wrong2}"
+          },
+          {
+            "en": "{wrong3}",
+            "zh": "{wrong3}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Side of A = √{aA} = {sA} cm, side of B = √{aB} = {sB} cm. In the figure C spans both, so its side is {sA} + {sB} = {sC} cm and its area is {sC}² = {aC} cm². Total = {aA} + {aB} + {aC} = {aA + aB + aC} cm².",
+        "zh": "A 的边长 = √{aA} = {sA} 厘米，B 的边长 = √{aB} = {sB} 厘米。图中 C 跨在两者下方，所以边长是 {sA} + {sB} = {sC} 厘米，面积 {sC}² = {aC} 平方厘米。总面积 = {aA} + {aB} + {aC} = {aA + aB + aC} 平方厘米。"
+      },
+      "diagram": {
+        "type": "threesquares",
+        "aA": "aA",
+        "aB": "aB"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q32",
+      "noVariantReason": "",
+      "id": "mm1t2-32",
+      "topic": "不定方程取最大值",
+      "difficulty": 4,
+      "title": "两种重量锭子凑总重，求黄金最大可能量",
+      "tags": [
+        "不定方程",
+        "最值"
+      ],
+      "stem": {
+        "en": "A vault holds only {a}-gram tablets of gold and {b}-gram tablets of silver. If there are {T} grams of gold and silver in total, what is the greatest amount of gold that can be in the vault, in grams?",
+        "zh": "一个金库中只有 {a} 克的金锭和 {b} 克的银锭。如果金和银一共有 {T} 克，那么其中黄金最多可能有多少克？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "a": "sel(i, 80, 60, 90, 70)",
+        "b": "sel(i, 50, 40, 50, 30)",
+        "T": "sel(i, 1300, 1000, 1450, 860)",
+        "x": "sel(i, 15, 16, 15, 11)",
+        "gold": "sel(i, 80, 60, 90, 70)*sel(i, 15, 16, 15, 11)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "15",
+            "zh": "15"
+          },
+          {
+            "en": "40",
+            "zh": "40"
+          },
+          {
+            "en": "800",
+            "zh": "800"
+          },
+          {
+            "en": "{gold}",
+            "zh": "{gold}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "We want as many {a} g gold tablets as possible. With {x} gold tablets the gold weighs {gold} g, leaving {T} − {gold} = {T - gold} g of silver, which is {T - gold} ÷ {b} = {(T-gold)/b} silver tablets — a whole number. One more gold tablet would need {gold+a} g, leaving {T - gold - a} g of silver, which is not a multiple of {b}. So the greatest amount of gold is {gold} g.",
+        "zh": "要让黄金尽量多。取 {x} 块 {a} 克的金锭，黄金共 {gold} 克，剩下 {T} − {gold} = {T - gold} 克白银，正好是 {T - gold} ÷ {b} = {(T-gold)/b} 块银锭。再多一块金锭就要 {gold+a} 克黄金，剩下 {T - gold - a} 克白银不是 {b} 的整数倍，凑不出。所以黄金最多 {gold} 克。"
+      },
+      "noFigure": "纯文字应用题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q33",
+      "noVariantReason": "",
+      "id": "mm1t2-33",
+      "topic": "往返行程问题",
+      "difficulty": 4,
+      "title": "去快回慢，全程一小时，求单程距离",
+      "tags": [
+        "速度",
+        "往返"
+      ],
+      "stem": {
+        "en": "John runs from home to school at an average speed of {v1} km per hour, and then walks home along the same route at an average speed of {v2} km per hour. If his whole journey took one hour, how many km is his home from his school?",
+        "zh": "John 以平均每小时 {v1} 千米从家跑到学校，然后沿原路以平均每小时 {v2} 千米走回家。整个来回花了 1 小时。他家到学校有多少千米？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "v1": "sel(i, 6, 8, 9, 10)",
+        "v2": "sel(i, 3, 4, 3, 5)",
+        "d": "sel(i, 6, 8, 9, 10)*sel(i, 3, 4, 3, 5)/(sel(i, 6, 8, 9, 10) + sel(i, 3, 4, 3, 5))",
+        "t1": "60*sel(i, 3, 4, 3, 5)/(sel(i, 6, 8, 9, 10) + sel(i, 3, 4, 3, 5))",
+        "t2": "60*sel(i, 6, 8, 9, 10)/(sel(i, 6, 8, 9, 10) + sel(i, 3, 4, 3, 5))"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{d} km",
+            "zh": "{d} 千米"
+          },
+          {
+            "en": "{v1/2} km",
+            "zh": "{v1/2} 千米"
+          },
+          {
+            "en": "{v2} km",
+            "zh": "{v2} 千米"
+          },
+          {
+            "en": "{v1} km",
+            "zh": "{v1} 千米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Going is {v1}/{v2} = {v1/v2} times as fast as coming back, so going takes {v1/v2} of 1 hour... Working in minutes: going takes {t1} min and coming back {t2} min (total 60). Distance = {v1} × {t1}/60 = {d} km.",
+        "zh": "去的速度是回的 {v1}/{v2} = {v1/v2} 倍，所以去用的时间是回的 1/{v1/v2}。按分钟算：去用 {t1} 分钟，回用 {t2} 分钟（共 60 分钟）。距离 = {v1} × {t1}/60 = {d} 千米。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q34",
+      "noVariantReason": "",
+      "id": "mm1t2-34",
+      "topic": "差价与倍数",
+      "difficulty": 3,
+      "title": "两种镜片差价是便宜镜片的若干倍",
+      "tags": [
+        "倍数",
+        "差价"
+      ],
+      "stem": {
+        "en": "An optometrist charges ${P1}.00 for an eye examination, frames, and glass lenses, but ${P2}.00 for an eye examination, frames, and plastic lenses. If the plastic lenses cost {k} times as much as the glass lenses, how much do the glass lenses cost?",
+        "zh": "一位验光师配「验光 + 镜架 + 玻璃镜片」收费 {P1} 元，配「验光 + 镜架 + 树脂镜片」收费 {P2} 元。如果树脂镜片的价格是玻璃镜片的 {k} 倍，玻璃镜片多少钱？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "P1": "sel(i, 300, 280, 350, 400)",
+        "P2": "sel(i, 420, 400, 470, 520)",
+        "k": "sel(i, 4, 5, 4, 3)",
+        "d": "sel(i, 420, 400, 470, 520) - sel(i, 300, 280, 350, 400)",
+        "glass": "(sel(i, 420, 400, 470, 520) - sel(i, 300, 280, 350, 400))/(sel(i, 4, 5, 4, 3) - 1)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "${glass}",
+            "zh": "{glass} 元"
+          },
+          {
+            "en": "${d}",
+            "zh": "{d} 元"
+          },
+          {
+            "en": "${glass*2}",
+            "zh": "{glass*2} 元"
+          },
+          {
+            "en": "${d/2}",
+            "zh": "{d/2} 元"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The only difference is the lenses, so the price gap ${d} is the difference between the lenses. Plastic = {k} × glass, so the gap is ({k} − 1) = {k-1} times the glass lens price. Glass = {d} ÷ {k-1} = ${glass}.",
+        "zh": "两次收费只差在镜片上，差价 {d} 元就是两种镜片的价格差。树脂是玻璃的 {k} 倍，所以差价是玻璃镜片价格的 ({k} − 1) = {k-1} 倍。玻璃镜片 = {d} ÷ {k-1} = {glass} 元。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q35",
+      "noVariantReason": "",
+      "id": "mm1t2-35",
+      "topic": "指数运算",
+      "difficulty": 3,
+      "title": "由指数方程求指数的立方",
+      "tags": [
+        "指数",
+        "幂"
+      ],
+      "stem": {
+        "en": "If {b}^{n} = {P}, then {n}^{3} =",
+        "zh": "如果 {b} 的 {n} 次方等于 {P}，那么 {n}³ ="
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "b": "sel(i, 3, 2, 5, 4)",
+        "n": "sel(i, 4, 6, 3, 3)",
+        "P": "pow(sel(i, 3, 2, 5, 4), sel(i, 4, 6, 3, 3))",
+        "xc": "pow(sel(i, 4, 6, 3, 3), 3)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{n}",
+            "zh": "{n}"
+          },
+          {
+            "en": "{xc}",
+            "zh": "{xc}"
+          },
+          {
+            "en": "{P}",
+            "zh": "{P}"
+          },
+          {
+            "en": "{xc*2}",
+            "zh": "{xc*2}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{b} raised to the power {n} is {P} (check by repeated multiplication), so the exponent is {n}. Then {n}³ = {n} × {n} × {n} = {xc}.",
+        "zh": "{b} 自乘 {n} 次正好得 {P}，所以指数 = {n}。于是 {n}³ = {n} × {n} × {n} = {xc}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q36",
+      "noVariantReason": "",
+      "id": "mm1t2-36",
+      "topic": "两向表推理",
+      "difficulty": 4,
+      "title": "由班级信息求出戴眼镜女生占全班的几分之几",
+      "tags": [
+        "逻辑推理",
+        "分数"
+      ],
+      "stem": {
+        "en": "Questions 36 and 37 refer to the following information: Here is some information about pupils in a class. — The total number of pupils is {N}. — {ng} of the pupils do not wear glasses. — A quarter of the pupils who do wear glasses are boys. — There are {d} more boys than girls. Use the information to find the fraction of girls who wear glasses in the class.",
+        "zh": "第 36、37 题共用下面的信息。以下是某班学生的信息：全班共 {N} 人；不戴眼镜的有 {ng} 人；戴眼镜的学生中有四分之一是男生；男生比女生多 {d} 人。根据这些信息，求戴眼镜的女生占全班的几分之几。"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "N": "sel(i, 30, 40, 24, 36)",
+        "ng": "sel(i, 26, 34, 20, 30)",
+        "d": "sel(i, 2, 4, 2, 4)",
+        "wear": "sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30)",
+        "gw": "3*(sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4",
+        "frac": "3*(sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4/sel(i, 30, 40, 24, 36)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "1/16",
+            "zh": "1/16"
+          },
+          {
+            "en": "3/14",
+            "zh": "3/14"
+          },
+          {
+            "en": "7/15",
+            "zh": "7/15"
+          },
+          {
+            "en": "{gw}/{N}",
+            "zh": "{gw}/{N}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Pupils who wear glasses = {N} − {ng} = {wear}. Of these, one quarter are boys, so three quarters are girls: {wear} × 3/4 = {gw} girls. As a fraction of the whole class: {gw}/{N} = {frac}.",
+        "zh": "戴眼镜的人数 = {N} − {ng} = {wear} 人；其中四分之一是男生，所以四分之三是女生：{wear} × 3/4 = {gw} 名女生。占全班的比例 = {gw}/{N} = {frac}。"
+      },
+      "noFigure": "原题为纯文字信息题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q37",
+      "noVariantReason": "",
+      "id": "mm1t2-37",
+      "topic": "两向表推理",
+      "difficulty": 4,
+      "title": "由班级信息求不戴眼镜男生占男生的几分之几",
+      "tags": [
+        "逻辑推理",
+        "分数"
+      ],
+      "stem": {
+        "en": "Questions 36 and 37 refer to the following information: Here is some information about pupils in a class. — The total number of pupils is {N}. — {ng} of the pupils do not wear glasses. — A quarter of the pupils who do wear glasses are boys. — There are {d} more boys than girls. What fraction of boys do not wear glasses?",
+        "zh": "第 36、37 题共用下面的信息（同上一题）。求不戴眼镜的男生占男生的几分之几。"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "N": "sel(i, 30, 40, 24, 36)",
+        "ng": "sel(i, 26, 34, 20, 30)",
+        "d": "sel(i, 2, 4, 2, 4)",
+        "boys": "(sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2",
+        "girls": "(sel(i, 30, 40, 24, 36) - sel(i, 2, 4, 2, 4))/2",
+        "wear": "sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30)",
+        "bw": "(sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4",
+        "bng": "(sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2 - (sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4",
+        "frac": "((sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2 - (sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4)/((sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{bw}/{boys}",
+            "zh": "{bw}/{boys}"
+          },
+          {
+            "en": "{bng}/{boys}",
+            "zh": "{bng}/{boys}"
+          },
+          {
+            "en": "1/30",
+            "zh": "1/30"
+          },
+          {
+            "en": "1/4",
+            "zh": "1/4"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Boys = ({N} + {d}) ÷ 2 = {boys}; girls = ({N} − {d}) ÷ 2 = {girls}. Pupils wearing glasses = {N} − {ng} = {wear}; boys among them = {wear}/4 = {bw}, so girls among them = {wear} − {bw} = {wear - bw}. Boys who do NOT wear glasses = {boys} − {bw} = {bng}. Fraction = {bng}/{boys}.",
+        "zh": "男生 = ({N} + {d}) ÷ 2 = {boys} 人；女生 = ({N} − {d}) ÷ 2 = {girls} 人。戴眼镜的共 {N} − {ng} = {wear} 人；其中男生 {wear}/4 = {bw} 人，女生 {wear} − {bw} = {wear - bw} 人。不戴眼镜的男生 = {boys} − {bw} = {bng} 人。占男生的 {bng}/{boys}。"
+      },
+      "diagram": {
+        "type": "twoway",
+        "variant": "0"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q38",
+      "noVariantReason": "",
+      "id": "mm1t2-38",
+      "topic": "表面积（粘合面未上漆）",
+      "difficulty": 4,
+      "title": "粘合后整体上漆，拆开后有多少面没上漆",
+      "tags": [
+        "表面积",
+        "立体",
+        "计数"
+      ],
+      "stem": {
+        "en": "{n} cubes are glued together, and then the entire figure is painted. The cubes are then separated. How many faces have not been painted?",
+        "zh": "{n} 个正方体粘在一起，然后给整个图形的外表面上漆。之后把正方体拆开。有多少个面没有上到漆？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "derived": {
+        "n": "sel(i, 10, 12)",
+        "joins": "sel(i, 10, 12)",
+        "unpainted": "2*sel(i, 10, 12)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{unpainted}",
+            "zh": "{unpainted}"
+          },
+          {
+            "en": "{n*4}",
+            "zh": "{n*4}"
+          },
+          {
+            "en": "{n*2 + 16}",
+            "zh": "{n*2 + 16}"
+          },
+          {
+            "en": "{n*2 - 6}",
+            "zh": "{n*2 - 6}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "A face is left unpainted only where two cubes were glued together. Gluing {n} cubes in a ring makes {joins} joins, and each join hides 2 faces: 2 × {joins} = {unpainted} faces unpainted.",
+        "zh": "只有当两个正方体粘在一起的那个面才没上漆。{n} 个正方体粘成一圈共有 {joins} 个接缝，每个接缝盖住 2 个面：2 × {joins} = {unpainted} 个面没上漆。"
+      },
+      "diagram": {
+        "type": "framecubes",
+        "n": "n"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q39",
+      "noVariantReason": "",
+      "id": "mm1t2-39",
+      "topic": "分数的基本性质",
+      "difficulty": 3,
+      "title": "分子分母同加一个数使分数等于给定值",
+      "tags": [
+        "分数",
+        "方程"
+      ],
+      "stem": {
+        "en": "What number must be added to both the numerator and the denominator of the fraction {a}/{b} to change its value to {c}/{d}?",
+        "zh": "给分数 {a}/{b} 的分子和分母同时加上哪个数，才能使它的值等于 {c}/{d}？"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "a": "sel(i, 7, 3, 5, 2)",
+        "b": "sel(i, 15, 7, 13, 5)",
+        "c": "sel(i, 3, 3, 5, 2)",
+        "d": "sel(i, 5, 5, 9, 3)",
+        "add": "sel(i, 5, 3, 5, 1)",
+        "w1": "sel(i, 5, 5, 9, 3)",
+        "w2": "sel(i, 8, 4, 8, 3)",
+        "w3": "sel(i, 3, 3, 5, 2)"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{w1}",
+            "zh": "{w1}"
+          },
+          {
+            "en": "{add}",
+            "zh": "{add}"
+          },
+          {
+            "en": "{w2}",
+            "zh": "{w2}"
+          },
+          {
+            "en": "{w3}",
+            "zh": "{w3}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "We need ({a} + k)/({b} + k) = {c}/{d}. Cross-multiplying: {d}({a} + k) = {c}({b} + k), so {d*a} + {d}k = {c*b} + {c}k, giving ({d} − {c})k = {c*b} − {d*a}, so k = {add}. Check: ({a}+{add})/({b}+{add}) = {a+add}/{b+add}, which does equal {c}/{d}.",
+        "zh": "要使 ({a} + k)/({b} + k) = {c}/{d}，交叉相乘得 {d}({a} + k) = {c}({b} + k)，即 {d*a} + {d}k = {c*b} + {c}k，所以 ({d} − {c})k = {c*b} − {d*a}，解得 k = {add}。验算：({a}+{add})/({b}+{add}) = {a+add}/{b+add}，确实等于 {c}/{d}。"
+      },
+      "noFigure": "纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 2",
+      "source": "Mastering Mathematics Book 1 Test 2 Q40",
+      "noVariantReason": "",
+      "id": "mm1t2-40",
+      "topic": "概率（独立事件相乘）",
+      "difficulty": 4,
+      "title": "求两件独立事件同时发生的概率",
+      "tags": [
+        "概率",
+        "分数"
+      ],
+      "stem": {
+        "en": "Minh misses the bus to school {m1} days out of {m2} days. He leaves his Mathematics textbook at home {k1} days out of {k2}. What is the probability of Minh catching the bus with his Mathematics textbook?",
+        "zh": "Minh 每 {m2} 天中有 {m1} 天会错过校车；每 {k2} 天中有 {k1} 天会把数学课本忘在家里。求 Minh 既赶上校车、又带上数学课本的概率。"
+      },
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "m1": "sel(i, 2, 3, 1, 4)",
+        "m2": "sel(i, 5, 8, 4, 10)",
+        "k1": "sel(i, 3, 5, 2, 1)",
+        "k2": "sel(i, 4, 6, 3, 5)",
+        "catchP": "(sel(i, 5, 8, 4, 10) - sel(i, 2, 3, 1, 4))/sel(i, 5, 8, 4, 10)",
+        "bringP": "(sel(i, 4, 6, 3, 5) - sel(i, 3, 5, 2, 1))/sel(i, 4, 6, 3, 5)",
+        "pct": "(sel(i, 5, 8, 4, 10) - sel(i, 2, 3, 1, 4))/sel(i, 5, 8, 4, 10)*(sel(i, 4, 6, 3, 5) - sel(i, 3, 5, 2, 1))/sel(i, 4, 6, 3, 5)*100"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{pct}%",
+            "zh": "{pct}%"
+          },
+          {
+            "en": "{pct*10}%",
+            "zh": "{pct*10}%"
+          },
+          {
+            "en": "{pct*2}%",
+            "zh": "{pct*2}%"
+          },
+          {
+            "en": "{pct*4}%",
+            "zh": "{pct*4}%"
+          }
+        ]
+      },
+      "solution": {
+        "en": "He misses the bus {m1} days out of {m2}, so he catches it ({m2} − {m1})/{m2} = {catchP} of the time. He forgets the book {k1} days out of {k2}, so he brings it ({k2} − {k1})/{k2} = {bringP} of the time. The two are independent, so multiply: {catchP} × {bringP} = {pct/100} = {pct}%.",
+        "zh": "每 {m2} 天有 {m1} 天错过车，所以赶上车的机会是 ({m2} − {m1})/{m2} = {catchP}；每 {k2} 天有 {k1} 天忘带书，所以带上课本的机会是 ({k2} − {k1})/{k2} = {bringP}。两件事互相独立，相乘：{catchP} × {bringP} = {pct/100} = {pct}%。"
+      },
+      "noFigure": "纯文字概率题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    }
+  ]
+}

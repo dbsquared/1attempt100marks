@@ -2455,6 +2455,46 @@
       return s;
     },
 
+    /* 数正方形（「图中有多少个正方形」题）。
+       与普通方格图不同：这里允许**故意缺掉内部线段**，从而改变各尺寸正方形的数目。
+       spec.n = 网格边长（n x n 个 1x1 格）
+       spec.missH = 缺掉的水平线段，元素为 [row, col]，表示第 row 条水平线（0..n，从上往下）
+                   在第 col 列（0..n-1，从左往右）这一小段被擦掉
+       spec.missV = 缺掉的竖直线段，元素为 [row, col]，表示第 col 条竖直线（0..n）
+                   在第 row 行（0..n-1）这一小段被擦掉
+       图上每条线段都写 data-h/data-v 与 data-row/data-col，自检脚本据此独立重算正方形总数：
+       一个 k x k 正方形存在 ⇔ 它的 4k 条单位线段全部存在。 */
+    squarecount: function (spec, vars) {
+      var n = Math.max(2, Math.min(6, Math.round(num(spec.n, vars) || 4)));
+      var u = 56, pad = 18;
+      var W = pad * 2 + n * u, H = pad * 2 + n * u;
+      var missH = spec.missH || [], missV = spec.missV || [];
+      function hMissing(r, c) { return missH.some(function (m) { return m[0] === r && m[1] === c; }); }
+      function vMissing(r, c) { return missV.some(function (m) { return m[0] === r && m[1] === c; }); }
+      var s = svgOpen(W, H, 'grid figure for counting squares');
+      s += '<g data-u="sqgrid" data-n="' + n + '">';
+      var r, c;
+      /* 水平线段：第 r 条线（0..n），第 c 段（0..n-1） */
+      for (r = 0; r <= n; r++) {
+        for (c = 0; c < n; c++) {
+          if (hMissing(r, c)) continue;
+          s += '<line data-h="1" data-row="' + r + '" data-col="' + c + '" x1="' + (pad + c * u) + '" y1="' + (pad + r * u) +
+               '" x2="' + (pad + (c + 1) * u) + '" y2="' + (pad + r * u) + '" stroke="' + INK + '" stroke-width="2"/>';
+        }
+      }
+      /* 竖直线段：第 c 条线（0..n），第 r 段（0..n-1） */
+      for (c = 0; c <= n; c++) {
+        for (r = 0; r < n; r++) {
+          if (vMissing(r, c)) continue;
+          s += '<line data-v="1" data-row="' + r + '" data-col="' + c + '" x1="' + (pad + c * u) + '" y1="' + (pad + r * u) +
+               '" x2="' + (pad + c * u) + '" y2="' + (pad + (r + 1) * u) + '" stroke="' + INK + '" stroke-width="2"/>';
+        }
+      }
+      s += '</g>';
+      s += '</svg>';
+      return s;
+    },
+
     /* 数三角形（Q20）：A(0,1) 左下、B(0.5,0) 顶、C(1,1) 右下；
        从 A 向对边 BC 引 j 条分割线（把 BC 等分成 j+1 段），extra=1 时再从 AB 中点连到 C。 */
     trilines: function (spec, vars) {
@@ -2490,10 +2530,874 @@
     return (items || []).map(function (it) { return it[0] + ':' + Math.round(num(it[1], vars)); }).join('+');
   }
 
+  /* ==========================================================================
+   * Book 1（Mastering Mathematics Selective & Scholarship）新增图元
+   * ========================================================================== */
+  var TYPES6 = {
+
+    /* 三角形：已知面积 A，图上只标面积与底边，不标高（高由学生算） */
+    triangleareagiven: function (spec, vars) {
+      var A = Math.max(4, Math.round(num(spec.A, vars)));
+      var W = 420, H = 250, x0 = 70, x1 = 350, yb = 200, yt = 60;
+      var s = svgOpen(W, H, 'triangle with area ' + A + ' square centimetres');
+      s += '<polygon points="' + x0 + ',' + yb + ' ' + x1 + ',' + yb + ' 190,' + yt +
+           '" fill="none" stroke="' + INK + '" stroke-width="2.5"/>';
+      /* 底边直角标记 */
+      s += '<polyline points="' + (x1 - 26) + ',' + yb + ' ' + (x1 - 26) + ',' + (yb - 26) + ' ' + x1 + ',' + (yb - 26) +
+           '" fill="none" stroke="' + INK + '" stroke-width="1.5" opacity="0.5"/>';
+      s += '<line x1="190" y1="' + yt + '" x2="190" y2="' + yb + '" stroke="' + GREY + '" stroke-dasharray="6 5" stroke-width="1.5"/>';
+      s += '<text x="200" y="' + (yt + 52) + '" font-size="17" fill="' + INK + '">h</text>';
+      s += '<text x="' + ((x0 + x1) / 2) + '" y="' + (yb + 28) + '" font-size="17" text-anchor="middle" fill="' + INK + '">base</text>';
+      s += '<text x="' + ((x0 + x1) / 2) + '" y="' + (yb + 56) + '" font-size="17" text-anchor="middle" fill="' + RED + '">Area = ' + A + ' cm&#178;</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 平行四边形：中心分割线把图形分成 P1 / P2（面积必相等） */
+    parabiset: function (spec, vars) {
+      var W = 400, H = 240, ox = 60, oy = 60, w = 220, h = 140, sk = 70;
+      var A = [ox + sk, oy], B = [ox + sk + w, oy], C = [ox + w, oy + h], D = [ox, oy + h];
+      var s = svgOpen(W, H, 'parallelogram split into P1 and P2');
+      s += '<polygon points="' + A.join(',') + ' ' + B.join(',') + ' ' + C.join(',') + ' ' + D.join(',') +
+           '" fill="none" stroke="' + INK + '" stroke-width="2.5"/>';
+      /* 过中心的分割线：取 AD 中点与 BC 中点 */
+      var mid = function (p, q) { return [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2]; };
+      var P = mid(A, B), Q = mid(D, C);
+      s += '<line x1="' + P[0] + '" y1="' + P[1] + '" x2="' + Q[0] + '" y2="' + Q[1] + '" stroke="' + RED + '" stroke-width="2.5"/>';
+      s += '<text x="' + (P[0] + 8) + '" y="' + (P[1] - 10) + '" font-size="18" fill="' + RED + '">P1</text>';
+      s += '<text x="' + (Q[0] - 30) + '" y="' + (Q[1] - 10) + '" font-size="18" fill="' + BLUE + '">P2</text>';
+      s += '<circle cx="' + (A[0] + C[0]) / 2 + '" cy="' + (A[1] + C[1]) / 2 + '" r="3.5" fill="' + INK + '"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 正方形四角各剪去边长 s 的小正方形 */
+    cornercut: function (spec, vars) {
+      var S = Math.max(3, Math.round(num(spec.S, vars)));
+      var s0 = Math.max(1, Math.round(num(spec.s, vars)));
+      var W = 360, H = 300, x0 = 50, y0 = 40, size = 220, px = size / S, k = s0 * px;
+      var s = svgOpen(W, H, 'square of side ' + S + ' with four corners of side ' + s0 + ' removed');
+      /* 外框（虚线，原大正方形） */
+      s += '<rect x="' + x0 + '" y="' + y0 + '" width="' + size + '" height="' + size +
+           '" fill="none" stroke="' + GREY + '" stroke-width="1.5" stroke-dasharray="6 5"/>';
+      /* 阴影十字形 */
+      var pts = [
+        [x0 + k, y0], [x0 + size - k, y0], [x0 + size - k, y0 + k], [x0 + size, y0 + k],
+        [x0 + size, y0 + size - k], [x0 + size - k, y0 + size - k], [x0 + size - k, y0 + size],
+        [x0 + k, y0 + size], [x0 + k, y0 + size - k], [x0, y0 + size - k],
+        [x0, y0 + k], [x0 + k, y0 + k]
+      ];
+      s += '<polygon points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') +
+           '" fill="#5b9bd5" fill-opacity="0.55" stroke="' + INK + '" stroke-width="2"/>';
+      /* 四个被剪掉的小正方形：用虚线勾出 */
+      [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(function (c) {
+        var cx = x0 + c[0] * (size - k), cy = y0 + c[1] * (size - k);
+        s += '<rect x="' + cx + '" y="' + cy + '" width="' + k + '" height="' + k +
+             '" fill="#ffffff" stroke="' + GREY + '" stroke-width="1.2" stroke-dasharray="4 4"/>';
+      });
+      s += '<text x="' + (x0 + size / 2) + '" y="' + (y0 + size + 26) + '" font-size="17" text-anchor="middle" fill="' + INK + '">' + S + ' cm</text>';
+      s += '<text x="' + (x0 + k + 27) + '" y="' + (y0 + k + 18) + '" font-size="14" fill="' + INK + '">' + s0 + ' cm</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 三圆韦恩图（岗位 / 集合） */
+    venn3: function (spec, vars) {
+      var W = 420, H = 300;
+      var lab = String(spec.labels || 'S,C,D').split(',');
+      var r = 78, cx = [170, 250, 210], cy = [110, 110, 178];
+      var s = svgOpen(W, H, 'three-circle Venn diagram');
+      s += '<circle cx="' + cx[0] + '" cy="' + cy[0] + '" r="' + r + '" fill="#5b9bd5" fill-opacity="0.22" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<circle cx="' + cx[1] + '" cy="' + cy[1] + '" r="' + r + '" fill="#e5484d" fill-opacity="0.18" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<circle cx="' + cx[2] + '" cy="' + cy[2] + '" r="' + r + '" fill="#2ea043" fill-opacity="0.20" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<text x="' + (cx[0] - 46) + '" y="' + (cy[0] - 46) + '" font-size="17" font-weight="bold" fill="' + INK + '">' + esc(lab[0]) + '</text>';
+      s += '<text x="' + (cx[1] + 30) + '" y="' + (cy[1] - 46) + '" font-size="17" font-weight="bold" fill="' + INK + '">' + esc(lab[1]) + '</text>';
+      s += '<text x="' + (cx[2]) + '" y="' + (cy[2] + 66) + '" font-size="17" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + esc(lab[2]) + '</text>';
+      /* 标出 C∩D 且不在 S 的公共区域（供学生对照） */
+      s += '<circle cx="238" cy="152" r="5" fill="' + INK + '"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 一面靠墙的长方形花园：画三边篱笆 + 墙 */
+    gardenfence: function (spec, vars) {
+      var L = Math.max(4, Math.round(num(spec.L, vars)));
+      var Wd = Math.max(2, Math.round(num(spec.W, vars)));
+      var maxW = 380, maxH = 220;
+      var scale = Math.min(maxW / L, maxH / Wd);
+      var w = L * scale, h = Wd * scale;
+      var x0 = (440 - w) / 2, y0 = 60;
+      var s = svgOpen(440, y0 + h + 70, 'rectangular garden with one side fenced by a wall');
+      /* 墙（上边） */
+      s += '<rect x="' + x0 + '" y="' + (y0 - 16) + '" width="' + w + '" height="14" fill="#b0a89a" stroke="' + INK + '" stroke-width="1.5"/>';
+      s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 - 22) + '" font-size="14" text-anchor="middle" fill="' + INK + '">wall</text>';
+      /* 三边篱笆 */
+      s += '<polyline points="' + x0 + ',' + y0 + ' ' + x0 + ',' + (y0 + h) + ' ' + (x0 + w) + ',' + (y0 + h) + ' ' + (x0 + w) + ',' + y0 +
+           '" fill="none" stroke="' + GREEN + '" stroke-width="3.5"/>';
+      for (var i = 0; i <= 10; i++) {
+        var px = x0 + i * w / 10;
+        s += '<line x1="' + px.toFixed(1) + '" y1="' + (y0 + h) + '" x2="' + px.toFixed(1) + '" y2="' + (y0 + h + 9) + '" stroke="' + GREEN + '" stroke-width="2"/>';
+      }
+      s += '<text x="' + (x0 + w + 8) + '" y="' + (y0 + h / 2) + '" font-size="16" fill="' + INK + '">' + Wd + ' m</text>';
+      s += '<text x="' + (x0 + w / 2) + '" y="' + (y0 + h + 32) + '" font-size="16" text-anchor="middle" fill="' + INK + '">' + L + ' m</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 菱形/平行四边形 ABCD + 对角线 BD，标出 AB 与 BD 的倍数关系 */
+    rhombustri: function (spec, vars) {
+      var A = Math.max(8, Math.round(num(spec.A, vars)));
+      var W = 420, H = 280;
+      var B = [110, 60], D = [250, 60], C = [330, 220], Aa = [190, 220];
+      var s = svgOpen(W, H, 'two identical triangles ABD and BCD with common diagonal BD');
+      s += '<polygon points="' + Aa.join(',') + ' ' + B.join(',') + ' ' + D.join(',') +
+           '" fill="#5b9bd5" fill-opacity="0.30" stroke="' + INK + '" stroke-width="2.5"/>';
+      s += '<polygon points="' + D.join(',') + ' ' + B.join(',') + ' ' + C.join(',') +
+           '" fill="#e5484d" fill-opacity="0.20" stroke="' + INK + '" stroke-width="2.5"/>';
+      /* 对角线 BD */
+      s += '<line x1="' + B[0] + '" y1="' + B[1] + '" x2="' + D[0] + '" y2="' + D[1] + '" stroke="' + INK + '" stroke-width="2"/>';
+      /* 直角标记在 A 处（BD 为底，高 = AB） */
+      s += '<text x="' + (Aa[0] - 6) + '" y="' + (Aa[1] - 12) + '" font-size="17" font-weight="bold" fill="' + INK + '">A</text>';
+      s += '<text x="' + (B[0] - 22) + '" y="' + (B[1] - 8) + '" font-size="17" font-weight="bold" fill="' + INK + '">B</text>';
+      s += '<text x="' + (D[0] + 10) + '" y="' + (D[1] - 8) + '" font-size="17" font-weight="bold" fill="' + INK + '">D</text>';
+      s += '<text x="' + (C[0] + 8) + '" y="' + (C[1] + 8) + '" font-size="17" font-weight="bold" fill="' + INK + '">C</text>';
+      s += '<text x="' + ((Aa[0] + B[0]) / 2 - 30) + '" y="' + ((Aa[1] + B[1]) / 2) + '" font-size="15" fill="' + RED + '">AB</text>';
+      s += '<text x="' + ((B[0] + D[0]) / 2) + '" y="' + (B[1] - 12) + '" font-size="15" text-anchor="middle" fill="' + BLUE + '">BD</text>';
+      s += '<text x="210" y="' + (H - 22) + '" font-size="16" text-anchor="middle" fill="' + INK + '">AB = &#189; BD    Total area = ' + A + ' cm&#178;</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 方格街道 + S/F + 四条长度不同的路径。
+       几何要求（四条路长度必须**严格递增**，否则"谁最短"出现并列 ⇒ 题目无唯一解）：
+         R1 = m+n    （只走右、上，唯一最短）
+         R2 = m+n+2  （在横段某一格向下探一格再回来）
+         R3 = m+n+4  （两个不同位置各探一次）
+         R4 = m+n+6  （三个不同位置各探一次）
+       每条路径都必须**逐段连通**（相邻点只差 1 格），不能跳格或重复点。
+       S 在左下 (0,n)，F 在右上 (m,0)；基线沿最上行向右 m 步、再沿最右列向上 n 步。
+       插入回环时**从右往左**做，否则前面的插入会让后面的下标漂移。 */
+    gridroutes: function (spec, vars) {
+      var m = Math.max(3, Math.min(8, Math.round(num(spec.m, vars))));
+      var n = Math.max(3, Math.min(8, Math.round(num(spec.n, vars))));
+      var c = 46, x0 = 40, y0 = 34;
+      var W = x0 * 2 + m * c, H = y0 + n * c + 58;
+
+      /* 基线 */
+      var base = [], i, j;
+      for (i = 0; i <= m; i++) base.push([i, n]);
+      for (j = n - 1; j >= 0; j--) base.push([m, j]);
+
+      /* 在横段上 x=xAt 这一格处，向下探一格 (xAt, n-1) 再回来 ⇒ 长度 +2 */
+      function spike(pts, xAt) {
+        var p = -1;
+        for (var t = 0; t < pts.length; t++) { if (pts[t][0] === xAt && pts[t][1] === n) { p = t; break; } }
+        if (p < 0) return null;
+        return pts.slice(0, p + 1).concat([[xAt, n - 1]]).concat([pts[p]]).concat(pts.slice(p + 1));
+      }
+      /* 按 x 列表插入回环（从右往左，避免下标漂移） */
+      function withSpikes(xs) {
+        var cur = base, sorted = xs.slice().sort(function (a, b) { return b - a; });
+        for (var t = 0; t < sorted.length; t++) {
+          var nxt = spike(cur, sorted[t]);
+          if (nxt) cur = nxt;
+        }
+        return cur;
+      }
+      var mid = Math.max(1, Math.floor(m / 2));
+      var t1 = Math.max(1, Math.floor(m / 3));
+      var t2 = Math.max(1, Math.floor(2 * m / 3));
+      var paths = [
+        base,
+        withSpikes([mid]),
+        withSpikes([t1, t2]),
+        withSpikes([1, mid, Math.max(1, m - 1)])
+      ];
+
+      var s = svgOpen(W, H, 'street grid from S to F with four routes');
+      for (i = 0; i <= m; i++) {
+        s += '<line x1="' + (x0 + i * c) + '" y1="' + y0 + '" x2="' + (x0 + i * c) + '" y2="' + (y0 + n * c) + '" stroke="' + GREY + '" stroke-width="1"/>';
+      }
+      for (j = 0; j <= n; j++) {
+        s += '<line x1="' + x0 + '" y1="' + (y0 + j * c) + '" x2="' + (x0 + m * c) + '" y2="' + (y0 + j * c) + '" stroke="' + GREY + '" stroke-width="1"/>';
+      }
+      var cols = [RED, BLUE, GREEN, '#d97706'];
+      var dy = [-13, -4.5, 4.5, 13];
+      paths.forEach(function (p, k) {
+        var d = p.map(function (pt, t) {
+          return (t ? 'L' : 'M') + (x0 + pt[0] * c) + ',' + (y0 + pt[1] * c + dy[k]).toFixed(1);
+        }).join(' ');
+        s += '<path data-u="route" d="' + d + '" fill="none" stroke="' + cols[k] + '" stroke-width="2.4" stroke-linejoin="round"/>';
+      });
+      s += '<circle cx="' + x0 + '" cy="' + (y0 + n * c) + '" r="7" fill="' + INK + '"/>';
+      s += '<text x="' + (x0 - 6) + '" y="' + (y0 + n * c + 24) + '" font-size="17" font-weight="bold" fill="' + INK + '">S</text>';
+      s += '<circle cx="' + (x0 + m * c) + '" cy="' + y0 + '" r="7" fill="' + RED + '"/>';
+      s += '<text x="' + (x0 + m * c + 12) + '" y="' + (y0 + 6) + '" font-size="17" font-weight="bold" fill="' + INK + '">F</text>';
+      s += '<text x="' + (W / 2) + '" y="' + (H - 10) + '" font-size="13" text-anchor="middle" fill="' + INK + '">' +
+           'red = Andy, blue = Ben, green = Cathy, orange = Daniel</text>';
+      s += '</svg>';
+      return s;
+    }
+  };
+
+  /* ==========================================================================
+   * Book 1 · TEST 2 新增图元（TYPES7）
+   * ========================================================================== */
+  var TYPES7 = {
+
+    /* 九宫格去掉中心：k×k 网格，四角的对角各切掉半个中心格，形成八角形
+       data-u="cell" 标出每个存活的小格；data-u="hole" 标出被挖掉的中心格 */
+    octagon9: function (spec, vars) {
+      var k = Math.max(3, Math.min(5, Math.round(num(spec.k, vars) || 3)));
+      var cell = k <= 3 ? 54 : 40, pad = 22, i, j;
+      var W = pad * 2 + k * cell, H = pad * 2 + k * cell;
+      var s = svgOpen(W, H, 'square cut into ' + k + ' by ' + k + ' with the middle removed');
+      /* 网格线 */
+      for (i = 0; i <= k; i++) {
+        s += '<line x1="' + (pad + i * cell) + '" y1="' + pad + '" x2="' + (pad + i * cell) + '" y2="' + (pad + k * cell) + '" stroke="' + GREY + '" stroke-width="1.2"/>';
+        s += '<line x1="' + pad + '" y1="' + (pad + i * cell) + '" x2="' + (pad + k * cell) + '" y2="' + (pad + i * cell) + '" stroke="' + GREY + '" stroke-width="1.2"/>';
+      }
+      /* 每个存活小格填浅色（除中心格外全部保留 —— 原图就是挖掉中心、
+         并且把与该格相邻的四条边的中点连成八角形轮廓） */
+      for (i = 0; i < k; i++) {
+        for (j = 0; j < k; j++) {
+          var isHole = (i === (k - 1) / 2 && j === (k - 1) / 2);
+          if (k % 2 === 0) continue;
+          s += '<rect data-u="cell" data-r="' + i + '" data-c="' + j + '" x="' + (pad + j * cell) + '" y="' + (pad + i * cell) +
+               '" width="' + cell + '" height="' + cell + '" fill="' + (isHole ? '#ffffff' : '#dbeafe') + '" fill-opacity="' +
+               (isHole ? '1' : '0.75') + '"/>';
+        }
+      }
+      /* 八角形轮廓：四条边的中点依次相连 */
+      if (k % 2 === 1) {
+        var mid = (k - 1) / 2;
+        var c0 = pad, c1 = pad + k * cell, mc0 = pad + (mid + 0.5) * cell;
+        var pts = [[mc0, c0], [c1, c0], [c1, mc0], [c1, c1], [mc0, c1], [c0, c1], [c0, mc0], [c0, c0]];
+        s += '<polygon data-u="oct" points="' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' ') +
+             '" fill="none" stroke="' + INK + '" stroke-width="2.6"/>';
+        s += '<rect data-u="hole" x="' + (pad + mid * cell) + '" y="' + (pad + mid * cell) + '" width="' + cell + '" height="' + cell +
+             '" fill="' + '#ffffff' + '" stroke="' + INK + '" stroke-width="2"/>';
+      }
+      s += '<rect x="' + pad + '" y="' + pad + '" width="' + (k * cell) + '" height="' + (k * cell) + '" fill="none" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 平均分条带：左段 n1 场均值 a1，右段 n2 场均值 a2；只画段长比例与两个均值
+       （图里不写最终答案，答案靠算） */
+    avgstrip: function (spec, vars) {
+      var n1 = Math.max(1, Math.round(num(spec.n1, vars) || 15));
+      var n2 = Math.max(1, Math.round(num(spec.n2, vars) || 5));
+      var a1 = Math.round(num(spec.a1, vars) || 17);
+      var a2 = Math.round(num(spec.a2, vars) || 21);
+      var W = 470, H = 150, x0 = 45, y = 74, h = 34;
+      var unit = Math.min(22, (W - x0 * 2) / (n1 + n2));
+      var w1 = n1 * unit, w2 = n2 * unit;
+      var s = svgOpen(W, H, 'strip showing ' + n1 + ' games at average ' + a1 + ' and ' + n2 + ' games at average ' + a2);
+      s += '<rect data-u="seg" data-games="' + n1 + '" data-avg="' + a1 + '" x="' + x0 + '" y="' + y + '" width="' + w1.toFixed(1) + '" height="' + h +
+           '" fill="#dbeafe" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<rect data-u="seg" data-games="' + n2 + '" data-avg="' + a2 + '" x="' + (x0 + w1).toFixed(1) + '" y="' + y + '" width="' + w2.toFixed(1) + '" height="' + h +
+           '" fill="#fde68a" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<text x="' + (x0 + w1 / 2).toFixed(1) + '" y="' + (y + h / 2 + 6) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + n1 + ' games</text>';
+      s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="' + (y + h / 2 + 6) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + n2 + ' games</text>';
+      s += '<text x="' + (x0 + w1 / 2).toFixed(1) + '" y="' + (y + h + 24) + '" font-size="15" text-anchor="middle" fill="' + INK + '">average ' + a1 + '</text>';
+      s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="' + (y + h + 24) + '" font-size="15" text-anchor="middle" fill="' + INK + '">average ' + a2 + '</text>';
+      s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="30" font-size="15" text-anchor="middle" fill="' + INK + '">average of all ' + (n1 + n2) + ' games = ?</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 方位点阵：N 在上，C 在 N 正下方，S 在 C 左下方；另标一个 SW 参考点
+       （原卷就有 SW 标注，保留原词） */
+    compasspts: function (spec, vars) {
+      var W = 380, H = 290, cx = 205, cy = 120;
+      var s = svgOpen(W, H, 'compass diagram with points N, C, S and SW');
+      /* 指北针小图 */
+      s += '<circle cx="46" cy="46" r="24" fill="#f8fafc" stroke="' + INK + '" stroke-width="1.6"/>';
+      s += '<polygon points="46,24 51,46 46,68 41,46" fill="' + RED + '"/>';
+      s += '<text x="46" y="16" font-size="14" text-anchor="middle" fill="' + INK + '">N</text>';
+      /* 四个点：N 在 C 正上方；S 在 C 左下方；SW 在最左下作为参照 */
+      var pN = [cx, cy - 78], pC = [cx, cy + 24], pS = [cx - 76, cy + 96], pSW = [cx - 140, cy + 150];
+      s += '<line x1="' + pN[0] + '" y1="' + pN[1] + '" x2="' + pC[0] + '" y2="' + pC[1] + '" stroke="' + GREY + '" stroke-width="1.6" stroke-dasharray="5 4"/>';
+      s += '<line x1="' + pS[0] + '" y1="' + pS[1] + '" x2="' + pC[0] + '" y2="' + pC[1] + '" stroke="' + GREY + '" stroke-width="1.6" stroke-dasharray="5 4"/>';
+      [[pN, 'N'], [pC, 'C'], [pS, 'S'], [pSW, 'SW']].forEach(function (e) {
+        s += '<circle data-u="pt" data-label="' + e[1] + '" cx="' + e[0][0] + '" cy="' + e[0][1] + '" r="7" fill="' + (e[1] === 'C' ? RED : INK) + '"/>';
+        s += '<text x="' + (e[0][0] + (e[1] === 'S' || e[1] === 'SW' ? -24 : 14)) + '" y="' + (e[0][1] + 6) +
+             '" font-size="17" font-weight="bold" fill="' + INK + '">' + e[1] + '</text>';
+      });
+      /* 方向十字 */
+      s += '<line x1="' + (cx - 168) + '" y1="' + cy + '" x2="' + (cx + 150) + '" y2="' + cy + '" stroke="' + GREY + '" stroke-width="1" opacity="0.55"/>';
+      s += '<line x1="' + cx + '" y1="' + (cy - 130) + '" x2="' + cx + '" y2="' + (cy + 176) + '" stroke="' + GREY + '" stroke-width="1" opacity="0.55"/>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* L 形（阶梯状）多边形：宽 W、左侧高 HL、右侧高 HR，所有转角为直角
+       data-u="dim" 标出三个尺寸；顶点数固定为 6（5 个直角 + 1 个凹角 270°） */
+    lshape: function (spec, vars) {
+      var Wm = num(spec.W, vars), HL = num(spec.HL, vars), HR = num(spec.HR, vars);
+      var maxV = Math.max(HL, HR), u = 190 / maxV;
+      var w = Wm * u, hl = HL * u, hr = HR * u;
+      var x0 = 66, yb = 246, padR = 60, padT = 34;
+      var SX0 = x0, SX1 = x0 + w, SYb = yb, SYt = yb - hr, SYs = yb - hl;
+      var W = Math.round(SX1 + padR), H = Math.round(padT + hr + 66);
+      var pts = [[SX0, SYb], [SX1, SYb], [SX1, SYt], [SX1 - w * 0.42, SYt], [SX1 - w * 0.42, SYs], [SX0, SYs]];
+      var s = svgOpen(W, H, 'L shaped playground, all corners right angles');
+      s += '<polygon data-u="shape" data-corners="6" points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') +
+           '" fill="#bbf7d0" fill-opacity="0.75" stroke="' + INK + '" stroke-width="2.2"/>';
+      /* 直角标记（每个角画个小方块） */
+      var cornerIdx = [0, 1, 2, 4, 5];
+      cornerIdx.forEach(function (ci) {
+        var p = pts[ci], a = pts[(ci + 5) % 6], b = pts[(ci + 1) % 6], d = 11;
+        var u1 = norm([a[0] - p[0], a[1] - p[1]]), u2 = norm([b[0] - p[0], b[1] - p[1]]);
+        if (!u1 || !u2) return;
+        var q1 = [p[0] + u1[0] * d, p[1] + u1[1] * d], q2 = [p[0] + u2[0] * d, p[1] + u2[1] * d];
+        s += '<polyline data-u="rightangle" points="' + q1[0].toFixed(1) + ',' + q1[1].toFixed(1) + ' ' +
+             (q1[0] + u2[0] * d).toFixed(1) + ',' + (q1[1] + u2[1] * d).toFixed(1) + ' ' +
+             q2[0].toFixed(1) + ',' + q2[1].toFixed(1) + '" fill="none" stroke="' + INK + '" stroke-width="1.6"/>';
+      });
+      /* 尺寸标注 */
+      s += '<text data-u="dim" data-d="W" x="' + ((SX0 + SX1) / 2).toFixed(1) + '" y="' + (SYb + 24) + '" font-size="14" text-anchor="middle" fill="' + INK + '">' + fmt(Wm) + ' m</text>';
+      s += '<text data-u="dim" data-d="HL" x="' + (SX0 - 10) + '" y="' + ((SYs + SYb) / 2 + 5).toFixed(1) + '" font-size="14" text-anchor="end" fill="' + INK + '">' + fmt(HL) + ' m</text>';
+      s += '<text data-u="dim" data-d="HR" x="' + (SX1 + 10) + '" y="' + ((SYt + SYb) / 2 + 5).toFixed(1) + '" font-size="14" fill="' + INK + '">' + fmt(HR) + ' m</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 折线统计图：横轴 1..6 天，纵轴 Number of PUPILS
+       data-u="pt" 逐个标出 (天数, 人数)，图上的高度由 data-v 给出 */
+    linegraph: function (spec, vars) {
+      var vs = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'].map(function (k) { return Math.round(num(spec[k], vars)); });
+      var x0 = 74, x1 = 372, y0 = 250, y1 = 40, i;
+      var top = Math.max.apply(null, vs.concat([10]));
+      var step = Math.ceil(top / 5);
+      var maxV = step * 5;
+      var W = 430, H = 300;
+      var s = svgOpen(W, H, 'line graph of pupils against days absent');
+      /* 轴 */
+      s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + y1 + '" stroke="' + INK + '" stroke-width="2"/>';
+      for (i = 0; i <= 5; i++) {
+        var gy = y0 - (y0 - y1) * i / 5, gv = maxV * i / 5;
+        s += '<line x1="' + x0 + '" y1="' + gy.toFixed(1) + '" x2="' + x1 + '" y2="' + gy.toFixed(1) + '" stroke="' + GREY + '" stroke-width="1"/>';
+        s += '<text x="' + (x0 - 10) + '" y="' + (gy + 5).toFixed(1) + '" font-size="13" text-anchor="end" fill="' + INK + '">' + gv + '</text>';
+      }
+      var X = function (d) { return (x0 + (x1 - x0) * d / 7).toFixed(1); };
+      var Y = function (v) { return (y0 - (y0 - y1) * v / maxV).toFixed(1); };
+      var dpath = vs.map(function (v, k) { return (k ? 'L' : 'M') + X(k + 1) + ',' + Y(v); }).join(' ');
+      s += '<path data-u="line" data-series="' + vs.join(',') + '" d="' + dpath + '" fill="none" stroke="#9f1239" stroke-width="2.4"/>';
+      vs.forEach(function (v, k) {
+        s += '<circle data-u="pt" data-x="' + (k + 1) + '" data-v="' + v + '" cx="' + X(k + 1) + '" cy="' + Y(v) + '" r="5" fill="#9f1239"/>';
+        s += '<text x="' + X(k + 1) + '" y="' + (y0 + 22) + '" font-size="14" text-anchor="middle" fill="' + INK + '">' + (k + 1) + '</text>';
+      });
+      s += '<text x="' + ((x0 + x1) / 2) + '" y="' + (y0 + 48) + '" font-size="14" text-anchor="middle" fill="' + INK + '">Number of days ABSENT</text>';
+      s += '<text x="22" y="' + ((y0 + y1) / 2) + '" font-size="14" text-anchor="middle" fill="' + INK + '" transform="rotate(-90 22 ' + ((y0 + y1) / 2) + ')">Number of PUPILS</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 两个表盘（无指针时间）：左侧逆时针箭头、右侧顺时针箭头，中心标 O / P */
+    clockpair2: function (spec, vars) {
+      var W = 420, H = 190;
+      var s = svgOpen(W, H, 'two dials labelled O and P with rotation arrows');
+      s += '<g data-u="dial" data-id="O" data-turn="anticlockwise">';
+      s += '<circle cx="115" cy="96" r="62" fill="#dbeafe" stroke="' + INK + '" stroke-width="2.2"/>';
+      s += '<line x1="115" y1="96" x2="115" y2="46" stroke="' + INK + '" stroke-width="3.4" stroke-linecap="round"/>';
+      s += '<polygon points="115,38 108,52 122,52" fill="' + INK + '"/>';
+      s += '<path d="M 62 60 A 62 62 0 0 0 62 132" fill="none" stroke="' + BLUE + '" stroke-width="2.4"/>';
+      s += '<polygon points="62,132 56,118 70,120" fill="' + BLUE + '"/>';
+      s += '<text x="115" y="120" font-size="20" font-weight="bold" text-anchor="middle" fill="' + INK + '">O</text>';
+      s += '</g>';
+      s += '<g data-u="dial" data-id="P" data-turn="clockwise">';
+      s += '<circle cx="305" cy="96" r="62" fill="#d1fae5" stroke="' + INK + '" stroke-width="2.2"/>';
+      s += '<line x1="305" y1="96" x2="305" y2="46" stroke="' + INK + '" stroke-width="3.4" stroke-linecap="round"/>';
+      s += '<polygon points="305,38 298,52 312,52" fill="' + INK + '"/>';
+      s += '<path d="M 358 132 A 62 62 0 0 0 358 60" fill="none" stroke="' + GREEN + '" stroke-width="2.4"/>';
+      s += '<polygon points="358,60 352,74 366,72" fill="' + GREEN + '"/>';
+      s += '<text x="305" y="120" font-size="20" font-weight="bold" text-anchor="middle" fill="' + INK + '">P</text>';
+      s += '</g>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* n 个棱长 s 的正方体排成一排（等距斜二测），data-u="cube" 逐个标出 */
+    rowcubes: function (spec, vars) {
+      var n = Math.max(2, Math.min(5, Math.round(num(spec.n, vars) || 3)));
+      var s0 = 52, dx = s0 * 0.46, dy = s0 * 0.30, pad = 40;
+      var W = Math.round(pad * 2 + n * s0 + dx), H = Math.round(pad * 2 + s0 + dy);
+      var s = svgOpen(W, H, n + ' cubes of side glued in a row');
+      function cube(ox, oy) {
+        var b = '', x, y;
+        /* 右面 */
+        b += '<polygon points="' + (ox + s0) + ',' + oy + ' ' + (ox + s0 + dx) + ',' + (oy - dy) + ' ' +
+             (ox + s0 + dx) + ',' + (oy + s0 - dy) + ' ' + (ox + s0) + ',' + (oy + s0) + '" fill="#bfdbfe" stroke="' + INK + '" stroke-width="1.6"/>';
+        /* 顶面 */
+        b += '<polygon points="' + ox + ',' + oy + ' ' + (ox + dx) + ',' + (oy - dy) + ' ' +
+             (ox + s0 + dx) + ',' + (oy - dy) + ' ' + (ox + s0) + ',' + oy + '" fill="#eff6ff" stroke="' + INK + '" stroke-width="1.6"/>';
+        /* 前面 */
+        b += '<rect x="' + ox + '" y="' + oy + '" width="' + s0 + '" height="' + s0 + '" fill="#ffffff" stroke="' + INK + '" stroke-width="1.6"/>';
+        return b;
+      }
+      for (var i = 0; i < n; i++) {
+        var ox = pad + i * s0, oy = pad + dy;
+        s += '<g data-u="cube" data-i="' + i + '" data-side="' + Math.round(num(spec.s, vars)) + '">' + cube(ox, oy) + '</g>';
+      }
+      /* 接缝（粘合面）标虚线 */
+      for (var j = 1; j < n; j++) {
+        var sx = pad + j * s0;
+        s += '<line data-u="join" x1="' + sx + '" y1="' + (pad + dy) + '" x2="' + sx + '" y2="' + (pad + dy + s0) +
+             '" stroke="' + RED + '" stroke-width="2.4" stroke-dasharray="6 4"/>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 一条直线 AD，在中间点处竖起两条斜线到 B、C，并在该点标直角
+       data-u="rightangle" 标出直角，data-u="angle" 标出 x 与 y */
+    angleline: function (spec, vars) {
+      var W = 460, H = 260, x0 = 44, x1 = 416, yb = 196;
+      var fx = 250;
+      var s = svgOpen(W, H, 'straight line AD with a right angle and two slanted segments');
+      s += '<line x1="' + x0 + '" y1="' + yb + '" x2="' + x1 + '" y2="' + yb + '" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<line data-u="seg" data-id="B" x1="' + fx + '" y1="' + yb + '" x2="' + (fx - 104) + '" y2="' + (yb - 118) + '" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<line data-u="seg" data-id="C" x1="' + fx + '" y1="' + yb + '" x2="' + (fx + 84) + '" y2="' + (yb - 96) + '" stroke="' + INK + '" stroke-width="2.4"/>';
+      /* 直角标记 */
+      s += '<polyline data-u="rightangle" points="' + (fx - 20) + ',' + yb + ' ' + (fx - 20) + ',' + (yb - 20) + ' ' + fx + ',' + (yb - 20) +
+           '" fill="none" stroke="' + INK + '" stroke-width="1.8"/>';
+      /* 角 x 在左侧（AB 与 AD 之间），角 y 在右侧（AC 与 AD 之间） */
+      s += '<text data-u="angle" data-id="x" x="' + (fx - 74) + '" y="' + (yb - 22) + '" font-size="19" font-weight="bold" fill="' + BLUE + '">x</text>';
+      s += '<text data-u="angle" data-id="y" x="' + (fx + 36) + '" y="' + (yb - 18) + '" font-size="19" font-weight="bold" fill="' + RED + '">y</text>';
+      s += '<text x="' + (x0 - 4) + '" y="' + (yb + 26) + '" font-size="18" font-weight="bold" fill="' + INK + '">A</text>';
+      s += '<text x="' + (x1 - 6) + '" y="' + (yb + 26) + '" font-size="18" font-weight="bold" fill="' + INK + '">D</text>';
+      s += '<text x="' + (fx - 120) + '" y="' + (yb - 124) + '" font-size="18" font-weight="bold" fill="' + INK + '">B</text>';
+      s += '<text x="' + (fx + 88) + '" y="' + (yb - 102) + '" font-size="18" font-weight="bold" fill="' + INK + '">C</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 三个正方形：A 左上、B 右上（顶边对齐），C 在下方横跨 A 与 B
+       C 的边长 = A 边长 + B 边长；图上只标 A、B、C 字母与已知的两个面积 */
+    threesquares: function (spec, vars) {
+      var aA = num(spec.aA, vars), aB = num(spec.aB, vars);
+      var sA = Math.sqrt(aA), sB = Math.sqrt(aB), sC = sA + sB;
+      var u = 168 / sC, pad = 34;
+      var wa = sA * u, wb = sB * u, wc = sC * u;
+      var W = Math.round(pad * 2 + wc), H = Math.round(pad * 2 + Math.max(wa, wb) + wc);
+      var ytop = pad, ymid = pad + Math.max(wa, wb), ybot = ymid + wc;
+      var s = svgOpen(W, H, 'three squares A, B and C');
+      s += '<rect data-u="sq" data-id="A" data-area="' + fmt(aA) + '" data-side="' + fmt(sA) + '" x="' + pad + '" y="' + ytop + '" width="' + wa.toFixed(1) + '" height="' + wa.toFixed(1) +
+           '" fill="#fed7aa" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<rect data-u="sq" data-id="B" data-area="' + fmt(aB) + '" data-side="' + fmt(sB) + '" x="' + (pad + wa).toFixed(1) + '" y="' + ytop + '" width="' + wb.toFixed(1) + '" height="' + wb.toFixed(1) +
+           '" fill="#fbcfe8" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<rect data-u="sq" data-id="C" data-side="' + fmt(sC) + '" x="' + pad + '" y="' + ymid + '" width="' + wc.toFixed(1) + '" height="' + wc.toFixed(1) +
+           '" fill="#a7f3d0" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<text x="' + (pad + wa / 2).toFixed(1) + '" y="' + (ytop + wa / 2 + 6).toFixed(1) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="' + INK + '">A</text>';
+      s += '<text x="' + (pad + wa + wb / 2).toFixed(1) + '" y="' + (ytop + wb / 2 + 6).toFixed(1) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="' + INK + '">B</text>';
+      s += '<text x="' + (pad + wc / 2).toFixed(1) + '" y="' + (ymid + wc / 2 + 6).toFixed(1) + '" font-size="16" font-weight="bold" text-anchor="middle" fill="' + INK + '">C</text>';
+      s += '<text x="' + (pad - 8) + '" y="' + (ytop + wa / 2 + 5).toFixed(1) + '" font-size="12" text-anchor="end" fill="' + INK + '">' + fmt(aA) + ' cm²</text>';
+      s += '<text x="' + (pad + wa + wb + 8).toFixed(1) + '" y="' + (ytop + wb / 2 + 5).toFixed(1) + '" font-size="12" fill="' + INK + '">' + fmt(aB) + ' cm²</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 两向表（Boys / Girls × Glasses / No Glasses / Total）空表，
+       data-u="cell" 逐个标出 (row, col)，表内不填数字（数据在题干里） */
+    twoway: function (spec, vars) {
+      var cols = ['Boys', 'Girls', 'Total'], rows = ['Glasses', 'No Glasses', 'Total'];
+      var cw = 92, ch = 40, pad = 16, i, j;
+      var W = pad * 2 + 4 * cw, H = pad * 2 + 4 * ch;
+      var s = svgOpen(W, H, 'two way table with empty cells');
+      for (i = 0; i <= 3; i++) {
+        for (j = 0; j <= 3; j++) {
+          var x = pad + j * cw, y = pad + i * ch;
+          s += '<rect data-u="cell" data-r="' + i + '" data-c="' + j + '" x="' + x + '" y="' + y + '" width="' + cw + '" height="' + ch +
+               '" fill="' + (i === 0 || j === 0 ? '#f1f5f9' : '#ffffff') + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        }
+      }
+      for (j = 0; j < 3; j++) {
+        s += '<text x="' + (pad + (j + 1) * cw + cw / 2) + '" y="' + (pad + ch / 2 + 5) + '" font-size="13" text-anchor="middle" fill="' + INK + '">' + cols[j] + '</text>';
+      }
+      for (i = 0; i < 3; i++) {
+        s += '<text x="' + (pad + cw / 2) + '" y="' + (pad + (i + 1) * ch + ch / 2 + 5) + '" font-size="13" text-anchor="middle" fill="' + INK + '">' + rows[i] + '</text>';
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 3×3 中空方框（10 个立方体粘成）：8 个围成环 + 2 个补厚度
+       data-u="cube" 逐个标出，data-u="join" 标出接缝数 */
+    framecubes: function (spec, vars) {
+      var n = Math.round(num(spec.n, vars) || 10);
+      var s0 = 44, dx = s0 * 0.46, dy = s0 * 0.30, pad = 40;
+      var W = Math.round(pad * 2 + 3 * s0 + dx), H = Math.round(pad * 2 + 3 * s0 + dy);
+      var s = svgOpen(W, H, 'ten cubes glued into a hollow square frame');
+      function cubeAt(cx, cy, key) {
+        var b = '';
+        /* 右面 */
+        b += '<polygon points="' + (cx + s0) + ',' + cy + ' ' + (cx + s0 + dx) + ',' + (cy - dy) + ' ' +
+             (cx + s0 + dx) + ',' + (cy + s0 - dy) + ' ' + (cx + s0) + ',' + (cy + s0) + '" fill="#bfdbfe" stroke="' + INK + '" stroke-width="1.5"/>';
+        /* 顶面 */
+        b += '<polygon points="' + cx + ',' + cy + ' ' + (cx + dx) + ',' + (cy - dy) + ' ' +
+             (cx + s0 + dx) + ',' + (cy - dy) + ' ' + (cx + s0) + ',' + cy + '" fill="#eff6ff" stroke="' + INK + '" stroke-width="1.5"/>';
+        /* 前面 */
+        b += '<rect x="' + cx + '" y="' + cy + '" width="' + s0 + '" height="' + s0 + '" fill="#ffffff" stroke="' + INK + '" stroke-width="1.5"/>';
+        return '<g data-u="cube" data-key="' + key + '">' + b + '</g>';
+      }
+      var cells = [[0, 0], [0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1], [2, 2]];
+      cells.forEach(function (c, idx) {
+        s += cubeAt(pad + c[0] * s0, pad + dy + c[1] * s0, 'front' + idx);
+      });
+      /* 后面补 2 个（画在右上/右下偏移处，表示有厚度） */
+      s += cubeAt(pad + 2 * s0 + dx, pad + dy - dy + s0 * 0.0, 'backA');
+      s += cubeAt(pad + 2 * s0 + dx, pad + dy + 1 * s0, 'backB');
+      /* 空缺的中心 */
+      s += '<rect data-u="hole" x="' + (pad + s0) + '" y="' + (pad + dy + s0) + '" width="' + s0 + '" height="' + s0 +
+           '" fill="#ffffff" stroke="' + GREY + '" stroke-width="1.4" stroke-dasharray="5 4"/>';
+      s += '<text data-u="count" data-n="' + n + '" x="' + (pad + 1.5 * s0) + '" y="' + (pad + dy + 1.5 * s0 + 6) + '" font-size="15" font-weight="bold" text-anchor="middle" fill="' + INK + '">' + n + ' cubes</text>';
+      s += '</svg>';
+      return s;
+    }
+  };
+
+  function norm(v) {
+    var L = Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+    if (!L) return null;
+    return [v[0] / L, v[1] / L];
+  }
+  function fmt(x) {
+    var r = Math.round(x * 100) / 100;
+    return String(r);
+  }
+
   Object.keys(TYPES2).forEach(function (k) { TYPES[k] = TYPES2[k]; });
   Object.keys(TYPES3).forEach(function (k) { if (k !== 'vehicleIcon') TYPES[k] = TYPES3[k]; });
   Object.keys(TYPES4).forEach(function (k) { TYPES[k] = TYPES4[k]; });
   Object.keys(TYPES5).forEach(function (k) { TYPES[k] = TYPES5[k]; });
+  Object.keys(TYPES6).forEach(function (k) { TYPES[k] = TYPES6[k]; });
+  Object.keys(TYPES7).forEach(function (k) { TYPES[k] = TYPES7[k]; });
+
+  /* =====================================================================
+   * Mastering Mathematics Book 1 · TEST 3 新增图元（TYPES8）
+   * 每个图元都用 data-* 标注可复算结构，供 test-figs.js 断言。
+   * ===================================================================== */
+  var TYPES8 = {
+    /* 五个全等小矩形拼成一个大矩形（上排 3 竖、下排 2 横）
+       关键几何：设小矩形 长 L、宽 W。上排 3 个竖放 ⇒ 大宽 = 3W；下排 2 个横放 ⇒ 大宽 = 2L
+       ⇒ 3W = 2L。大高 = L + W。周长 = 2(3W + L + W) = 2(4W + L)。
+       模板给出大周长 P，解出 W：因 L = 1.5W ⇒ 2(4W + 1.5W) = 11W = P ⇒ W = P/11，L = 1.5W。
+       data-u = 小矩形宽 W；data-bigw/data-bigh = 大矩形尺寸；
+       data-s="L" / data-s="W" 供断言。 */
+    fivefit: function (spec, vars) {
+      var P = Math.max(11, Math.round(num(spec.P, vars)));
+      var W = P / 11, L = 1.5 * W;
+      var sc = 320 / (3 * W);                     // 3W 是大宽，缩放到 320px
+      var u = W * sc;                             // 小矩形宽（像素）
+      var v = L * sc;                             // 小矩形长（像素）
+      var pad = 34;
+      var bigW = 3 * u, bigH = v + u;
+      var Wpx = Math.round(bigW + pad * 2), Hpx = Math.round(bigH + pad * 2 + 26);
+      var s = svgOpen(Wpx, Hpx, 'a rectangle divided into five identical smaller rectangles');
+      var x0 = pad, y0 = pad;
+      s += '<rect x="' + fmt(x0) + '" y="' + fmt(y0) + '" width="' + fmt(bigW) + '" height="' + fmt(bigH) +
+           '" fill="#eaf3fb" stroke="' + INK + '" stroke-width="2.5" data-u="' + fmt(W) + '" data-bigw="' + fmt(3 * W) + '" data-bigh="' + fmt(L + W) + '"/>';
+      var i;
+      /* 上排 3 个竖放小矩形：宽 u、高 v */
+      for (i = 0; i < 3; i++) {
+        s += '<rect x="' + fmt(x0 + i * u) + '" y="' + fmt(y0) + '" width="' + fmt(u) + '" height="' + fmt(v) +
+             '" fill="none" stroke="' + INK + '" stroke-width="1.8" data-s="W"/>';
+      }
+      /* 下排 2 个横放小矩形：宽 v、高 u */
+      for (i = 0; i < 2; i++) {
+        s += '<rect x="' + fmt(x0 + i * v) + '" y="' + fmt(y0 + v) + '" width="' + fmt(v) + '" height="' + fmt(u) +
+             '" fill="none" stroke="' + INK + '" stroke-width="1.8" data-s="L"/>';
+      }
+      s += '<text x="' + fmt(x0 + 0.5 * u) + '" y="' + fmt(y0 + bigH + 20) + '" font-size="15" text-anchor="middle" fill="' + INK + '">a</text>';
+      s += '<text x="' + fmt(x0 + v + 0.5 * v) + '" y="' + fmt(y0 + bigH + 20) + '" font-size="15" text-anchor="middle" fill="' + INK + '">b</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 骰子展开图（十字/阶梯形 6 面净图），3 面已画点数、3 面留空写 A/B/C
+       布局（squares 数组给出面内点数，null 表示留空并给标签）：
+         列: 0    1    2    3
+         行0:              [3]
+         行1:        [6]  [4x] [A]     ← 说明见模板：A 与 5 相对
+         行2: [空]  [1]  ...
+       为通用起见，用 spec.cells = 每格 {r,c,dots|null,label} 描述。 */
+    dienet: function (spec, vars) {
+      var cells = spec.cells || [];
+      var u = 56, pad = 26;
+      var maxR = 0, maxC = 0;
+      cells.forEach(function (c) { maxR = Math.max(maxR, c.r); maxC = Math.max(maxC, c.c); });
+      var W = pad * 2 + (maxC + 1) * u, H = pad * 2 + (maxR + 1) * u + 20;
+      var s = svgOpen(W, H, 'an unfolded cube net with dotted fold lines');
+      /* 点阵坐标（3x3 九宫格里的位置，1..9） */
+      var POS = {
+        1: [[1, 1]],
+        2: [[0, 0], [2, 2]],
+        3: [[0, 0], [1, 1], [2, 2]],
+        4: [[0, 0], [2, 0], [0, 2], [2, 2]],
+        5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]],
+        6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]]
+      };
+      cells.forEach(function (c) {
+        var x = pad + c.c * u, y = pad + c.r * u;
+        s += '<rect x="' + x + '" y="' + y + '" width="' + u + '" height="' + u +
+             '" fill="#eef7ee" stroke="' + INK + '" stroke-width="1.8" stroke-dasharray="5 4"/>';
+        if (c.dots) {
+          var pos = POS[c.dots] || [];
+          pos.forEach(function (p) {
+            var cx = x + u * (0.25 + p[0] * 0.25), cy = y + u * (0.25 + p[1] * 0.25);
+            s += '<circle cx="' + fmt(cx) + '" cy="' + fmt(cy) + '" r="3.6" fill="' + INK + '"/>';
+          });
+          s += '<text x="' + (x + 5) + '" y="' + (y + u - 6) + '" font-size="10" fill="' + GREY + '">' + c.dots + '</text>';
+        }
+        if (c.label) {
+          s += '<text x="' + (x + u / 2) + '" y="' + (y + u / 2 + 8) + '" font-size="24" font-weight="700" text-anchor="middle" fill="' + BLUE + '">' + esc(c.label) + '</text>';
+        }
+      });
+      s += '</svg>';
+      return s;
+    },
+
+    /* 邮包资费阶梯图：横轴 Mass (kg) 0..5，纵轴 Cost ($) 1..7
+       spec.steps = [ {m0, m1, cost}, ... ] 每段的质量区间与价格
+       data-u="step" data-cost data-m0 data-m1 */
+    stepcost: function (spec, vars) {
+      var steps = spec.steps || [];
+      var W = 460, H = 300, x0 = 62, y0 = 24, x1 = 420, y1 = 248;
+      var maxM = 5, maxC = 7;
+      var px = function (m) { return x0 + (m / maxM) * (x1 - x0); };
+      var py = function (c) { return y1 - (c / maxC) * (y1 - y0); };
+      var s = svgOpen(W, H, 'a step graph showing postage cost against mass');
+      /* 轴 */
+      s += '<line x1="' + x0 + '" y1="' + y1 + '" x2="' + x1 + '" y2="' + y1 + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line x1="' + x0 + '" y1="' + y1 + '" x2="' + x0 + '" y2="' + y0 + '" stroke="' + INK + '" stroke-width="2"/>';
+      var i;
+      for (i = 1; i <= maxC; i++) {
+        s += '<line x1="' + (x0 - 6) + '" y1="' + fmt(py(i)) + '" x2="' + x0 + '" y2="' + fmt(py(i)) + '" stroke="' + INK + '" stroke-width="1.5"/>';
+        s += '<text x="' + (x0 - 10) + '" y="' + fmt(py(i) + 5) + '" font-size="13" text-anchor="end" fill="' + INK + '">' + i + '</text>';
+      }
+      for (i = 0; i <= maxM; i++) {
+        s += '<line x1="' + fmt(px(i)) + '" y1="' + y1 + '" x2="' + fmt(px(i)) + '" y2="' + (y1 + 6) + '" stroke="' + INK + '" stroke-width="1.5"/>';
+        s += '<text x="' + fmt(px(i)) + '" y="' + (y1 + 22) + '" font-size="13" text-anchor="middle" fill="' + INK + '">' + i + '</text>';
+      }
+      s += '<text x="' + ((x0 + x1) / 2) + '" y="' + (y1 + 46) + '" font-size="14" text-anchor="middle" fill="' + INK + '">Mass (kg)</text>';
+      s += '<text x="14" y="' + ((y0 + y1) / 2) + '" font-size="14" fill="' + INK + '" transform="rotate(-90 14 ' + ((y0 + y1) / 2) + ')">Cost ($)</text>';
+      /* 阶梯段 */
+      steps.forEach(function (st) {
+        var xa = px(st.m0), xb = px(st.m1), yy = py(st.cost);
+        s += '<line x1="' + fmt(xa) + '" y1="' + fmt(yy) + '" x2="' + fmt(xb) + '" y2="' + fmt(yy) +
+             '" stroke="' + BLUE + '" stroke-width="2.5" data-u="step" data-cost="' + st.cost + '" data-m0="' + st.m0 + '" data-m1="' + st.m1 + '"/>';
+        s += '<circle cx="' + fmt(xa) + '" cy="' + fmt(yy) + '" r="4" fill="' + BLUE + '"/>';
+        s += '<circle cx="' + fmt(xb) + '" cy="' + fmt(yy) + '" r="4" fill="#ffffff" stroke="' + BLUE + '" stroke-width="2"/>';
+      });
+      s += '</svg>';
+      return s;
+    },
+
+    /* 12 个全等矩形围成方框（外边长 O，内孔边长 I）
+       每边 4 个竖放（上下）/ 2 个横放（左右），共 4+4+2+2 = 12
+       由 O 与 I 求单块面积：(O^2 - I^2)/12
+       data-o / data-i / data-u=n */
+    framefill: function (spec, vars) {
+      var O = Math.max(2, Math.round(num(spec.O, vars)));
+      var I = Math.max(1, Math.round(num(spec.I, vars)));
+      var n = 12;
+      var W = 330, H = 330, pad = 46;
+      var sc = Math.min(W - pad * 2, H - pad * 2) / O;
+      var oc = O * sc, ic = I * sc;
+      var x0 = (W - oc) / 2, y0 = (H - oc) / 2 + 8;
+      var t = (oc - ic) / 2;                       // 框厚
+      var s = svgOpen(W, H, 'twelve identical rectangles arranged into a square frame');
+      /* 框体 */
+      s += '<rect x="' + fmt(x0) + '" y="' + fmt(y0) + '" width="' + fmt(oc) + '" height="' + fmt(oc) +
+           '" fill="#f6efe2" stroke="' + INK + '" stroke-width="2" data-o="' + O + '" data-i="' + I + '" data-u="' + n + '"/>';
+      s += '<rect x="' + fmt(x0 + t) + '" y="' + fmt(y0 + t) + '" width="' + fmt(ic) + '" height="' + fmt(ic) +
+           '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      /* 上下各 4 个竖放：宽 t、高 t（此处为视觉分割，实际由 t 决定） */
+      var i;
+      for (i = 1; i < 4; i++) {
+        var xx = x0 + t + (ic / 4) * i;
+        s += '<line x1="' + fmt(xx) + '" y1="' + fmt(y0) + '" x2="' + fmt(xx) + '" y2="' + fmt(y0 + t) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+        s += '<line x1="' + fmt(xx) + '" y1="' + fmt(y0 + t + ic) + '" x2="' + fmt(xx) + '" y2="' + fmt(y0 + oc) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+      }
+      /* 左右各 2 个横放 */
+      for (i = 1; i < 2; i++) {
+        var yy = y0 + t + (ic / 2) * i;
+        s += '<line x1="' + fmt(x0) + '" y1="' + fmt(yy) + '" x2="' + fmt(x0 + t) + '" y2="' + fmt(yy) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+        s += '<line x1="' + fmt(x0 + t + ic) + '" y1="' + fmt(yy) + '" x2="' + fmt(x0 + oc) + '" y2="' + fmt(yy) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+      }
+      /* 标注：内边长 + 外底边 */
+      s += '<line x1="' + fmt(x0 + t) + '" y1="' + fmt(y0 + t / 2) + '" x2="' + fmt(x0 + t + ic) + '" y2="' + fmt(y0 + t / 2) + '" stroke="' + RED + '" stroke-width="1.6" marker-start="url(#ar)" marker-end="url(#ar)"/>';
+      s += '<text x="' + fmt(x0 + t + ic / 2) + '" y="' + fmt(y0 + t / 2 - 6) + '" font-size="14" text-anchor="middle" fill="' + RED + '">' + I + ' cm</text>';
+      s += '<line x1="' + fmt(x0) + '" y1="' + fmt(y0 + oc + 24) + '" x2="' + fmt(x0 + oc) + '" y2="' + fmt(y0 + oc + 24) + '" stroke="' + RED + '" stroke-width="1.6"/>';
+      s += '<text x="' + fmt(x0 + oc / 2) + '" y="' + fmt(y0 + oc + 40) + '" font-size="14" text-anchor="middle" fill="' + RED + '">' + O + ' cm</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 正方形 ABCD 各边中点连成内接正方形 EFGH（菱形朝向）
+       面积比 ABCD : EFGH = 2 : 1 ⇒ ABCD 是 EFGH 的 2/1
+       data-outer / data-inner = 面积倍数（固定 2）
+       spec.labels = 'ABCD'/'EFGH' 是否标字母 */
+    midsquare: function (spec, vars) {
+      var W = 360, H = 330, pad = 54, id = spec.id || 1;
+      var a = Math.min(W - pad * 2, H - pad * 2);
+      var x0 = (W - a) / 2, y0 = (H - a) / 2 + 6;
+      var s = svgOpen(W, H, 'square ABCD with inner square EFGH joining the midpoints');
+      /* 外正方形 */
+      s += '<polygon points="' + x0 + ',' + y0 + ' ' + (x0 + a) + ',' + y0 + ' ' + (x0 + a) + ',' + (y0 + a) + ' ' + x0 + ',' + (y0 + a) +
+           '" fill="#eaf3fb" stroke="' + INK + '" stroke-width="2.5" data-u="outer" data-id="' + id + '"/>';
+      /* 内接菱形（四个中点） */
+      var m = [[x0 + a / 2, y0], [x0 + a, y0 + a / 2], [x0 + a / 2, y0 + a], [x0, y0 + a / 2]];
+      s += '<polygon points="' + m.map(function (p) { return fmt(p[0]) + ',' + fmt(p[1]); }).join(' ') +
+           '" fill="#cfe6f7" stroke="' + BLUE + '" stroke-width="2" data-u="inner" data-id="' + id + '" data-ratio="2"/>';
+      var L = spec.labels !== false;
+      if (L) {
+        var lab = [['A', x0 - 16, y0 - 8], ['B', x0 + a + 16, y0 - 8], ['C', x0 + a + 16, y0 + a + 20], ['D', x0 - 16, y0 + a + 20]];
+        lab.forEach(function (t) {
+          s += '<text x="' + t[1] + '" y="' + t[2] + '" font-size="17" font-weight="600" text-anchor="middle" fill="' + INK + '">' + t[0] + '</text>';
+        });
+        var lab2 = [['F', m[0][0], m[0][1] - 8], ['G', m[1][0] + 14, m[1][1] + 5], ['H', m[2][0], m[2][1] + 20], ['E', m[3][0] - 14, m[3][1] + 5]];
+        lab2.forEach(function (t) {
+          s += '<text x="' + t[1] + '" y="' + t[2] + '" font-size="16" font-weight="600" text-anchor="middle" fill="' + BLUE + '">' + t[0] + '</text>';
+        });
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 四选项图象面板（t-y 曲线）：用于「哪个图符合表格」题
+       spec.panels = [ {kind:'dec-steep'|'dec-soft'|'inc-line'|'dec-line'}, ... ] 共 4 个
+       每个面板一条曲线 + 轴标 y/t + 面板字母
+       data-u="panel" data-kind data-i */
+    curveopts: function (spec, vars) {
+      var panels = spec.panels || [];
+      var pw = 168, ph = 138, gap = 16, pad = 12;
+      var n = panels.length || 4, cols = 2, rows = Math.ceil(n / cols);
+      var W = pad * 2 + cols * pw + (cols - 1) * gap;
+      var H = pad * 2 + rows * (ph + 24) + (rows - 1) * gap;
+      var s = svgOpen(W, H, 'four graph options for cost against mass');
+      panels.forEach(function (p, k) {
+        var cx0 = pad + (k % cols) * (pw + gap);
+        var cy0 = pad + Math.floor(k / cols) * (ph + 24 + gap);
+        var bx = cx0 + 26, by = cy0 + ph - 24, ex = cx0 + pw - 10, ey = cy0 + 10;
+        s += '<line x1="' + bx + '" y1="' + by + '" x2="' + ex + '" y2="' + by + '" stroke="' + INK + '" stroke-width="1.8"/>';
+        s += '<line x1="' + bx + '" y1="' + by + '" x2="' + bx + '" y2="' + ey + '" stroke="' + INK + '" stroke-width="1.8"/>';
+        s += '<text x="' + (bx - 8) + '" y="' + (ey + 4) + '" font-size="12" text-anchor="end" fill="' + INK + '">y</text>';
+        s += '<text x="' + (ex + 2) + '" y="' + (by + 4) + '" font-size="12" fill="' + INK + '">t</text>';
+        var d = '';
+        if (p.kind === 'dec-steep') {
+          /* 从 y 轴高位快速下降后趋平（凸） */
+          d = 'M' + bx + ' ' + ey + ' C' + (bx + 10) + ' ' + (ey + ph * 0.30) + ' ' + (bx + 16) + ' ' + (by - 14) + ' ' + ex + ' ' + (by - 6);
+        } else if (p.kind === 'dec-soft') {
+          d = 'M' + bx + ' ' + ey + ' C' + (bx + 24) + ' ' + (ey + ph * 0.14) + ' ' + (bx + 46) + ' ' + (by - 16) + ' ' + ex + ' ' + (by - 8);
+        } else if (p.kind === 'inc-line') {
+          d = 'M' + bx + ' ' + by + ' L' + ex + ' ' + (ey + 16);
+        } else {
+          d = 'M' + bx + ' ' + ey + ' L' + ex + ' ' + by;
+        }
+        s += '<path d="' + d + '" fill="none" stroke="' + GREEN + '" stroke-width="2.4" data-u="panel" data-kind="' + p.kind + '" data-i="' + k + '"/>';
+        s += '<text x="' + (cx0 + pw / 2) + '" y="' + (cy0 + ph + 14) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + String.fromCharCode(65 + k) + '</text>';
+      });
+      s += '</svg>';
+      return s;
+    },
+
+    /* 单个图象面板：作为选择题的「图形选项」用。
+       四联的 curveopts 只能当题干配图，不能整块塞进某一个选项，所以单独出一个单面板图元。
+       spec.kind = 'dec-steep'|'dec-soft'|'inc-line'|'dec-line'；可选 spec.label 覆盖面板字母
+       data-u="panel" data-kind */
+    graphopt: function (spec, vars) {      var pw = 168, ph = 138, pad = 12;
+      var W = pad * 2 + pw, H = pad * 2 + ph + 24;
+      var s = svgOpen(W, H, 'graph option');
+      var cx0 = pad, cy0 = pad;
+      var bx = cx0 + 26, by = cy0 + ph - 24, ex = cx0 + pw - 10, ey = cy0 + 10;
+      s += '<line x1="' + bx + '" y1="' + by + '" x2="' + ex + '" y2="' + by + '" stroke="' + INK + '" stroke-width="1.8"/>';
+      s += '<line x1="' + bx + '" y1="' + by + '" x2="' + bx + '" y2="' + ey + '" stroke="' + INK + '" stroke-width="1.8"/>';
+      s += '<text x="' + (bx - 8) + '" y="' + (ey + 4) + '" font-size="12" text-anchor="end" fill="' + INK + '">y</text>';
+      s += '<text x="' + (ex + 2) + '" y="' + (by + 4) + '" font-size="12" fill="' + INK + '">t</text>';
+      var d = '';
+      if (spec.kind === 'dec-steep') {
+        d = 'M' + bx + ' ' + ey + ' C' + (bx + 10) + ' ' + (ey + ph * 0.30) + ' ' + (bx + 16) + ' ' + (by - 14) + ' ' + ex + ' ' + (by - 6);
+      } else if (spec.kind === 'dec-soft') {
+        d = 'M' + bx + ' ' + ey + ' C' + (bx + 24) + ' ' + (ey + ph * 0.14) + ' ' + (bx + 46) + ' ' + (by - 16) + ' ' + ex + ' ' + (by - 8);
+      } else if (spec.kind === 'inc-line') {
+        d = 'M' + bx + ' ' + by + ' L' + ex + ' ' + (ey + 16);
+      } else {
+        d = 'M' + bx + ' ' + ey + ' L' + ex + ' ' + by;
+      }
+      s += '<path d="' + d + '" fill="none" stroke="' + GREEN + '" stroke-width="2.4" data-u="panel" data-kind="' + spec.kind + '"/>';
+      s += '<text x="' + (cx0 + pw / 2) + '" y="' + (cy0 + ph + 14) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + (spec.label || 'A') + '</text>';
+      s += '</svg>';
+      return s;
+    },
+
+    /* 数据表 + 四个图象选项面板（「哪个图符合表格数据」题的整幅题干配图）。
+       spec.cols = ['t','y']，spec.rows = [['0','120'], ...]，spec.panels = [{kind}, ...]
+       表在上、四个面板 2x2 在下，面板字母 A/B/C/D；四个面板本身也可作为选项图（graphopt）。
+       data-u="panel" data-kind data-i；表体用 data-cell 标注 */
+    tableopts: function (spec, vars) {
+      var cols = spec.cols || [], rows = spec.rows || [];
+      var panels = spec.panels || [];
+      var widths = spec.widths || cols.map(function () { return 118; });
+      var rowH = 30, pad = 14, headRows = 1;
+      var total = widths.reduce(function (a, b) { return a + b; }, 0);
+      var xOf = function (c) { var x = pad; for (var i = 0; i < c; i++) x += widths[i]; return x; };
+
+      var pw = 168, ph = 138, gap = 16;
+      var n = panels.length || 4, pcols = 2, prows = Math.ceil(n / pcols);
+      var gridW = pcols * pw + (pcols - 1) * gap;
+      var W = Math.max(pad * 2 + total, pad * 2 + gridW);
+      var tableH = (rows.length + headRows) * rowH;
+      var H = pad * 2 + tableH + 20 + prows * (ph + 24) + (prows - 1) * gap;
+      var s = svgOpen(W, H, 'table of data with four graph options');
+
+      /* 表格 */
+      var padX = Math.round((W - total) / 2);
+      var tx = function (c) { return padX + xOf(c) - pad; };
+      s += '<rect x="' + padX + '" y="' + pad + '" width="' + total + '" height="' + tableH + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      for (var c = 0; c < cols.length; c++) {
+        s += '<rect x="' + tx(c) + '" y="' + pad + '" width="' + widths[c] + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+        s += '<text x="' + (tx(c) + widths[c] / 2) + '" y="' + (pad + rowH - 9) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(cols[c]) + '</text>';
+      }
+      for (var r = 0; r < rows.length; r++) {
+        for (var c3 = 0; c3 < cols.length; c3++) {
+          s += '<rect x="' + tx(c3) + '" y="' + (pad + (r + headRows) * rowH) + '" width="' + widths[c3] + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
+          s += '<text data-cell="1" x="' + (tx(c3) + widths[c3] / 2) + '" y="' + (pad + (r + headRows + 1) * rowH - 9) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(cellText(rows[r][c3], vars)) + '</text>';
+        }
+      }
+
+      /* 四个图象面板 */
+      var gy0 = pad + tableH + 20;
+      var gx0 = Math.round((W - gridW) / 2);
+      panels.forEach(function (p, k) {
+        var cx0 = gx0 + (k % pcols) * (pw + gap);
+        var cy0 = gy0 + Math.floor(k / pcols) * (ph + 24 + gap);
+        var bx = cx0 + 26, by = cy0 + ph - 24, ex = cx0 + pw - 10, ey = cy0 + 10;
+        s += '<line x1="' + bx + '" y1="' + by + '" x2="' + ex + '" y2="' + by + '" stroke="' + INK + '" stroke-width="1.8"/>';
+        s += '<line x1="' + bx + '" y1="' + by + '" x2="' + bx + '" y2="' + ey + '" stroke="' + INK + '" stroke-width="1.8"/>';
+        s += '<text x="' + (bx - 8) + '" y="' + (ey + 4) + '" font-size="12" text-anchor="end" fill="' + INK + '">y</text>';
+        s += '<text x="' + (ex + 2) + '" y="' + (by + 4) + '" font-size="12" fill="' + INK + '">t</text>';
+        var d = '';
+        if (p.kind === 'dec-steep') {
+          d = 'M' + bx + ' ' + ey + ' C' + (bx + 10) + ' ' + (ey + ph * 0.30) + ' ' + (bx + 16) + ' ' + (by - 14) + ' ' + ex + ' ' + (by - 6);
+        } else if (p.kind === 'dec-soft') {
+          d = 'M' + bx + ' ' + ey + ' C' + (bx + 24) + ' ' + (ey + ph * 0.14) + ' ' + (bx + 46) + ' ' + (by - 16) + ' ' + ex + ' ' + (by - 8);
+        } else if (p.kind === 'inc-line') {
+          d = 'M' + bx + ' ' + by + ' L' + ex + ' ' + (ey + 16);
+        } else {
+          d = 'M' + bx + ' ' + ey + ' L' + ex + ' ' + by;
+        }
+        s += '<path d="' + d + '" fill="none" stroke="' + GREEN + '" stroke-width="2.4" data-u="panel" data-kind="' + p.kind + '" data-i="' + k + '"/>';
+        s += '<text x="' + (cx0 + pw / 2) + '" y="' + (cy0 + ph + 14) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + String.fromCharCode(65 + k) + '</text>';
+      });
+      s += '</svg>';
+      return s;
+    }
+  };
+  Object.keys(TYPES8).forEach(function (k) { TYPES[k] = TYPES8[k]; });
 
   function render(spec, vars) {
     if (!spec || !spec.type) return '';

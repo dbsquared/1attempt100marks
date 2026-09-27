@@ -1858,6 +1858,107 @@ function triGeoCount(lines) {
   console.log('2021 配图文字 = 原卷英文 ✓ 第 3 组未被画出 ✓');
 }
 
+/* ---------- graphopt / tableopts / squarecount：本轮新增图元的独立验算 ---------- */
+{
+  const KINDS = ['dec-steep', 'dec-soft', 'inc-line', 'dec-line'];
+
+  /* graphopt：单面板选项图，必须能渲染、带 data-kind 与面板字母 */
+  KINDS.forEach((kind, i) => {
+    const letter = 'ABCD'[i];
+    const svg = ctx.Diagrams.render({ type: 'graphopt', kind, label: letter }, {});
+    chk(!!svg, 'graphopt(' + kind + ') 渲染为空');
+    chk(svg.indexOf('data-kind="' + kind + '"') >= 0, 'graphopt(' + kind + ') 缺少 data-kind');
+    chk(svg.indexOf('>' + letter + '<') >= 0, 'graphopt(' + kind + ') 缺少面板字母 ' + letter);
+  });
+  /* 四种曲线的形状必须真的不同（否则选项里有重复答案） */
+  {
+    const ds = KINDS.map((kind) => {
+      const svg = ctx.Diagrams.render({ type: 'graphopt', kind }, {});
+      const m = svg.match(/<path d="([^"]+)"/);
+      return m ? m[1] : '';
+    });
+    chk(UNIQ(ds).length === 4, 'graphopt 四种 kind 画出了重复的曲线路径');
+    /* inc-line 必须从左下到右上；dec-line 必须从左上到右下（验「上升/下降」没画反） */
+    const inc = ds[KINDS.indexOf('inc-line')], dec = ds[KINDS.indexOf('dec-line')];
+    const y0 = (d) => parseFloat(d.split(/[MLC]/).filter(Boolean)[0].trim().split(/\s+/)[1]);
+    const y1 = (d) => { const p = d.split(/[MLC]/).filter(Boolean).pop().trim().split(/\s+/); return parseFloat(p[1]); };
+    chk(y1(inc) < y0(inc), 'graphopt inc-line 画成了下降');
+    chk(Math.abs(y1(dec) - y0(dec)) > 1, 'graphopt dec-line 两端等高，画不出下降');
+  }
+
+  /* tableopts：表 + 四面板；格数 = cols × rows，面板数 = panels.length。
+     注意：表格单元格走 cellText()，写的是**裸变量名**（'a'）而不是占位符（'{a}'）。 */
+  {
+    const spec = {
+      type: 'tableopts',
+      cols: ['t', 'y'],
+      rows: [['0', 'a'], ['t1', 'b'], ['t2', 'c'], ['t3', 'd']],
+      panels: KINDS.map((k, i) => ({ kind: k, label: 'ABCD'[i] })),
+    };
+    const vars = { a: 120, b: 43, c: 15, d: 5.5, t1: 20, t2: 40, t3: 60 };
+    const svg = ctx.Diagrams.render(spec, vars);
+    chk(!!svg, 'tableopts 渲染为空');
+    const cells = (svg.match(/data-cell="1"/g) || []).length;
+    chk(cells === spec.cols.length * spec.rows.length,
+      'tableopts 表体格数 ' + cells + ' ≠ cols×rows ' + (spec.cols.length * spec.rows.length));
+    const panels = (svg.match(/data-u="panel"/g) || []).length;
+    chk(panels === spec.panels.length, 'tableopts 面板数 ' + panels + ' ≠ ' + spec.panels.length);
+    KINDS.forEach((k) => chk(svg.indexOf('data-kind="' + k + '"') >= 0, 'tableopts 缺少面板 ' + k));
+    /* 单元格里的变量名必须真的被替换成数值（裸名 a/t1 不能原样留在图上） */
+    chk(svg.indexOf('>120<') >= 0 && svg.indexOf('>43<') >= 0, 'tableopts 未把 a/b 替换成数值');
+    chk(svg.indexOf('>20<') >= 0 && svg.indexOf('>60<') >= 0, 'tableopts 未把 t1/t3 替换成数值');
+    ['a', 'b', 'c', 'd', 't1', 't2', 't3'].forEach((k) => {
+      chk(svg.indexOf('>' + k + '<') < 0, 'tableopts 单元格残留未替换的变量名 ' + k);
+    });
+  }
+
+  /* squarecount：从图上真的线段独立重算正方形个数（不读图元内部计数），
+     与图元自己标注的线段集合必须一致 —— 顺便验证「缺线」确实被擦掉了 */
+  function countFromSvg(svg) {
+    const n = parseInt((svg.match(/data-n="(\d+)"/) || [])[1], 10);
+    const h = {}, v = {};   // "r,c" -> 1
+    (svg.match(/<line[^>]*data-h="1"[^>]*>/g) || []).forEach((t) => {
+      h[t.match(/data-row="(\d+)"/)[1] + ',' + t.match(/data-col="(\d+)"/)[1]] = 1;
+    });
+    (svg.match(/<line[^>]*data-v="1"[^>]*>/g) || []).forEach((t) => {
+      v[t.match(/data-row="(\d+)"/)[1] + ',' + t.match(/data-col="(\d+)"/)[1]] = 1;
+    });
+    const res = {};
+    for (let k = 1; k <= n; k++) {
+      let c = 0;
+      for (let r = 0; r + k <= n; r++) {
+        for (let cc = 0; cc + k <= n; cc++) {
+          let ok = true;
+          for (let i = 0; i < k; i++) {
+            if (!h[r + ',' + (cc + i)] || !h[(r + k) + ',' + (cc + i)]) ok = false;
+            if (!v[(r + i) + ',' + cc] || !v[(r + i) + ',' + (cc + k)]) ok = false;
+          }
+          if (ok) c++;
+        }
+      }
+      res[k] = c;
+    }
+    return res;
+  }
+  {
+    /* 完整 4×4：1x1=16, 2x2=9, 3x3=4, 4x4=1 */
+    const full = ctx.Diagrams.render({ type: 'squarecount', n: 4 }, {});
+    const rf = countFromSvg(full);
+    chk(rf[1] === 16 && rf[2] === 9 && rf[3] === 4 && rf[4] === 1,
+      'squarecount 完整 4×4 计数错误：' + JSON.stringify(rf));
+    /* 擦掉中间竖线中段 2 条 + 中间横线中段 2 条：抄掉单位线段数应恰好减少 4 条 */
+    const lines = (svg) => (svg.match(/data-[hv]="1"/g) || []).length;
+    const cut = ctx.Diagrams.render({ type: 'squarecount', n: 4, missH: [[2, 1], [2, 2]], missV: [[1, 2], [2, 2]] }, {});
+    chk(lines(full) - lines(cut) === 4,
+      'squarecount 擦线数 ' + (lines(full) - lines(cut)) + ' ≠ 4');
+    const rc = countFromSvg(cut);
+    chk(rc[1] < rf[1] && rc[4] === 0, 'squarecount 擦线后 1x1 未减少或 4x4 仍存在：' + JSON.stringify(rc));
+    /* 3×3 完整：1x1=9, 2x2=4, 3x3=1 */
+    const r3 = countFromSvg(ctx.Diagrams.render({ type: 'squarecount', n: 3 }, {}));
+    chk(r3[1] === 9 && r3[2] === 4 && r3[3] === 1, 'squarecount 完整 3×3 计数错误：' + JSON.stringify(r3));
+  }
+}
+
 /* ---------- 图形类型表不能有重复 key（重复时后者静默覆盖，改前面那个等于白改） ---------- */
 {
   const src = fs.readFileSync(path.join(root, 'assets/js/diagrams.js'), 'utf8');

@@ -103,6 +103,129 @@ const EXPECT = {
   'seamo25a-q23': '121',
   'seamo25a-q24': '9',
   'seamo25a-q25': '19',
+  // ---- Mastering Mathematics Book 1 · TEST 1（40 题，官方答案已逐题核对）----
+  'mm1t1-01': '0.01',   // 卷 A
+  'mm1t1-02': '8',   // 卷 D
+  'mm1t1-03': '57.365',   // 卷 D
+  'mm1t1-04': 'litres',   // 卷 B
+  'mm1t1-05': '60',   // 卷 B
+  'mm1t1-06': '1/200',   // 卷 B
+  'mm1t1-07': '1600',   // 卷 D
+  'mm1t1-08': '13',   // 卷 C
+  'mm1t1-09': '5 × n',   // 卷 C
+  'mm1t1-10': '500',   // 卷 A
+  'mm1t1-11': 'base 5 cm, height 6 cm',   // 卷 A
+  'mm1t1-12': 'P1 and P2 have the same perimeter',   // 卷 B
+  'mm1t1-13': '(L + 2) × (W + 2)',   // 卷 D
+  'mm1t1-14': '132',   // 卷 C
+  'mm1t1-15': '160',   // 卷 A
+  'mm1t1-16': 'snake',   // 卷 B
+  'mm1t1-17': 'When dividing a positive number by a negative number, the result is negative.',   // 卷 C
+  'mm1t1-18': '4:7',   // 卷 B
+  'mm1t1-19': '-19',   // 卷 D
+  'mm1t1-20': '7',   // 卷 B
+  'mm1t1-21': 'cannot be determined',   // 卷 D
+  'mm1t1-22': '104',   // 卷 D
+  'mm1t1-23': '21',   // 卷 A
+  'mm1t1-24': '9',   // 卷 B
+  'mm1t1-25': 'Z',   // 卷 D
+  'mm1t1-26': '180',   // 卷 A
+  'mm1t1-27': '1',   // 卷 C
+  'mm1t1-28': 'B',   // 卷 B
+  'mm1t1-29': '3',   // 卷 A
+  'mm1t1-30': '1629630000',   // 卷 B
+  'mm1t1-31': '69',   // 卷 D
+  'mm1t1-32': '16',   // 卷 C
+  'mm1t1-33': 'Ben',   // 卷 D
+  'mm1t1-34': 'two equal sides and one right angle',   // 卷 C
+  'mm1t1-35': '21',   // 卷 B
+  'mm1t1-36': '8 and 40',   // 卷 D
+  'mm1t1-37': '1800',   // 卷 B
+  'mm1t1-38': '24',   // 卷 B
+  'mm1t1-39': '14',   // 卷 C
+  'mm1t1-40': '9',   // 卷 B
+  // ---- Mastering Mathematics Book 1 · TEST 2（40 题，官方答案已逐题核对）----
+  'mm1t2-01': '3 11/25',   // 卷 D
+  'mm1t2-02': '1/4',   // 卷 C
+  'mm1t2-03': '1.666',   // 卷 D
+  'mm1t2-04': '72 grams',   // 卷 A
+  'mm1t2-05': '7/9',   // 卷 A
+  'mm1t2-06': '21',   // 卷 C
+  'mm1t2-07': '1000000 mm^2',   // 卷 D
+  'mm1t2-08': 'n^2 + 2n',   // 卷 B
+  'mm1t2-09': 'South-West',   // 卷 C
+  'mm1t2-10': 'North-East',   // 卷 B
+  'mm1t2-11': '11',   // 卷 D
+  'mm1t2-12': '66.4 m',   // 卷 B
+  'mm1t2-13': '720 degrees',   // 卷 D
+  'mm1t2-14': '32',   // 卷 C
+  'mm1t2-15': '14/32',   // 卷 D
+  'mm1t2-16': 'right-angled',   // 卷 C
+  'mm1t2-17': '15',   // 卷 D
+  'mm1t2-18': '1.25 m',   // 卷 A
+  'mm1t2-19': '180',   // 卷 B
+  'mm1t2-20': '144',   // 卷 C
+  'mm1t2-21': 'All the angles in a parallelogram are equal.',   // 卷 D
+  'mm1t2-22': '30 minutes',   // 卷 A
+  'mm1t2-23': '35 litres',   // 卷 B
+  'mm1t2-24': '6',   // 卷 B
+  'mm1t2-25': '12 1/2 cans',   // 卷 C
+  'mm1t2-26': '90',   // 卷 C
+  'mm1t2-27': '$300',   // 卷 A
+  'mm1t2-28': '(4000 x 50)/30',   // 卷 D
+  'mm1t2-29': '224',   // 卷 A
+  'mm1t2-30': '$3.2',   // 卷 C
+  'mm1t2-31': '38',   // 卷 D
+  'mm1t2-32': '1200',   // 卷 D
+  'mm1t2-33': '2 km',   // 卷 A
+  'mm1t2-34': '$40',   // 卷 A
+  'mm1t2-35': '64',   // 卷 B
+  'mm1t2-36': '3/30',   // 卷 D
+  'mm1t2-37': '15/16',   // 卷 B
+  'mm1t2-38': '20',   // 卷 A
+  'mm1t2-39': '5',   // 卷 B
+  'mm1t2-40': '15%',   // 卷 A
+  /* ---- Mastering Mathematics Book 1 · TEST 3 ---- */
+  'mm1t3-01': '0.43',   // 卷 C
+  'mm1t3-02': '12/8',   // 卷 B（[[12/8]] 渲染为分数，即原卷 1 1/2）
+  'mm1t3-03': '8217',   // 卷 C
+  'mm1t3-04': '3240',   // 卷 D
+  'mm1t3-05': 'I and III only',   // 卷 D（空 vars 定性题，回退按 correctIndex 比对）
+  'mm1t3-06': '12 cm^2',   // 卷 A
+  'mm1t3-07': '3',   // 卷 D
+  'mm1t3-08': '29',   // 卷 D
+  'mm1t3-09': '8090020.01',   // 卷 D
+  'mm1t3-10': '120 cm',   // 卷 C
+  'mm1t3-11': '36',   // 卷 B
+  'mm1t3-12': '0.318',   // 卷 A
+  'mm1t3-13': '3',   // 卷 D
+  'mm1t3-14': '25',   // 卷 C
+  'mm1t3-15': '2',   // 卷 A（空 vars 定性题）
+  'mm1t3-16': '32',   // 卷 D
+  'mm1t3-17': 'A = 2, B = 6, C = 3',   // 卷 C（空 vars 定性题）
+  'mm1t3-18': '$900',   // 卷 B
+  'mm1t3-19': '$1500',   // 卷 C
+  'mm1t3-20': '450 games',   // 卷 C
+  'mm1t3-21': '0.45 kg',   // 卷 D（阶梯图固定题）
+  'mm1t3-22': '75 cm^2',   // 卷 B
+  'mm1t3-23': '40',   // 卷 C
+  'mm1t3-24': 'The sum of P and Q is a multiple of 6.',   // 卷 D（空 vars 定性题）
+  'mm1t3-25': '6.667 %',   // 卷 B
+  'mm1t3-26': '27',   // 卷 D
+  'mm1t3-27': { svg: 0 },   // 卷 C（选项是图：cur[0] = dec-soft）
+  'mm1t3-28': '140 cm^2',   // 卷 D
+  'mm1t3-29': '17 x (510/150)',   // 卷 B
+  'mm1t3-30': '3 h 5 min',   // 卷 A
+  'mm1t3-31': '1/3',   // 卷 A
+  'mm1t3-32': '38',   // 卷 B
+  'mm1t3-33': '19, 2',   // 卷 D
+  'mm1t3-34': '$1170',   // 卷 C
+  'mm1t3-35': 'm^2',   // 卷 D
+  'mm1t3-36': '15',   // 卷 D
+  'mm1t3-37': '2 minutes',   // 卷 C
+  'mm1t3-38': '52 kg',   // 卷 A
+  'mm1t3-39': '2/1',   // 卷 D
+  'mm1t3-40': '14',   // 卷 B（figureTodo，固定题）
 };
 
 const bank = JSON.parse(fs.readFileSync(path.join(root, 'data/question-bank.json'), 'utf8'));

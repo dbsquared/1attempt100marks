@@ -52,6 +52,20 @@
         var k = i; while (i < n && /[A-Za-z0-9_]/.test(src[i])) i++;
         toks.push({ t: 'id', v: src.slice(k, i) }); continue;
       }
+      /* 字符串字面量：'abc' 或 "abc"（支持 \' \" \\ 转义）。
+         为什么需要它：sel(i, ...) 需要把序号映射成名字/图案串，
+         而「互不相同」这类约束只能用整数变量表达 —— 于是模板里写成
+         字符串字面量 + 整数序号分离，既能约束又能换名字。
+         放在运算符判定之前，否则引号里的 - * , 会被当成 token。 */
+      if (c === "'" || c === '"') {
+        var q = c, s = '', k2 = i + 1;
+        while (k2 < n && src[k2] !== q) {
+          if (src[k2] === '\\' && k2 + 1 < n) { s += src[k2 + 1]; k2 += 2; continue; }
+          s += src[k2]; k2++;
+        }
+        if (k2 >= n) throw new Error('字符串未闭合 @' + i);
+        toks.push({ t: 'str', v: s }); i = k2 + 1; continue;
+      }
       var two = src.substr(i, 2);
       if (two === '==' || two === '!=' || two === '<=' || two === '>=' || two === '&&' || two === '||') {
         toks.push({ t: 'op', v: two }); i += 2; continue;
@@ -129,6 +143,7 @@
     var tk = this.next();
     if (!tk) throw new Error('表达式意外结束');
     if (tk.t === 'num') return { k: 'num', v: tk.v };
+    if (tk.t === 'str') return { k: 'str', v: tk.v };
     if (tk.t === 'id') {
       if (this.peek() && this.peek().v === '(') {
         this.next();
@@ -150,6 +165,7 @@
   function evalNode(node, scope) {
     switch (node.k) {
       case 'num': return node.v;
+      case 'str': return node.v;
       case 'var':
         if (Object.prototype.hasOwnProperty.call(scope, node.name)) return scope[node.name];
         if (Object.prototype.hasOwnProperty.call(CONST, node.name)) return CONST[node.name];

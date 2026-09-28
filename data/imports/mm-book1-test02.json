@@ -29,10 +29,10 @@
       },
       "derived": {
         "whole": "sel(i, 3, 3, 4, 2, 5, 3, 6, 7)",
-        "dd": "sel(i, 44, 12, 16, 25, 75, 20, 24, 36)",
-        "x": "sel(i, 3.44, 3.12, 4.16, 2.25, 5.75, 3.2, 6.24, 7.36)",
-        "a": "sel(i, 11, 3, 4, 1, 3, 1, 6, 9)",
-        "b": "sel(i, 25, 25, 25, 4, 4, 5, 25, 25)"
+        "dd": "sel(i, 44, 12, 16, 40, 75, 20, 24, 36)",
+        "x": "sel(i, 3.44, 3.12, 4.16, 2.4, 5.75, 3.2, 6.24, 7.36)",
+        "a": "sel(i, 11, 3, 4, 2, 3, 1, 6, 9)",
+        "b": "sel(i, 25, 25, 25, 5, 4, 5, 25, 25)"
       },
       "answer": {
         "type": "choice",
@@ -64,7 +64,12 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "D"
+      "originalAnswer": "D",
+      "constraints": [
+        "a*4 != b",
+        "a*11 != 4*b",
+        "a*20 != 7*b"
+      ]
     },
     {
       "subject": "数学",
@@ -92,16 +97,17 @@
         }
       },
       "derived": {
-        "P": "sel(i, 20, 20, 25, 50)",
-        "n0": "sel(i, 2, 1, 1, 1)",
-        "d0": "sel(i, 12, 6, 8, 4)",
-        "n1": "sel(i, 1, 2, 2, 3)",
-        "d1": "sel(i, 6, 12, 9, 10)",
-        "n2": "sel(i, 1, 1, 3, 2)",
-        "d2": "sel(i, 8, 3, 10, 5)",
-        "n3": "sel(i, 1, 4, 3, 3)",
-        "d3": "sel(i, 4, 15, 8, 4)",
-        "ix": "sel(i, 3, 1, 2, 0)"
+        "P": "sel(i, 20, 25, 50, 40)",
+        "n0": "sel(i, 1, 1, 2, 1)",
+        "d0": "sel(i, 8, 5, 5, 2)",
+        "n1": "sel(i, 1, 1, 3, 3)",
+        "d1": "sel(i, 6, 4, 5, 8)",
+        "n2": "sel(i, 3, 3, 1, 1)",
+        "d2": "sel(i, 16, 10, 2, 4)",
+        "n3": "sel(i, 1, 3, 7, 2)",
+        "d3": "sel(i, 4, 20, 20, 5)",
+        "ix": "sel(i, 3, 2, 1, 0)",
+        "ansFrac": "sel(i, '1/4', '3/10', '3/5', '1/2')"
       },
       "answer": {
         "type": "choice",
@@ -126,8 +132,8 @@
         "correctIndex": "ix"
       },
       "solution": {
-        "en": "{P}% means {P}/100, i.e. {P/100} as a decimal. Turn each fraction into a decimal and compare: only {n3}/{d3} is above {P/100}.",
-        "zh": "{P}% 就是 {P}/100 = {P/100}。把四个分数都化成小数再比较，只有 {n3}/{d3} 大于 {P/100}。"
+        "en": "{P}% means {P}/100, i.e. {P/100} as a decimal. Turn each fraction into a decimal and compare: only {ansFrac} is above {P/100}.",
+        "zh": "{P}% 就是 {P}/100 = {P/100}。把四个分数都化成小数再比较，只有 {ansFrac} 大于 {P/100}。"
       },
       "noFigure": "纯计算题，无图",
       "original": {
@@ -281,8 +287,8 @@
         "格点"
       ],
       "stem": {
-        "en": "A square is divided into 9 equal smaller squares. What is the area of the shaded octagon in terms of the whole square?",
-        "zh": "一个大正方形被分成 9 个相同的小正方形。图中阴影八角形占整个正方形的几分之几？"
+        "en": "A square is divided into {tot} equal smaller squares. What is the area of the shaded octagon as a fraction of the whole square?",
+        "zh": "一个大正方形被分成 {tot} 个相同的小正方形。图中阴影八角形占整个正方形的几分之几？"
       },
       "vars": {
         "i": {
@@ -292,12 +298,9 @@
         }
       },
       "derived": {
-        "k": "sel(i, 3, 3, 3, 5)",
-        "keep": "sel(i, 7, 8, 5, 21)",
-        "tot": "k*k",
-        "d1": "sel(i, 8, 8, 6, 25)",
-        "d2": "sel(i, 1, 2, 1, 4)",
-        "d3": "sel(i, 4, 6, 4, 9)"
+        "k": "sel(i, 3, 4, 5, 6)",
+        "tot": "sel(i, 3, 4, 5, 6)*sel(i, 3, 4, 5, 6)",
+        "keep": "sel(i, 3, 4, 5, 6)*sel(i, 3, 4, 5, 6) - 2"
       },
       "answer": {
         "type": "choice",
@@ -308,22 +311,22 @@
             "zh": "{keep}/{tot}"
           },
           {
-            "en": "{d1}/{tot}",
-            "zh": "{d1}/{tot}"
+            "en": "{keep + 1}/{tot}",
+            "zh": "{keep + 1}/{tot}"
           },
           {
-            "en": "{d2}/{tot}",
-            "zh": "{d2}/{tot}"
+            "en": "{keep - 1}/{tot}",
+            "zh": "{keep - 1}/{tot}"
           },
           {
-            "en": "{d3}/{tot}",
-            "zh": "{d3}/{tot}"
+            "en": "{keep - 2}/{tot}",
+            "zh": "{keep - 2}/{tot}"
           }
         ]
       },
       "solution": {
-        "en": "The square is cut into {k}×{k} = {tot} equal small squares. The shaded octagon covers {keep} of them, so its area is {keep}/{tot} of the square.",
-        "zh": "正方形被分成 {k}×{k} = {tot} 个相同的小正方形，阴影八角形占其中 {keep} 个，所以面积是整个正方形的 {keep}/{tot}。"
+        "en": "The square is cut into {k} x {k} = {tot} equal small squares. The octagon cuts off half of each of the 4 corner squares, i.e. 4 x 1/2 = 2 whole squares, so it covers {tot} - 2 = {keep} of them: {keep}/{tot}.",
+        "zh": "正方形被分成 {k} × {k} = {tot} 个相同的小正方形。八角形切掉了四个角上各半个小正方形，共 4 × 1/2 = 2 个，所以它占 {tot} − 2 = {keep} 个：{keep}/{tot}。"
       },
       "diagram": {
         "type": "octagon9",
@@ -349,8 +352,8 @@
         "应用题"
       ],
       "stem": {
-        "en": "A netball team played {n1} games and the average score was {a1}. In the next {n2} games the average score was {a2}. What was the average score of the {n2} games?",
-        "zh": "一支球队打了 {n1} 场比赛，平均得分 {a1} 分。接下来 {n2} 场的平均得分是 {a2} 分。这 {n2} 场的平均分是多少？"
+        "en": "A netball team played {n1} games and the average score was {a1}. After {n2} more games, the average score of all {tot} games was {a2}. What was the average score of the last {n2} games?",
+        "zh": "一支球队打了 {n1} 场比赛，平均得分 {a1} 分。又打了 {n2} 场之后，全部 {tot} 场的平均得分是 {a2} 分。最后这 {n2} 场的平均分是多少？"
       },
       "vars": {
         "i": {
@@ -360,19 +363,24 @@
         }
       },
       "derived": {
-        "n1": "sel(i, 15, 12, 20, 18)",
-        "a1": "sel(i, 17, 14, 16, 20)",
-        "n2": "sel(i, 5, 4, 5, 6)",
-        "a2": "sel(i, 21, 23, 24, 19)",
-        "T1": "n1*a1",
-        "T2": "n2*a2",
-        "N": "n1 + n2",
-        "ans": "a2"
+        "n1": "sel(i, 15, 10, 20, 12)",
+        "a1": "sel(i, 17, 12, 14, 20)",
+        "n2": "sel(i, 5, 5, 5, 8)",
+        "a2": "sel(i, 21, 15, 17, 24)",
+        "tot": "sel(i, 15, 10, 20, 12) + sel(i, 5, 5, 5, 8)",
+        "sumAll": "(sel(i, 15, 10, 20, 12) + sel(i, 5, 5, 5, 8))*sel(i, 21, 15, 17, 24)",
+        "sumFirst": "sel(i, 15, 10, 20, 12)*sel(i, 17, 12, 14, 20)",
+        "ans": "((sel(i, 15, 10, 20, 12) + sel(i, 5, 5, 5, 8))*sel(i, 21, 15, 17, 24) - sel(i, 15, 10, 20, 12)*sel(i, 17, 12, 14, 20))/sel(i, 5, 5, 5, 8)",
+        "s12": "sel(i, 21, 15, 17, 24) + sel(i, 17, 12, 14, 20)"
       },
       "answer": {
         "type": "choice",
         "correctIndex": 0,
         "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
           {
             "en": "{a2}",
             "zh": "{a2}"
@@ -382,18 +390,14 @@
             "zh": "{a1}"
           },
           {
-            "en": "{T1/N}",
-            "zh": "{T1/N}"
-          },
-          {
-            "en": "{T2}",
-            "zh": "{T2}"
+            "en": "{s12}",
+            "zh": "{s12}"
           }
         ]
       },
       "solution": {
-        "en": "The {n2} games scored {n2} × {a2} = {T2} in total, so their average is {T2} ÷ {n2} = {a2}. (For comparison the first {n1} games scored {n1} × {a1} = {T1}.)",
-        "zh": "这 {n2} 场总共得 {n2} × {a2} = {T2} 分，所以平均分是 {T2} ÷ {n2} = {a2}。(前 {n1} 场共得 {n1} × {a1} = {T1} 分。)"
+        "en": "Total of all {tot} games = {tot} x {a2} = {sumAll}. Total of the first {n1} games = {n1} x {a1} = {sumFirst}. So the last {n2} games total {sumAll} - {sumFirst} = {sumAll - sumFirst}, giving an average of {sumAll - sumFirst} / {n2} = {ans}.",
+        "zh": "全部 {tot} 场的总分 = {tot} × {a2} = {sumAll}；前 {n1} 场的总分 = {n1} × {a1} = {sumFirst}。所以最后 {n2} 场共得 {sumAll} − {sumFirst} = {sumAll - sumFirst} 分，平均 {sumAll - sumFirst} ÷ {n2} = {ans} 分。"
       },
       "diagram": {
         "type": "avgstrip",
@@ -405,7 +409,14 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "C"
+      "originalAnswer": "C",
+      "constraints": [
+        "mod(sumAll - sumFirst, n2) == 0",
+        "ans > 0",
+        "ans != a1",
+        "ans != a2",
+        "ans != s12"
+      ]
     },
     {
       "subject": "数学",
@@ -689,8 +700,8 @@
             "zh": "{wrongP}"
           },
           {
-            "en": "{N - wrong}",
-            "zh": "{N - wrong}"
+            "en": "{right - 1}",
+            "zh": "{right - 1}"
           }
         ]
       },
@@ -702,7 +713,14 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "D"
+      "originalAnswer": "D",
+      "constraints": [
+        "mod(N*P, 100) == 0",
+        "wrong > 0",
+        "wrong != right",
+        "wrong != wrongP",
+        "right != wrongP"
+      ]
     },
     {
       "subject": "数学",
@@ -1213,11 +1231,11 @@
       "derived": {
         "rO": "sel(i, 5, 6, 8, 4)",
         "rP": "sel(i, 9, 10, 12, 7)",
-        "N": "sel(i, 100, 120, 90, 150)",
-        "X": "sel(i, 100, 120, 90, 150)*sel(i, 9, 10, 12, 7)/sel(i, 5, 6, 8, 4)",
+        "N": "sel(i, 100, 120, 90, 120)",
+        "X": "sel(i, 100, 120, 90, 120)*sel(i, 9, 10, 12, 7)/sel(i, 5, 6, 8, 4)",
         "v0": "sel(i, 55, 60, 66, 45)",
         "v1": "sel(i, 180, 200, 135, 262.5)",
-        "v2": "sel(i, 72, 60, 45, 105)"
+        "v2": "sel(i, 72, 72, 45, 105)"
       },
       "answer": {
         "type": "choice",
@@ -1253,7 +1271,17 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "B"
+      "originalAnswer": "B",
+      "constraints": [
+        "mod(X, 1) == 0",
+        "X > 0",
+        "X != v0",
+        "X != v2",
+        "v0 != v2",
+        "N*9 != X",
+        "N*9 != v0",
+        "N*9 != v2"
+      ]
     },
     {
       "subject": "数学",
@@ -1537,7 +1565,8 @@
         "a2": "sel(i, 16, 13, 15, 22)",
         "S1": "sel(i, 10, 8, 12, 9)*sel(i, 15, 12, 14, 20)",
         "S2": "(sel(i, 10, 8, 12, 9) - 1)*sel(i, 16, 13, 15, 22)",
-        "removed": "sel(i, 10, 8, 12, 9)*sel(i, 15, 12, 14, 20) - (sel(i, 10, 8, 12, 9) - 1)*sel(i, 16, 13, 15, 22)"
+        "removed": "sel(i, 10, 8, 12, 9)*sel(i, 15, 12, 14, 20) - (sel(i, 10, 8, 12, 9) - 1)*sel(i, 16, 13, 15, 22)",
+        "delta": "sel(i, 10, 8, 12, 9)*(sel(i, 16, 13, 15, 22) - sel(i, 15, 12, 14, 20))"
       },
       "answer": {
         "type": "choice",
@@ -1552,12 +1581,12 @@
             "zh": "{removed}"
           },
           {
-            "en": "{S1 - S2}",
-            "zh": "{S1 - S2}"
-          },
-          {
             "en": "{a2}",
             "zh": "{a2}"
+          },
+          {
+            "en": "{delta}",
+            "zh": "{delta}"
           }
         ]
       },
@@ -1569,7 +1598,16 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "B"
+      "originalAnswer": "B",
+      "constraints": [
+        "removed > 0",
+        "a2 > a1",
+        "n > 1",
+        "removed != a1",
+        "removed != a2",
+        "removed != delta",
+        "a1 != a2"
+      ]
     },
     {
       "subject": "数学",
@@ -1721,7 +1759,8 @@
         "g": "sel(i, 20, 20, 10, 25)",
         "l": "sel(i, 40, 30, 20, 50)",
         "cost": "sel(i, 600, 720, 660, 900)/(1 + sel(i, 20, 20, 10, 25)/100)",
-        "sold": "sel(i, 600, 720, 660, 900)/(1 + sel(i, 20, 20, 10, 25)/100)*(1 - sel(i, 40, 30, 20, 50)/100)"
+        "sold": "sel(i, 600, 720, 660, 900)/(1 + sel(i, 20, 20, 10, 25)/100)*(1 - sel(i, 40, 30, 20, 50)/100)",
+        "prof": "sel(i, 600, 720, 660, 900) - sel(i, 600, 720, 660, 900)/(1 + sel(i, 20, 20, 10, 25)/100)"
       },
       "answer": {
         "type": "choice",
@@ -1732,16 +1771,16 @@
             "zh": "{sold} 元"
           },
           {
-            "en": "${P - sold}",
-            "zh": "{P - sold} 元"
-          },
-          {
             "en": "${cost}",
             "zh": "{cost} 元"
           },
           {
             "en": "${P}",
             "zh": "{P} 元"
+          },
+          {
+            "en": "${prof}",
+            "zh": "{prof} 元"
           }
         ]
       },
@@ -1753,7 +1792,16 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "A"
+      "originalAnswer": "A",
+      "constraints": [
+        "sold > 0",
+        "sold != cost",
+        "sold != P",
+        "cost != P",
+        "prof != sold",
+        "prof != cost",
+        "prof != P"
+      ]
     },
     {
       "subject": "数学",
@@ -1849,12 +1897,11 @@
       },
       "derived": {
         "L": "sel(i, 1000, 900, 1200, 800)",
-        "gap": "sel(i, 8, 7, 9, 6)",
-        "perSide": "floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 9, 6) + 1)) + 1",
-        "total": "2*(floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 9, 6) + 1)) + 1)",
-        "one": "floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 9, 6) + 1)) + 1",
-        "wrong2": "2*floor(sel(i, 1000, 900, 1200, 800)/(sel(i, 8, 7, 9, 6) + 1))",
-        "wrong3": "2*floor(sel(i, 1000, 900, 1200, 800)/sel(i, 8, 7, 9, 6))"
+        "gap": "sel(i, 8, 7, 10, 6)",
+        "one": "floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 10, 6) + 1)) + 1",
+        "total": "2*(floor((sel(i, 1000, 900, 1200, 800) - 1)/(sel(i, 8, 7, 10, 6) + 1)) + 1)",
+        "wrong2": "2*floor(sel(i, 1000, 900, 1200, 800)/(sel(i, 8, 7, 10, 6) + 1))",
+        "wrong3": "2*floor(sel(i, 1000, 900, 1200, 800)/sel(i, 8, 7, 10, 6))"
       },
       "answer": {
         "type": "choice",
@@ -1886,7 +1933,15 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "A"
+      "originalAnswer": "A",
+      "constraints": [
+        "one != total",
+        "one != wrong2",
+        "one != wrong3",
+        "total != wrong2",
+        "total != wrong3",
+        "wrong2 != wrong3"
+      ]
     },
     {
       "subject": "数学",
@@ -2117,11 +2172,11 @@
         }
       },
       "derived": {
-        "v1": "sel(i, 6, 8, 9, 10)",
-        "v2": "sel(i, 3, 4, 3, 5)",
-        "d": "sel(i, 6, 8, 9, 10)*sel(i, 3, 4, 3, 5)/(sel(i, 6, 8, 9, 10) + sel(i, 3, 4, 3, 5))",
-        "t1": "60*sel(i, 3, 4, 3, 5)/(sel(i, 6, 8, 9, 10) + sel(i, 3, 4, 3, 5))",
-        "t2": "60*sel(i, 6, 8, 9, 10)/(sel(i, 6, 8, 9, 10) + sel(i, 3, 4, 3, 5))"
+        "v1": "sel(i, 6, 12, 15, 20)",
+        "v2": "sel(i, 3, 4, 10, 5)",
+        "d": "sel(i, 6, 12, 15, 20)*sel(i, 3, 4, 10, 5)/(sel(i, 6, 12, 15, 20) + sel(i, 3, 4, 10, 5))",
+        "t1": "60*sel(i, 3, 4, 10, 5)/(sel(i, 6, 12, 15, 20) + sel(i, 3, 4, 10, 5))",
+        "t2": "60*sel(i, 6, 12, 15, 20)/(sel(i, 6, 12, 15, 20) + sel(i, 3, 4, 10, 5))"
       },
       "answer": {
         "type": "choice",
@@ -2132,12 +2187,12 @@
             "zh": "{d} 千米"
           },
           {
-            "en": "{v1/2} km",
-            "zh": "{v1/2} 千米"
-          },
-          {
             "en": "{v2} km",
             "zh": "{v2} 千米"
+          },
+          {
+            "en": "{2*d} km",
+            "zh": "{2*d} 千米"
           },
           {
             "en": "{v1} km",
@@ -2153,7 +2208,12 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "A"
+      "originalAnswer": "A",
+      "constraints": [
+        "mod(d, 1) == 0",
+        "d > 0",
+        "t1 != t2"
+      ]
     },
     {
       "subject": "数学",
@@ -2181,11 +2241,11 @@
         }
       },
       "derived": {
-        "P1": "sel(i, 300, 280, 350, 400)",
-        "P2": "sel(i, 420, 400, 470, 520)",
-        "k": "sel(i, 4, 5, 4, 3)",
-        "d": "sel(i, 420, 400, 470, 520) - sel(i, 300, 280, 350, 400)",
-        "glass": "(sel(i, 420, 400, 470, 520) - sel(i, 300, 280, 350, 400))/(sel(i, 4, 5, 4, 3) - 1)"
+        "P1": "sel(i, 300, 280, 300, 400)",
+        "P2": "sel(i, 420, 400, 480, 520)",
+        "k": "sel(i, 4, 5, 6, 4)",
+        "d": "sel(i, 420, 400, 480, 520) - sel(i, 300, 280, 300, 400)",
+        "glass": "(sel(i, 420, 400, 480, 520) - sel(i, 300, 280, 300, 400))/(sel(i, 4, 5, 6, 4) - 1)"
       },
       "answer": {
         "type": "choice",
@@ -2196,16 +2256,16 @@
             "zh": "{glass} 元"
           },
           {
-            "en": "${d}",
-            "zh": "{d} 元"
+            "en": "${k*glass}",
+            "zh": "{k*glass} 元"
           },
           {
             "en": "${glass*2}",
             "zh": "{glass*2} 元"
           },
           {
-            "en": "${d/2}",
-            "zh": "{d/2} 元"
+            "en": "${d}",
+            "zh": "{d} 元"
           }
         ]
       },
@@ -2217,7 +2277,18 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "A"
+      "originalAnswer": "A",
+      "constraints": [
+        "k > 3",
+        "mod(d, k - 1) == 0",
+        "glass > 0",
+        "glass != k*glass",
+        "glass != glass*2",
+        "glass != d",
+        "k*glass != glass*2",
+        "k*glass != d",
+        "glass*2 != d"
+      ]
     },
     {
       "subject": "数学",
@@ -2309,11 +2380,11 @@
       },
       "derived": {
         "N": "sel(i, 30, 40, 24, 36)",
-        "ng": "sel(i, 26, 34, 20, 30)",
+        "ng": "sel(i, 26, 32, 20, 28)",
         "d": "sel(i, 2, 4, 2, 4)",
-        "wear": "sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30)",
-        "gw": "3*(sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4",
-        "frac": "3*(sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4/sel(i, 30, 40, 24, 36)"
+        "wear": "sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28)",
+        "gw": "3*(sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28))/4",
+        "frac": "3*(sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28))/4/sel(i, 30, 40, 24, 36)"
       },
       "answer": {
         "type": "choice",
@@ -2345,7 +2416,17 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "D"
+      "originalAnswer": "D",
+      "constraints": [
+        "wear > 0",
+        "wear < N",
+        "mod(wear, 4) == 0",
+        "mod(N + d, 2) == 0",
+        "mod(N - d, 2) == 0",
+        "gw*16 != N",
+        "gw*14 != 3*N",
+        "gw*15 != 7*N"
+      ]
     },
     {
       "subject": "数学",
@@ -2374,14 +2455,14 @@
       },
       "derived": {
         "N": "sel(i, 30, 40, 24, 36)",
-        "ng": "sel(i, 26, 34, 20, 30)",
+        "ng": "sel(i, 26, 32, 20, 28)",
         "d": "sel(i, 2, 4, 2, 4)",
         "boys": "(sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2",
         "girls": "(sel(i, 30, 40, 24, 36) - sel(i, 2, 4, 2, 4))/2",
-        "wear": "sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30)",
-        "bw": "(sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4",
-        "bng": "(sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2 - (sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4",
-        "frac": "((sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2 - (sel(i, 30, 40, 24, 36) - sel(i, 26, 34, 20, 30))/4)/((sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2)"
+        "wear": "sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28)",
+        "bw": "(sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28))/4",
+        "bng": "(sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2 - (sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28))/4",
+        "frac": "((sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2 - (sel(i, 30, 40, 24, 36) - sel(i, 26, 32, 20, 28))/4)/((sel(i, 30, 40, 24, 36) + sel(i, 2, 4, 2, 4))/2)"
       },
       "answer": {
         "type": "choice",
@@ -2416,7 +2497,21 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "B"
+      "originalAnswer": "B",
+      "constraints": [
+        "wear > 0",
+        "wear < N",
+        "mod(wear, 4) == 0",
+        "mod(N + d, 2) == 0",
+        "mod(N - d, 2) == 0",
+        "bw > 0",
+        "bng > 0",
+        "bw != bng",
+        "bng*30 != boys",
+        "bng*4 != boys",
+        "bw*30 != boys",
+        "bw*4 != boys"
+      ]
     },
     {
       "subject": "数学",
@@ -2514,10 +2609,10 @@
         "b": "sel(i, 15, 7, 13, 5)",
         "c": "sel(i, 3, 3, 5, 2)",
         "d": "sel(i, 5, 5, 9, 3)",
-        "add": "sel(i, 5, 3, 5, 1)",
-        "w1": "sel(i, 5, 5, 9, 3)",
-        "w2": "sel(i, 8, 4, 8, 3)",
-        "w3": "sel(i, 3, 3, 5, 2)"
+        "add": "(sel(i, 3, 3, 5, 2)*sel(i, 15, 7, 13, 5) - sel(i, 5, 5, 9, 3)*sel(i, 7, 3, 5, 2))/(sel(i, 5, 5, 9, 3) - sel(i, 3, 3, 5, 2))",
+        "w1": "sel(i, 10, 6, 10, 8)",
+        "w2": "sel(i, 4, 2, 4, 3)",
+        "w3": "sel(i, 12, 4, 8, 6)"
       },
       "answer": {
         "type": "choice",
@@ -2549,7 +2644,20 @@
       "original": {
         "i": 0
       },
-      "originalAnswer": "B"
+      "originalAnswer": "B",
+      "constraints": [
+        "d != c",
+        "mod(add, 1) == 0",
+        "add > 0",
+        "b > a",
+        "d > c",
+        "w1 != add",
+        "w2 != add",
+        "w3 != add",
+        "w1 != w2",
+        "w1 != w3",
+        "w2 != w3"
+      ]
     },
     {
       "subject": "数学",

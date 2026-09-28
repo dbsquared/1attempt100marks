@@ -809,7 +809,8 @@
       for (var r = 0; r < rows.length; r++) {
         for (var c2 = 0; c2 < cols.length; c2++) {
           s += '<rect x="' + xOf(c2) + '" y="' + (pad + (r + headRows) * rowH) + '" width="' + widths[c2] + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
-          s += '<text x="' + (xOf(c2) + widths[c2] / 2) + '" y="' + (pad + (r + headRows + 1) * rowH - 9) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(cellText(rows[r][c2], vars)) + '</text>';
+          /* data-cell / data-r / data-c 供自检脚本逐格核对（与 tableopts 同一约定） */
+          s += '<text data-cell="1" data-r="' + r + '" data-c="' + c2 + '" x="' + (xOf(c2) + widths[c2] / 2) + '" y="' + (pad + (r + headRows + 1) * rowH - 9) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + esc(cellText(rows[r][c2], vars)) + '</text>';
         }
       }
       s += '</svg>';
@@ -2855,44 +2856,34 @@
 
     /* 九宫格去掉中心：k×k 网格，四角的对角各切掉半个中心格，形成八角形
        data-u="cell" 标出每个存活的小格；data-u="hole" 标出被挖掉的中心格 */
+    /* k×k 等分正方形里内接一个「四角各切掉半个小正方形」的八角形。
+       ★ 关键几何：切角量恒为 1 个小格，每条边从距角 1 格处起 —— 被切掉的是
+         4 个面积各 1/2 格的角三角形，所以八角形面积 = k² − 2（k=3 时 7/9 ✓ 与原卷一致）。
+       旧版把四条边的中点连起来，那画出来还是原正方形（面积 k²），与答案矛盾。 */
     octagon9: function (spec, vars) {
-      var k = Math.max(3, Math.min(5, Math.round(num(spec.k, vars) || 3)));
-      var cell = k <= 3 ? 54 : 40, pad = 22, i, j;
+      var k = Math.max(3, Math.min(6, Math.round(num(spec.k, vars) || 3)));
+      var cell = k <= 3 ? 54 : (k <= 4 ? 46 : 38), pad = 22, i;
       var W = pad * 2 + k * cell, H = pad * 2 + k * cell;
-      var s = svgOpen(W, H, 'square cut into ' + k + ' by ' + k + ' with the middle removed');
-      /* 网格线 */
-      for (i = 0; i <= k; i++) {
-        s += '<line x1="' + (pad + i * cell) + '" y1="' + pad + '" x2="' + (pad + i * cell) + '" y2="' + (pad + k * cell) + '" stroke="' + GREY + '" stroke-width="1.2"/>';
-        s += '<line x1="' + pad + '" y1="' + (pad + i * cell) + '" x2="' + (pad + k * cell) + '" y2="' + (pad + i * cell) + '" stroke="' + GREY + '" stroke-width="1.2"/>';
+      var s = svgOpen(W, H, 'square cut into ' + k + ' by ' + k + ' with an octagon inscribed');
+      var c0 = pad, c1 = pad + k * cell, t0 = pad + cell, t1 = pad + (k - 1) * cell;
+      var pts = [[t0, c0], [t1, c0], [c1, t0], [c1, t1], [t1, c1], [t0, c1], [c0, t1], [c0, t0]];
+      /* 八角形本体 */
+      s += '<polygon data-u="oct" data-k="' + k + '" data-keep="' + (k * k - 2) +
+           '" points="' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' ') +
+           '" fill="#dbeafe" fill-opacity="0.8" stroke="' + INK + '" stroke-width="2.6"/>';
+      /* 网格线（画在填充之上，保持等分格子看得见） */
+      for (i = 1; i < k; i++) {
+        s += '<line x1="' + (pad + i * cell) + '" y1="' + pad + '" x2="' + (pad + i * cell) + '" y2="' + c1 + '" stroke="' + GREY + '" stroke-width="1.2"/>';
+        s += '<line x1="' + pad + '" y1="' + (pad + i * cell) + '" x2="' + c1 + '" y2="' + (pad + i * cell) + '" stroke="' + GREY + '" stroke-width="1.2"/>';
       }
-      /* 每个存活小格填浅色（除中心格外全部保留 —— 原图就是挖掉中心、
-         并且把与该格相邻的四条边的中点连成八角形轮廓） */
-      for (i = 0; i < k; i++) {
-        for (j = 0; j < k; j++) {
-          var isHole = (i === (k - 1) / 2 && j === (k - 1) / 2);
-          if (k % 2 === 0) continue;
-          s += '<rect data-u="cell" data-r="' + i + '" data-c="' + j + '" x="' + (pad + j * cell) + '" y="' + (pad + i * cell) +
-               '" width="' + cell + '" height="' + cell + '" fill="' + (isHole ? '#ffffff' : '#dbeafe') + '" fill-opacity="' +
-               (isHole ? '1' : '0.75') + '"/>';
-        }
-      }
-      /* 八角形轮廓：四条边的中点依次相连 */
-      if (k % 2 === 1) {
-        var mid = (k - 1) / 2;
-        var c0 = pad, c1 = pad + k * cell, mc0 = pad + (mid + 0.5) * cell;
-        var pts = [[mc0, c0], [c1, c0], [c1, mc0], [c1, c1], [mc0, c1], [c0, c1], [c0, mc0], [c0, c0]];
-        s += '<polygon data-u="oct" points="' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' ') +
-             '" fill="none" stroke="' + INK + '" stroke-width="2.6"/>';
-        s += '<rect data-u="hole" x="' + (pad + mid * cell) + '" y="' + (pad + mid * cell) + '" width="' + cell + '" height="' + cell +
-             '" fill="' + '#ffffff' + '" stroke="' + INK + '" stroke-width="2"/>';
-      }
+      /* 大正方形外框 */
       s += '<rect x="' + pad + '" y="' + pad + '" width="' + (k * cell) + '" height="' + (k * cell) + '" fill="none" stroke="' + INK + '" stroke-width="2.4"/>';
       s += '</svg>';
       return s;
     },
 
-    /* 平均分条带：左段 n1 场均值 a1，右段 n2 场均值 a2；只画段长比例与两个均值
-       （图里不写最终答案，答案靠算） */
+    /* 平均分条带：左段 n1 场（已知均值 a1），右段 n2 场（均值留白，正是要求的值）；
+       整条上标注「全部 n1+n2 场的均值 = a2」。图里不写最终答案（答案靠算）。 */
     avgstrip: function (spec, vars) {
       var n1 = Math.max(1, Math.round(num(spec.n1, vars) || 15));
       var n2 = Math.max(1, Math.round(num(spec.n2, vars) || 5));
@@ -2909,8 +2900,8 @@
       s += '<text x="' + (x0 + w1 / 2).toFixed(1) + '" y="' + (y + h / 2 + 6) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + n1 + ' games</text>';
       s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="' + (y + h / 2 + 6) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + n2 + ' games</text>';
       s += '<text x="' + (x0 + w1 / 2).toFixed(1) + '" y="' + (y + h + 24) + '" font-size="15" text-anchor="middle" fill="' + INK + '">average ' + a1 + '</text>';
-      s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="' + (y + h + 24) + '" font-size="15" text-anchor="middle" fill="' + INK + '">average ' + a2 + '</text>';
-      s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="30" font-size="15" text-anchor="middle" fill="' + INK + '">average of all ' + (n1 + n2) + ' games = ?</text>';
+      s += '<text data-u="ask" data-avg="' + a2 + '" x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="' + (y + h + 24) + '" font-size="15" text-anchor="middle" fill="' + INK + '">average ?</text>';
+      s += '<text x="' + (x0 + w1 + w2 / 2).toFixed(1) + '" y="30" font-size="15" text-anchor="middle" fill="' + INK + '">average of all ' + (n1 + n2) + ' games = ' + a2 + '</text>';
       s += '</svg>';
       return s;
     },

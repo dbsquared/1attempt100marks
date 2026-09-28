@@ -150,7 +150,7 @@ const EXPECT = {
   'mm1t2-03': '1.666',   // 卷 D
   'mm1t2-04': '72 grams',   // 卷 A
   'mm1t2-05': '7/9',   // 卷 A
-  'mm1t2-06': '21',   // 卷 C
+  'mm1t2-06': '33',   // 卷 C（题干原为「自问自答」，已按原卷语义改）
   'mm1t2-07': '1000000 mm^2',   // 卷 D
   'mm1t2-08': 'n^2 + 2n',   // 卷 B
   'mm1t2-09': 'South-West',   // 卷 C
@@ -212,7 +212,7 @@ const EXPECT = {
   'mm1t3-24': 'The sum of P and Q is a multiple of 6.',   // 卷 D（空 vars 定性题）
   'mm1t3-25': '6.667 %',   // 卷 B
   'mm1t3-26': '27',   // 卷 D
-  'mm1t3-27': { svg: 0 },   // 卷 C（选项是图：cur[0] = dec-soft）
+  'mm1t3-27': { svg: ['data-kind="dec-steep"'] },   // 卷 C（先急降后趋缓；correctIndex 曾错指面板 A）
   'mm1t3-28': '140 cm^2',   // 卷 D
   'mm1t3-29': '17 x (510/150)',   // 卷 B
   'mm1t3-30': '3 h 5 min',   // 卷 A

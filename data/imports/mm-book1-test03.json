@@ -1,3087 +1,3136 @@
 {
- "v": 1,
- "batch": "Mastering Mathematics Book 1 · TEST 3（40 题·中英双语）",
- "templates": [
-  {
-   "id": "mm1t3-01",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q01",
-   "noVariantReason": "带分数减小数，共 6 组固定取值（原卷为 6 3/4 − 6.32）",
-   "topic": "小数减法",
-   "difficulty": 2,
-   "title": "带分数减小数",
-   "tags": [
-    "小数",
-    "带分数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 5
-    }
-   },
-   "derived": {
-    "w": "sel(i, 6, 7, 5, 8, 9, 4)",
-    "tn": "sel(i, 3, 1, 1, 3, 1, 3)",
-    "sub": "sel(i, 6.32, 6.85, 4.79, 7.62, 8.55, 3.71)",
-    "whole": "sel(i, 6.75, 7.25, 5.25, 8.75, 9.25, 4.75)",
-    "ans": "sel(i, 0.43, 0.4, 0.46, 1.13, 0.7, 1.04)",
-    "wa": "sel(i, 0.53, 0.5, 0.56, 1.23, 0.8, 1.14)",
-    "wb": "sel(i, 0.33, 0.3, 0.36, 1.03, 0.6, 0.94)",
-    "wd": "sel(i, 0.63, 0.6, 0.66, 1.33, 0.9, 1.24)"
-   },
-   "constraints": [
-    "ans > 0",
-    "ans != wa",
-    "ans != wb",
-    "ans != wd",
-    "wa != wb",
-    "wb != wd",
-    "wa != wd"
-   ],
-   "stem": {
-    "en": "{w} {tn}/4 - {sub} =",
-    "zh": "{w} {tn}/4 − {sub} ="
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wd}",
-      "zh": "{wd}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "{w} {tn}/4 = {whole} as a decimal. {whole} - {sub} = {ans}.",
-    "zh": "{w} {tn}/4 化成小数是 {whole}，所以 {whole} − {sub} = {ans}。"
-   },
-   "noFigure": "原题为纯计算题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-02",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q02",
-   "topic": "小数连加化分数",
-   "difficulty": 2,
-   "title": "四个八分族小数相加",
-   "tags": [
-    "小数",
-    "分数"
-   ],
-   "vars": {
-    "k1": {
-     "type": "pick",
-     "from": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-     ]
+  "v": 1,
+  "batch": "Mastering Mathematics Book 1 · TEST 3（40 题·中英双语）",
+  "templates": [
+    {
+      "id": "mm1t3-01",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q01",
+      "noVariantReason": "带分数减小数，共 6 组固定取值（原卷为 6 3/4 − 6.32）",
+      "topic": "小数减法",
+      "difficulty": 2,
+      "title": "带分数减小数",
+      "tags": [
+        "小数",
+        "带分数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 5
+        }
+      },
+      "derived": {
+        "w": "sel(i, 6, 7, 5, 8, 9, 4)",
+        "tn": "sel(i, 3, 1, 1, 3, 1, 3)",
+        "sub": "sel(i, 6.32, 6.85, 4.79, 7.62, 8.55, 3.71)",
+        "whole": "sel(i, 6.75, 7.25, 5.25, 8.75, 9.25, 4.75)",
+        "ans": "sel(i, 0.43, 0.4, 0.46, 1.13, 0.7, 1.04)",
+        "wa": "sel(i, 0.53, 0.5, 0.56, 1.23, 0.8, 1.14)",
+        "wb": "sel(i, 0.33, 0.3, 0.36, 1.03, 0.6, 0.94)",
+        "wd": "sel(i, 0.63, 0.6, 0.66, 1.33, 0.9, 1.24)"
+      },
+      "constraints": [
+        "ans > 0",
+        "ans != wa",
+        "ans != wb",
+        "ans != wd",
+        "wa != wb",
+        "wb != wd",
+        "wa != wd"
+      ],
+      "stem": {
+        "en": "{w} {tn}/4 - {sub} =",
+        "zh": "{w} {tn}/4 − {sub} ="
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wd}",
+            "zh": "{wd}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{w} {tn}/4 = {whole} as a decimal. {whole} - {sub} = {ans}.",
+        "zh": "{w} {tn}/4 化成小数是 {whole}，所以 {whole} − {sub} = {ans}。"
+      },
+      "noFigure": "原题为纯计算题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
     },
-    "k2": {
-     "type": "pick",
-     "from": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-     ]
+    {
+      "id": "mm1t3-02",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q02",
+      "topic": "小数连加化分数",
+      "difficulty": 2,
+      "title": "四个八分族小数相加",
+      "tags": [
+        "小数",
+        "分数"
+      ],
+      "vars": {
+        "k1": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "k2": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "k3": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "k4": {
+          "type": "pick",
+          "from": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        }
+      },
+      "derived": {
+        "d1": "sel(k1, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "d2": "sel(k2, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "d3": "sel(k3, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "d4": "sel(k4, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
+        "s": "k1 + k2 + k3 + k4",
+        "rem": "mod(s, 8)",
+        "wa": "s - 1",
+        "wb": "s + 1",
+        "wc": "s + 3"
+      },
+      "constraints": [
+        "s >= 8",
+        "s <= 20",
+        "rem != 0",
+        "k1 != k2"
+      ],
+      "stem": {
+        "en": "{d1} + {d2} + {d3} + {d4} =",
+        "zh": "{d1} + {d2} + {d3} + {d4} ="
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "[[{s}/8]]",
+            "zh": "[[{s}/8]]"
+          },
+          {
+            "en": "[[{wa}/8]]",
+            "zh": "[[{wa}/8]]"
+          },
+          {
+            "en": "[[{wb}/8]]",
+            "zh": "[[{wb}/8]]"
+          },
+          {
+            "en": "[[{wc}/8]]",
+            "zh": "[[{wc}/8]]"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Write every decimal over 8: {d1} = {k1}/8, {d2} = {k2}/8, {d3} = {k3}/8, {d4} = {k4}/8. Adding the numerators gives {k1} + {k2} + {k3} + {k4} = {s}, so the sum is {s}/8.",
+        "zh": "把每个小数都化成分母 8 的分数：{d1} = {k1}/8，{d2} = {k2}/8，{d3} = {k3}/8，{d4} = {k4}/8。分子相加得 {k1} + {k2} + {k3} + {k4} = {s}，所以和是 {s}/8。"
+      },
+      "noFigure": "原题为纯计算题，无图",
+      "original": {
+        "k1": 1,
+        "k2": 2,
+        "k3": 3,
+        "k4": 6
+      },
+      "originalAnswer": "B"
     },
-    "k3": {
-     "type": "pick",
-     "from": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-     ]
+    {
+      "id": "mm1t3-03",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q03",
+      "noVariantReason": "原卷固定用 1、2、5、9 四个数字，答案恒为 8217",
+      "topic": "数字排列",
+      "difficulty": 4,
+      "title": "用四个数字组成最大/最小的数",
+      "tags": [
+        "排列",
+        "数位"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "d1": "sel(i, 1, 3, 4, 1)",
+        "d2": "sel(i, 2, 6, 7, 3)",
+        "d3": "sel(i, 5, 7, 8, 5)",
+        "d4": "sel(i, 9, 8, 9, 8)",
+        "secondBig": "sel(i, 9512, 8763, 9874, 8531)",
+        "secondSmall": "sel(i, 1295, 3678, 4789, 1358)",
+        "ans": "sel(i, 9512, 8763, 9874, 8531) - sel(i, 1295, 3678, 4789, 1358)",
+        "wa": "sel(i, 8262, 7615, 8462, 7396)",
+        "wb": "sel(i, 8253, 7604, 8451, 7385)",
+        "wd": "sel(i, 8226, 7579, 8426, 7360)"
+      },
+      "constraints": [
+        "ans > 0",
+        "ans != wa",
+        "ans != wb",
+        "ans != wd"
+      ],
+      "stem": {
+        "en": "Using the digits {d1}, {d2}, {d3}, {d4} exactly once in each number, what is the difference between the second largest and the second smallest number that can be formed?",
+        "zh": "用数字 {d1}、{d2}、{d3}、{d4} 各一次组成四位数，第二大的数减去第二小的数，差是多少？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wd}",
+            "zh": "{wd}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The second largest arrangement is {secondBig} and the second smallest is {secondSmall}. Their difference is {secondBig} - {secondSmall} = {ans}.",
+        "zh": "第二大的排法是 {secondBig}，第二小的排法是 {secondSmall}。相差 {secondBig} − {secondSmall} = {ans}。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
     },
-    "k4": {
-     "type": "pick",
-     "from": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-     ]
+    {
+      "id": "mm1t3-04",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q04",
+      "noVariantReason": "",
+      "topic": "百分数应用",
+      "difficulty": 3,
+      "title": "速度提高百分之几后求每小时产量",
+      "tags": [
+        "百分数",
+        "速度"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 5
+        }
+      },
+      "derived": {
+        "r": "sel(i, 45, 60, 35, 50, 40, 55)",
+        "p": "sel(i, 20, 25, 40, 20, 30, 20)",
+        "nv": "sel(i, 45, 60, 35, 50, 40, 55)*(1 + sel(i, 20, 25, 40, 20, 30, 20)/100)",
+        "ans": "sel(i, 45, 60, 35, 50, 40, 55)*(1 + sel(i, 20, 25, 40, 20, 30, 20)/100)*60",
+        "wa": "sel(i, 675, 900, 840, 750, 960, 825)",
+        "wb": "sel(i, 900, 1200, 1050, 1000, 1200, 1100)",
+        "wc": "sel(i, 2700, 3600, 2940, 3000, 3120, 3300)"
+      },
+      "constraints": [
+        "mod(ans, 1) == 0",
+        "ans != wc",
+        "wc != wa"
+      ],
+      "stem": {
+        "en": "A typist can type {r} words per minute. He then increases his speed by {p} percent. How many words can he now type per hour?",
+        "zh": "一名打字员每分钟打 {r} 个词，后来速度提高了 {p}%，现在他每小时能打多少个词？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{p}% of {r} is {r} x {p}/100 = {r*p/100}. His new speed is {nv} words per minute. In one hour: {nv} x 60 = {ans} words.",
+        "zh": "{r} 的 {p}% 是 {r} × {p}/100 = {r*p/100}。新速度是每分钟 {nv} 个词。一小时打 {nv} × 60 = {ans} 个词。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-05",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q05",
+      "noVariantReason": "定性推理题，选项为固定的「哪几项成立」，不随数值变化",
+      "topic": "整数与平方",
+      "difficulty": 4,
+      "title": "连续整数中前一个的平方等于第三个",
+      "tags": [
+        "整数",
+        "平方"
+      ],
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "I only",
+            "zh": "只有 I"
+          },
+          {
+            "en": "III only",
+            "zh": "只有 III"
+          },
+          {
+            "en": "I and II only",
+            "zh": "只有 I 和 II"
+          },
+          {
+            "en": "I and III only",
+            "zh": "只有 I 和 III"
+          }
+        ]
+      },
+      "stem": {
+        "en": "The integers A, B and C are consecutive and A < B < C. If A^2 = C, which of the following could be the value of A?\nI. -1    II. 0    III. 2",
+        "zh": "整数 A、B、C 依次连续且 A < B < C。如果 A² = C，下面哪些可以是 A 的值？\nI. −1    II. 0    III. 2"
+      },
+      "solution": {
+        "en": "If A = -1 then A^2 = 1, so A = -1, B = 0, C = 1 — works. If A = 0 then A^2 = 0, so C = 0, but C must be greater than B which is greater than A = 0 — impossible. If A = 2 then A^2 = 4, so A = 2, B = 3, C = 4 — works. Only I and III work.",
+        "zh": "若 A = −1，则 A² = 1，于是 A = −1、B = 0、C = 1，成立。若 A = 0，则 A² = 0，C = 0，但 C 必须大于 B 且 B 大于 A = 0，不可能。若 A = 2，则 A² = 4，于是 A = 2、B = 3、C = 4，成立。所以只有 I 和 III。"
+      },
+      "noFigure": "原题为纯文字推理题，无图",
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-06",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q06",
+      "noVariantReason": "",
+      "topic": "长方形面积周长",
+      "difficulty": 3,
+      "title": "长是周长的几分之几，已知周长求面积",
+      "tags": [
+        "长方形",
+        "面积",
+        "周长"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 5
+        }
+      },
+      "derived": {
+        "P": "sel(i, 14, 28, 21, 42, 35, 56)",
+        "a": "sel(i, 2, 2, 3, 2, 3, 3)",
+        "b": "sel(i, 7, 7, 7, 7, 7, 7)",
+        "len": "sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7",
+        "wid": "sel(i, 14, 28, 21, 42, 35, 56)/2 - sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7",
+        "ans": "sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7*(sel(i, 14, 28, 21, 42, 35, 56)/2 - sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7)",
+        "wa": "sel(i, 28, 56, 42, 84, 70, 112)",
+        "wb": "sel(i, 20, 36, 24, 60, 40, 72)",
+        "wc": "sel(i, 40, 72, 6, 72, 60, 42)"
+      },
+      "constraints": [
+        "len > 0",
+        "wid > 0",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc"
+      ],
+      "stem": {
+        "en": "The length of a rectangle is {a}/{b} of the perimeter. What is the area of the rectangle if the perimeter is {P} centimetres?",
+        "zh": "一个长方形的长是它周长的 {a}/{b}。如果周长是 {P} 厘米，这个长方形的面积是多少平方厘米？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans} cm^2",
+            "zh": "{ans} 平方厘米"
+          },
+          {
+            "en": "{wa} cm^2",
+            "zh": "{wa} 平方厘米"
+          },
+          {
+            "en": "{wb} cm^2",
+            "zh": "{wb} 平方厘米"
+          },
+          {
+            "en": "{wc} cm^2",
+            "zh": "{wc} 平方厘米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The length is {a}/{b} of {P} = {len} cm. The half-perimeter is {P}/2, so the width is {P/2} - {len} = {wid} cm. Area = {len} x {wid} = {ans} cm².",
+        "zh": "长 = {P} 的 {a}/{b} = {len} 厘米。半周长是 {P}/2，所以宽 = {P/2} − {len} = {wid} 厘米。面积 = {len} × {wid} = {ans} 平方厘米。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "id": "mm1t3-07",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q07",
+      "noVariantReason": "",
+      "topic": "解方程",
+      "difficulty": 4,
+      "title": "交叉相乘解分式方程",
+      "tags": [
+        "方程",
+        "分数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "u": "sel(i, 2, 1, 3, 2, 4)",
+        "v": "sel(i, 3, 4, 2, 5, 3)",
+        "s": "sel(i, 5, 5, 5, 7, 7)",
+        "ans": "sel(i, 3, 3, 3, 4, 4)",
+        "wa": "sel(i, 7, 5, 4, 8, 9)",
+        "wb": "sel(i, 10, 9, 8, 5, 12)",
+        "wc": "sel(i, 8, 7, 10, 6, 7)"
+      },
+      "constraints": [
+        "u + v == s",
+        "(u+v)/sel(i,3,3,3,4,4)*sel(i,3,3,3,4,4) == u+v",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc"
+      ],
+      "stem": {
+        "en": "What one value for x can be correctly entered into the equation below?\n({u} + {v})/x = ({u} + x)/{v}",
+        "zh": "下面这个方程中，x 可以取哪一个值？\n({u} + {v})/x = ({u} + x)/{v}"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Cross-multiplying: ({u}+{v}) x {v} = x({u}+x), that is {s} x {v} = x^2 + {u}x. Testing x = {ans}: left side = {s*v}, right side = {ans*ans} + {u*ans} = {s*v} — it balances.",
+        "zh": "交叉相乘：({u}+{v}) × {v} = x({u}+x)，即 {s} × {v} = x² + {u}x。代入 x = {ans} 检验：左边 = {s*v}，右边 = {ans*ans} + {u*ans} = {s*v}，成立。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-08",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q08",
+      "noVariantReason": "",
+      "topic": "有余数除法",
+      "difficulty": 3,
+      "title": "需要向上取整的除法",
+      "tags": [
+        "除法",
+        "取整"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 5
+        }
+      },
+      "derived": {
+        "N": "sel(i, 230, 150, 200, 310, 175, 260)",
+        "per": "sel(i, 8, 7, 9, 7, 6, 9)",
+        "ans": "ceil(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 7, 9, 7, 6, 9))",
+        "wa": "floor(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 7, 9, 7, 6, 9))",
+        "wb": "floor(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 7, 9, 7, 6, 9)) + 2",
+        "wc": "floor(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 7, 9, 7, 6, 9)) - 1"
+      },
+      "constraints": [
+        "mod(N, per) != 0",
+        "N > per",
+        "wa > 1",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc",
+        "wa != wb",
+        "wa != wc",
+        "wb != wc"
+      ],
+      "stem": {
+        "en": "{N} people at a party decide to order pizza for a snack. If each pizza has {per} slices, how many pizzas should they order so that each person can have one slice?",
+        "zh": "派对上有 {N} 个人要订披萨。每张披萨有 {per} 片，要让每人都有 1 片，至少要订多少张？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{N} / {per} = {floor(N/per)} remainder {mod(N, per)}. The leftover people still need one more pizza, so they must order {floor(N/per)} + 1 = {ans} pizzas.",
+        "zh": "{N} ÷ {per} = {floor(N/per)} 余 {mod(N, per)}。剩下的人还需要一张，所以要订 {floor(N/per)} + 1 = {ans} 张。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-09",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q09",
+      "noVariantReason": "",
+      "topic": "大数的读法",
+      "difficulty": 3,
+      "title": "把中文读数写成小数",
+      "tags": [
+        "大数",
+        "数位"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "ans": "sel(i, 8090020.01, 6090030.02, 7090040.03, 5080050.04)",
+        "wa": "sel(i, 8090020.10, 6090030.20, 7090040.30, 5080050.40)",
+        "wb": "sel(i, 8900020.10, 6900030.20, 7900040.30, 5800050.40)",
+        "wc": "sel(i, 8900200.01, 6900300.02, 7900400.03, 5800500.04)",
+        "words": "sel(i, 'eight million, ninety thousand, twenty and one hundredth', 'six million, ninety thousand, thirty and two hundredths', 'seven million, ninety thousand, forty and three hundredths', 'five million, eighty thousand, fifty and four hundredths')",
+        "zhWords": "sel(i, '八百零九万零二十又百分之一', '六百零九万零三十又百分之二', '七百零九万零四十又百分之三', '五百零八万零五十又百分之四')"
+      },
+      "constraints": [
+        "ans != wa",
+        "ans != wb",
+        "ans != wc",
+        "wa != wb"
+      ],
+      "stem": {
+        "en": "In words: \"{words}\". Which number is this?",
+        "zh": "「{zhWords}」这个数写作："
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "[[{ans}]]",
+            "zh": "[[{ans}]]"
+          },
+          {
+            "en": "[[{wa}]]",
+            "zh": "[[{wa}]]"
+          },
+          {
+            "en": "[[{wb}]]",
+            "zh": "[[{wb}]]"
+          },
+          {
+            "en": "[[{wc}]]",
+            "zh": "[[{wc}]]"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Read place by place: millions + thousands + tens + hundredths = {ans}. The other options misplace the digits (a whole tenth instead of a hundredth, or the thousands and ten-thousands swapped).",
+        "zh": "一位一位地读：百万位 + 万位 + 十位 + 百分位 = {ans}。其它选项要么把百分位写成十分位，要么把万位和十万位颠倒。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-10",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q10",
+      "noVariantReason": "",
+      "topic": "矩形分割",
+      "difficulty": 4,
+      "title": "五个全等矩形拼成大矩形",
+      "tags": [
+        "矩形",
+        "周长"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "P": "sel(i, 264, 220, 286, 242, 308)",
+        "W": "sel(i, 264, 220, 286, 242, 308)/11",
+        "L": "1.5*sel(i, 264, 220, 286, 242, 308)/11",
+        "ans": "2*(1.5*sel(i, 264, 220, 286, 242, 308)/11 + sel(i, 264, 220, 286, 242, 308)/11)",
+        "wa": "sel(i, 58, 48, 62, 52, 66)",
+        "wb": "sel(i, 110, 92, 119, 100, 128)"
+      },
+      "constraints": [
+        "ans != wb",
+        "wa != wb"
+      ],
+      "stem": {
+        "en": "In the figure below a rectangle with perimeter {P} cm is divided into five identical rectangles. Find the perimeter of one of the rectangles.",
+        "zh": "如下图，一个周长 {P} 厘米的大矩形被分成五个完全相同的小矩形。求其中一个小矩形的周长。"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans} cm",
+            "zh": "{ans} 厘米"
+          },
+          {
+            "en": "{wa} cm",
+            "zh": "{wa} 厘米"
+          },
+          {
+            "en": "{wb} cm",
+            "zh": "{wb} 厘米"
+          },
+          {
+            "en": "cannot be determined",
+            "zh": "无法确定"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The top row is three widths and the bottom row is two lengths, and both span the whole width — so 3 x width = 2 x length, giving length = 1.5 x width. The height is length + width = 2.5 x width. Perimeter = 2 x (3w + 2.5w) = 11w = {P}, so w = {W} cm and length = {L} cm. One small rectangle: 2 x ({L} + {W}) = {ans} cm.",
+        "zh": "上排是 3 个宽，下排是 2 个长，两者都横跨整个宽度 —— 所以 3 × 宽 = 2 × 长，即长 = 1.5 × 宽。大矩形的高 = 长 + 宽 = 2.5 × 宽。大周长 = 2 × (3宽 + 2.5宽) = 11宽 = {P}，所以宽 = {W} 厘米、长 = {L} 厘米。小矩形周长 = 2 × ({L} + {W}) = {ans} 厘米。"
+      },
+      "diagram": {
+        "type": "fivefit",
+        "P": "P"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-11",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q11",
+      "noVariantReason": "",
+      "topic": "最值·重叠集合",
+      "difficulty": 4,
+      "title": "最多有多少人不在某集合中",
+      "tags": [
+        "分数",
+        "最值"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "N": "sel(i, 60, 90, 120, 84, 75)",
+        "gn": "sel(i, 2, 2, 2, 3, 2)",
+        "gd": "sel(i, 3, 3, 3, 4, 5)",
+        "mn": "sel(i, 2, 2, 3, 1, 2)",
+        "md": "sel(i, 5, 3, 5, 3, 5)",
+        "girls": "sel(i, 40, 60, 80, 63, 30)",
+        "boys": "sel(i, 20, 30, 40, 21, 45)",
+        "music": "sel(i, 24, 60, 72, 28, 30)",
+        "ans": "sel(i, 36, 30, 48, 56, 30)",
+        "ansSub": "sel(i, 4, 30, 32, 7, 0)",
+        "wa": "sel(i, 40, 60, 80, 63, 45)",
+        "wb": "sel(i, 24, 60, 72, 28, 30)",
+        "wc": "sel(i, 44, 90, 92, 91, 45)"
+      },
+      "constraints": [
+        "mod(sel(i,60,90,120,84,75), sel(i,3,3,3,4,5)) == 0",
+        "mod(sel(i,60,90,120,84,75)*sel(i,2,2,3,1,2), sel(i,5,3,5,3,5)) == 0",
+        "ans > 0",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc",
+        "wa != wb"
+      ],
+      "stem": {
+        "en": "Of {N} students in a class {gn}/{gd} are girls, and {mn}/{md} of the class are taking music lessons. What is the maximum number of girls that are not taking music lessons?",
+        "zh": "{N} 名学生中有 {gn}/{gd} 是女生，全班有 {mn}/{md} 在上音乐课。不上音乐课的女生最多有多少人？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Girls = {gn}/{gd} x {N} = {girls}, so boys = {boys}. Music students = {mn}/{md} x {N} = {music}. To make as many girls as possible miss music, give the music places to boys first — at most {boys} of them can hold places. That still leaves {music} - {boys} = {ansSub} places taken by girls, so the maximum number of girls with no music lesson is {girls} - {ansSub} = {ans}.",
+        "zh": "女生 = {N} 的 {gn}/{gd} = {girls} 人，所以男生 = {boys} 人。上音乐课的共 {N} 的 {mn}/{md} = {music} 人。要让不上音乐课的女生最多，就让音乐课名额先给男生 —— 最多只有 {boys} 个男生能占。这样仍有 {music} − {boys} = {ansSub} 个名额落在女生身上，所以不上音乐课的女生最多 {girls} − {ansSub} = {ans} 人。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "id": "mm1t3-12",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q12",
+      "noVariantReason": "",
+      "topic": "数轴读数",
+      "difficulty": 3,
+      "title": "等距数轴上读出某点的值",
+      "tags": [
+        "数轴",
+        "小数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "B": "sel(i, 0.312, 0.204, 0.415, 0.106, 0.523)",
+        "E": "sel(i, 0.326, 0.225, 0.443, 0.127, 0.558)",
+        "n": "sel(i, 7, 7, 7, 7, 7)",
+        "k": "sel(i, 3, 3, 3, 3, 3)",
+        "step": "sel(i, 0.002, 0.003, 0.004, 0.003, 0.005)",
+        "ans": "sel(i, 0.318, 0.213, 0.427, 0.115, 0.538)",
+        "wa": "sel(i, 0.315, 0.210, 0.423, 0.112, 0.533)",
+        "wb": "sel(i, 0.316, 0.211, 0.424, 0.113, 0.534)",
+        "wc": "sel(i, 0.317, 0.212, 0.425, 0.114, 0.535)"
+      },
+      "constraints": [
+        "E > B",
+        "ans > B",
+        "ans < E",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc"
+      ],
+      "stem": {
+        "en": "The diagram shows part of a number line with evenly spaced intervals between marks. What is the value of P?",
+        "zh": "下图是一条数轴的一部分，各刻度之间等距。P 表示的数是多少？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "[[{ans}]]",
+            "zh": "[[{ans}]]"
+          },
+          {
+            "en": "[[{wa}]]",
+            "zh": "[[{wa}]]"
+          },
+          {
+            "en": "[[{wb}]]",
+            "zh": "[[{wb}]]"
+          },
+          {
+            "en": "[[{wc}]]",
+            "zh": "[[{wc}]]"
+          }
+        ]
+      },
+      "solution": {
+        "en": "There are {n} equal intervals from {B} to {E}, so each interval is ({E} - {B}) / {n} = {step}. P sits {k} intervals to the right of {B}, so P = {B} + {k} x {step} = {ans}.",
+        "zh": "从 {B} 到 {E} 一共分成 {n} 等份，所以每份 = ({E} − {B}) ÷ {n} = {step}。P 在 {B} 右边第 {k} 个刻度上，所以 P = {B} + {k} × {step} = {ans}。"
+      },
+      "diagram": {
+        "type": "numline",
+        "B": "B",
+        "E": "E",
+        "n": "n",
+        "k": "k"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "id": "mm1t3-13",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q13",
+      "noVariantReason": "",
+      "topic": "比例变化",
+      "difficulty": 4,
+      "title": "比例变化后求加入的人数",
+      "tags": [
+        "比",
+        "方程"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "b1": "sel(i, 4, 5, 4, 3, 5)",
+        "g1": "sel(i, 3, 3, 3, 4, 3)",
+        "b2": "sel(i, 3, 2, 3, 2, 7)",
+        "g2": "sel(i, 2, 1, 2, 1, 4)",
+        "boys": "sel(i, 12, 15, 20, 12, 25)",
+        "girls": "sel(i, 9, 9, 15, 16, 15)",
+        "tot": "sel(i, 21, 24, 35, 28, 40)",
+        "girls1": "sel(i, 10, 10, 16, 17, 16)",
+        "newBoys": "sel(i, 15, 20, 24, 34, 28)",
+        "ans": "sel(i, 3, 5, 4, 22, 3)",
+        "wa": "sel(i, 15, 20, 24, 34, 28)",
+        "wb": "sel(i, 12, 15, 20, 12, 25)",
+        "wc": "sel(i, 9, 9, 15, 16, 15)"
+      },
+      "constraints": [
+        "ans > 0",
+        "g2 != b2",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc",
+        "wa != wc",
+        "boys + girls == tot",
+        "girls1 == girls + 1",
+        "newBoys == girls1*sel(i,3,2,3,2,7)/sel(i,2,1,2,1,4)",
+        "newBoys - boys == ans"
+      ],
+      "stem": {
+        "en": "In a class of {tot} students, the ratio of boys to girls is {b1} : {g1}. Some extra boys and one extra girl join the class. The new ratio becomes {b2} : {g2}. What is the number of new boys joined?",
+        "zh": "一个班有 {tot} 名学生，男生与女生的人数比是 {b1} : {g1}。后来又加入若干名男生和 1 名女生，新的比变成 {b2} : {g2}。新加入了多少名男生？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The ratio {b1} : {g1} means {boys} boys and {girls} girls. After one girl joins there are {girls1} girls. The new ratio {b2} : {g2} = ? : {girls1}, and ? = {girls1} x {b2}/{g2} = {newBoys}, so {newBoys} - {boys} = {ans} boys joined.",
+        "zh": "比 {b1} : {g1} 表示男生 {boys} 人、女生 {girls} 人。加入 1 名女生后女生为 {girls1} 人。新的比 {b2} : {g2} = ? : {girls1}，所以 ? = {girls1} × {b2}/{g2} = {newBoys}，即新加入的男生为 {newBoys} − {boys} = {ans} 名。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-14",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q14",
+      "noVariantReason": "",
+      "topic": "鸡兔同笼",
+      "difficulty": 3,
+      "title": "两种价格混合销售",
+      "tags": [
+        "方程",
+        "应用题"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "hi": "sel(i, 10, 8, 12, 10, 15)",
+        "lo": "sel(i, 5, 3, 5, 4, 5)",
+        "tot": "sel(i, 75, 60, 80, 70, 90)",
+        "money": "sel(i, 625, 390, 760, 520, 950)",
+        "nLo": "sel(i, 25, 30, 40, 30, 40)",
+        "nHi": "sel(i, 50, 30, 40, 40, 50)",
+        "lp": "sel(i, 375, 180, 400, 280, 450)",
+        "dif": "sel(i, 250, 210, 360, 240, 500)",
+        "gap": "sel(i, 5, 5, 7, 6, 10)",
+        "wa": "sel(i, 50, 40, 50, 40, 60)",
+        "wb": "sel(i, 23, 20, 30, 25, 30)",
+        "wc": "sel(i, 29, 25, 35, 20, 45)"
+      },
+      "constraints": [
+        "nLo > 0",
+        "nLo < tot",
+        "nHi > 0",
+        "nLo + nHi == tot",
+        "lo < hi",
+        "nLo*lo + nHi*hi == money",
+        "nLo != wa",
+        "nLo != wb",
+        "nLo != wc"
+      ],
+      "stem": {
+        "en": "A charity organisation sells greetings cards in packs costing ${hi} or ${lo} each. A total of {tot} packs were sold at a fair for a total of ${money}. How many of the ${lo} packs were sold?",
+        "zh": "某慈善机构出售贺卡，每包 {hi} 元或 {lo} 元。义卖会上共卖出 {tot} 包，收入 {money} 元。其中 {lo} 元一包的有几包？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{nLo}",
+            "zh": "{nLo}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "If all {tot} packs were the ${lo} kind the takings would be {tot} x {lo} = ${lp}. The real takings are ${money}, which is ${dif} more; every ${hi} pack adds {gap} more. So there are {dif} / {gap} = {nHi} packs at ${hi}, and {tot} - {nHi} = {nLo} packs at ${lo}. Check: {nLo} x {lo} + {nHi} x {hi} = ${money}.",
+        "zh": "若 {tot} 包全是 {lo} 元的，应得 {tot} × {lo} = {lp} 元。实际收入 {money} 元，多出 {dif} 元；每换一包 {hi} 元的会多出 {gap} 元。所以 {hi} 元一包的有 {dif} ÷ {gap} = {nHi} 包，{lo} 元一包的有 {tot} − {nHi} = {nLo} 包。验算：{nLo} × {lo} + {nHi} × {hi} = {money} 元。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-15",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q15",
+      "noVariantReason": "定性不等式推理题，年龄上限 16 固定，答案恒为 2",
+      "topic": "年龄不等关系",
+      "difficulty": 4,
+      "title": "用不等式确定可能值",
+      "tags": [
+        "不等式",
+        "年龄"
+      ],
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "2",
+            "zh": "2"
+          },
+          {
+            "en": "5",
+            "zh": "5"
+          },
+          {
+            "en": "4",
+            "zh": "4"
+          },
+          {
+            "en": "3",
+            "zh": "3"
+          }
+        ]
+      },
+      "stem": {
+        "en": "Andy, Mark and Sean all have their birthdays today, but Andy is more than twice as old as Mark and Mark is more than four years older than Sean. If Andy is less than 16 years old, what is one possible value for Sean's age in years?",
+        "zh": "Andy、Mark、Sean 三人今天都过生日。Andy 的年龄超过 Mark 的两倍，Mark 比 Sean 大 4 岁以上。如果 Andy 小于 16 岁，Sean 的年龄可能是下面哪一个？"
+      },
+      "solution": {
+        "en": "Andy < 16 and Andy > 2 x Mark, so 2 x Mark < 16, i.e. Mark < 8. Mark > Sean + 4, so Sean < Mark - 4 < 4. Testing: if Sean = 2 then Mark could be 7 (> 6), and Andy could be 15 — which is < 16 and > 14, so it works. Sean = 3 would force Mark >= 8, and then Andy > 16 — too old. So only 2 works.",
+        "zh": "Andy < 16 且 Andy > 2×Mark，所以 2×Mark < 16，即 Mark < 8。又 Mark > Sean + 4，所以 Sean < Mark − 4 < 4。检验：若 Sean = 2，可取 Mark = 7（> 6），Andy = 15（< 16 且 > 14），全部成立。若 Sean = 3，则 Mark ≥ 8，Andy 就会超过 16，不行。所以只有 2 成立。"
+      },
+      "noFigure": "原题为纯文字推理题，无图",
+      "originalAnswer": "A"
+    },
+    {
+      "id": "mm1t3-16",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q16",
+      "noVariantReason": "",
+      "topic": "指数增长",
+      "difficulty": 3,
+      "title": "每隔一段时间翻倍，求总倍数",
+      "tags": [
+        "指数",
+        "倍率"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "m": "sel(i, 40, 50, 20, 45, 15)",
+        "h": "sel(i, 3, 2, 2, 2, 2)",
+        "mm": "sel(i, 20, 30, 40, 15, 30)",
+        "totalMin": "sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30)",
+        "times": "(sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15)",
+        "tUp": "(sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15) + 1",
+        "tDn": "(sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15) - 1",
+        "ans": "pow(2, (sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15))",
+        "wa": "(sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15)",
+        "wb": "pow(2, (sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15) + 1)",
+        "wc": "pow(2, (sel(i, 3, 2, 2, 2, 2)*60 + sel(i, 20, 30, 40, 15, 30))/sel(i, 40, 50, 20, 45, 15) - 1)"
+      },
+      "constraints": [
+        "mod(totalMin, m) == 0",
+        "ans > 0",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc",
+        "wa != wb",
+        "wa != wc",
+        "wb != wc"
+      ],
+      "stem": {
+        "en": "If the population of bacteria in a culture flask doubles every {m} minutes, the population after {h} hours {mm} minutes will be how many times the population at the start?",
+        "zh": "培养瓶中细菌的数量每 {m} 分钟翻一倍。{h} 小时 {mm} 分钟之后，细菌数量是原来的多少倍？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "{h} hours {mm} minutes = {totalMin} minutes. It doubles {totalMin} / {m} = {times} times, so the population is multiplied by 2^{times} = {ans}.",
+        "zh": "{h} 小时 {mm} 分钟 = {totalMin} 分钟。共翻倍 {totalMin} ÷ {m} = {times} 次，所以数量变为原来的 2^{times} = {ans} 倍。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-17",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q17",
+      "noVariantReason": "骰子展开图为固定图形，对面关系唯一，答案恒为 A=2, B=6, C=3",
+      "topic": "正方体展开图",
+      "difficulty": 4,
+      "title": "正方体展开图上的对面点数",
+      "tags": [
+        "立体图形",
+        "展开图"
+      ],
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 2,
+        "options": [
+          {
+            "en": "A = 6, B = 3, C = 2",
+            "zh": "A = 6，B = 3，C = 2"
+          },
+          {
+            "en": "A = 6, B = 2, C = 3",
+            "zh": "A = 6，B = 2，C = 3"
+          },
+          {
+            "en": "A = 2, B = 6, C = 3",
+            "zh": "A = 2，B = 6，C = 3"
+          },
+          {
+            "en": "A = 2, B = 3, C = 6",
+            "zh": "A = 2，B = 3，C = 6"
+          }
+        ]
+      },
+      "stem": {
+        "en": "The shape below is to be cut out and folded along the dotted lines to form a cubic die. Dots are to be added to faces A, B and C so that the numbers of dots on opposite faces add up to 7. How many dots should appear on each face?",
+        "zh": "下图沿虚线剪下折成一个正方体骰子。要给 A、B、C 三个面画上点，使相对两面的点数之和都等于 7。A、B、C 各应画几个点？"
+      },
+      "solution": {
+        "en": "Fold the net mentally. The face with 5 dots ends up opposite A, so A = 7 - 5 = 2. The face with 1 dot ends up opposite B, so B = 7 - 1 = 6. The face with 4 dots ends up opposite C, so C = 7 - 4 = 3. Hence A = 2, B = 6, C = 3.",
+        "zh": "把展开图在脑中折起来：点数为 5 的面与 A 相对，所以 A = 7 − 5 = 2；点数为 1 的面与 B 相对，所以 B = 7 − 1 = 6；点数为 4 的面与 C 相对，所以 C = 7 − 4 = 3。因此 A = 2、B = 6、C = 3。"
+      },
+      "diagram": {
+        "type": "dienet",
+        "cells": [
+          {
+            "r": 0,
+            "c": 2,
+            "dots": 3
+          },
+          {
+            "r": 1,
+            "c": 1,
+            "dots": 6
+          },
+          {
+            "r": 1,
+            "c": 2,
+            "dots": 5
+          },
+          {
+            "r": 1,
+            "c": 3,
+            "label": "B"
+          },
+          {
+            "r": 2,
+            "c": 0,
+            "label": "A"
+          },
+          {
+            "r": 2,
+            "c": 1,
+            "dots": 1
+          }
+        ]
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-18",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q18",
+      "noVariantReason": "",
+      "topic": "连续分数应用",
+      "difficulty": 3,
+      "title": "多步分数分配",
+      "tags": [
+        "分数",
+        "应用题"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "T": "sel(i, 4800, 6000, 3600, 7200, 5400)",
+        "expF": "sel(i, 1200, 1500, 900, 1800, 1350)",
+        "rem": "sel(i, 3600, 4500, 2700, 5400, 4050)",
+        "aF": "sel(i, 2700, 3375, 2025, 4050, 3037.5)",
+        "ans": "sel(i, 900, 1125, 675, 1350, 1012.5)",
+        "wa": "0",
+        "wb": "expF",
+        "wc": "aF"
+      },
+      "constraints": [
+        "ans > 0",
+        "ans != aF",
+        "mod(sel(i,4800,6000,3600,7200,5400), 4) == 0"
+      ],
+      "stem": {
+        "en": "A school charity sale raised ${T}. One quarter of this was taken to cover expenses. Three quarters of the remainder was given to Charity A and the rest to Charity B. How much did B receive?",
+        "zh": "学校义卖共筹得 {T} 元。其中四分之一用于支付开支，余下部分的四分之三捐给慈善机构 A，剩下的捐给慈善机构 B。B 收到多少钱？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "${ans}",
+            "zh": "{ans} 元"
+          },
+          {
+            "en": "${wa}",
+            "zh": "{wa} 元"
+          },
+          {
+            "en": "${wb}",
+            "zh": "{wb} 元"
+          },
+          {
+            "en": "${wc}",
+            "zh": "{wc} 元"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Expenses = 1/4 x {T} = ${expF}. The remainder is {T} - {expF} = ${rem}. Charity A gets 3/4 x {rem} = ${aF}, so Charity B gets {T} - {expF} - {aF} = ${ans}.",
+        "zh": "开支 = {T} 的 1/4 = {expF} 元。余下 {T} − {expF} = {rem} 元。A 得到 {rem} 的 3/4 = {aF} 元，所以 B 得到 {T} − {expF} − {aF} = {ans} 元。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "id": "mm1t3-19",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q19",
+      "noVariantReason": "",
+      "topic": "百分数·佣金",
+      "difficulty": 3,
+      "title": "已知总收入反求销售额",
+      "tags": [
+        "百分数",
+        "佣金"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "sal": "sel(i, 50, 60, 40, 80, 100)",
+        "p": "sel(i, 10, 20, 10, 15, 25)",
+        "got": "sel(i, 200, 260, 190, 320, 400)",
+        "com": "sel(i, 150, 200, 150, 240, 300)",
+        "ans": "sel(i, 1500, 1000, 1500, 1600, 1200)",
+        "wa": "sel(i, 205, 265, 195, 330, 410)",
+        "wb": "sel(i, 1200, 800, 1200, 1280, 960)",
+        "wc": "sel(i, 2000, 1400, 2100, 2200, 1600)"
+      },
+      "constraints": [
+        "got > sal",
+        "ans > 0",
+        "com > 0"
+      ],
+      "stem": {
+        "en": "A brush salesman earns ${sal} salary each month plus {p} percent commission on the value of his sales. If he earned ${got} last month, what was the total value of his sales?",
+        "zh": "一名推销员每月有 {sal} 元底薪，另有销售额的 {p}% 作为佣金。他上个月共收入 {got} 元，那么他上个月的销售额是多少？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "${ans}",
+            "zh": "{ans} 元"
+          },
+          {
+            "en": "${wa}",
+            "zh": "{wa} 元"
+          },
+          {
+            "en": "${wb}",
+            "zh": "{wb} 元"
+          },
+          {
+            "en": "${wc}",
+            "zh": "{wc} 元"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The commission was {got} - {sal} = ${com}. That is {p}% of his sales, so sales = {com} / {p} x 100 = ${ans}.",
+        "zh": "佣金是 {got} − {sal} = {com} 元。这等于销售额的 {p}%，所以销售额 = {com} ÷ {p} × 100 = {ans} 元。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-20",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q20",
+      "noVariantReason": "",
+      "topic": "组合计数",
+      "difficulty": 3,
+      "title": "循环赛总场次",
+      "tags": [
+        "组合",
+        "计数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "n": "sel(i, 10, 12, 8, 15, 9)",
+        "per": "sel(i, 10, 5, 4, 2, 6)",
+        "pairs": "sel(i, 45, 66, 28, 105, 36)",
+        "ans": "sel(i, 450, 330, 112, 210, 216)",
+        "wa": "pairs",
+        "wb": "n*per",
+        "wc": "n*(per+1)"
+      },
+      "constraints": [
+        "ans > 0",
+        "n > 2",
+        "per > 1",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc",
+        "wa != wb",
+        "wa != wc",
+        "wb != wc"
+      ],
+      "stem": {
+        "en": "During a season in a certain baseball league, every team plays every other team in the league {per} times. If there are {n} teams in the league, how many games are played altogether in the league in one season?",
+        "zh": "某棒球联盟一个赛季中，每两支队伍之间都要比赛 {per} 场。如果联盟共有 {n} 支队，一个赛季一共要打多少场？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans} games",
+            "zh": "{ans} 场"
+          },
+          {
+            "en": "{wa} games",
+            "zh": "{wa} 场（只算两两配对的组数）"
+          },
+          {
+            "en": "{wb} games",
+            "zh": "{wb} 场（把队数直接乘以每对场次）"
+          },
+          {
+            "en": "{wc} games",
+            "zh": "{wc} 场（把队数乘以配对组数）"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Each team plays the other {n} - 1 teams, and pairing them up gives {n} x ({n}-1) / 2 = {pairs} different pairings. Each pairing plays {per} games, so the total is {pairs} x {per} = {ans} games.",
+        "zh": "每支队要和其他 {n} − 1 支队交手，两两配对的组数是 {n} × ({n}−1) ÷ 2 = {pairs} 组。每组要比 {per} 场，所以共 {pairs} × {per} = {ans} 场。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-21",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q21",
+      "noVariantReason": "阶梯图为原卷原图（澳洲邮政资费表），数据固定，答案恒为 0.45 kg",
+      "topic": "阶梯函数读图",
+      "difficulty": 4,
+      "title": "从阶梯图读出可能的质量",
+      "tags": [
+        "图象",
+        "读图"
+      ],
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "3.75 kg",
+            "zh": "3.75 千克"
+          },
+          {
+            "en": "1.75 kg",
+            "zh": "1.75 千克"
+          },
+          {
+            "en": "0.65 kg",
+            "zh": "0.65 千克"
+          },
+          {
+            "en": "0.45 kg",
+            "zh": "0.45 千克"
+          }
+        ]
+      },
+      "stem": {
+        "en": "This step graph shows the cost of sending parcels by Australia Post within NSW, according to the mass of the parcel. If Renata posted a parcel for $3.75, what could be the mass of the parcel?",
+        "zh": "下面的阶梯图表示按包裹质量计算的新南威尔士州内邮费。如果 Renata 寄一个包裹花了 3.75 元，这个包裹的质量可能是多少？"
+      },
+      "solution": {
+        "en": "Find the step whose cost is $3.75 on the vertical axis and read the range of masses it covers on the horizontal axis. That step runs from 0.5 kg up to (but not including) 1 kg — its largest mass is 500 g. Of the options only 0.45 kg falls inside 0.5–1 kg... check each: 3.75 kg is far to the right, 1.75 kg and 0.65 kg are past the step, so 0.45 kg is the only mass the graph allows.",
+        "zh": "在纵轴上找到 3.75 元那一阶，再看它在横轴上覆盖的质量区间。这一阶从 0.5 千克一直延伸到（不含）1 千克，最大质量是 500 克。逐一核对：3.75 千克远超图形范围；1.75 千克和 0.65 千克都落在更高的一阶上；只有 0.45 千克落在这一阶覆盖的区间内，所以答案是 0.45 千克。"
+      },
+      "diagram": {
+        "type": "stepcost",
+        "steps": [
+          {
+            "m0": 0,
+            "m1": 0.5,
+            "cost": 2.5
+          },
+          {
+            "m0": 0.5,
+            "m1": 1,
+            "cost": 3.25
+          },
+          {
+            "m0": 1,
+            "m1": 2,
+            "cost": 3.75
+          },
+          {
+            "m0": 2,
+            "m1": 3,
+            "cost": 4.25
+          },
+          {
+            "m0": 3,
+            "m1": 4,
+            "cost": 5.25
+          },
+          {
+            "m0": 4,
+            "m1": 5,
+            "cost": 6.25
+          }
+        ]
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-22",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q22",
+      "noVariantReason": "",
+      "topic": "方框分割求面积",
+      "difficulty": 4,
+      "title": "用大正方形减小正方形求单块面积",
+      "tags": [
+        "面积",
+        "正方形"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "O": "sel(i, 50, 60, 40, 70, 90)",
+        "I": "sel(i, 40, 50, 30, 60, 80)",
+        "ans": "sel(i, 75, 275, 175, 325, 425)",
+        "wa": "sel(i, 15, 25, 10, 35, 45)",
+        "wc": "sel(i, 400, 900, 225, 1225, 2025)",
+        "wd": "sel(i, 1600, 2500, 900, 3600, 6400)"
+      },
+      "constraints": [
+        "O > I",
+        "ans > 0",
+        "ans != wa",
+        "ans != wc",
+        "ans != wd"
+      ],
+      "stem": {
+        "en": "Twelve rectangles, all the same size, are arranged to make a square, as shown in the diagram. Calculate the area of one of the rectangles.",
+        "zh": "如下图，12 个完全相同的小矩形围成一个正方形（中间留出一个正方形孔）。求其中一个小矩形的面积。"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans} cm^2",
+            "zh": "{ans} 平方厘米"
+          },
+          {
+            "en": "{wa} cm^2",
+            "zh": "{wa} 平方厘米"
+          },
+          {
+            "en": "{wc} cm^2",
+            "zh": "{wc} 平方厘米"
+          },
+          {
+            "en": "{wd} cm^2",
+            "zh": "{wd} 平方厘米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The whole square has side {O} cm, area {O} x {O} = {O*O} cm². The hole in the middle is a square of side {I} cm, area {I} x {I} = {I*I} cm². So the 12 rectangles together cover {O*O} - {I*I} = {O*O-I*I} cm². One rectangle is {O*O-I*I} / 12 = {ans} cm².",
+        "zh": "大正方形边长 {O} 厘米，面积 {O} × {O} = {O*O} 平方厘米。中间的正方形孔边长 {I} 厘米，面积 {I} × {I} = {I*I} 平方厘米。所以 12 个小矩形一共占 {O*O} − {I*I} = {O*O-I*I} 平方厘米。每个小矩形是 {O*O-I*I} ÷ 12 = {ans} 平方厘米。"
+      },
+      "diagram": {
+        "type": "framefill",
+        "O": "O",
+        "I": "I",
+        "n": 12
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "id": "mm1t3-23",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q23",
+      "noVariantReason": "",
+      "topic": "图形规律·代数",
+      "difficulty": 4,
+      "title": "从图形序列归纳出公式并反解",
+      "tags": [
+        "规律",
+        "代数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "a": "sel(i, 3, 2, 4, 3, 5)",
+        "b": "sel(i, 1, 1, 1, 2, 1)",
+        "s0": "sel(i, 4, 4, 5, 5, 6)",
+        "S": "sel(i, 121, 151, 201, 83, 251)",
+        "q1": "sel(i, 4, 4, 5, 5, 6)",
+        "q2": "sel(i, 4, 4, 5, 5, 6) + sel(i, 3, 2, 4, 3, 5)",
+        "q3": "sel(i, 4, 4, 5, 5, 6) + 2*sel(i, 3, 2, 4, 3, 5)",
+        "q4": "sel(i, 4, 4, 5, 5, 6) + 3*sel(i, 3, 2, 4, 3, 5)",
+        "ans": "(sel(i, 121, 151, 201, 83, 251) - sel(i, 1, 1, 1, 2, 1))/sel(i, 3, 2, 4, 3, 5)",
+        "wa": "sel(i, 121, 151, 201, 83, 251)",
+        "wb": "sel(i, 121, 151, 201, 83, 251) + 1",
+        "wc2": "(sel(i, 121, 151, 201, 83, 251) - sel(i, 1, 1, 1, 2, 1))/sel(i, 3, 2, 4, 3, 5) + 1"
+      },
+      "constraints": [
+        "mod(S - b, a) == 0",
+        "ans > 0",
+        "a > 1",
+        "ans != wa",
+        "ans != wb",
+        "ans != wc2",
+        "wa != wb",
+        "wa != wc2",
+        "wb != wc2"
+      ],
+      "stem": {
+        "en": "Here is a sequence of patterns made from octagons and squares. The table shows the number of octagons (1, 2, 3, 4) and the matching number of squares ({s0}, {s0+a}, {s0+2*a}, {s0+3*a}). If the sequence continues, how many octagons will there be in the pattern that has {S} squares?",
+        "zh": "下面是用八边形和正方形拼成的图形序列。表格给出八边形的个数（1、2、3、4）和对应的正方形个数（{s0}、{s0+a}、{s0+2*a}、{s0+3*a}）。如果序列继续下去，那么有 {S} 个正方形的图形里有多少个八边形？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc2}",
+            "zh": "{wc2}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "From the table, squares = {a} x octagons + {b} (each new octagon brings {a} more squares). So {S} = {a} x octagons + {b}, giving octagons = ({S} - {b}) / {a} = {ans}.",
+        "zh": "由表格可见：正方形个数 = {a} × 八边形个数 + {b}（每多一个八边形就多出 {a} 个正方形）。所以 {S} = {a} × 八边形 + {b}，解得八边形 = ({S} − {b}) ÷ {a} = {ans}。"
+      },
+      "diagram": {
+        "type": "datatable",
+        "cols": [
+          "number of octagons",
+          "number of squares"
+        ],
+        "rows": [
+          [
+            "1",
+            "{q1}"
+          ],
+          [
+            "2",
+            "{q2}"
+          ],
+          [
+            "3",
+            "{q3}"
+          ],
+          [
+            "4",
+            "{q4}"
+          ]
+        ]
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-24",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q24",
+      "noVariantReason": "定性判断题，四个说法固定，不随数值变化",
+      "topic": "数论·整除性质",
+      "difficulty": 4,
+      "title": "判断关于倍数的不正确说法",
+      "tags": [
+        "整除",
+        "倍数"
+      ],
+      "vars": {},
+      "answer": {
+        "type": "choice",
+        "correctIndex": 3,
+        "options": [
+          {
+            "en": "The difference between P and Q is a multiple of 3.",
+            "zh": "P 与 Q 的差是 3 的倍数。"
+          },
+          {
+            "en": "The product of P and Q is a multiple of 9.",
+            "zh": "P 与 Q 的积是 9 的倍数。"
+          },
+          {
+            "en": "The quotient of P and Q is not always a multiple of 3.",
+            "zh": "P 除以 Q 的商不总是 3 的倍数。"
+          },
+          {
+            "en": "The sum of P and Q is a multiple of 6.",
+            "zh": "P 与 Q 的和是 6 的倍数。"
+          }
+        ]
+      },
+      "stem": {
+        "en": "P stands for a multiple of 3. Q stands for a different multiple of 3. Which statement is not true?",
+        "zh": "P 表示 3 的一个倍数，Q 表示 3 的另一个不同的倍数。下面哪个说法不成立？"
+      },
+      "solution": {
+        "en": "A: 3a - 3b = 3(a-b), always a multiple of 3 — true. B: 3a x 3b = 9ab, always a multiple of 9 — true. C: 6 / 3 = 2 is not a multiple of 3, so the quotient is not always a multiple of 3 — true. D: 6 + 9 = 15 and 12 + 3 = 15, neither is a multiple of 6 — false. So D is the statement that is not true.",
+        "zh": "A：3a − 3b = 3(a−b)，一定是 3 的倍数，成立。B：3a × 3b = 9ab，一定是 9 的倍数，成立。C：6 ÷ 3 = 2 不是 3 的倍数，可见商不总是 3 的倍数，成立。D：6 + 9 = 15，12 + 3 = 15，都不是 6 的倍数，不成立。所以选 D。"
+      },
+      "noFigure": "原题为纯文字推理题，无图",
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-25",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q25",
+      "noVariantReason": "",
+      "topic": "浓度稀释",
+      "difficulty": 4,
+      "title": "加水稀释后求浓度",
+      "tags": [
+        "百分数",
+        "浓度"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "V": "sel(i, 25, 30, 20, 40, 50)",
+        "p": "sel(i, 20, 25, 30, 20, 10)",
+        "add": "sel(i, 50, 45, 40, 60, 50)",
+        "alc": "sel(i, 25, 30, 20, 40, 50)*sel(i, 20, 25, 30, 20, 10)/100",
+        "tot": "sel(i, 25, 30, 20, 40, 50) + sel(i, 50, 45, 40, 60, 50)",
+        "ans": "roundTo(sel(i, 25, 30, 20, 40, 50)*sel(i, 20, 25, 30, 20, 10)/100/(sel(i, 25, 30, 20, 40, 50) + sel(i, 50, 45, 40, 60, 50))*100, 3)",
+        "wa": "sel(i, 20, 25, 30, 20, 10)",
+        "wc": "sel(i, 8, 20, 20, 16, 8)"
+      },
+      "constraints": [
+        "alc > 0",
+        "tot > V",
+        "ans > 0",
+        "ans < p",
+        "ans != 50",
+        "p != 50",
+        "wc != ans",
+        "wc != p",
+        "wc != 50"
+      ],
+      "stem": {
+        "en": "A {V} litre solution is {p} percent alcohol. If {add} litres of water are added to it, what percent of the new solution is alcohol?",
+        "zh": "{V} 升溶液中含酒精 {p}%。如果加入 {add} 升水，新溶液中酒精占百分之几？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans} %",
+            "zh": "{ans}%"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "50 %",
+            "zh": "50%"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The alcohol itself is {p}% of {V} L = {alc} L (adding water does not change it). The new volume is {V} + {add} = {tot} L. So the alcohol percentage is {alc} / {tot} x 100% = {ans}%.",
+        "zh": "酒精的量是 {V} 升的 {p}% = {alc} 升（加水不改变酒精的量）。新溶液共 {V} + {add} = {tot} 升。所以酒精占 {alc} ÷ {tot} × 100% = {ans}%。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "id": "mm1t3-26",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q26",
+      "noVariantReason": "",
+      "topic": "分数与倍数",
+      "difficulty": 3,
+      "title": "先求女生人数再按倍数求老师",
+      "tags": [
+        "分数",
+        "倍数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "N": "sel(i, 567, 280, 420, 630, 504)",
+        "bn": "sel(i, 4, 3, 3, 5, 4)",
+        "bd": "sel(i, 7, 5, 7, 9, 9)",
+        "k": "sel(i, 9, 7, 6, 8, 7)",
+        "boys": "sel(i, 324, 168, 180, 350, 224)",
+        "girls": "sel(i, 243, 112, 240, 280, 280)",
+        "ans": "sel(i, 27, 16, 40, 35, 40)",
+        "wa": "boys",
+        "wb": "girls",
+        "wc": "girls*k"
+      },
+      "constraints": [
+        "mod(sel(i,567,280,420,630,504), sel(i,7,5,7,9,9)) == 0",
+        "ans > 0",
+        "mod(sel(i,243,112,240,280,280), sel(i,9,7,6,8,7)) == 0"
+      ],
+      "stem": {
+        "en": "There are {N} students in a school. {bn}/{bd} are boys and the rest are girls. There are {k} times as many girls as there are teachers. How many teachers are there?",
+        "zh": "一所学校有 {N} 名学生，其中 {bn}/{bd} 是男生，其余是女生。女生人数是老师人数的 {k} 倍。老师有多少人？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wc}",
+            "zh": "{wc}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Boys = {bn}/{bd} x {N} = {boys}, so girls = {N} - {boys} = {girls}. Girls are {k} times the number of teachers, so teachers = {girls} / {k} = {ans}.",
+        "zh": "男生 = {N} 的 {bn}/{bd} = {boys} 人，所以女生 = {N} − {boys} = {girls} 人。女生是老师的 {k} 倍，所以老师 = {girls} ÷ {k} = {ans} 人。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-27",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q27",
+      "noVariantReason": "",
+      "topic": "数据与图象",
+      "difficulty": 5,
+      "title": "从表格数据选出匹配的图象",
+      "tags": [
+        "图象",
+        "数据分析"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 3
+        }
+      },
+      "derived": {
+        "a": "sel(i, 120, 200, 90, 250)",
+        "b": "sel(i, 43, 60, 40, 100)",
+        "c": "sel(i, 15, 20, 18, 45)",
+        "d": "sel(i, 5.5, 4, 6, 15)",
+        "t1": "sel(i, 20, 10, 30, 25)",
+        "t2": "sel(i, 40, 20, 60, 50)",
+        "t3": "sel(i, 60, 30, 90, 75)",
+        "correctIndex": "2"
+      },
+      "constraints": [
+        "a > b",
+        "b > c",
+        "c > d",
+        "d > 0",
+        "a - b > b - c",
+        "b - c > c - d"
+      ],
+      "stem": {
+        "en": "The table gives the values of y for four values of t. Which of the graph options below could be a graph of this data?",
+        "zh": "下表给出了 t 取四个不同值时对应的 y 值。下面哪个图象可能是这组数据的图象？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "A",
+            "zh": "甲"
+          },
+          {
+            "en": "B",
+            "zh": "乙"
+          },
+          {
+            "en": "C",
+            "zh": "丙"
+          },
+          {
+            "en": "D",
+            "zh": "丁"
+          }
+        ],
+        "optionsSvg": [
+          {
+            "type": "graphopt",
+            "kind": "dec-soft",
+            "label": "A"
+          },
+          {
+            "type": "graphopt",
+            "kind": "inc-line",
+            "label": "B"
+          },
+          {
+            "type": "graphopt",
+            "kind": "dec-steep",
+            "label": "C"
+          },
+          {
+            "type": "graphopt",
+            "kind": "dec-line",
+            "label": "D"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Read the table: as t goes from 0 to {t1} to {t2} to {t3}, y falls from {a} to {b} to {c} to {d}. So the graph must start high on the y-axis and come down — B (rising straight line) is out. The drops are not equal: {a} - {b} = {a-b}, then {b} - {c} = {b-c}, then {c} - {d} = {c-d}, so the curve is steepest at the start and flattens out. A is a gentle even curve and D is a straight line, so only C — steep at first, then flattening — fits the data.",
+        "zh": "读表：t 从 0 变到 {t1}、{t2}、{t3} 时，y 从 {a} 降到 {b}、{c}、{d}。所以图象应从纵轴高处向下走——B（上升直线）排除。再看下降幅度并不相等：{a} − {b} = {a-b}，{b} − {c} = {b-c}，{c} − {d} = {c-d}，可见开头降得最急、后面趋缓。A 是一开始就平缓的曲线，D 是直线下降，都不吻合；只有 C（先急降后趋缓）符合。"
+      },
+      "diagram": {
+        "type": "tableopts",
+        "cols": [
+          "t",
+          "y"
+        ],
+        "rows": [
+          [
+            "0",
+            "a"
+          ],
+          [
+            "t1",
+            "b"
+          ],
+          [
+            "t2",
+            "c"
+          ],
+          [
+            "t3",
+            "d"
+          ]
+        ],
+        "panels": [
+          {
+            "kind": "dec-soft",
+            "label": "A"
+          },
+          {
+            "kind": "inc-line",
+            "label": "B"
+          },
+          {
+            "kind": "dec-steep",
+            "label": "C"
+          },
+          {
+            "kind": "dec-line",
+            "label": "D"
+          }
+        ]
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-28",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q28",
+      "noVariantReason": "",
+      "topic": "矩形面积·消元",
+      "difficulty": 4,
+      "title": "两矩形已知宽和长之和、面积之和求其一面积",
+      "tags": [
+        "面积",
+        "方程"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "wX": "sel(i, 14, 12, 10, 15, 9)",
+        "wY": "sel(i, 8, 6, 4, 10, 6)",
+        "lX": "sel(i, 10, 10, 10, 14, 14)",
+        "lY": "sel(i, 12, 10, 8, 14, 6)",
+        "sumL": "lX + lY",
+        "sumA": "wX*lX + wY*lY",
+        "ans": "wX*lX",
+        "areaY": "wY*lY",
+        "wa": "sel(i, 88, 72, 60, 120, 72)",
+        "wb": "sel(i, 112, 96, 80, 180, 108)",
+        "wc": "sel(i, 96, 84, 48, 150, 90)"
+      },
+      "constraints": [
+        "wX > wY",
+        "lX > 0",
+        "lY > 0",
+        "ans > 0",
+        "wa != ans",
+        "wb != ans",
+        "wc != ans",
+        "wa != wb",
+        "wa != wc",
+        "wb != wc"
+      ],
+      "stem": {
+        "en": "The breadths of two rectangles, X and Y, are {wX} cm and {wY} cm. The sum of the lengths of X and Y is {sumL} cm and the sum of their areas is {sumA} cm^2. What is the area of rectangle X?",
+        "zh": "两个矩形 X 和 Y 的宽分别是 {wX} 厘米和 {wY} 厘米。X 与 Y 的长之和是 {sumL} 厘米，面积之和是 {sumA} 平方厘米。求矩形 X 的面积。"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "{ans} cm^2",
+            "zh": "{ans} 平方厘米"
+          },
+          {
+            "en": "{wa} cm^2",
+            "zh": "{wa} 平方厘米"
+          },
+          {
+            "en": "{wb} cm^2",
+            "zh": "{wb} 平方厘米"
+          },
+          {
+            "en": "{wc} cm^2",
+            "zh": "{wc} 平方厘米"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Let the length of X be a and the length of Y be b. Then a + b = {sumL} and {wX}a + {wY}b = {sumA}. Substituting b = {sumL} - a gives {wX}a + {wY}({sumL} - a) = {sumA}, so ({wX} - {wY})a = {sumA} - {wY} x {sumL} = {sumA-wY*sumL}. Hence a = {lX}. The area of X is {wX} cm x {lX} cm = {ans} cm² (check: Y is {wY} cm x {lY} cm = {areaY} cm², and {ans} + {areaY} = {sumA} ✓).",
+        "zh": "设 X 的长为 a、Y 的长为 b，则 a + b = {sumL}，且 {wX}a + {wY}b = {sumA}。把 b = {sumL} − a 代入，得 {wX}a + {wY}({sumL} − a) = {sumA}，即 ({wX} − {wY})a = {sumA} − {wY} × {sumL} = {sumA-wY*sumL}，所以 a = {lX}。矩形 X 的面积 = {wX} × {lX} = {ans} 平方厘米。（验算：Y 是 {wY} × {lY} = {areaY} 平方厘米，{ans} + {areaY} = {sumA} ✓）"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-29",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q29",
+      "noVariantReason": "",
+      "topic": "单价·等价表达式",
+      "difficulty": 4,
+      "title": "判断哪个表达式不能表示同一数量",
+      "tags": [
+        "比例",
+        "代数式"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "n0": "sel(i, 30, 40, 25, 45, 60)",
+        "c0": "sel(i, 5, 8, 4, 9, 12)",
+        "c1": "sel(i, 17, 21, 11, 25, 30)",
+        "ratioCellA": "sel(i, 510, 840, 275, 1125, 1800)",
+        "correctIndex": "sel(i, 1, 1, 1, 1, 1)"
+      },
+      "constraints": [
+        "n0 > 0",
+        "c0 > 0",
+        "c1 > 0",
+        "c1 > c0"
+      ],
+      "stem": {
+        "en": "If {n0} jellybeans cost you ${c0}, which one is not an expression of how many jellybeans you can purchase for ${c1}?",
+        "zh": "如果 {n0} 粒软糖要 {c0} 元，那么下面哪个式子不能表示 {c1} 元能买到的软糖粒数？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{c1} / ({c0}/{n0})",
+            "zh": "{c1} ÷ ({c0}/{n0})"
+          },
+          {
+            "en": "{c1} x ({ratioCellA}/{n0*c0})",
+            "zh": "{c1} × ({ratioCellA}/{n0*c0})"
+          },
+          {
+            "en": "{c1} x ({n0}/{c0})",
+            "zh": "{c1} × ({n0}/{c0})"
+          },
+          {
+            "en": "({c1*100} x {n0}) / ({c0*100})",
+            "zh": "({c1*100} × {n0}) ÷ ({c0*100})"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The unit price is ${c0} / {n0} jellybeans, so ${c1} buys {c1} / ({c0}/{n0}) = {c1} x ({n0}/{c0}) = {c1*n0}/{c0}. Multiplying top and bottom by 100 gives ({c1*100} x {n0}) / ({c0*100}), so the first, third and fourth expressions are all equal. Testing the second with {c0} = {c0}: {c1} x ({ratioCellA}/{n0*c0}) = {c1} x ({ratioCellA}/{n0*c0}) = {c1*ratioCellA/(n0*c0)}, not {c1*n0/c0}. So the second is not a valid expression.",
+        "zh": "单价是 {c0} ÷ {n0} 元/粒，所以 {c1} 元能买 {c1} ÷ ({c0}/{n0}) = {c1} × ({n0}/{c0}) = {c1*n0}/{c0} 粒。分子分母同乘 100 就得 ({c1*100} × {n0}) ÷ ({c0*100})，所以第一、三、四个式子都相等。再看第二个：当 {c0} = {c0} 时 {c1} × ({ratioCellA}/{n0*c0}) = {c1*ratioCellA/(n0*c0)}，并不等于 {c1*n0/c0}。所以第二个式子不能表示该数量。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "id": "mm1t3-30",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q30",
+      "noVariantReason": "",
+      "topic": "速度·时间换算",
+      "difficulty": 3,
+      "title": "同速行驶求所需时间（时与分换算）",
+      "tags": [
+        "速度",
+        "时间单位"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "m0": "sel(i, 15, 20, 12)",
+        "d0": "sel(i, 18, 24, 15)",
+        "d1": "sel(i, 210, 300, 175)",
+        "m10": "sel(i, 5, 6, 20)",
+        "totMin": "d1*m0/d0",
+        "wantMin": "sel(i, 175, 250, 140)",
+        "ok1": "mod(60*d0, m0)",
+        "ok2": "sel(i, 0, 0, 0)",
+        "correctIndex": "sel(i, 0, 0, 0)"
+      },
+      "constraints": [
+        "ok1 == ok2",
+        "totMin == wantMin",
+        "m10 > 0"
+      ],
+      "stem": {
+        "en": "In our car, it took us {m0} minutes to cover {d0} km. At this rate, how long would it take to travel {d1} km?",
+        "zh": "我们开车用 {m0} 分钟行驶了 {d0} 千米。按这个速度，行驶 {d1} 千米需要多长时间？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "3 h {m10} min",
+            "zh": "3 小时 {m10} 分"
+          },
+          {
+            "en": "3 h {m10-20} min",
+            "zh": "3 小时 {m10-20} 分"
+          },
+          {
+            "en": "2 h {m10+45} min",
+            "zh": "2 小时 {m10+45} 分"
+          },
+          {
+            "en": "1 h {m10+35} min",
+            "zh": "1 小时 {m10+35} 分"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The speed is {d0} km per {m0} minutes = {d0*60/m0} km/h. The time needed is {d1} / {d0*60/m0} = {d1*m0/d0} minutes = 180 + {m10} minutes, which is 3 hours {m10} minutes. (In hours that is {d1}/{d0*60/m0} = 3 {m10}/60 h.)",
+        "zh": "速度是 {m0} 分钟走 {d0} 千米，即每小时 {d0*60/m0} 千米。所需时间 = {d1} ÷ {d0*60/m0} = {d1*m0/d0} 分钟 = 180 + {m10} 分钟，也就是 3 小时 {m10} 分。（用小时表示是 {d1}/{d0*60/m0} = 3 又 {m10}/60 小时。）"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "id": "mm1t3-31",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q31",
+      "noVariantReason": "",
+      "topic": "分数表示部分与整体",
+      "difficulty": 3,
+      "title": "用一种珠子数表示与另两种珠子总数之比",
+      "tags": [
+        "分数",
+        "比例"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "R": "sel(i, 28, 24, 30, 36, 40)",
+        "G": "sel(i, 16, 18, 12, 24, 20)",
+        "Y": "sel(i, 20, 30, 18, 12, 25)",
+        "Rk": "sel(i, 7, 4, 5, 3, 2)",
+        "Gk": "sel(i, 4, 3, 2, 2, 1)",
+        "Yk": "sel(i, 5, 5, 3, 1, 1)",
+        "correctIndex": "sel(i, 0, 1, 1, 0, 0)",
+        "ansTxt": "sel(i, 1/3, 3/7, 1/3, 2/3, 4/13)"
+      },
+      "constraints": [
+        "G*Rk == R*Gk",
+        "G*Yk == Y*Gk",
+        "ansTxt != '1/2'",
+        "ansTxt != '1/4'"
+      ],
+      "stem": {
+        "en": "In a box, there are {R} red beads, {G} green beads and {Y} yellow beads. Express the number of green beads as a fraction of the total number of red and yellow beads.",
+        "zh": "盒子里有 {R} 颗红珠子、{G} 颗绿珠子和 {Y} 颗黄珠子。用分数表示绿珠子数量占红珠子与黄珠子总数的几分之几。"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "1/3",
+            "zh": "1/3"
+          },
+          {
+            "en": "3/7",
+            "zh": "3/7"
+          },
+          {
+            "en": "1/2",
+            "zh": "1/2"
+          },
+          {
+            "en": "1/4",
+            "zh": "1/4"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Green beads = {G}. Red + yellow = {R} + {Y} = {R+Y}. So green as a fraction of red and yellow is {G}/{R+Y}, which simplifies to {ansTxt}.",
+        "zh": "绿珠子有 {G} 颗。红珠子与黄珠子共 {R} + {Y} = {R+Y} 颗。所以绿珠子占红黄总数的 {G}/{R+Y}，化简得 {ansTxt}。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "id": "mm1t3-32",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q32",
+      "noVariantReason": "",
+      "topic": "平均数·增量",
+      "difficulty": 3,
+      "title": "已知前 n 次平均分求使平均分提高 k 的末次分数",
+      "tags": [
+        "平均数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "n": "sel(i, 4, 5, 6)",
+        "avg0": "sel(i, 28, 22, 30)",
+        "k": "sel(i, 2, 3, 2)",
+        "unit": "sel(i, 40, 50, 50)",
+        "avg1": "avg0 + k",
+        "ans": "sel(i, 38, 40, 44)",
+        "unit2": "sel(i, 50, 60, 55)",
+        "wa": "sel(i, 30, 25, 36)",
+        "wb": "sel(i, 39, 47, 47)",
+        "wd": "sel(i, 40, 45, 50)",
+        "correctIndex": "sel(i, 1, 1, 1)"
+      },
+      "constraints": [
+        "avg1 == avg0 + k",
+        "ans == (n+1)*avg1 - n*avg0",
+        "ans <= unit2",
+        "ans != wa",
+        "ans != wb",
+        "ans != wd",
+        "wa != wb",
+        "wa != wd",
+        "wb != wd"
+      ],
+      "stem": {
+        "en": "My average result from the last {n} maths exams was {avg0} out of {unit}. What do I need in my next exam in order to increase my average by {k}?",
+        "zh": "我最近 {n} 次数学考试的平均分是 {avg0} 分（满分 {unit} 分）。下次考试我要考多少分，才能让平均分提高 {k} 分？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wd}",
+            "zh": "{wd}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The {n} exams total {avg0} x {n} = {avg0*n} marks. To raise the average by {k} the new average must be {avg1}, so the {n+1} exams must total {avg1} x {n+1} = {avg1*(n+1)} marks. The next exam must be {avg1*(n+1)} - {avg0*n} = {ans}.",
+        "zh": "{n} 次考试总分 = {avg0} × {n} = {avg0*n} 分。要让平均分提高 {k} 分，新平均分应为 {avg1} 分，那么 {n+1} 次考试的总分要达到 {avg1} × {n+1} = {avg1*(n+1)} 分。所以下次考试要考 {avg1*(n+1)} − {avg0*n} = {ans} 分。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
+    },
+    {
+      "id": "mm1t3-33",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q33",
+      "noVariantReason": "",
+      "topic": "质数与线性方程",
+      "difficulty": 4,
+      "title": "求满足线性方程的质数对",
+      "tags": [
+        "质数",
+        "方程"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "a": "sel(i, 5, 5, 11, 3, 7)",
+        "b": "sel(i, 7, 3, 2, 5, 2)",
+        "S": "sel(i, 109, 101, 89, 71, 73)",
+        "P": "sel(i, 19, 19, 5, 2, 5)",
+        "Q": "sel(i, 2, 2, 17, 13, 19)",
+        "bluff": "sel(i, 12, 12, 16, 15, 15)",
+        "wrongP": "sel(i, 7, 7, 7, 3, 3)",
+        "correctIndex": "sel(i, 3, 3, 3, 3, 3)"
+      },
+      "constraints": [
+        "a*P + b*Q == S",
+        "P != Q",
+        "Q >= 2",
+        "bluff != P",
+        "bluff != Q",
+        "wrongP != P",
+        "wrongP != Q"
+      ],
+      "stem": {
+        "en": "Suppose P and Q both represent prime numbers such that {a} x P + {b} x Q = {S}. Find the value of P and Q (in the form P, Q).",
+        "zh": "设 P 和 Q 都是质数，且满足 {a} × P + {b} × Q = {S}。求 P 和 Q 的值（按 P, Q 的顺序写出）。"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{bluff}, {b}",
+            "zh": "{bluff}, {b}"
+          },
+          {
+            "en": "{a}, {bluff}",
+            "zh": "{a}, {bluff}"
+          },
+          {
+            "en": "{wrongP}, {a}",
+            "zh": "{wrongP}, {a}"
+          },
+          {
+            "en": "{P}, {Q}",
+            "zh": "{P}, {Q}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Options A and B contain {bluff}, which is not a prime number, so they are out. Checking C: {a} x {wrongP} + {b} x {a} = {a*wrongP+b*a}, which is not {S}. Checking D: {a} x {P} + {b} x {Q} = {a*P+b*Q} = {S} ✓ (and {P} and {Q} are both prime). So P = {P} and Q = {Q}.",
+        "zh": "选项 A、B 里都含 {bluff}，{bluff} 不是质数，排除。检验 C：{a} × {wrongP} + {b} × {a} = {a*wrongP+b*a}，不等于 {S}。检验 D：{a} × {P} + {b} × {Q} = {a*P+b*Q} = {S} ✓（且 {P} 和 {Q} 都是质数）。所以 P = {P}、Q = {Q}。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-34",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q34",
+      "noVariantReason": "",
+      "topic": "按比例分配",
+      "difficulty": 3,
+      "title": "已知最小份额求总额",
+      "tags": [
+        "比例"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "r1": "sel(i, 6, 5, 4, 7, 8)",
+        "r2": "sel(i, 4, 3, 3, 5, 4)",
+        "r3": "sel(i, 3, 2, 2, 4, 3)",
+        "least": "sel(i, 270, 140, 150, 320, 180)",
+        "parts": "sel(i, 13, 10, 9, 16, 15)",
+        "one": "sel(i, 90, 70, 75, 80, 60)",
+        "ans": "sel(i, 1170, 700, 675, 1280, 900)",
+        "wa": "sel(i, 3510, 2100, 2700, 5120, 2400)",
+        "wb": "sel(i, 1620, 1120, 1350, 2240, 1800)",
+        "wd": "sel(i, 2700, 1400, 1500, 3200, 1200)",
+        "correctIndex": "sel(i, 2, 2, 2, 2, 2)"
+      },
+      "constraints": [
+        "mod(least, r3) == 0",
+        "one == least/r3",
+        "ans == one*parts",
+        "parts == r1+r2+r3",
+        "wa != ans",
+        "wb != ans",
+        "wd != ans"
+      ],
+      "stem": {
+        "en": "Three people share a sum of money in the ratio {r1} : {r2} : {r3}. The person who receives the least amount gets ${least}. Find the total amount of money they shared.",
+        "zh": "三个人按 {r1} : {r2} : {r3} 的比例分一笔钱。分得最少的那个人拿到 {least} 元。求他们一共分了多少钱。"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "${wa}",
+            "zh": "{wa} 元"
+          },
+          {
+            "en": "${wb}",
+            "zh": "{wb} 元"
+          },
+          {
+            "en": "${ans}",
+            "zh": "{ans} 元"
+          },
+          {
+            "en": "${wd}",
+            "zh": "{wd} 元"
+          }
+        ]
+      },
+      "solution": {
+        "en": "The smallest share is the {r3} part, and that part is worth ${least}. So one part is ${least} / {r3} = ${one}. The whole sum is {r1} + {r2} + {r3} = {parts} parts, so the total is {parts} x ${one} = ${ans}.",
+        "zh": "最小的份额是比例中的 {r3} 份，这 {r3} 份值 {least} 元，所以 1 份 = {least} ÷ {r3} = {one} 元。总额共 {r1} + {r2} + {r3} = {parts} 份，因此一共是 {parts} × {one} = {ans} 元。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-35",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q35",
+      "noVariantReason": "",
+      "topic": "奇偶性",
+      "difficulty": 4,
+      "title": "判断含奇数 m 的哪个表达式必为奇数",
+      "tags": [
+        "奇偶性",
+        "代数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "a": "sel(i, 2, 4, 6, 8, 10)",
+        "b": "sel(i, 3, 5, 7, 9, 11)",
+        "correctIndex": "sel(i, 3, 3, 3, 3, 3)"
+      },
+      "constraints": [
+        "mod(a, 2) == 0",
+        "a > 0",
+        "b > 0"
+      ],
+      "stem": {
+        "en": "If m is an odd number, which of the numbers below must be odd?",
+        "zh": "如果 m 是一个奇数，下面哪个数一定是奇数？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{a} x m",
+            "zh": "{a} × m"
+          },
+          {
+            "en": "{b} x m + 1",
+            "zh": "{b} × m + 1"
+          },
+          {
+            "en": "(m - 1) x (m + 1)",
+            "zh": "(m − 1) × (m + 1)"
+          },
+          {
+            "en": "m^2",
+            "zh": "m²"
+          }
+        ]
+      },
+      "solution": {
+        "en": "An even number times an odd number is even, so {a} x m is even. {b} x m is odd, so {b} x m + 1 is even. m - 1 and m + 1 are both even, so their product is even. m x m = m² is odd x odd = odd. So only m² must be odd.",
+        "zh": "偶数乘奇数得偶数，所以 {a} × m 是偶数。{b} × m 是奇数，所以 {b} × m + 1 是偶数。m − 1 与 m + 1 都是偶数，它们的积也是偶数。而 m × m = m² 是奇数乘奇数 = 奇数。所以只有 m² 一定是奇数。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-36",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q36",
+      "noVariantReason": "",
+      "topic": "组合计数",
+      "difficulty": 4,
+      "title": "已知两两互发消息总数求人数",
+      "tags": [
+        "计数",
+        "方程"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "n": "sel(i, 15, 12, 18, 20, 24)",
+        "msg": "sel(i, 210, 132, 306, 380, 552)",
+        "unit": "sel(i, 20, 25, 15, 30, 10)",
+        "ans": "sel(i, 15, 12, 18, 20, 24)",
+        "wa": "sel(i, 14, 11, 17, 19, 23)",
+        "wb": "sel(i, 12, 10, 16, 21, 22)",
+        "wd": "sel(i, 13, 14, 19, 22, 25)",
+        "correctIndex": "sel(i, 3, 3, 3, 3, 3)"
+      },
+      "constraints": [
+        "msg == n*(n-1)",
+        "ans == n",
+        "wa != ans",
+        "wb != ans",
+        "wd != ans",
+        "wa != wb",
+        "wa != wd",
+        "wb != wd"
+      ],
+      "stem": {
+        "en": "Every student in a class sends a message to each of the other students in the class. Altogether {msg} messages are sent. How many students are there in the class?",
+        "zh": "班上每名学生都给班上其他每一名同学发一条消息，一共发了 {msg} 条消息。班上有多少名学生？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{wa}",
+            "zh": "{wa}"
+          },
+          {
+            "en": "{wb}",
+            "zh": "{wb}"
+          },
+          {
+            "en": "{wd}",
+            "zh": "{wd}"
+          },
+          {
+            "en": "{ans}",
+            "zh": "{ans}"
+          }
+        ]
+      },
+      "solution": {
+        "en": "If there are m students, each of them sends m - 1 messages, but each message is counted twice (sender and receiver), so there are m x (m - 1) / 2? No — the question counts one message per student per receiver, giving m x (m - 1) messages. Solving m x (m - 1) = {msg}: try m = {n}, and {n} x {n-1} = {msg} ✓. So there are {ans} students.",
+        "zh": "设班上有 m 名学生，每人都要发给其余 m − 1 人各一条消息，所以消息总数是 m × (m − 1) 条（每名学生各发一条，各算一条）。解 m × (m − 1) = {msg}：试 m = {n}，{n} × {n-1} = {msg} ✓。所以班上有 {ans} 名学生。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-37",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q37",
+      "noVariantReason": "",
+      "topic": "工程问题·合做",
+      "difficulty": 3,
+      "title": "三人同吃一张披萨求所需时间",
+      "tags": [
+        "工程问题",
+        "速度"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 2
+        }
+      },
+      "derived": {
+        "a": "sel(i, 4, 6, 3)",
+        "b": "sel(i, 5, 10, 4)",
+        "c": "sel(i, 20, 30, 12)",
+        "unit": "c",
+        "pa": "sel(i, 5, 5, 4)",
+        "pb": "sel(i, 4, 3, 3)",
+        "psum": "pa + pb + 1",
+        "ansMin": "sel(i, 2, 3, 1.5)",
+        "ansS": "sel(i, 120, 180, 90)",
+        "correctIndex": "sel(i, 2, 2, 2)"
+      },
+      "constraints": [
+        "unit == c",
+        "a < b",
+        "b < c",
+        "mod(unit, a) == 0",
+        "mod(unit, b) == 0",
+        "pa == unit/a",
+        "pb == unit/b",
+        "ansS == unit*60/psum",
+        "ansMin == ansS/60"
+      ],
+      "stem": {
+        "en": "Peter can eat a pizza in {a} minutes. Jim can eat a pizza in {b} minutes. Their dad can eat a pizza in {c} minutes. If the two boys and dad all start eating the same pizza at the same time, how long does it take them to finish one pizza?",
+        "zh": "Peter {a} 分钟能吃完一张披萨，Jim {b} 分钟能吃完一张，他们的爸爸要 {c} 分钟。如果两个男孩和爸爸同时开始吃同一张披萨，吃完一张需要多长时间？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{ansMin+0.2} minutes",
+            "zh": "{ansMin+0.2} 分钟"
+          },
+          {
+            "en": "2 minutes 30 seconds",
+            "zh": "2 分 30 秒"
+          },
+          {
+            "en": "{ansMin} minutes",
+            "zh": "{ansMin} 分钟"
+          },
+          {
+            "en": "1 minute 36 seconds",
+            "zh": "1 分 36 秒"
+          }
+        ]
+      },
+      "solution": {
+        "en": "In {unit} minutes Peter eats {pa} pizzas, Jim eats {pb} pizzas and dad eats 1 pizza, so together they eat {pa} + {pb} + 1 = {psum} pizzas in {unit} minutes. A single pizza therefore takes {unit} / {psum} = {ansMin} minutes = {ansS} seconds.",
+        "zh": "{unit} 分钟内 Peter 能吃 {pa} 张，Jim 能吃 {pb} 张，爸爸能吃 1 张，合起来 {pa} + {pb} + 1 = {psum} 张。所以吃完 1 张只需 {unit} ÷ {psum} = {ansMin} 分钟 = {ansS} 秒。"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "C"
+    },
+    {
+      "id": "mm1t3-38",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q38",
+      "noVariantReason": "",
+      "topic": "和倍问题",
+      "difficulty": 3,
+      "title": "已知两人体重之和与倍数关系求较小者体重",
+      "tags": [
+        "方程",
+        "倍数"
+      ],
+      "vars": {
+        "i": {
+          "type": "int",
+          "min": 0,
+          "max": 4
+        }
+      },
+      "derived": {
+        "k": "sel(i, 2, 3, 2, 4, 2)",
+        "d": "sel(i, 1, 2, 3, 1, 5)",
+        "sum": "sel(i, 157, 128, 168, 165, 113)",
+        "ans": "sel(i, 52, 42, 55, 41, 36)",
+        "wa": "sel(i, 78, 63, 82, 62, 54)",
+        "wb": "sel(i, 50, 40, 54, 40, 35)",
+        "wc": "sel(i, 51, 41, 56, 43, 38)",
+        "correctIndex": "sel(i, 0, 0, 0, 0, 0)"
+      },
+      "constraints": [
+        "k*ans + d + ans == sum",
+        "ans > 0",
+        "ans != wb",
+        "ans != wc",
+        "ans != wa",
+        "wb != wc"
+      ],
+      "stem": {
+        "en": "The total weight of Chris and his sister Ann is {sum} kilograms. Chris's weight is {d} kilogram(s) more than {k} times Ann's weight. What is Ann's weight?",
+        "zh": "Chris 和妹妹 Ann 的体重一共是 {sum} 千克。Chris 的体重比 Ann 的 {k} 倍还多 {d} 千克。Ann 的体重是多少？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": "correctIndex",
+        "options": [
+          {
+            "en": "{ans} kg",
+            "zh": "{ans} 千克"
+          },
+          {
+            "en": "{wa} kg",
+            "zh": "{wa} 千克"
+          },
+          {
+            "en": "{wb} kg",
+            "zh": "{wb} 千克"
+          },
+          {
+            "en": "{wc} kg",
+            "zh": "{wc} 千克"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Let Ann's weight be x. Chris weighs {k}x + {d}. So x + {k}x + {d} = {sum}, giving {k+1}x = {sum-d}, so x = {ans}. Ann weighs {ans} kg (Chris weighs {k} x {ans} + {d} = {wa} kg, and {ans} + {wa} = {sum} ✓).",
+        "zh": "设 Ann 的体重为 x。Chris 的体重是 {k}x + {d}。于是 x + {k}x + {d} = {sum}，即 {k+1}x = {sum-d}，解得 x = {ans}。Ann 重 {ans} 千克。（Chris 重 {k} × {ans} + {d} = {wa} 千克，{ans} + {wa} = {sum} ✓）"
+      },
+      "noFigure": "原题为纯文字题，无图",
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "A"
+    },
+    {
+      "id": "mm1t3-39",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q39",
+      "topic": "内接正方形·面积比",
+      "difficulty": 4,
+      "title": "正方形各边中点连成内接正方形求面积比",
+      "tags": [
+        "面积",
+        "比"
+      ],
+      "vars": {
+        "i": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      },
+      "derived": {
+        "s": "sel(i, 10, 12, 8, 14, 16, 20)",
+        "bigA": "s*s",
+        "smA": "s*s/2",
+        "quarter": "s*s/4",
+        "third": "s*s/3",
+        "sixth": "s*s/6",
+        "eighth": "s*s/8",
+        "half": "s/2"
+      },
+      "constraints": [
+        "mod(bigA, 2) == 0",
+        "mod(s, 2) == 0"
+      ],
+      "stem": {
+        "en": "The midpoints of the sides of square ABCD are joined to form square EFGH. What fraction is the area of square ABCD of the area of square EFGH?",
+        "zh": "连接正方形 ABCD 各边的中点，得到正方形 EFGH。正方形 ABCD 的面积是正方形 EFGH 面积的几分之几？"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 0,
+        "options": [
+          {
+            "en": "2",
+            "zh": "2"
+          },
+          {
+            "en": "1/2",
+            "zh": "1/2"
+          },
+          {
+            "en": "1/4",
+            "zh": "1/4"
+          },
+          {
+            "en": "1/3",
+            "zh": "1/3"
+          },
+          {
+            "en": "4",
+            "zh": "4"
+          },
+          {
+            "en": "1/6",
+            "zh": "1/6"
+          }
+        ]
+      },
+      "solution": {
+        "en": "Take square ABCD with side {s} cm, so its area is {bigA} cm². The four corner triangles cut off by EFGH are right-angled isosceles triangles with legs {s}/2 = {half} cm each, so each has area (1/2) x {half} x {half} = {eighth} cm². The four together take up {bigA} - {smA} = {smA} cm², leaving EFGH with area {smA} cm². Hence area ABCD / area EFGH = {bigA} / {smA} = 2, i.e. ABCD is 2 times EFGH.",
+        "zh": "取边长为 {s} 厘米的正方形 ABCD，面积为 {bigA} 平方厘米。EFGH 切下的四个角都是等腰直角三角形，直角边各为 {s} ÷ 2 = {half} 厘米，每个面积 (1/2) × {half} × {half} = {eighth} 平方厘米，四个共占 {bigA} − {smA} = {smA} 平方厘米，剩下 EFGH 的面积就是 {smA} 平方厘米。所以 ABCD 的面积 ÷ EFGH 的面积 = {bigA} ÷ {smA} = 2，即 ABCD 是 EFGH 的 2 倍。"
+      },
+      "diagram": {
+        "type": "midsquare",
+        "side": "s"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "D"
+    },
+    {
+      "id": "mm1t3-40",
+      "subject": "数学",
+      "grade": "六年级",
+      "sourceSet": "Mastering Mathematics Book 1 Test 3",
+      "source": "Mastering Mathematics Book 1 Test 3 Q40",
+      "topic": "数正方形",
+      "difficulty": 4,
+      "title": "数出图中所有尺寸的正方形个数",
+      "tags": [
+        "计数",
+        "图形"
+      ],
+      "vars": {
+        "i": {
+          "type": "pick",
+          "from": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "derived": {
+        "sq1": "sel(i, 10, 9, 8, 8)",
+        "sq2": "sel(i, 2, 0, 4, 4)",
+        "sq3": "sel(i, 2, 1, 0, 1)",
+        "tot": "sel(i, 14, 10, 12, 13)",
+        "wA": "sel(i, 12, 12, 10, 10)",
+        "wB": "sel(i, 16, 14, 14, 14)",
+        "wC": "sel(i, 13, 13, 13, 12)",
+        "kH": "sel(i, 1, 2, 2, 2)",
+        "mH1": "sel(i, 2, 1, 1, 1)",
+        "mHc1": "sel(i, 1, 1, 1, 0)",
+        "mH2": "sel(i, 0, 2, 3, 1)",
+        "mHc2": "sel(i, 0, 1, 1, 1)",
+        "kV": "0"
+      },
+      "constraints": [
+        "wA != tot",
+        "wB != tot",
+        "wC != tot",
+        "wA != wB",
+        "wA != wC",
+        "wB != wC",
+        "sq1 != sq2",
+        "tot > sq1"
+      ],
+      "diagram": {
+        "type": "squarecount",
+        "cols": "3",
+        "rows": "4",
+        "kH": "kH",
+        "mH1": "mH1",
+        "mHc1": "mHc1",
+        "mH2": "mH2",
+        "mHc2": "mHc2",
+        "kV": "kV"
+      },
+      "answer": {
+        "type": "choice",
+        "correctIndex": 1,
+        "options": [
+          {
+            "en": "{wA}",
+            "zh": "{wA}"
+          },
+          {
+            "en": "{tot}",
+            "zh": "{tot}"
+          },
+          {
+            "en": "{wC}",
+            "zh": "{wC}"
+          },
+          {
+            "en": "{wB}",
+            "zh": "{wB}"
+          }
+        ]
+      },
+      "stem": {
+        "en": "How many squares of any size exist in the figure below?",
+        "zh": "下面的图形中一共有多少个正方形（各种大小都算）？"
+      },
+      "solution": {
+        "en": "Count by size. Smallest squares: {sq1}. Next size up: {sq2}. Largest size present: {sq3}. Total = {sq1} + {sq2} + {sq3} = {tot}.",
+        "zh": "按大小分类数：最小的正方形有 {sq1} 个，次大的有 {sq2} 个，更大的有 {sq3} 个，所以一共 {sq1} + {sq2} + {sq3} = {tot} 个。"
+      },
+      "original": {
+        "i": 0
+      },
+      "originalAnswer": "B"
     }
-   },
-   "derived": {
-    "d1": "sel(k1, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
-    "d2": "sel(k2, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
-    "d3": "sel(k3, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
-    "d4": "sel(k4, 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75)",
-    "s": "k1 + k2 + k3 + k4",
-    "rem": "mod(s, 8)",
-    "wa": "s - 1",
-    "wb": "s + 1",
-    "wc": "s + 3"
-   },
-   "constraints": [
-    "s >= 8",
-    "s <= 20",
-    "rem != 0",
-    "k1 != k2"
-   ],
-   "stem": {
-    "en": "{d1} + {d2} + {d3} + {d4} =",
-    "zh": "{d1} + {d2} + {d3} + {d4} ="
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "[[{s}/8]]",
-      "zh": "[[{s}/8]]"
-     },
-     {
-      "en": "[[{wa}/8]]",
-      "zh": "[[{wa}/8]]"
-     },
-     {
-      "en": "[[{wb}/8]]",
-      "zh": "[[{wb}/8]]"
-     },
-     {
-      "en": "[[{wc}/8]]",
-      "zh": "[[{wc}/8]]"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Write every decimal over 8: {d1} = {k1}/8, {d2} = {k2}/8, {d3} = {k3}/8, {d4} = {k4}/8. Adding the numerators gives {k1} + {k2} + {k3} + {k4} = {s}, so the sum is {s}/8.",
-    "zh": "把每个小数都化成分母 8 的分数：{d1} = {k1}/8，{d2} = {k2}/8，{d3} = {k3}/8，{d4} = {k4}/8。分子相加得 {k1} + {k2} + {k3} + {k4} = {s}，所以和是 {s}/8。"
-   },
-   "noFigure": "原题为纯计算题，无图",
-   "original": {
-    "k1": 1,
-    "k2": 2,
-    "k3": 3,
-    "k4": 6
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-03",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q03",
-   "noVariantReason": "原卷固定用 1、2、5、9 四个数字，答案恒为 8217",
-   "topic": "数字排列",
-   "difficulty": 4,
-   "title": "用四个数字组成最大/最小的数",
-   "tags": [
-    "排列",
-    "数位"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 3
-    }
-   },
-   "derived": {
-    "d1": "sel(i, 1, 3, 4, 1)",
-    "d2": "sel(i, 2, 6, 7, 3)",
-    "d3": "sel(i, 5, 7, 8, 5)",
-    "d4": "sel(i, 9, 8, 9, 8)",
-    "secondBig": "sel(i, 9512, 8763, 9874, 8531)",
-    "secondSmall": "sel(i, 1295, 3678, 4789, 1358)",
-    "ans": "sel(i, 9512, 8763, 9874, 8531) - sel(i, 1295, 3678, 4789, 1358)",
-    "wa": "sel(i, 8262, 7615, 8462, 7396)",
-    "wb": "sel(i, 8253, 7604, 8451, 7385)",
-    "wd": "sel(i, 8226, 7579, 8426, 7360)"
-   },
-   "constraints": [
-    "ans > 0",
-    "ans != wa",
-    "ans != wb",
-    "ans != wd"
-   ],
-   "stem": {
-    "en": "Using the digits {d1}, {d2}, {d3}, {d4} exactly once in each number, what is the difference between the second largest and the second smallest number that can be formed?",
-    "zh": "用数字 {d1}、{d2}、{d3}、{d4} 各一次组成四位数，第二大的数减去第二小的数，差是多少？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wd}",
-      "zh": "{wd}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The second largest arrangement is {secondBig} and the second smallest is {secondSmall}. Their difference is {secondBig} - {secondSmall} = {ans}.",
-    "zh": "第二大的排法是 {secondBig}，第二小的排法是 {secondSmall}。相差 {secondBig} − {secondSmall} = {ans}。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-04",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q04",
-   "noVariantReason": "",
-   "topic": "百分数应用",
-   "difficulty": 3,
-   "title": "速度提高百分之几后求每小时产量",
-   "tags": [
-    "百分数",
-    "速度"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 5
-    }
-   },
-   "derived": {
-    "r": "sel(i, 45, 60, 35, 50, 40, 55)",
-    "p": "sel(i, 20, 25, 40, 20, 30, 20)",
-    "nv": "sel(i, 45, 60, 35, 50, 40, 55)*(1 + sel(i, 20, 25, 40, 20, 30, 20)/100)",
-    "ans": "sel(i, 45, 60, 35, 50, 40, 55)*(1 + sel(i, 20, 25, 40, 20, 30, 20)/100)*60",
-    "wa": "sel(i, 675, 900, 840, 750, 960, 825)",
-    "wb": "sel(i, 900, 1200, 1050, 1000, 1200, 1100)",
-    "wc": "sel(i, 2700, 3600, 2940, 3000, 3120, 3300)"
-   },
-   "constraints": [
-    "mod(ans, 1) == 0",
-    "ans != wc",
-    "wc != wa"
-   ],
-   "stem": {
-    "en": "A typist can type {r} words per minute. He then increases his speed by {p} percent. How many words can he now type per hour?",
-    "zh": "一名打字员每分钟打 {r} 个词，后来速度提高了 {p}%，现在他每小时能打多少个词？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "{p}% of {r} is {r} x {p}/100 = {r*p/100}. His new speed is {nv} words per minute. In one hour: {nv} x 60 = {ans} words.",
-    "zh": "{r} 的 {p}% 是 {r} × {p}/100 = {r*p/100}。新速度是每分钟 {nv} 个词。一小时打 {nv} × 60 = {ans} 个词。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-05",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q05",
-   "noVariantReason": "定性推理题，选项为固定的「哪几项成立」，不随数值变化",
-   "topic": "整数与平方",
-   "difficulty": 4,
-   "title": "连续整数中前一个的平方等于第三个",
-   "tags": [
-    "整数",
-    "平方"
-   ],
-   "vars": {},
-   "answer": {
-    "type": "choice",
-    "correctIndex": 3,
-    "options": [
-     {
-      "en": "I only",
-      "zh": "只有 I"
-     },
-     {
-      "en": "III only",
-      "zh": "只有 III"
-     },
-     {
-      "en": "I and II only",
-      "zh": "只有 I 和 II"
-     },
-     {
-      "en": "I and III only",
-      "zh": "只有 I 和 III"
-     }
-    ]
-   },
-   "stem": {
-    "en": "The integers A, B and C are consecutive and A < B < C. If A^2 = C, which of the following could be the value of A?\nI. -1    II. 0    III. 2",
-    "zh": "整数 A、B、C 依次连续且 A < B < C。如果 A² = C，下面哪些可以是 A 的值？\nI. −1    II. 0    III. 2"
-   },
-   "solution": {
-    "en": "If A = -1 then A^2 = 1, so A = -1, B = 0, C = 1 — works. If A = 0 then A^2 = 0, so C = 0, but C must be greater than B which is greater than A = 0 — impossible. If A = 2 then A^2 = 4, so A = 2, B = 3, C = 4 — works. Only I and III work.",
-    "zh": "若 A = −1，则 A² = 1，于是 A = −1、B = 0、C = 1，成立。若 A = 0，则 A² = 0，C = 0，但 C 必须大于 B 且 B 大于 A = 0，不可能。若 A = 2，则 A² = 4，于是 A = 2、B = 3、C = 4，成立。所以只有 I 和 III。"
-   },
-   "noFigure": "原题为纯文字推理题，无图",
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-06",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q06",
-   "noVariantReason": "",
-   "topic": "长方形面积周长",
-   "difficulty": 3,
-   "title": "长是周长的几分之几，已知周长求面积",
-   "tags": [
-    "长方形",
-    "面积",
-    "周长"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 5
-    }
-   },
-   "derived": {
-    "P": "sel(i, 14, 28, 21, 42, 35, 56)",
-    "a": "sel(i, 2, 2, 3, 2, 3, 3)",
-    "b": "sel(i, 7, 7, 7, 7, 7, 7)",
-    "len": "sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7",
-    "wid": "sel(i, 14, 28, 21, 42, 35, 56)/2 - sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7",
-    "ans": "sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7*(sel(i, 14, 28, 21, 42, 35, 56)/2 - sel(i, 14, 28, 21, 42, 35, 56)*sel(i, 2, 2, 3, 2, 3, 3)/7)",
-    "wa": "sel(i, 28, 56, 42, 84, 70, 112)",
-    "wb": "sel(i, 20, 36, 24, 60, 40, 72)",
-    "wc": "sel(i, 40, 72, 6, 72, 60, 42)"
-   },
-   "constraints": [
-    "len > 0",
-    "wid > 0",
-    "ans != wa",
-    "ans != wb",
-    "ans != wc"
-   ],
-   "stem": {
-    "en": "The length of a rectangle is {a}/{b} of the perimeter. What is the area of the rectangle if the perimeter is {P} centimetres?",
-    "zh": "一个长方形的长是它周长的 {a}/{b}。如果周长是 {P} 厘米，这个长方形的面积是多少平方厘米？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans} cm^2",
-      "zh": "{ans} 平方厘米"
-     },
-     {
-      "en": "{wa} cm^2",
-      "zh": "{wa} 平方厘米"
-     },
-     {
-      "en": "{wb} cm^2",
-      "zh": "{wb} 平方厘米"
-     },
-     {
-      "en": "{wc} cm^2",
-      "zh": "{wc} 平方厘米"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The length is {a}/{b} of {P} = {len} cm. The half-perimeter is {P}/2, so the width is {P/2} - {len} = {wid} cm. Area = {len} x {wid} = {ans} cm².",
-    "zh": "长 = {P} 的 {a}/{b} = {len} 厘米。半周长是 {P}/2，所以宽 = {P/2} − {len} = {wid} 厘米。面积 = {len} × {wid} = {ans} 平方厘米。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "A"
-  },
-  {
-   "id": "mm1t3-07",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q07",
-   "noVariantReason": "",
-   "topic": "解方程",
-   "difficulty": 4,
-   "title": "交叉相乘解分式方程",
-   "tags": [
-    "方程",
-    "分数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "u": "sel(i, 2, 1, 3, 2, 4)",
-    "v": "sel(i, 3, 4, 2, 5, 3)",
-    "s": "sel(i, 5, 5, 5, 7, 7)",
-    "ans": "sel(i, 3, 3, 3, 4, 4)",
-    "wa": "sel(i, 7, 5, 4, 8, 9)",
-    "wb": "sel(i, 10, 9, 8, 5, 12)",
-    "wc": "sel(i, 8, 7, 10, 6, 7)"
-   },
-   "constraints": [
-    "u + v == s",
-    "(u+v)/sel(i,3,3,3,4,4)*sel(i,3,3,3,4,4) == u+v",
-    "ans != wa",
-    "ans != wb",
-    "ans != wc"
-   ],
-   "stem": {
-    "en": "What one value for x can be correctly entered into the equation below?\n({u} + {v})/x = ({u} + x)/{v}",
-    "zh": "下面这个方程中，x 可以取哪一个值？\n({u} + {v})/x = ({u} + x)/{v}"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Cross-multiplying: ({u}+{v}) x {v} = x({u}+x), that is {s} x {v} = x^2 + {u}x. Testing x = {ans}: left side = {s*v}, right side = {ans*ans} + {u*ans} = {s*v} — it balances.",
-    "zh": "交叉相乘：({u}+{v}) × {v} = x({u}+x)，即 {s} × {v} = x² + {u}x。代入 x = {ans} 检验：左边 = {s*v}，右边 = {ans*ans} + {u*ans} = {s*v}，成立。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-08",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q08",
-   "noVariantReason": "",
-   "topic": "有余数除法",
-   "difficulty": 3,
-   "title": "需要向上取整的除法",
-   "tags": [
-    "除法",
-    "取整"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 5
-    }
-   },
-   "derived": {
-    "N": "sel(i, 230, 150, 200, 310, 175, 260)",
-    "per": "sel(i, 8, 6, 8, 7, 6, 9)",
-    "ans": "ceil(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 6, 8, 7, 6, 9))",
-    "wa": "floor(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 6, 8, 7, 6, 9))",
-    "wb": "floor(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 6, 8, 7, 6, 9)) + 2",
-    "wc": "floor(sel(i, 230, 150, 200, 310, 175, 260)/sel(i, 8, 6, 8, 7, 6, 9)) + 1"
-   },
-   "constraints": [
-    "mod(sel(i,230,150,200,310,175,260), sel(i,8,6,8,7,6,9)) != 0"
-   ],
-   "stem": {
-    "en": "{N} people at a party decide to order pizza for a snack. If each pizza has {per} slices, how many pizzas should they order so that each person can have one slice?",
-    "zh": "派对上有 {N} 个人要订披萨。每张披萨有 {per} 片，要让每人都有 1 片，至少要订多少张？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "{N} / {per} = {floor(N/per)} remainder {mod(N, per)}. The leftover people still need one more pizza, so they must order {floor(N/per)} + 1 = {ans} pizzas.",
-    "zh": "{N} ÷ {per} = {floor(N/per)} 余 {mod(N, per)}。剩下的人还需要一张，所以要订 {floor(N/per)} + 1 = {ans} 张。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-09",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q09",
-   "noVariantReason": "",
-   "topic": "大数的读法",
-   "difficulty": 3,
-   "title": "把中文读数写成小数",
-   "tags": [
-    "大数",
-    "数位"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 3
-    }
-   },
-   "derived": {
-    "ans": "sel(i, 8090020.01, 6090030.02, 7090040.03, 5080050.04)",
-    "wa": "sel(i, 8090020.10, 6090030.20, 7090040.30, 5080050.40)",
-    "wb": "sel(i, 8900020.10, 6900030.20, 7900040.30, 5800050.40)",
-    "wc": "sel(i, 8900200.01, 6900300.02, 7900400.03, 5800500.04)",
-    "words": "sel(i, 'eight million, ninety thousand, twenty and one hundredth', 'six million, ninety thousand, thirty and two hundredths', 'seven million, ninety thousand, forty and three hundredths', 'five million, eighty thousand, fifty and four hundredths')",
-    "zhWords": "sel(i, '八百零九万零二十又百分之一', '六百零九万零三十又百分之二', '七百零九万零四十又百分之三', '五百零八万零五十又百分之四')"
-   },
-   "constraints": [
-    "ans != wa",
-    "ans != wb",
-    "ans != wc",
-    "wa != wb"
-   ],
-   "stem": {
-    "en": "In words: \"{words}\". Which number is this?",
-    "zh": "「{zhWords}」这个数写作："
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "[[{ans}]]",
-      "zh": "[[{ans}]]"
-     },
-     {
-      "en": "[[{wa}]]",
-      "zh": "[[{wa}]]"
-     },
-     {
-      "en": "[[{wb}]]",
-      "zh": "[[{wb}]]"
-     },
-     {
-      "en": "[[{wc}]]",
-      "zh": "[[{wc}]]"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Read place by place: millions + thousands + tens + hundredths = {ans}. The other options misplace the digits (a whole tenth instead of a hundredth, or the thousands and ten-thousands swapped).",
-    "zh": "一位一位地读：百万位 + 万位 + 十位 + 百分位 = {ans}。其它选项要么把百分位写成十分位，要么把万位和十万位颠倒。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-10",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q10",
-   "noVariantReason": "",
-   "topic": "矩形分割",
-   "difficulty": 4,
-   "title": "五个全等矩形拼成大矩形",
-   "tags": [
-    "矩形",
-    "周长"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "P": "sel(i, 264, 220, 286, 242, 308)",
-    "W": "sel(i, 264, 220, 286, 242, 308)/11",
-    "L": "1.5*sel(i, 264, 220, 286, 242, 308)/11",
-    "ans": "2*(1.5*sel(i, 264, 220, 286, 242, 308)/11 + sel(i, 264, 220, 286, 242, 308)/11)",
-    "wa": "sel(i, 58, 48, 62, 52, 66)",
-    "wb": "sel(i, 110, 92, 119, 100, 128)"
-   },
-   "constraints": [
-    "ans != wb",
-    "wa != wb"
-   ],
-   "stem": {
-    "en": "In the figure below a rectangle with perimeter {P} cm is divided into five identical rectangles. Find the perimeter of one of the rectangles.",
-    "zh": "如下图，一个周长 {P} 厘米的大矩形被分成五个完全相同的小矩形。求其中一个小矩形的周长。"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans} cm",
-      "zh": "{ans} 厘米"
-     },
-     {
-      "en": "{wa} cm",
-      "zh": "{wa} 厘米"
-     },
-     {
-      "en": "{wb} cm",
-      "zh": "{wb} 厘米"
-     },
-     {
-      "en": "cannot be determined",
-      "zh": "无法确定"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The top row is three widths and the bottom row is two lengths, and both span the whole width — so 3 x width = 2 x length, giving length = 1.5 x width. The height is length + width = 2.5 x width. Perimeter = 2 x (3w + 2.5w) = 11w = {P}, so w = {W} cm and length = {L} cm. One small rectangle: 2 x ({L} + {W}) = {ans} cm.",
-    "zh": "上排是 3 个宽，下排是 2 个长，两者都横跨整个宽度 —— 所以 3 × 宽 = 2 × 长，即长 = 1.5 × 宽。大矩形的高 = 长 + 宽 = 2.5 × 宽。大周长 = 2 × (3宽 + 2.5宽) = 11宽 = {P}，所以宽 = {W} 厘米、长 = {L} 厘米。小矩形周长 = 2 × ({L} + {W}) = {ans} 厘米。"
-   },
-   "diagram": {
-    "type": "fivefit",
-    "P": "P"
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-11",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q11",
-   "noVariantReason": "",
-   "topic": "最值·重叠集合",
-   "difficulty": 4,
-   "title": "最多有多少人不在某集合中",
-   "tags": [
-    "分数",
-    "最值"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "N": "sel(i, 60, 90, 120, 84, 75)",
-    "gn": "sel(i, 2, 2, 2, 3, 2)",
-    "gd": "sel(i, 3, 3, 3, 4, 5)",
-    "mn": "sel(i, 2, 2, 3, 1, 2)",
-    "md": "sel(i, 5, 3, 5, 3, 5)",
-    "girls": "sel(i, 40, 60, 80, 63, 30)",
-    "boys": "sel(i, 20, 30, 40, 21, 45)",
-    "music": "sel(i, 24, 60, 72, 28, 30)",
-    "ans": "sel(i, 36, 30, 48, 56, 30)",
-    "ansSub": "sel(i, 4, 30, 32, 7, 0)",
-    "wa": "sel(i, 40, 60, 80, 63, 45)",
-    "wb": "sel(i, 24, 60, 72, 28, 30)",
-    "wc": "sel(i, 44, 90, 92, 91, 45)"
-   },
-   "constraints": [
-    "mod(sel(i,60,90,120,84,75), sel(i,3,3,3,4,5)) == 0",
-    "mod(sel(i,60,90,120,84,75)*sel(i,2,2,3,1,2), sel(i,5,3,5,3,5)) == 0",
-    "ans > 0",
-    "ans != wa",
-    "ans != wb",
-    "ans != wc",
-    "wa != wb"
-   ],
-   "stem": {
-    "en": "Of {N} students in a class {gn}/{gd} are girls, and {mn}/{md} of the class are taking music lessons. What is the maximum number of girls that are not taking music lessons?",
-    "zh": "{N} 名学生中有 {gn}/{gd} 是女生，全班有 {mn}/{md} 在上音乐课。不上音乐课的女生最多有多少人？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Girls = {gn}/{gd} x {N} = {girls}, so boys = {boys}. Music students = {mn}/{md} x {N} = {music}. To make as many girls as possible miss music, give the music places to boys first — at most {boys} of them can hold places. That still leaves {music} - {boys} = {ansSub} places taken by girls, so the maximum number of girls with no music lesson is {girls} - {ansSub} = {ans}.",
-    "zh": "女生 = {N} 的 {gn}/{gd} = {girls} 人，所以男生 = {boys} 人。上音乐课的共 {N} 的 {mn}/{md} = {music} 人。要让不上音乐课的女生最多，就让音乐课名额先给男生 —— 最多只有 {boys} 个男生能占。这样仍有 {music} − {boys} = {ansSub} 个名额落在女生身上，所以不上音乐课的女生最多 {girls} − {ansSub} = {ans} 人。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-12",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q12",
-   "noVariantReason": "",
-   "topic": "数轴读数",
-   "difficulty": 3,
-   "title": "等距数轴上读出某点的值",
-   "tags": [
-    "数轴",
-    "小数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "B": "sel(i, 0.312, 0.204, 0.415, 0.106, 0.523)",
-    "E": "sel(i, 0.326, 0.225, 0.443, 0.127, 0.558)",
-    "n": "sel(i, 7, 7, 7, 7, 7)",
-    "k": "sel(i, 3, 3, 3, 3, 3)",
-    "step": "sel(i, 0.002, 0.003, 0.004, 0.003, 0.005)",
-    "ans": "sel(i, 0.318, 0.213, 0.427, 0.115, 0.538)",
-    "wa": "sel(i, 0.315, 0.210, 0.423, 0.112, 0.533)",
-    "wb": "sel(i, 0.316, 0.211, 0.424, 0.113, 0.534)",
-    "wc": "sel(i, 0.317, 0.212, 0.425, 0.114, 0.535)"
-   },
-   "constraints": [
-    "E > B",
-    "ans > B",
-    "ans < E",
-    "ans != wa",
-    "ans != wb",
-    "ans != wc"
-   ],
-   "stem": {
-    "en": "The diagram shows part of a number line with evenly spaced intervals between marks. What is the value of P?",
-    "zh": "下图是一条数轴的一部分，各刻度之间等距。P 表示的数是多少？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "[[{ans}]]",
-      "zh": "[[{ans}]]"
-     },
-     {
-      "en": "[[{wa}]]",
-      "zh": "[[{wa}]]"
-     },
-     {
-      "en": "[[{wb}]]",
-      "zh": "[[{wb}]]"
-     },
-     {
-      "en": "[[{wc}]]",
-      "zh": "[[{wc}]]"
-     }
-    ]
-   },
-   "solution": {
-    "en": "There are {n} equal intervals from {B} to {E}, so each interval is ({E} - {B}) / {n} = {step}. P sits {k} intervals to the right of {B}, so P = {B} + {k} x {step} = {ans}.",
-    "zh": "从 {B} 到 {E} 一共分成 {n} 等份，所以每份 = ({E} − {B}) ÷ {n} = {step}。P 在 {B} 右边第 {k} 个刻度上，所以 P = {B} + {k} × {step} = {ans}。"
-   },
-   "diagram": {
-    "type": "numline",
-    "B": "B",
-    "E": "E",
-    "n": "n",
-    "k": "k"
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "A"
-  },
-  {
-   "id": "mm1t3-13",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q13",
-   "noVariantReason": "",
-   "topic": "比例变化",
-   "difficulty": 4,
-   "title": "比例变化后求加入的人数",
-   "tags": [
-    "比",
-    "方程"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "b1": "sel(i, 4, 5, 4, 3, 5)",
-    "g1": "sel(i, 3, 3, 3, 4, 3)",
-    "b2": "sel(i, 3, 2, 3, 2, 7)",
-    "g2": "sel(i, 2, 1, 2, 1, 4)",
-    "boys": "sel(i, 12, 15, 20, 12, 25)",
-    "girls": "sel(i, 9, 9, 15, 16, 15)",
-    "tot": "sel(i, 21, 24, 35, 28, 40)",
-    "girls1": "sel(i, 10, 10, 16, 17, 16)",
-    "newBoys": "sel(i, 15, 20, 24, 34, 28)",
-    "ans": "sel(i, 3, 5, 4, 22, 3)",
-    "wa": "sel(i, 15, 20, 24, 34, 28)",
-    "wb": "sel(i, 12, 15, 20, 12, 25)",
-    "wc": "sel(i, 9, 9, 15, 16, 15)"
-   },
-   "constraints": [
-    "ans > 0",
-    "g2 != b2",
-    "ans != wa",
-    "ans != wb",
-    "ans != wc",
-    "wa != wc",
-    "boys + girls == tot",
-    "girls1 == girls + 1",
-    "newBoys == girls1*sel(i,3,2,3,2,7)/sel(i,2,1,2,1,4)",
-    "newBoys - boys == ans"
-   ],
-   "stem": {
-    "en": "In a class of {tot} students, the ratio of boys to girls is {b1} : {g1}. Some extra boys and one extra girl join the class. The new ratio becomes {b2} : {g2}. What is the number of new boys joined?",
-    "zh": "一个班有 {tot} 名学生，男生与女生的人数比是 {b1} : {g1}。后来又加入若干名男生和 1 名女生，新的比变成 {b2} : {g2}。新加入了多少名男生？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The ratio {b1} : {g1} means {boys} boys and {girls} girls. After one girl joins there are {girls1} girls. The new ratio {b2} : {g2} = ? : {girls1}, and ? = {girls1} x {b2}/{g2} = {newBoys}, so {newBoys} - {boys} = {ans} boys joined.",
-    "zh": "比 {b1} : {g1} 表示男生 {boys} 人、女生 {girls} 人。加入 1 名女生后女生为 {girls1} 人。新的比 {b2} : {g2} = ? : {girls1}，所以 ? = {girls1} × {b2}/{g2} = {newBoys}，即新加入的男生为 {newBoys} − {boys} = {ans} 名。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-14",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q14",
-   "noVariantReason": "",
-   "topic": "鸡兔同笼",
-   "difficulty": 3,
-   "title": "两种价格混合销售",
-   "tags": [
-    "方程",
-    "应用题"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "hi": "sel(i, 10, 8, 12, 10, 15)",
-    "lo": "sel(i, 5, 3, 5, 4, 5)",
-    "tot": "sel(i, 75, 60, 80, 70, 90)",
-    "money": "sel(i, 625, 390, 760, 520, 950)",
-    "nLo": "sel(i, 25, 30, 40, 30, 40)",
-    "nHi": "sel(i, 50, 30, 40, 40, 50)",
-    "lp": "sel(i, 375, 180, 400, 280, 450)",
-    "dif": "sel(i, 250, 210, 360, 240, 500)",
-    "gap": "sel(i, 5, 5, 7, 6, 10)",
-    "wa": "sel(i, 50, 40, 50, 40, 60)",
-    "wb": "sel(i, 23, 20, 30, 25, 30)",
-    "wc": "sel(i, 29, 25, 35, 20, 45)"
-   },
-   "constraints": [
-    "nLo > 0",
-    "nLo < tot",
-    "nHi > 0",
-    "nLo + nHi == tot",
-    "lo < hi",
-    "nLo*lo + nHi*hi == money",
-    "nLo != wa",
-    "nLo != wb",
-    "nLo != wc"
-   ],
-   "stem": {
-    "en": "A charity organisation sells greetings cards in packs costing ${hi} or ${lo} each. A total of {tot} packs were sold at a fair for a total of ${money}. How many of the ${lo} packs were sold?",
-    "zh": "某慈善机构出售贺卡，每包 {hi} 元或 {lo} 元。义卖会上共卖出 {tot} 包，收入 {money} 元。其中 {lo} 元一包的有几包？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{nLo}",
-      "zh": "{nLo}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "If all {tot} packs were the ${lo} kind the takings would be {tot} x {lo} = ${lp}. The real takings are ${money}, which is ${dif} more; every ${hi} pack adds {gap} more. So there are {dif} / {gap} = {nHi} packs at ${hi}, and {tot} - {nHi} = {nLo} packs at ${lo}. Check: {nLo} x {lo} + {nHi} x {hi} = ${money}.",
-    "zh": "若 {tot} 包全是 {lo} 元的，应得 {tot} × {lo} = {lp} 元。实际收入 {money} 元，多出 {dif} 元；每换一包 {hi} 元的会多出 {gap} 元。所以 {hi} 元一包的有 {dif} ÷ {gap} = {nHi} 包，{lo} 元一包的有 {tot} − {nHi} = {nLo} 包。验算：{nLo} × {lo} + {nHi} × {hi} = {money} 元。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-15",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q15",
-   "noVariantReason": "定性不等式推理题，年龄上限 16 固定，答案恒为 2",
-   "topic": "年龄不等关系",
-   "difficulty": 4,
-   "title": "用不等式确定可能值",
-   "tags": [
-    "不等式",
-    "年龄"
-   ],
-   "vars": {},
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "2",
-      "zh": "2"
-     },
-     {
-      "en": "5",
-      "zh": "5"
-     },
-     {
-      "en": "4",
-      "zh": "4"
-     },
-     {
-      "en": "3",
-      "zh": "3"
-     }
-    ]
-   },
-   "stem": {
-    "en": "Andy, Mark and Sean all have their birthdays today, but Andy is more than twice as old as Mark and Mark is more than four years older than Sean. If Andy is less than 16 years old, what is one possible value for Sean's age in years?",
-    "zh": "Andy、Mark、Sean 三人今天都过生日。Andy 的年龄超过 Mark 的两倍，Mark 比 Sean 大 4 岁以上。如果 Andy 小于 16 岁，Sean 的年龄可能是下面哪一个？"
-   },
-   "solution": {
-    "en": "Andy < 16 and Andy > 2 x Mark, so 2 x Mark < 16, i.e. Mark < 8. Mark > Sean + 4, so Sean < Mark - 4 < 4. Testing: if Sean = 2 then Mark could be 7 (> 6), and Andy could be 15 — which is < 16 and > 14, so it works. Sean = 3 would force Mark >= 8, and then Andy > 16 — too old. So only 2 works.",
-    "zh": "Andy < 16 且 Andy > 2×Mark，所以 2×Mark < 16，即 Mark < 8。又 Mark > Sean + 4，所以 Sean < Mark − 4 < 4。检验：若 Sean = 2，可取 Mark = 7（> 6），Andy = 15（< 16 且 > 14），全部成立。若 Sean = 3，则 Mark ≥ 8，Andy 就会超过 16，不行。所以只有 2 成立。"
-   },
-   "noFigure": "原题为纯文字推理题，无图",
-   "originalAnswer": "A"
-  },
-  {
-   "id": "mm1t3-16",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q16",
-   "noVariantReason": "",
-   "topic": "指数增长",
-   "difficulty": 3,
-   "title": "每隔一段时间翻倍，求总倍数",
-   "tags": [
-    "指数",
-    "倍率"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "m": "sel(i, 40, 30, 20, 45, 15)",
-    "h": "sel(i, 3, 2, 4, 3, 5)",
-    "mm": "sel(i, 20, 0, 0, 0, 0)",
-    "totalMin": "sel(i, 200, 120, 240, 180, 300)",
-    "times": "sel(i, 5, 4, 12, 4, 20)",
-    "ans": "sel(i, 32, 16, 4096, 16, 1048576)",
-    "wa": "sel(i, 5, 4, 12, 4, 20)",
-    "wb": "sel(i, 10, 8, 24, 8, 40)",
-    "wc": "sel(i, 16, 16, 1024, 16, 65536)"
-   },
-   "constraints": [
-    "mod(sel(i,200,120,240,180,300), sel(i,40,30,20,45,15)) == 0",
-    "ans > 0"
-   ],
-   "stem": {
-    "en": "If the population of bacteria in a culture flask doubles every {m} minutes, the population after {h} hours {mm} minutes will be how many times the population at the start?",
-    "zh": "培养瓶中细菌的数量每 {m} 分钟翻一倍。{h} 小时 {mm} 分钟之后，细菌数量是原来的多少倍？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "{h} hours {mm} minutes = {totalMin} minutes. It doubles {totalMin} / {m} = {times} times, so the population is multiplied by 2^{times} = {ans}.",
-    "zh": "{h} 小时 {mm} 分钟 = {totalMin} 分钟。共翻倍 {totalMin} ÷ {m} = {times} 次，所以数量变为原来的 2^{times} = {ans} 倍。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-17",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q17",
-   "noVariantReason": "骰子展开图为固定图形，对面关系唯一，答案恒为 A=2, B=6, C=3",
-   "topic": "正方体展开图",
-   "difficulty": 4,
-   "title": "正方体展开图上的对面点数",
-   "tags": [
-    "立体图形",
-    "展开图"
-   ],
-   "vars": {},
-   "answer": {
-    "type": "choice",
-    "correctIndex": 2,
-    "options": [
-     {
-      "en": "A = 6, B = 3, C = 2",
-      "zh": "A = 6，B = 3，C = 2"
-     },
-     {
-      "en": "A = 6, B = 2, C = 3",
-      "zh": "A = 6，B = 2，C = 3"
-     },
-     {
-      "en": "A = 2, B = 6, C = 3",
-      "zh": "A = 2，B = 6，C = 3"
-     },
-     {
-      "en": "A = 2, B = 3, C = 6",
-      "zh": "A = 2，B = 3，C = 6"
-     }
-    ]
-   },
-   "stem": {
-    "en": "The shape below is to be cut out and folded along the dotted lines to form a cubic die. Dots are to be added to faces A, B and C so that the numbers of dots on opposite faces add up to 7. How many dots should appear on each face?",
-    "zh": "下图沿虚线剪下折成一个正方体骰子。要给 A、B、C 三个面画上点，使相对两面的点数之和都等于 7。A、B、C 各应画几个点？"
-   },
-   "solution": {
-    "en": "Fold the net mentally. The face with 5 dots ends up opposite A, so A = 7 - 5 = 2. The face with 1 dot ends up opposite B, so B = 7 - 1 = 6. The face with 4 dots ends up opposite C, so C = 7 - 4 = 3. Hence A = 2, B = 6, C = 3.",
-    "zh": "把展开图在脑中折起来：点数为 5 的面与 A 相对，所以 A = 7 − 5 = 2；点数为 1 的面与 B 相对，所以 B = 7 − 1 = 6；点数为 4 的面与 C 相对，所以 C = 7 − 4 = 3。因此 A = 2、B = 6、C = 3。"
-   },
-   "diagram": {
-    "type": "dienet",
-    "cells": [
-     {
-      "r": 0,
-      "c": 2,
-      "dots": 3
-     },
-     {
-      "r": 1,
-      "c": 1,
-      "dots": 6
-     },
-     {
-      "r": 1,
-      "c": 2,
-      "dots": 5
-     },
-     {
-      "r": 1,
-      "c": 3,
-      "label": "B"
-     },
-     {
-      "r": 2,
-      "c": 0,
-      "label": "A"
-     },
-     {
-      "r": 2,
-      "c": 1,
-      "dots": 1
-     }
-    ]
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-18",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q18",
-   "noVariantReason": "",
-   "topic": "连续分数应用",
-   "difficulty": 3,
-   "title": "多步分数分配",
-   "tags": [
-    "分数",
-    "应用题"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "T": "sel(i, 4800, 6000, 3600, 7200, 5400)",
-    "expF": "sel(i, 1200, 1500, 900, 1800, 1350)",
-    "rem": "sel(i, 3600, 4500, 2700, 5400, 4050)",
-    "aF": "sel(i, 2700, 3375, 2025, 4050, 3037.5)",
-    "ans": "sel(i, 900, 1125, 675, 1350, 1012.5)",
-    "wa": "0",
-    "wb": "expF",
-    "wc": "aF"
-   },
-   "constraints": [
-    "ans > 0",
-    "ans != aF",
-    "mod(sel(i,4800,6000,3600,7200,5400), 4) == 0"
-   ],
-   "stem": {
-    "en": "A school charity sale raised ${T}. One quarter of this was taken to cover expenses. Three quarters of the remainder was given to Charity A and the rest to Charity B. How much did B receive?",
-    "zh": "学校义卖共筹得 {T} 元。其中四分之一用于支付开支，余下部分的四分之三捐给慈善机构 A，剩下的捐给慈善机构 B。B 收到多少钱？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "${ans}",
-      "zh": "{ans} 元"
-     },
-     {
-      "en": "${wa}",
-      "zh": "{wa} 元"
-     },
-     {
-      "en": "${wb}",
-      "zh": "{wb} 元"
-     },
-     {
-      "en": "${wc}",
-      "zh": "{wc} 元"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Expenses = 1/4 x {T} = ${expF}. The remainder is {T} - {expF} = ${rem}. Charity A gets 3/4 x {rem} = ${aF}, so Charity B gets {T} - {expF} - {aF} = ${ans}.",
-    "zh": "开支 = {T} 的 1/4 = {expF} 元。余下 {T} − {expF} = {rem} 元。A 得到 {rem} 的 3/4 = {aF} 元，所以 B 得到 {T} − {expF} − {aF} = {ans} 元。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-19",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q19",
-   "noVariantReason": "",
-   "topic": "百分数·佣金",
-   "difficulty": 3,
-   "title": "已知总收入反求销售额",
-   "tags": [
-    "百分数",
-    "佣金"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "sal": "sel(i, 50, 60, 40, 80, 100)",
-    "p": "sel(i, 10, 20, 10, 15, 25)",
-    "got": "sel(i, 200, 260, 190, 320, 400)",
-    "com": "sel(i, 150, 200, 150, 240, 300)",
-    "ans": "sel(i, 1500, 1000, 1500, 1600, 1200)",
-    "wa": "sel(i, 205, 265, 195, 330, 410)",
-    "wb": "sel(i, 1200, 800, 1200, 1280, 960)",
-    "wc": "sel(i, 2000, 1400, 2100, 2200, 1600)"
-   },
-   "constraints": [
-    "got > sal",
-    "ans > 0",
-    "com > 0"
-   ],
-   "stem": {
-    "en": "A brush salesman earns ${sal} salary each month plus {p} percent commission on the value of his sales. If he earned ${got} last month, what was the total value of his sales?",
-    "zh": "一名推销员每月有 {sal} 元底薪，另有销售额的 {p}% 作为佣金。他上个月共收入 {got} 元，那么他上个月的销售额是多少？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "${ans}",
-      "zh": "{ans} 元"
-     },
-     {
-      "en": "${wa}",
-      "zh": "{wa} 元"
-     },
-     {
-      "en": "${wb}",
-      "zh": "{wb} 元"
-     },
-     {
-      "en": "${wc}",
-      "zh": "{wc} 元"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The commission was {got} - {sal} = ${com}. That is {p}% of his sales, so sales = {com} / {p} x 100 = ${ans}.",
-    "zh": "佣金是 {got} − {sal} = {com} 元。这等于销售额的 {p}%，所以销售额 = {com} ÷ {p} × 100 = {ans} 元。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-20",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q20",
-   "noVariantReason": "",
-   "topic": "组合计数",
-   "difficulty": 3,
-   "title": "循环赛总场次",
-   "tags": [
-    "组合",
-    "计数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "n": "sel(i, 10, 12, 8, 15, 9)",
-    "per": "sel(i, 10, 5, 4, 2, 6)",
-    "pairs": "sel(i, 45, 66, 28, 105, 36)",
-    "ans": "sel(i, 450, 330, 112, 210, 216)",
-    "wa": "pairs",
-    "wb": "n*per",
-    "wc": "n*(per+1)"
-   },
-   "constraints": [
-    "ans > 0",
-    "n > 2",
-    "per > 1",
-    "ans != wa",
-    "ans != wb",
-    "ans != wc",
-    "wa != wb",
-    "wa != wc",
-    "wb != wc"
-   ],
-   "stem": {
-    "en": "During a season in a certain baseball league, every team plays every other team in the league {per} times. If there are {n} teams in the league, how many games are played altogether in the league in one season?",
-    "zh": "某棒球联盟一个赛季中，每两支队伍之间都要比赛 {per} 场。如果联盟共有 {n} 支队，一个赛季一共要打多少场？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans} games",
-      "zh": "{ans} 场"
-     },
-     {
-      "en": "{wa} games",
-      "zh": "{wa} 场（只算两两配对的组数）"
-     },
-     {
-      "en": "{wb} games",
-      "zh": "{wb} 场（把队数直接乘以每对场次）"
-     },
-     {
-      "en": "{wc} games",
-      "zh": "{wc} 场（把队数乘以配对组数）"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Each team plays the other {n} - 1 teams, and pairing them up gives {n} x ({n}-1) / 2 = {pairs} different pairings. Each pairing plays {per} games, so the total is {pairs} x {per} = {ans} games.",
-    "zh": "每支队要和其他 {n} − 1 支队交手，两两配对的组数是 {n} × ({n}−1) ÷ 2 = {pairs} 组。每组要比 {per} 场，所以共 {pairs} × {per} = {ans} 场。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-21",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q21",
-   "noVariantReason": "阶梯图为原卷原图（澳洲邮政资费表），数据固定，答案恒为 0.45 kg",
-   "topic": "阶梯函数读图",
-   "difficulty": 4,
-   "title": "从阶梯图读出可能的质量",
-   "tags": [
-    "图象",
-    "读图"
-   ],
-   "vars": {},
-   "answer": {
-    "type": "choice",
-    "correctIndex": 3,
-    "options": [
-     {
-      "en": "3.75 kg",
-      "zh": "3.75 千克"
-     },
-     {
-      "en": "1.75 kg",
-      "zh": "1.75 千克"
-     },
-     {
-      "en": "0.65 kg",
-      "zh": "0.65 千克"
-     },
-     {
-      "en": "0.45 kg",
-      "zh": "0.45 千克"
-     }
-    ]
-   },
-   "stem": {
-    "en": "This step graph shows the cost of sending parcels by Australia Post within NSW, according to the mass of the parcel. If Renata posted a parcel for $3.75, what could be the mass of the parcel?",
-    "zh": "下面的阶梯图表示按包裹质量计算的新南威尔士州内邮费。如果 Renata 寄一个包裹花了 3.75 元，这个包裹的质量可能是多少？"
-   },
-   "solution": {
-    "en": "Find the step whose cost is $3.75 on the vertical axis and read the range of masses it covers on the horizontal axis. That step runs from 0.5 kg up to (but not including) 1 kg — its largest mass is 500 g. Of the options only 0.45 kg falls inside 0.5–1 kg... check each: 3.75 kg is far to the right, 1.75 kg and 0.65 kg are past the step, so 0.45 kg is the only mass the graph allows.",
-    "zh": "在纵轴上找到 3.75 元那一阶，再看它在横轴上覆盖的质量区间。这一阶从 0.5 千克一直延伸到（不含）1 千克，最大质量是 500 克。逐一核对：3.75 千克远超图形范围；1.75 千克和 0.65 千克都落在更高的一阶上；只有 0.45 千克落在这一阶覆盖的区间内，所以答案是 0.45 千克。"
-   },
-   "diagram": {
-    "type": "stepcost",
-    "steps": [
-     {
-      "m0": 0,
-      "m1": 0.5,
-      "cost": 2.5
-     },
-     {
-      "m0": 0.5,
-      "m1": 1,
-      "cost": 3.25
-     },
-     {
-      "m0": 1,
-      "m1": 2,
-      "cost": 3.75
-     },
-     {
-      "m0": 2,
-      "m1": 3,
-      "cost": 4.25
-     },
-     {
-      "m0": 3,
-      "m1": 4,
-      "cost": 5.25
-     },
-     {
-      "m0": 4,
-      "m1": 5,
-      "cost": 6.25
-     }
-    ]
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-22",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q22",
-   "noVariantReason": "",
-   "topic": "方框分割求面积",
-   "difficulty": 4,
-   "title": "用大正方形减小正方形求单块面积",
-   "tags": [
-    "面积",
-    "正方形"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "O": "sel(i, 50, 60, 40, 70, 90)",
-    "I": "sel(i, 40, 50, 30, 60, 80)",
-    "ans": "sel(i, 75, 275, 175, 325, 425)",
-    "wa": "sel(i, 15, 25, 10, 35, 45)",
-    "wc": "sel(i, 400, 900, 225, 1225, 2025)",
-    "wd": "sel(i, 1600, 2500, 900, 3600, 6400)"
-   },
-   "constraints": [
-    "O > I",
-    "ans > 0",
-    "ans != wa",
-    "ans != wc",
-    "ans != wd"
-   ],
-   "stem": {
-    "en": "Twelve rectangles, all the same size, are arranged to make a square, as shown in the diagram. Calculate the area of one of the rectangles.",
-    "zh": "如下图，12 个完全相同的小矩形围成一个正方形（中间留出一个正方形孔）。求其中一个小矩形的面积。"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans} cm^2",
-      "zh": "{ans} 平方厘米"
-     },
-     {
-      "en": "{wa} cm^2",
-      "zh": "{wa} 平方厘米"
-     },
-     {
-      "en": "{wc} cm^2",
-      "zh": "{wc} 平方厘米"
-     },
-     {
-      "en": "{wd} cm^2",
-      "zh": "{wd} 平方厘米"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The whole square has side {O} cm, area {O} x {O} = {O*O} cm². The hole in the middle is a square of side {I} cm, area {I} x {I} = {I*I} cm². So the 12 rectangles together cover {O*O} - {I*I} = {O*O-I*I} cm². One rectangle is {O*O-I*I} / 12 = {ans} cm².",
-    "zh": "大正方形边长 {O} 厘米，面积 {O} × {O} = {O*O} 平方厘米。中间的正方形孔边长 {I} 厘米，面积 {I} × {I} = {I*I} 平方厘米。所以 12 个小矩形一共占 {O*O} − {I*I} = {O*O-I*I} 平方厘米。每个小矩形是 {O*O-I*I} ÷ 12 = {ans} 平方厘米。"
-   },
-   "diagram": {
-    "type": "framefill",
-    "O": "O",
-    "I": "I",
-    "n": 12
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-23",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q23",
-   "noVariantReason": "",
-   "topic": "图形规律·代数",
-   "difficulty": 4,
-   "title": "从图形序列归纳出公式并反解",
-   "tags": [
-    "规律",
-    "代数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "a": "sel(i, 3, 3, 4, 3, 5)",
-    "b": "sel(i, 1, 1, 1, 2, 1)",
-    "s0": "sel(i, 4, 4, 5, 5, 6)",
-    "S": "sel(i, 121, 151, 201, 83, 251)",
-    "ans": "sel(i, 40, 50, 50, 27, 50)",
-    "wa": "sel(i, 122, 152, 202, 86, 252)",
-    "wb": "sel(i, 121, 151, 201, 83, 251)",
-    "wc2": "sel(i, 41, 51, 51, 28, 51)"
-   },
-   "constraints": [
-    "mod(sel(i,121,151,201,83,251) - sel(i,1,1,1,2,1), sel(i,3,3,4,3,5)) == 0",
-    "ans > 0",
-    "a > 1"
-   ],
-   "stem": {
-    "en": "Here is a sequence of patterns made from octagons and squares. The table shows the number of octagons (1, 2, 3, 4) and the matching number of squares ({s0}, {s0+a}, {s0+2*a}, {s0+3*a}). If the sequence continues, how many octagons will there be in the pattern that has {S} squares?",
-    "zh": "下面是用八边形和正方形拼成的图形序列。表格给出八边形的个数（1、2、3、4）和对应的正方形个数（{s0}、{s0+a}、{s0+2*a}、{s0+3*a}）。如果序列继续下去，那么有 {S} 个正方形的图形里有多少个八边形？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc2}",
-      "zh": "{wc2}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "From the table, squares = {a} x octagons + {b} (each new octagon brings {a} more squares). So {S} = {a} x octagons + {b}, giving octagons = ({S} - {b}) / {a} = {ans}.",
-    "zh": "由表格可见：正方形个数 = {a} × 八边形个数 + {b}（每多一个八边形就多出 {a} 个正方形）。所以 {S} = {a} × 八边形 + {b}，解得八边形 = ({S} − {b}) ÷ {a} = {ans}。"
-   },
-   "diagram": {
-    "type": "numgrid",
-    "step": 3,
-    "base": 4,
-    "mr": 0,
-    "mc": 0
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-24",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q24",
-   "noVariantReason": "定性判断题，四个说法固定，不随数值变化",
-   "topic": "数论·整除性质",
-   "difficulty": 4,
-   "title": "判断关于倍数的不正确说法",
-   "tags": [
-    "整除",
-    "倍数"
-   ],
-   "vars": {},
-   "answer": {
-    "type": "choice",
-    "correctIndex": 3,
-    "options": [
-     {
-      "en": "The difference between P and Q is a multiple of 3.",
-      "zh": "P 与 Q 的差是 3 的倍数。"
-     },
-     {
-      "en": "The product of P and Q is a multiple of 9.",
-      "zh": "P 与 Q 的积是 9 的倍数。"
-     },
-     {
-      "en": "The quotient of P and Q is not always a multiple of 3.",
-      "zh": "P 除以 Q 的商不总是 3 的倍数。"
-     },
-     {
-      "en": "The sum of P and Q is a multiple of 6.",
-      "zh": "P 与 Q 的和是 6 的倍数。"
-     }
-    ]
-   },
-   "stem": {
-    "en": "P stands for a multiple of 3. Q stands for a different multiple of 3. Which statement is not true?",
-    "zh": "P 表示 3 的一个倍数，Q 表示 3 的另一个不同的倍数。下面哪个说法不成立？"
-   },
-   "solution": {
-    "en": "A: 3a - 3b = 3(a-b), always a multiple of 3 — true. B: 3a x 3b = 9ab, always a multiple of 9 — true. C: 6 / 3 = 2 is not a multiple of 3, so the quotient is not always a multiple of 3 — true. D: 6 + 9 = 15 and 12 + 3 = 15, neither is a multiple of 6 — false. So D is the statement that is not true.",
-    "zh": "A：3a − 3b = 3(a−b)，一定是 3 的倍数，成立。B：3a × 3b = 9ab，一定是 9 的倍数，成立。C：6 ÷ 3 = 2 不是 3 的倍数，可见商不总是 3 的倍数，成立。D：6 + 9 = 15，12 + 3 = 15，都不是 6 的倍数，不成立。所以选 D。"
-   },
-   "noFigure": "原题为纯文字推理题，无图",
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-25",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q25",
-   "noVariantReason": "",
-   "topic": "浓度稀释",
-   "difficulty": 4,
-   "title": "加水稀释后求浓度",
-   "tags": [
-    "百分数",
-    "浓度"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "V": "sel(i, 25, 30, 20, 40, 50)",
-    "p": "sel(i, 20, 25, 30, 20, 10)",
-    "add": "sel(i, 50, 45, 40, 60, 50)",
-    "alc": "sel(i, 5, 7.5, 6, 8, 5)",
-    "tot": "sel(i, 75, 75, 60, 100, 100)",
-    "ans": "sel(i, 6.667, 10, 10, 8, 5)",
-    "wa": "p",
-    "wc": "8"
-   },
-   "constraints": [
-    "alc > 0",
-    "tot > V",
-    "ans > 0",
-    "ans < p"
-   ],
-   "stem": {
-    "en": "A {V} litre solution is {p} percent alcohol. If {add} litres of water are added to it, what percent of the new solution is alcohol?",
-    "zh": "{V} 升溶液中含酒精 {p}%。如果加入 {add} 升水，新溶液中酒精占百分之几？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans} %",
-      "zh": "{ans}%"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "50 %",
-      "zh": "50%"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The alcohol itself is {p}% of {V} L = {alc} L (adding water does not change it). The new volume is {V} + {add} = {tot} L. So the alcohol percentage is {alc} / {tot} x 100% = {ans}%.",
-    "zh": "酒精的量是 {V} 升的 {p}% = {alc} 升（加水不改变酒精的量）。新溶液共 {V} + {add} = {tot} 升。所以酒精占 {alc} ÷ {tot} × 100% = {ans}%。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-26",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q26",
-   "noVariantReason": "",
-   "topic": "分数与倍数",
-   "difficulty": 3,
-   "title": "先求女生人数再按倍数求老师",
-   "tags": [
-    "分数",
-    "倍数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "N": "sel(i, 567, 280, 420, 630, 504)",
-    "bn": "sel(i, 4, 3, 3, 5, 4)",
-    "bd": "sel(i, 7, 5, 7, 9, 9)",
-    "k": "sel(i, 9, 7, 6, 8, 7)",
-    "boys": "sel(i, 324, 168, 180, 350, 224)",
-    "girls": "sel(i, 243, 112, 240, 280, 280)",
-    "ans": "sel(i, 27, 16, 40, 35, 40)",
-    "wa": "boys",
-    "wb": "girls",
-    "wc": "girls*k"
-   },
-   "constraints": [
-    "mod(sel(i,567,280,420,630,504), sel(i,7,5,7,9,9)) == 0",
-    "ans > 0",
-    "mod(sel(i,243,112,240,280,280), sel(i,9,7,6,8,7)) == 0"
-   ],
-   "stem": {
-    "en": "There are {N} students in a school. {bn}/{bd} are boys and the rest are girls. There are {k} times as many girls as there are teachers. How many teachers are there?",
-    "zh": "一所学校有 {N} 名学生，其中 {bn}/{bd} 是男生，其余是女生。女生人数是老师人数的 {k} 倍。老师有多少人？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wc}",
-      "zh": "{wc}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Boys = {bn}/{bd} x {N} = {boys}, so girls = {N} - {boys} = {girls}. Girls are {k} times the number of teachers, so teachers = {girls} / {k} = {ans}.",
-    "zh": "男生 = {N} 的 {bn}/{bd} = {boys} 人，所以女生 = {N} − {boys} = {girls} 人。女生是老师的 {k} 倍，所以老师 = {girls} ÷ {k} = {ans} 人。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-27",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q27",
-   "noVariantReason": "",
-   "topic": "数据与图象",
-   "difficulty": 5,
-   "title": "从表格数据选出匹配的图象",
-   "tags": [
-    "图象",
-    "数据分析"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 1
-    }
-   },
-   "derived": {
-    "a": "sel(i, 120, 200)",
-    "b": "sel(i, 43, 60)",
-    "c": "sel(i, 15, 20)",
-    "d": "sel(i, 5.5, 4)",
-    "t1": "sel(i, 20, 10)",
-    "t2": "sel(i, 40, 20)",
-    "t3": "sel(i, 60, 30)",
-    "correctIndex": "sel(i, 0, 0)"
-   },
-   "constraints": [
-    "a > b",
-    "b > c",
-    "c > d",
-    "d > 0",
-    "a - b > b - c",
-    "b - c > c - d"
-   ],
-   "stem": {
-    "en": "The table gives the values of y for four values of t. Which of the graph options below could be a graph of this data?",
-    "zh": "下表给出了 t 取四个不同值时对应的 y 值。下面哪个图象可能是这组数据的图象？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "A",
-      "zh": "甲"
-     },
-     {
-      "en": "B",
-      "zh": "乙"
-     },
-     {
-      "en": "C",
-      "zh": "丙"
-     },
-     {
-      "en": "D",
-      "zh": "丁"
-     }
-    ],
-    "optionsSvg": [
-     {
-      "type": "graphopt",
-      "kind": "dec-soft",
-      "label": "A"
-     },
-     {
-      "type": "graphopt",
-      "kind": "inc-line",
-      "label": "B"
-     },
-     {
-      "type": "graphopt",
-      "kind": "dec-steep",
-      "label": "C"
-     },
-     {
-      "type": "graphopt",
-      "kind": "dec-line",
-      "label": "D"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Read the table: as t goes from 0 to {t1} to {t2} to {t3}, y falls from {a} to {b} to {c} to {d}. So the graph must start high on the y-axis and come down — B (rising straight line) is out. The drops are not equal: {a} - {b} = {a-b}, then {b} - {c} = {b-c}, then {c} - {d} = {c-d}, so the curve is steepest at the start and flattens out. A is a gentle even curve and D is a straight line, so only C — steep at first, then flattening — fits the data.",
-    "zh": "读表：t 从 0 变到 {t1}、{t2}、{t3} 时，y 从 {a} 降到 {b}、{c}、{d}。所以图象应从纵轴高处向下走——B（上升直线）排除。再看下降幅度并不相等：{a} − {b} = {a-b}，{b} − {c} = {b-c}，{c} − {d} = {c-d}，可见开头降得最急、后面趋缓。A 是一开始就平缓的曲线，D 是直线下降，都不吻合；只有 C（先急降后趋缓）符合。"
-   },
-   "diagram": {
-    "type": "tableopts",
-    "cols": [
-     "t",
-     "y"
-    ],
-    "rows": [
-     [
-      "0",
-      "a"
-     ],
-     [
-      "t1",
-      "b"
-     ],
-     [
-      "t2",
-      "c"
-     ],
-     [
-      "t3",
-      "d"
-     ]
-    ],
-    "panels": [
-     {
-      "kind": "dec-soft",
-      "label": "A"
-     },
-     {
-      "kind": "inc-line",
-      "label": "B"
-     },
-     {
-      "kind": "dec-steep",
-      "label": "C"
-     },
-     {
-      "kind": "dec-line",
-      "label": "D"
-     }
-    ]
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-28",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q28",
-   "noVariantReason": "",
-   "topic": "矩形面积·消元",
-   "difficulty": 4,
-   "title": "两矩形已知宽和长之和、面积之和求其一面积",
-   "tags": [
-    "面积",
-    "方程"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "wX": "sel(i, 14, 12, 10, 15, 9)",
-    "wY": "sel(i, 8, 6, 4, 10, 6)",
-    "lX": "sel(i, 10, 10, 10, 14, 14)",
-    "lY": "sel(i, 12, 10, 8, 14, 6)",
-    "sumL": "lX + lY",
-    "sumA": "wX*lX + wY*lY",
-    "ans": "wX*lX",
-    "areaY": "wY*lY",
-    "wa": "sel(i, 88, 72, 60, 120, 72)",
-    "wb": "sel(i, 112, 96, 80, 180, 108)",
-    "wc": "sel(i, 96, 84, 48, 150, 90)"
-   },
-   "constraints": [
-    "wX > wY",
-    "lX > 0",
-    "lY > 0",
-    "ans > 0",
-    "wa != ans",
-    "wb != ans",
-    "wc != ans",
-    "wa != wb",
-    "wa != wc",
-    "wb != wc"
-   ],
-   "stem": {
-    "en": "The breadths of two rectangles, X and Y, are {wX} cm and {wY} cm. The sum of the lengths of X and Y is {sumL} cm and the sum of their areas is {sumA} cm^2. What is the area of rectangle X?",
-    "zh": "两个矩形 X 和 Y 的宽分别是 {wX} 厘米和 {wY} 厘米。X 与 Y 的长之和是 {sumL} 厘米，面积之和是 {sumA} 平方厘米。求矩形 X 的面积。"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "{ans} cm^2",
-      "zh": "{ans} 平方厘米"
-     },
-     {
-      "en": "{wa} cm^2",
-      "zh": "{wa} 平方厘米"
-     },
-     {
-      "en": "{wb} cm^2",
-      "zh": "{wb} 平方厘米"
-     },
-     {
-      "en": "{wc} cm^2",
-      "zh": "{wc} 平方厘米"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Let the length of X be a and the length of Y be b. Then a + b = {sumL} and {wX}a + {wY}b = {sumA}. Substituting b = {sumL} - a gives {wX}a + {wY}({sumL} - a) = {sumA}, so ({wX} - {wY})a = {sumA} - {wY} x {sumL} = {sumA-wY*sumL}. Hence a = {lX}. The area of X is {wX} cm x {lX} cm = {ans} cm² (check: Y is {wY} cm x {lY} cm = {areaY} cm², and {ans} + {areaY} = {sumA} ✓).",
-    "zh": "设 X 的长为 a、Y 的长为 b，则 a + b = {sumL}，且 {wX}a + {wY}b = {sumA}。把 b = {sumL} − a 代入，得 {wX}a + {wY}({sumL} − a) = {sumA}，即 ({wX} − {wY})a = {sumA} − {wY} × {sumL} = {sumA-wY*sumL}，所以 a = {lX}。矩形 X 的面积 = {wX} × {lX} = {ans} 平方厘米。（验算：Y 是 {wY} × {lY} = {areaY} 平方厘米，{ans} + {areaY} = {sumA} ✓）"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-29",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q29",
-   "noVariantReason": "",
-   "topic": "单价·等价表达式",
-   "difficulty": 4,
-   "title": "判断哪个表达式不能表示同一数量",
-   "tags": [
-    "比例",
-    "代数式"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "n0": "sel(i, 30, 40, 25, 45, 60)",
-    "c0": "sel(i, 5, 8, 4, 9, 12)",
-    "c1": "sel(i, 17, 21, 11, 25, 30)",
-    "ratioCellA": "sel(i, 510, 840, 275, 1125, 1800)",
-    "correctIndex": "sel(i, 1, 1, 1, 1, 1)"
-   },
-   "constraints": [
-    "n0 > 0",
-    "c0 > 0",
-    "c1 > 0",
-    "c1 > c0"
-   ],
-   "stem": {
-    "en": "If {n0} jellybeans cost you ${c0}, which one is not an expression of how many jellybeans you can purchase for ${c1}?",
-    "zh": "如果 {n0} 粒软糖要 {c0} 元，那么下面哪个式子不能表示 {c1} 元能买到的软糖粒数？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{c1} / ({c0}/{n0})",
-      "zh": "{c1} ÷ ({c0}/{n0})"
-     },
-     {
-      "en": "{c1} x ({ratioCellA}/{n0*c0})",
-      "zh": "{c1} × ({ratioCellA}/{n0*c0})"
-     },
-     {
-      "en": "{c1} x ({n0}/{c0})",
-      "zh": "{c1} × ({n0}/{c0})"
-     },
-     {
-      "en": "({c1*100} x {n0}) / ({c0*100})",
-      "zh": "({c1*100} × {n0}) ÷ ({c0*100})"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The unit price is ${c0} / {n0} jellybeans, so ${c1} buys {c1} / ({c0}/{n0}) = {c1} x ({n0}/{c0}) = {c1*n0}/{c0}. Multiplying top and bottom by 100 gives ({c1*100} x {n0}) / ({c0*100}), so the first, third and fourth expressions are all equal. Testing the second with {c0} = {c0}: {c1} x ({ratioCellA}/{n0*c0}) = {c1} x ({ratioCellA}/{n0*c0}) = {c1*ratioCellA/(n0*c0)}, not {c1*n0/c0}. So the second is not a valid expression.",
-    "zh": "单价是 {c0} ÷ {n0} 元/粒，所以 {c1} 元能买 {c1} ÷ ({c0}/{n0}) = {c1} × ({n0}/{c0}) = {c1*n0}/{c0} 粒。分子分母同乘 100 就得 ({c1*100} × {n0}) ÷ ({c0*100})，所以第一、三、四个式子都相等。再看第二个：当 {c0} = {c0} 时 {c1} × ({ratioCellA}/{n0*c0}) = {c1*ratioCellA/(n0*c0)}，并不等于 {c1*n0/c0}。所以第二个式子不能表示该数量。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-30",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q30",
-   "noVariantReason": "",
-   "topic": "速度·时间换算",
-   "difficulty": 3,
-   "title": "同速行驶求所需时间（时与分换算）",
-   "tags": [
-    "速度",
-    "时间单位"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 2
-    }
-   },
-   "derived": {
-    "m0": "sel(i, 15, 20, 12)",
-    "d0": "sel(i, 18, 24, 15)",
-    "d1": "sel(i, 210, 300, 175)",
-    "m10": "sel(i, 5, 6, 20)",
-    "totMin": "d1*m0/d0",
-    "wantMin": "sel(i, 175, 250, 140)",
-    "ok1": "mod(60*d0, m0)",
-    "ok2": "sel(i, 0, 0, 0)",
-    "correctIndex": "sel(i, 0, 0, 0)"
-   },
-   "constraints": [
-    "ok1 == ok2",
-    "totMin == wantMin",
-    "m10 > 0"
-   ],
-   "stem": {
-    "en": "In our car, it took us {m0} minutes to cover {d0} km. At this rate, how long would it take to travel {d1} km?",
-    "zh": "我们开车用 {m0} 分钟行驶了 {d0} 千米。按这个速度，行驶 {d1} 千米需要多长时间？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "3 h {m10} min",
-      "zh": "3 小时 {m10} 分"
-     },
-     {
-      "en": "3 h {m10-20} min",
-      "zh": "3 小时 {m10-20} 分"
-     },
-     {
-      "en": "2 h {m10+45} min",
-      "zh": "2 小时 {m10+45} 分"
-     },
-     {
-      "en": "1 h {m10+35} min",
-      "zh": "1 小时 {m10+35} 分"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The speed is {d0} km per {m0} minutes = {d0*60/m0} km/h. The time needed is {d1} / {d0*60/m0} = {d1*m0/d0} minutes = 180 + {m10} minutes, which is 3 hours {m10} minutes. (In hours that is {d1}/{d0*60/m0} = 3 {m10}/60 h.)",
-    "zh": "速度是 {m0} 分钟走 {d0} 千米，即每小时 {d0*60/m0} 千米。所需时间 = {d1} ÷ {d0*60/m0} = {d1*m0/d0} 分钟 = 180 + {m10} 分钟，也就是 3 小时 {m10} 分。（用小时表示是 {d1}/{d0*60/m0} = 3 又 {m10}/60 小时。）"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "A"
-  },
-  {
-   "id": "mm1t3-31",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q31",
-   "noVariantReason": "",
-   "topic": "分数表示部分与整体",
-   "difficulty": 3,
-   "title": "用一种珠子数表示与另两种珠子总数之比",
-   "tags": [
-    "分数",
-    "比例"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "R": "sel(i, 28, 24, 30, 36, 40)",
-    "G": "sel(i, 16, 18, 12, 24, 20)",
-    "Y": "sel(i, 20, 30, 18, 12, 25)",
-    "Rk": "sel(i, 7, 4, 5, 3, 2)",
-    "Gk": "sel(i, 4, 3, 2, 2, 1)",
-    "Yk": "sel(i, 5, 5, 3, 1, 1)",
-    "correctIndex": "sel(i, 0, 1, 1, 0, 0)",
-    "ansTxt": "sel(i, 1/3, 3/7, 1/3, 2/3, 4/13)"
-   },
-   "constraints": [
-    "G*Rk == R*Gk",
-    "G*Yk == Y*Gk",
-    "ansTxt != '1/2'",
-    "ansTxt != '1/4'"
-   ],
-   "stem": {
-    "en": "In a box, there are {R} red beads, {G} green beads and {Y} yellow beads. Express the number of green beads as a fraction of the total number of red and yellow beads.",
-    "zh": "盒子里有 {R} 颗红珠子、{G} 颗绿珠子和 {Y} 颗黄珠子。用分数表示绿珠子数量占红珠子与黄珠子总数的几分之几。"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "1/3",
-      "zh": "1/3"
-     },
-     {
-      "en": "3/7",
-      "zh": "3/7"
-     },
-     {
-      "en": "1/2",
-      "zh": "1/2"
-     },
-     {
-      "en": "1/4",
-      "zh": "1/4"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Green beads = {G}. Red + yellow = {R} + {Y} = {R+Y}. So green as a fraction of red and yellow is {G}/{R+Y}, which simplifies to {ansTxt}.",
-    "zh": "绿珠子有 {G} 颗。红珠子与黄珠子共 {R} + {Y} = {R+Y} 颗。所以绿珠子占红黄总数的 {G}/{R+Y}，化简得 {ansTxt}。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "A"
-  },
-  {
-   "id": "mm1t3-32",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q32",
-   "noVariantReason": "",
-   "topic": "平均数·增量",
-   "difficulty": 3,
-   "title": "已知前 n 次平均分求使平均分提高 k 的末次分数",
-   "tags": [
-    "平均数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 2
-    }
-   },
-   "derived": {
-    "n": "sel(i, 4, 5, 6)",
-    "avg0": "sel(i, 28, 22, 30)",
-    "k": "sel(i, 2, 3, 2)",
-    "unit": "sel(i, 40, 50, 50)",
-    "avg1": "avg0 + k",
-    "ans": "sel(i, 38, 40, 44)",
-    "unit2": "sel(i, 50, 60, 55)",
-    "wa": "sel(i, 30, 25, 36)",
-    "wb": "sel(i, 39, 47, 47)",
-    "wd": "sel(i, 40, 45, 50)",
-    "correctIndex": "sel(i, 1, 1, 1)"
-   },
-   "constraints": [
-    "avg1 == avg0 + k",
-    "ans == (n+1)*avg1 - n*avg0",
-    "ans <= unit2",
-    "ans != wa",
-    "ans != wb",
-    "ans != wd",
-    "wa != wb",
-    "wa != wd",
-    "wb != wd"
-   ],
-   "stem": {
-    "en": "My average result from the last {n} maths exams was {avg0} out of {unit}. What do I need in my next exam in order to increase my average by {k}?",
-    "zh": "我最近 {n} 次数学考试的平均分是 {avg0} 分（满分 {unit} 分）。下次考试我要考多少分，才能让平均分提高 {k} 分？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wd}",
-      "zh": "{wd}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The {n} exams total {avg0} x {n} = {avg0*n} marks. To raise the average by {k} the new average must be {avg1}, so the {n+1} exams must total {avg1} x {n+1} = {avg1*(n+1)} marks. The next exam must be {avg1*(n+1)} - {avg0*n} = {ans}.",
-    "zh": "{n} 次考试总分 = {avg0} × {n} = {avg0*n} 分。要让平均分提高 {k} 分，新平均分应为 {avg1} 分，那么 {n+1} 次考试的总分要达到 {avg1} × {n+1} = {avg1*(n+1)} 分。所以下次考试要考 {avg1*(n+1)} − {avg0*n} = {ans} 分。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  },
-  {
-   "id": "mm1t3-33",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q33",
-   "noVariantReason": "",
-   "topic": "质数与线性方程",
-   "difficulty": 4,
-   "title": "求满足线性方程的质数对",
-   "tags": [
-    "质数",
-    "方程"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 2
-    }
-   },
-   "derived": {
-    "a": "sel(i, 5, 5, 11, 3, 7)",
-    "b": "sel(i, 7, 3, 2, 5, 2)",
-    "S": "sel(i, 109, 101, 89, 71, 73)",
-    "P": "sel(i, 19, 19, 5, 2, 5)",
-    "Q": "sel(i, 2, 2, 17, 13, 19)",
-    "bluff": "sel(i, 12, 12, 16, 15, 15)",
-    "wrongP": "sel(i, 7, 7, 7, 3, 3)",
-    "correctIndex": "sel(i, 3, 3, 3, 3, 3)"
-   },
-   "constraints": [
-    "a*P + b*Q == S",
-    "P != Q",
-    "Q >= 2",
-    "bluff != P",
-    "bluff != Q",
-    "wrongP != P",
-    "wrongP != Q"
-   ],
-   "stem": {
-    "en": "Suppose P and Q both represent prime numbers such that {a} x P + {b} x Q = {S}. Find the value of P and Q (in the form P, Q).",
-    "zh": "设 P 和 Q 都是质数，且满足 {a} × P + {b} × Q = {S}。求 P 和 Q 的值（按 P, Q 的顺序写出）。"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{bluff}, {b}",
-      "zh": "{bluff}, {b}"
-     },
-     {
-      "en": "{a}, {bluff}",
-      "zh": "{a}, {bluff}"
-     },
-     {
-      "en": "{wrongP}, {a}",
-      "zh": "{wrongP}, {a}"
-     },
-     {
-      "en": "{P}, {Q}",
-      "zh": "{P}, {Q}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Options A and B contain {bluff}, which is not a prime number, so they are out. Checking C: {a} x {wrongP} + {b} x {a} = {a*wrongP+b*a}, which is not {S}. Checking D: {a} x {P} + {b} x {Q} = {a*P+b*Q} = {S} ✓ (and {P} and {Q} are both prime). So P = {P} and Q = {Q}.",
-    "zh": "选项 A、B 里都含 {bluff}，{bluff} 不是质数，排除。检验 C：{a} × {wrongP} + {b} × {a} = {a*wrongP+b*a}，不等于 {S}。检验 D：{a} × {P} + {b} × {Q} = {a*P+b*Q} = {S} ✓（且 {P} 和 {Q} 都是质数）。所以 P = {P}、Q = {Q}。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-34",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q34",
-   "noVariantReason": "",
-   "topic": "按比例分配",
-   "difficulty": 3,
-   "title": "已知最小份额求总额",
-   "tags": [
-    "比例"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "r1": "sel(i, 6, 5, 4, 7, 8)",
-    "r2": "sel(i, 4, 3, 3, 5, 4)",
-    "r3": "sel(i, 3, 2, 2, 4, 3)",
-    "least": "sel(i, 270, 140, 150, 320, 180)",
-    "parts": "sel(i, 13, 10, 9, 16, 15)",
-    "one": "sel(i, 90, 70, 75, 80, 60)",
-    "ans": "sel(i, 1170, 700, 675, 1280, 900)",
-    "wa": "sel(i, 3510, 2100, 2700, 5120, 2400)",
-    "wb": "sel(i, 1620, 1120, 1350, 2240, 1800)",
-    "wd": "sel(i, 2700, 1400, 1500, 3200, 1200)",
-    "correctIndex": "sel(i, 2, 2, 2, 2, 2)"
-   },
-   "constraints": [
-    "mod(least, r3) == 0",
-    "one == least/r3",
-    "ans == one*parts",
-    "parts == r1+r2+r3",
-    "wa != ans",
-    "wb != ans",
-    "wd != ans"
-   ],
-   "stem": {
-    "en": "Three people share a sum of money in the ratio {r1} : {r2} : {r3}. The person who receives the least amount gets ${least}. Find the total amount of money they shared.",
-    "zh": "三个人按 {r1} : {r2} : {r3} 的比例分一笔钱。分得最少的那个人拿到 {least} 元。求他们一共分了多少钱。"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "${wa}",
-      "zh": "{wa} 元"
-     },
-     {
-      "en": "${wb}",
-      "zh": "{wb} 元"
-     },
-     {
-      "en": "${ans}",
-      "zh": "{ans} 元"
-     },
-     {
-      "en": "${wd}",
-      "zh": "{wd} 元"
-     }
-    ]
-   },
-   "solution": {
-    "en": "The smallest share is the {r3} part, and that part is worth ${least}. So one part is ${least} / {r3} = ${one}. The whole sum is {r1} + {r2} + {r3} = {parts} parts, so the total is {parts} x ${one} = ${ans}.",
-    "zh": "最小的份额是比例中的 {r3} 份，这 {r3} 份值 {least} 元，所以 1 份 = {least} ÷ {r3} = {one} 元。总额共 {r1} + {r2} + {r3} = {parts} 份，因此一共是 {parts} × {one} = {ans} 元。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-35",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q35",
-   "noVariantReason": "",
-   "topic": "奇偶性",
-   "difficulty": 4,
-   "title": "判断含奇数 m 的哪个表达式必为奇数",
-   "tags": [
-    "奇偶性",
-    "代数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "a": "sel(i, 2, 4, 6, 8, 10)",
-    "b": "sel(i, 3, 5, 7, 9, 11)",
-    "correctIndex": "sel(i, 3, 3, 3, 3, 3)"
-   },
-   "constraints": [
-    "mod(a, 2) == 0",
-    "a > 0",
-    "b > 0"
-   ],
-   "stem": {
-    "en": "If m is an odd number, which of the numbers below must be odd?",
-    "zh": "如果 m 是一个奇数，下面哪个数一定是奇数？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{a} x m",
-      "zh": "{a} × m"
-     },
-     {
-      "en": "{b} x m + 1",
-      "zh": "{b} × m + 1"
-     },
-     {
-      "en": "(m - 1) x (m + 1)",
-      "zh": "(m − 1) × (m + 1)"
-     },
-     {
-      "en": "m^2",
-      "zh": "m²"
-     }
-    ]
-   },
-   "solution": {
-    "en": "An even number times an odd number is even, so {a} x m is even. {b} x m is odd, so {b} x m + 1 is even. m - 1 and m + 1 are both even, so their product is even. m x m = m² is odd x odd = odd. So only m² must be odd.",
-    "zh": "偶数乘奇数得偶数，所以 {a} × m 是偶数。{b} × m 是奇数，所以 {b} × m + 1 是偶数。m − 1 与 m + 1 都是偶数，它们的积也是偶数。而 m × m = m² 是奇数乘奇数 = 奇数。所以只有 m² 一定是奇数。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-36",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q36",
-   "noVariantReason": "",
-   "topic": "组合计数",
-   "difficulty": 4,
-   "title": "已知两两互发消息总数求人数",
-   "tags": [
-    "计数",
-    "方程"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "n": "sel(i, 15, 12, 18, 20, 24)",
-    "msg": "sel(i, 210, 132, 306, 380, 552)",
-    "unit": "sel(i, 20, 25, 15, 30, 10)",
-    "ans": "sel(i, 15, 12, 18, 20, 24)",
-    "wa": "sel(i, 14, 11, 17, 19, 23)",
-    "wb": "sel(i, 12, 10, 16, 21, 22)",
-    "wd": "sel(i, 13, 14, 19, 22, 25)",
-    "correctIndex": "sel(i, 3, 3, 3, 3, 3)"
-   },
-   "constraints": [
-    "msg == n*(n-1)",
-    "ans == n",
-    "wa != ans",
-    "wb != ans",
-    "wd != ans",
-    "wa != wb",
-    "wa != wd",
-    "wb != wd"
-   ],
-   "stem": {
-    "en": "Every student in a class sends a message to each of the other students in the class. Altogether {msg} messages are sent. How many students are there in the class?",
-    "zh": "班上每名学生都给班上其他每一名同学发一条消息，一共发了 {msg} 条消息。班上有多少名学生？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{wa}",
-      "zh": "{wa}"
-     },
-     {
-      "en": "{wb}",
-      "zh": "{wb}"
-     },
-     {
-      "en": "{wd}",
-      "zh": "{wd}"
-     },
-     {
-      "en": "{ans}",
-      "zh": "{ans}"
-     }
-    ]
-   },
-   "solution": {
-    "en": "If there are m students, each of them sends m - 1 messages, but each message is counted twice (sender and receiver), so there are m x (m - 1) / 2? No — the question counts one message per student per receiver, giving m x (m - 1) messages. Solving m x (m - 1) = {msg}: try m = {n}, and {n} x {n-1} = {msg} ✓. So there are {ans} students.",
-    "zh": "设班上有 m 名学生，每人都要发给其余 m − 1 人各一条消息，所以消息总数是 m × (m − 1) 条（每名学生各发一条，各算一条）。解 m × (m − 1) = {msg}：试 m = {n}，{n} × {n-1} = {msg} ✓。所以班上有 {ans} 名学生。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-37",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q37",
-   "noVariantReason": "",
-   "topic": "工程问题·合做",
-   "difficulty": 3,
-   "title": "三人同吃一张披萨求所需时间",
-   "tags": [
-    "工程问题",
-    "速度"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 2
-    }
-   },
-   "derived": {
-    "a": "sel(i, 4, 6, 3)",
-    "b": "sel(i, 5, 10, 4)",
-    "c": "sel(i, 20, 30, 12)",
-    "unit": "c",
-    "pa": "sel(i, 5, 5, 4)",
-    "pb": "sel(i, 4, 3, 3)",
-    "psum": "pa + pb + 1",
-    "ansMin": "sel(i, 2, 3, 1.5)",
-    "ansS": "sel(i, 120, 180, 90)",
-    "correctIndex": "sel(i, 2, 2, 2)"
-   },
-   "constraints": [
-    "unit == c",
-    "a < b",
-    "b < c",
-    "mod(unit, a) == 0",
-    "mod(unit, b) == 0",
-    "pa == unit/a",
-    "pb == unit/b",
-    "ansS == unit*60/psum",
-    "ansMin == ansS/60"
-   ],
-   "stem": {
-    "en": "Peter can eat a pizza in {a} minutes. Jim can eat a pizza in {b} minutes. Their dad can eat a pizza in {c} minutes. If the two boys and dad all start eating the same pizza at the same time, how long does it take them to finish one pizza?",
-    "zh": "Peter {a} 分钟能吃完一张披萨，Jim {b} 分钟能吃完一张，他们的爸爸要 {c} 分钟。如果两个男孩和爸爸同时开始吃同一张披萨，吃完一张需要多长时间？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{ansMin+0.2} minutes",
-      "zh": "{ansMin+0.2} 分钟"
-     },
-     {
-      "en": "2 minutes 30 seconds",
-      "zh": "2 分 30 秒"
-     },
-     {
-      "en": "{ansMin} minutes",
-      "zh": "{ansMin} 分钟"
-     },
-     {
-      "en": "1 minute 36 seconds",
-      "zh": "1 分 36 秒"
-     }
-    ]
-   },
-   "solution": {
-    "en": "In {unit} minutes Peter eats {pa} pizzas, Jim eats {pb} pizzas and dad eats 1 pizza, so together they eat {pa} + {pb} + 1 = {psum} pizzas in {unit} minutes. A single pizza therefore takes {unit} / {psum} = {ansMin} minutes = {ansS} seconds.",
-    "zh": "{unit} 分钟内 Peter 能吃 {pa} 张，Jim 能吃 {pb} 张，爸爸能吃 1 张，合起来 {pa} + {pb} + 1 = {psum} 张。所以吃完 1 张只需 {unit} ÷ {psum} = {ansMin} 分钟 = {ansS} 秒。"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "C"
-  },
-  {
-   "id": "mm1t3-38",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q38",
-   "noVariantReason": "",
-   "topic": "和倍问题",
-   "difficulty": 3,
-   "title": "已知两人体重之和与倍数关系求较小者体重",
-   "tags": [
-    "方程",
-    "倍数"
-   ],
-   "vars": {
-    "i": {
-     "type": "int",
-     "min": 0,
-     "max": 4
-    }
-   },
-   "derived": {
-    "k": "sel(i, 2, 3, 2, 4, 2)",
-    "d": "sel(i, 1, 2, 3, 1, 5)",
-    "sum": "sel(i, 157, 128, 168, 165, 113)",
-    "ans": "sel(i, 52, 42, 55, 41, 36)",
-    "wa": "sel(i, 78, 63, 82, 62, 54)",
-    "wb": "sel(i, 50, 40, 54, 40, 35)",
-    "wc": "sel(i, 51, 41, 56, 43, 38)",
-    "correctIndex": "sel(i, 0, 0, 0, 0, 0)"
-   },
-   "constraints": [
-    "k*ans + d + ans == sum",
-    "ans > 0",
-    "ans != wb",
-    "ans != wc",
-    "ans != wa",
-    "wb != wc"
-   ],
-   "stem": {
-    "en": "The total weight of Chris and his sister Ann is {sum} kilograms. Chris's weight is {d} kilogram(s) more than {k} times Ann's weight. What is Ann's weight?",
-    "zh": "Chris 和妹妹 Ann 的体重一共是 {sum} 千克。Chris 的体重比 Ann 的 {k} 倍还多 {d} 千克。Ann 的体重是多少？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": "correctIndex",
-    "options": [
-     {
-      "en": "{ans} kg",
-      "zh": "{ans} 千克"
-     },
-     {
-      "en": "{wa} kg",
-      "zh": "{wa} 千克"
-     },
-     {
-      "en": "{wb} kg",
-      "zh": "{wb} 千克"
-     },
-     {
-      "en": "{wc} kg",
-      "zh": "{wc} 千克"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Let Ann's weight be x. Chris weighs {k}x + {d}. So x + {k}x + {d} = {sum}, giving {k+1}x = {sum-d}, so x = {ans}. Ann weighs {ans} kg (Chris weighs {k} x {ans} + {d} = {wa} kg, and {ans} + {wa} = {sum} ✓).",
-    "zh": "设 Ann 的体重为 x。Chris 的体重是 {k}x + {d}。于是 x + {k}x + {d} = {sum}，即 {k+1}x = {sum-d}，解得 x = {ans}。Ann 重 {ans} 千克。（Chris 重 {k} × {ans} + {d} = {wa} 千克，{ans} + {wa} = {sum} ✓）"
-   },
-   "noFigure": "原题为纯文字题，无图",
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "A"
-  },
-  {
-   "id": "mm1t3-39",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q39",
-   "topic": "内接正方形·面积比",
-   "difficulty": 4,
-   "title": "正方形各边中点连成内接正方形求面积比",
-   "tags": [
-    "面积",
-    "比"
-   ],
-   "vars": {
-    "i": {
-     "type": "pick",
-     "from": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5
-     ]
-    }
-   },
-   "derived": {
-    "s": "sel(i, 10, 12, 8, 14, 16, 20)",
-    "bigA": "s*s",
-    "smA": "s*s/2",
-    "quarter": "s*s/4",
-    "third": "s*s/3",
-    "sixth": "s*s/6",
-    "eighth": "s*s/8",
-    "half": "s/2"
-   },
-   "constraints": [
-    "mod(bigA, 2) == 0",
-    "mod(s, 2) == 0"
-   ],
-   "stem": {
-    "en": "The midpoints of the sides of square ABCD are joined to form square EFGH. What fraction is the area of square ABCD of the area of square EFGH?",
-    "zh": "连接正方形 ABCD 各边的中点，得到正方形 EFGH。正方形 ABCD 的面积是正方形 EFGH 面积的几分之几？"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 0,
-    "options": [
-     {
-      "en": "2",
-      "zh": "2"
-     },
-     {
-      "en": "1/2",
-      "zh": "1/2"
-     },
-     {
-      "en": "1/4",
-      "zh": "1/4"
-     },
-     {
-      "en": "1/3",
-      "zh": "1/3"
-     },
-     {
-      "en": "4",
-      "zh": "4"
-     },
-     {
-      "en": "1/6",
-      "zh": "1/6"
-     }
-    ]
-   },
-   "solution": {
-    "en": "Take square ABCD with side {s} cm, so its area is {bigA} cm². The four corner triangles cut off by EFGH are right-angled isosceles triangles with legs {s}/2 = {half} cm each, so each has area (1/2) x {half} x {half} = {eighth} cm². The four together take up {bigA} - {smA} = {smA} cm², leaving EFGH with area {smA} cm². Hence area ABCD / area EFGH = {bigA} / {smA} = 2, i.e. ABCD is 2 times EFGH.",
-    "zh": "取边长为 {s} 厘米的正方形 ABCD，面积为 {bigA} 平方厘米。EFGH 切下的四个角都是等腰直角三角形，直角边各为 {s} ÷ 2 = {half} 厘米，每个面积 (1/2) × {half} × {half} = {eighth} 平方厘米，四个共占 {bigA} − {smA} = {smA} 平方厘米，剩下 EFGH 的面积就是 {smA} 平方厘米。所以 ABCD 的面积 ÷ EFGH 的面积 = {bigA} ÷ {smA} = 2，即 ABCD 是 EFGH 的 2 倍。"
-   },
-   "diagram": {
-    "type": "midsquare",
-    "side": "s"
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "D"
-  },
-  {
-   "id": "mm1t3-40",
-   "subject": "数学",
-   "grade": "六年级",
-   "sourceSet": "Mastering Mathematics Book 1 Test 3",
-   "source": "Mastering Mathematics Book 1 Test 3 Q40",
-   "topic": "数正方形",
-   "difficulty": 4,
-   "title": "数出图中所有尺寸的正方形个数",
-   "tags": [
-    "计数",
-    "图形"
-   ],
-   "vars": {
-    "i": {
-     "type": "pick",
-     "from": [
-      0,
-      1,
-      2,
-      3
-     ]
-    }
-   },
-   "derived": {
-    "sq1": "sel(i, 10, 9, 8, 8)",
-    "sq2": "sel(i, 2, 0, 4, 4)",
-    "sq3": "sel(i, 2, 1, 0, 1)",
-    "tot": "sel(i, 14, 10, 12, 13)",
-    "wA": "sel(i, 12, 12, 10, 10)",
-    "wB": "sel(i, 16, 14, 14, 14)",
-    "wC": "sel(i, 13, 13, 13, 12)",
-    "kH": "sel(i, 1, 2, 2, 2)",
-    "mH1": "sel(i, 2, 1, 1, 1)",
-    "mHc1": "sel(i, 1, 1, 1, 0)",
-    "mH2": "sel(i, 0, 2, 3, 1)",
-    "mHc2": "sel(i, 0, 1, 1, 1)",
-    "kV": "0"
-   },
-   "constraints": [
-    "wA != tot",
-    "wB != tot",
-    "wC != tot",
-    "wA != wB",
-    "wA != wC",
-    "wB != wC",
-    "sq1 != sq2",
-    "tot > sq1"
-   ],
-   "diagram": {
-    "type": "squarecount",
-    "cols": "3",
-    "rows": "4",
-    "kH": "kH",
-    "mH1": "mH1",
-    "mHc1": "mHc1",
-    "mH2": "mH2",
-    "mHc2": "mHc2",
-    "kV": "kV"
-   },
-   "answer": {
-    "type": "choice",
-    "correctIndex": 1,
-    "options": [
-     {
-      "en": "{wA}",
-      "zh": "{wA}"
-     },
-     {
-      "en": "{tot}",
-      "zh": "{tot}"
-     },
-     {
-      "en": "{wC}",
-      "zh": "{wC}"
-     },
-     {
-      "en": "{wB}",
-      "zh": "{wB}"
-     }
-    ]
-   },
-   "stem": {
-    "en": "How many squares of any size exist in the figure below?",
-    "zh": "下面的图形中一共有多少个正方形（各种大小都算）？"
-   },
-   "solution": {
-    "en": "Count by size. Smallest squares: {sq1}. Next size up: {sq2}. Largest size present: {sq3}. Total = {sq1} + {sq2} + {sq3} = {tot}.",
-    "zh": "按大小分类数：最小的正方形有 {sq1} 个，次大的有 {sq2} 个，更大的有 {sq3} 个，所以一共 {sq1} + {sq2} + {sq3} = {tot} 个。"
-   },
-   "original": {
-    "i": 0
-   },
-   "originalAnswer": "B"
-  }
- ]
+  ]
 }

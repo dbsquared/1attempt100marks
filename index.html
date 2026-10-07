@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" data-page-node-id="YOiYPAlVfN2AuKU7HvdbRI">
 <title>一次一百分 · 智能练习</title>
 <meta name="description" content="真题变式练习：一次一百分，错题自动重练直到完全掌握。" data-page-node-id="g5okAhanJenkZotijUiutE">
-<link rel="stylesheet" href="assets/css/style.css?v=33" data-page-node-id="YsWtZzuzABH3sjCBwD4jFR">
+<link rel="stylesheet" href="assets/css/style.css?v=34" data-page-node-id="YsWtZzuzABH3sjCBwD4jFR">
 </head>
 <body data-page-node-id="ZJjBfzddzUbADtt2NuPFm4">
 
@@ -128,6 +128,16 @@
           <input type="checkbox" id="ppOriginal" style="width:auto;margin:0 5px 0 0;vertical-align:middle">原题
         </label>
       </div>
+      <div class="row" style="margin-top:10px">
+        <label class="small" style="cursor:pointer" title="整卷限时：倒计时固定在屏幕底部，上下滚动不影响显示；剩余不足 10% 会温和提醒，时间到自动停止作答并提示交卷。">
+          <input type="checkbox" id="ppTimerOn" checked style="width:auto;margin:0 5px 0 0;vertical-align:middle">限时
+        </label>
+        <label class="small">时长 <input type="number" id="ppTimerMin" min="1" max="300" step="1" style="max-width:90px"> 分钟</label>
+        <button type="button" class="btn sm" id="ppTimerReset" title="按试卷的官方限时与本次题量重新折算">按官方折算</button>
+        <span class="pill" id="ppTimerTag">—</span>
+        <span class="small muted" id="ppTimerSrc"></span>
+      </div>
+      <p class="small muted" id="ppTimerInfo" style="margin:6px 0 0"></p>
       <fieldset class="srcset" data-page-node-id="Db26QTZwtzdSmqAdE3CpZe">
         <legend data-page-node-id="JuKOOSW1K1bQfeRfGHPIAb">试题来源（可多选；不选 = 全部来源）</legend>
         <div class="row" style="margin-bottom:8px" data-page-node-id="1z4AAOIPcFpMsTIE5x68cB">
@@ -278,6 +288,31 @@
   </div>
 </div>
 
+<!-- ============ 限时倒计时（position:fixed 底栏，上下滚动不影响显示） ============ -->
+<div class="timer-bar hidden" id="paperTimer" role="timer" aria-live="polite">
+  <i class="tprog" id="timerProg"></i>
+  <span class="tclock"><span class="ticon" aria-hidden="true">⏱</span><b class="clock" id="timerClock">--:--</b></span>
+  <span class="tmsg small" id="timerMsg"></span>
+  <span class="spacer"></span>
+  <span class="tinfo small muted" id="timerInfo"></span>
+  <button class="btn sm primary" id="btnTimerSubmit">交卷</button>
+</div>
+
+<!-- ============ 时间到提示（自动停止作答后弹出） ============ -->
+<div class="modal-mask hidden" id="timeUpMask">
+  <div class="modal" role="dialog" aria-label="答题时间到">
+    <div class="modal-head">
+      <h3>⏱ 时间到</h3>
+    </div>
+    <p class="small" id="timeUpText">本卷限时已用完，已自动停止作答（答案不能再修改）。</p>
+    <div class="row" style="margin-top:14px">
+      <button class="btn primary" id="btnTimeUpSubmit">立即交卷判分</button>
+      <button class="btn" id="btnTimeUpLater">先不交，只读检查</button>
+    </div>
+    <p class="small muted" style="margin:10px 0 0">「只读检查」只关掉这个提示，答案仍然锁定；检查好了点页面上（或底部计时条上）的「交卷」。</p>
+  </div>
+</div>
+
 <div class="toast" id="toast" data-page-node-id="UIgf4ShTftoxqVIb9JumWT"></div>
 
 <script src="assets/js/expr.js?v=27"></script>
@@ -285,9 +320,10 @@
 <script src="assets/js/generator.js?v=29"></script>
 <script src="assets/js/grader.js?v=27"></script>
 <script src="assets/js/sync.js?v=29"></script>
-<script src="assets/js/store.js?v=31"></script>
+<script src="assets/js/papers.js?v=1"></script>
+<script src="assets/js/store.js?v=32"></script>
 <script src="assets/js/srs.js?v=30"></script>
-<script src="assets/js/app.js?v=41"></script>
+<script src="assets/js/app.js?v=42"></script>
 
 <!-- 页脚版本徽标：自动读取 app.js 的 ?v= 参数，方便确认浏览器实际运行的代码版本 -->
 <div id="verBadge" style="position:fixed;right:10px;bottom:8px;font-size:11px;color:#b9bec7;pointer-events:none;z-index:9"></div>

@@ -15,6 +15,9 @@
   var paper = null;       // {questions:[], answers:{}, graded:false}
   var lastResults = null; // 最近一轮的作答结果（用于生成可读答卷汇总邮件）
   var ppSizeTouched = false; // 用户是否手动改过组卷题量（手动改后不再被来源联动覆盖）
+  var ppTimerTouched = false; // 用户是否手动改过限时分钟数（改后不再被官方折算覆盖）
+  var paperTimer = null;      // 限时卷倒计时状态 {deadline,totalMs,tick,warned}
+  var saveRunTimer = null;    // 「进行中的限时卷」落盘防抖句柄
 
   /* ---------------- 基础工具 ---------------- */
   function toast(msg) {
@@ -488,6 +491,10 @@
       return '<label class="srcitem"><input type="checkbox" value="' + esc(s) + '"> ' + esc(s) + '</label>';
     }).join('');
     box.addEventListener('change', syncPaperSizeDefault);   // 勾选/取消来源 → 联动默认题量
+    if (!box.dataset.timerHook) {                           // 只挂一次（innerHTML 重设不影响 box 自身的监听）
+      box.dataset.timerHook = '1';
+      box.addEventListener('change', function () { refreshPaperTimerUI(); });
+    }
     if (countId) $(countId).textContent = list.length + ' 个来源';
     if (allId) $(allId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = true; }); syncPaperSizeDefault(); };
     if (noneId) $(noneId).onclick = function () { Array.prototype.forEach.call(box.querySelectorAll('input'), function (c) { c.checked = false; }); syncPaperSizeDefault(); };
@@ -515,6 +522,289 @@
     if (v > 0) { var el = $('#ppSize'); if (el) el.value = Math.max(1, Math.min(60, v)); }
   }
 
+  /* ================= 限时（试卷属性 → 本次题量 → 倒计时） =================
+   * 试卷的官方限时写在 data/papers.json（WorkBuddy 联网检索官方规则后填写，见 PIPELINE.md §10），
+   * 折算规则：限时 = 官方整卷分钟 × 本次题量 ÷ 试卷总题数（见 assets/js/papers.js）。
+   * 倒计时底栏是 position:fixed，所以上下滚动窗口始终可见；
+   * 截止时刻还存在本机（进行中的卷子），刷新/重开页面按原 deadline 继续，不会把时钟刷新掉。 */
+
+  /* 组卷面板里参与折算的模板：优先按勾选的「试题来源」，没勾就按科目/知识点筛 */
+  function paperLimitTemplates() {
+    var srcs = checkedSources('#ppSources');
+    var sub = ($('#ppSubject') || {}).value || '';
+    var topic = ($('#ppTopic') || {}).value || '';
+    return Bank.all().filter(function (t) {
+      if (sub && (t.subject || '') !== sub) return false;
+      if (topic && (t.topic || '') !== topic) return false;
+      if (srcs.length && srcs.indexOf(sourceSetOf(t)) < 0) return false;
+      return true;
+    });
+  }
+  function paperTimerOn() { return !!($('#ppTimerOn') && $('#ppTimerOn').checked); }
+
+  /* 组卷面板：显示「官方限时 → 按本次题量折算」，并把折算值填进分钟框。
+     用户手动改过分钟数就不再覆盖（标记「自定义」），点「按官方折算」可恢复自动。 */
+  function refreshPaperTimerUI(force) {
+    var minEl = $('#ppTimerMin'), tag = $('#ppTimerTag'), info = $('#ppTimerInfo'), srcEl = $('#ppTimerSrc');
+    if (!minEl || !info) return null;
+    var size = Math.max(1, Math.min(60, +$('#ppSize').value || 10));
+    var tpls = paperLimitTemplates();
+    var auto = Papers.plan({ templates: tpls, picked: size });
+    if (force || !ppTimerTouched) { minEl.value = auto.minutes || 1; ppTimerTouched = false; }
+    var manual = ppTimerTouched ? Math.max(1, Math.round(+minEl.value || 0)) : 0;
+    var shown = manual ? Papers.plan({ templates: tpls, picked: size, override: manual }) : auto;
+    if (tag) {
+      tag.textContent = !paperTimerOn() ? '不限时'
+        : (manual ? '自定义' : (shown.estimated ? '估算' : (shown.official ? '官方限时' : '推算')));
+      tag.className = 'pill' + (!paperTimerOn() || manual || shown.estimated ? '' : (shown.official ? ' ok' : ' review'));
+    }
+    if (srcEl) {
+      var p0 = shown.known[0];
+      srcEl.textContent = p0 ? '· ' + (p0.official ? '官方' : '推算') + ' ' + p0.minutes + '′ / ' + p0.totalQuestions + ' 题 · 核对于 ' + ((p0.timeLimit && p0.timeLimit.checkedAt) || '—') : '';
+      srcEl.title = p0 && p0.timeLimit ? (p0.timeLimit.source || p0.timeLimit.basis || '') : '';
+    }
+    info.innerHTML = paperTimerOn()
+      ? esc(Papers.explain(shown)) + '　时长可以直接改（改完按「自定义」算）。'
+      : '未启用限时：这一卷慢慢做，不计时。';
+    return shown;
+  }
+
+  /* 真正出卷时用「实际抽到的题」再算一次——题量可能与请求的不同；手动改过则尊重手动值 */
+  function paperLimitMinutesFor(picked) {
+    var tpls = picked.map(function (q) { return q.tpl; });
+    var plan = Papers.plan({ templates: tpls, picked: picked.length });
+    if (!paperTimerOn()) return { minutes: 0, plan: plan, custom: false };
+    if (ppTimerTouched) {
+      var v = Math.max(1, Math.round(+($('#ppTimerMin').value) || 0));
+      if (v > 0) return { minutes: v, plan: Papers.plan({ templates: tpls, picked: picked.length, override: v }), custom: true };
+    }
+    return { minutes: plan.minutes, plan: plan, custom: false };
+  }
+
+  /* ---------- 倒计时（固定底栏） ---------- */
+  function timerEls() {
+    return { bar: $('#paperTimer'), clock: $('#timerClock'), msg: $('#timerMsg'), info: $('#timerInfo'), prog: $('#timerProg') };
+  }
+  /* 底栏上一行小字：把「限时几分钟、怎么来的」讲清楚 */
+  function paperLimitInfoText() {
+    if (!paper || !paper.limitMinutes) return '';
+    var txt = '限时 ' + paper.limitMinutes + ' 分钟';
+    var p = paper.limitPlan, k = p && p.known ? p.known : [];
+    if (k.length === 1) {
+      txt += '（' + k[0].set + ' · ' + (paper.limitCustom ? '自定义' : (k[0].official ? '官方' : '推算')) +
+        ' ' + k[0].minutes + '′/' + k[0].totalQuestions + ' 题 × 本次 ' + paper.questions.length + ' 题）';
+    } else if (k.length > 1) {
+      txt += '（混合 ' + k.length + ' 份卷 · 平均 ' + (p.rateText || '') + ' × 本次 ' + paper.questions.length + ' 题）';
+    }
+    return txt;
+  }
+  function startPaperTimer(resume) {
+    clearPaperTick();
+    if (!paper || !paper.limitMinutes) return;
+    var totalMs = paper.limitMinutes * 60000;
+    if (!paper.deadline) paper.deadline = Date.now() + totalMs;
+    paperTimer = { deadline: paper.deadline, totalMs: totalMs, warned: !!paper.timedOut, tick: null };
+    var e = timerEls();
+    if (!e.bar) return;
+    e.bar.classList.remove('hidden', 'warn', 'over');
+    e.bar.classList.toggle('over', !!paper.timedOut);
+    document.body.classList.add('has-timer');
+    e.info.textContent = paperLimitInfoText();
+    e.info.title = e.info.textContent;
+    tickPaperTimer();                                  // 立刻画一次，别等 0.5 秒
+    paperTimer.tick = setInterval(tickPaperTimer, 500);
+    if (paper.timedOut) { lockPaper(); showTimeUpDialog(); }
+    else if (!resume) toast('限时 ' + paper.limitMinutes + ' 分钟 · 倒计时固定在屏幕底部，滚动不会消失');
+  }
+  function clearPaperTick() {
+    if (paperTimer && paperTimer.tick) clearInterval(paperTimer.tick);
+    if (paperTimer) paperTimer.tick = null;
+  }
+  function stopPaperTimer(keepBar) {
+    clearPaperTick();
+    paperTimer = null;
+    if (keepBar) return;
+    var e = timerEls();
+    if (e.bar) { e.bar.classList.add('hidden'); e.bar.classList.remove('warn', 'over'); }
+    document.body.classList.remove('has-timer');
+  }
+  function tickPaperTimer() {
+    if (!paper || !paperTimer) return;
+    var e = timerEls();
+    if (!e.clock) return;
+    var leftMs = paperTimer.deadline - Date.now();
+    var left = Math.max(0, Math.round(leftMs / 1000));
+    e.clock.textContent = Papers.formatMMSS(left);
+    var used = Math.min(1, Math.max(0, 1 - leftMs / paperTimer.totalMs));
+    if (e.prog) e.prog.style.width = (used * 100).toFixed(1) + '%';
+    if (leftMs <= 0) { onPaperTimeUp(); return; }
+    /* 剩余不足 10%：温和提醒（暖色 + 轻脉动 + 一句提示，不弹窗、不打断） */
+    var warnAt = Math.max(paperTimer.totalMs * 0.1, 15000);
+    if (!paperTimer.warned && leftMs <= warnAt) {
+      paperTimer.warned = true;
+      if (e.bar) e.bar.classList.add('warn');
+      if (e.msg) e.msg.textContent = '还剩不到 10%，先看看有没有漏题～';
+      toast('还剩 ' + Papers.formatMMSS(left) + '，别急，先检查有没有漏题');
+    }
+  }
+  /* 时间到：自动停止作答（锁定 + 提示提交） */
+  function onPaperTimeUp() {
+    clearPaperTick();
+    if (!paper || paper.graded) return;
+    var first = !paper.timedOut;
+    paper.timedOut = true;
+    var e = timerEls();
+    if (e.clock) e.clock.textContent = '00:00';
+    if (e.prog) e.prog.style.width = '100%';
+    if (e.bar) { e.bar.classList.remove('warn'); e.bar.classList.add('over'); }
+    if (e.msg) e.msg.textContent = '时间到 · 已自动停止作答，请交卷';
+    lockPaper();
+    savePaperRun();
+    showTimeUpDialog();
+    if (first) toast('时间到，已停止作答');
+  }
+  function lockPaper() {
+    var area = $('#paperArea');
+    if (area) area.classList.add('paper-locked');
+    var b = $('#btnSubmitPaper');
+    if (b) { b.classList.add('primary'); b.textContent = '时间到 · 交卷判分'; }
+  }
+  function unlockPaperUI() {
+    var area = $('#paperArea');
+    if (area) area.classList.remove('paper-locked');
+    var b = $('#btnSubmitPaper');
+    if (b) { b.classList.remove('primary'); b.textContent = '交卷判分'; }
+  }
+  function showTimeUpDialog() {
+    var m = $('#timeUpMask');
+    if (!m || !paper || paper.graded) return;
+    var t = $('#timeUpText');
+    if (t) t.textContent = '本卷限时 ' + paper.limitMinutes + ' 分钟已用完，已自动停止作答（答案不能再修改）。已作答的部分会正常判分。';
+    m.classList.remove('hidden');
+  }
+  function hideTimeUpDialog() { var m = $('#timeUpMask'); if (m) m.classList.add('hidden'); }
+
+  /* ---------- 进行中的限时卷：落盘 → 刷新后续答 ----------
+   * 只存「题序（模板 id + 变量取值）+ 答案 + 截止时刻」，题面重新实例化即可复现。
+   * ★ 答案必须转成「与选项顺序无关」的形式再存：重新实例化会重新洗牌选项，
+   *   直接存下标的话，恢复后学生选的那一项会被悄悄换成别的选项。 */
+  function encodeAnswer(q, a) {
+    if (!a) return null;
+    var out = { raw: a.raw === undefined ? '' : a.raw, ok: a.ok, given: a.given, expected: a.expected };
+    if (q.type === 'choice') {
+      var idxs = Array.isArray(a.picked) ? a.picked : (a.picked === null || a.picked === undefined ? [] : [a.picked]);
+      out.multi = Array.isArray(a.picked);
+      out.picks = idxs.map(function (i) { return q.options[i]; });
+    } else if (q.type === 'match') {
+      out.linkKeys = (a.links || []).map(function (lk) {
+        var L = (q.leftItems || [])[lk[0]], R = (q.rightItems || [])[lk[1]];
+        return [L ? L.key : null, R ? R.key : null];
+      });
+    }
+    return out;
+  }
+  function decodeAnswer(q, e) {
+    if (!e) return null;
+    var a = { raw: e.raw || '', ok: e.ok, given: e.given, expected: e.expected, picked: null };
+    if (q.type === 'choice' && e.picks) {
+      var idxs = e.picks.map(function (t) { return q.options.indexOf(t); })
+        .filter(function (i) { return i >= 0; });
+      a.picked = e.multi ? idxs : (idxs.length ? idxs[0] : null);
+    } else if (q.type === 'match' && e.linkKeys) {
+      a.links = e.linkKeys.map(function (pair) {
+        var li = -1, ri = -1;
+        (q.leftItems || []).forEach(function (it, i) { if (it.key === pair[0]) li = i; });
+        (q.rightItems || []).forEach(function (it, j) { if (it.key === pair[1]) ri = j; });
+        return [li, ri];
+      }).filter(function (lk) { return lk[0] >= 0 && lk[1] >= 0; });
+      a.picked = null;
+    }
+    return a;
+  }
+  function paperRunSnapshot() {
+    if (!paper || paper.graded || !paper.limitMinutes) return null;
+    var p = paper.limitPlan || {};
+    return {
+      v: 1,
+      id: paper.id, createdAt: paper.createdAt, original: !!paper.original,
+      limitMinutes: paper.limitMinutes, limitCustom: !!paper.limitCustom,
+      limitPlan: {
+        minutes: p.minutes || 0, picked: p.picked || 0, rate: p.rate || 0, rateText: p.rateText || '',
+        fullMinutes: p.fullMinutes || 0, fullQuestions: p.fullQuestions || 0,
+        custom: !!p.custom, estimated: !!p.estimated, official: !!p.official,
+        scaled: !!p.scaled, extended: !!p.extended,
+        known: (p.known || []).map(function (x) {
+          return { set: x.set, minutes: x.minutes, totalQuestions: x.totalQuestions, official: !!x.official };
+        })
+      },
+      deadline: paper.deadline || 0,
+      timedOut: !!paper.timedOut,
+      items: paper.questions.map(function (q) {
+        return { tplId: q.tplId, vars: q.vars, lang: q.lang, original: !!q.original };
+      }),
+      answers: paper.questions.map(function (q) { return encodeAnswer(q, paper.answers[q.key]); }),
+      marks: paper.marks || {}
+    };
+  }
+  function savePaperRun() {
+    try {
+      var snap = paperRunSnapshot();
+      if (snap) Store.savePaperRun(snap); else Store.clearPaperRun();
+    } catch (e) { /* 落盘失败不影响答题 */ }
+  }
+  function scheduleSaveRun() {
+    if (saveRunTimer) clearTimeout(saveRunTimer);
+    saveRunTimer = setTimeout(savePaperRun, 800);
+  }
+  function abandonPaperRun() {
+    stopPaperTimer();
+    hideTimeUpDialog();
+    try { Store.clearPaperRun(); } catch (e) {}
+    paper = null;
+    $('#paperArea').innerHTML = '';
+    $('#btnPrintPaper').classList.add('hidden');
+    $('#btnSubmitPaper').classList.add('hidden');
+    unlockPaperUI();
+  }
+  /* 启动时：把上次没交卷的限时卷接回来（按原 deadline 继续，过期就锁卷等交卷） */
+  function restorePaperRun() {
+    var snap = null;
+    try { snap = Store.paperRun(); } catch (e) { return false; }
+    if (!snap || !snap.items || !snap.items.length) return false;
+    var out = [];
+    for (var i = 0; i < snap.items.length; i++) {
+      var it = snap.items[i], tpl = Bank.byId(it.tplId);
+      if (!tpl) { Store.clearPaperRun(); return false; }        // 题库变了：整份作废，绝不给半卷
+      var q = it.original ? Generator.instantiateOriginal(tpl, it.lang) : Generator.instantiateWithVars(tpl, it.vars, it.lang);
+      if (!q) { Store.clearPaperRun(); return false; }
+      out.push(q);
+    }
+    var answers = {};
+    out.forEach(function (q, i) {
+      var a = decodeAnswer(q, snap.answers ? snap.answers[i] : null);
+      if (a) answers[q.key] = a;
+    });
+    paper = {
+      questions: out, answers: answers, marks: snap.marks || {}, graded: false,
+      createdAt: snap.createdAt || Date.now(), id: snap.id || ('P' + Date.now()),
+      original: !!snap.original, limitMinutes: snap.limitMinutes || 0, limitPlan: snap.limitPlan || null,
+      limitCustom: !!snap.limitCustom, deadline: snap.deadline || 0, timedOut: !!snap.timedOut
+    };
+    renderPaper();
+    $('#btnPrintPaper').classList.remove('hidden');
+    $('#btnSubmitPaper').classList.remove('hidden');
+    if (paper.timedOut) lockPaper();
+    switchView('paper');
+    if (paper.limitMinutes) {
+      startPaperTimer(true);
+      var leftSec = Math.round((paper.deadline - Date.now()) / 1000);
+      toast(paper.timedOut
+        ? '上次这份限时卷时间已用完 —— 答案已锁定，请交卷'
+        : '已接回上次没交卷的限时卷，还剩 ' + Papers.formatMMSS(leftSec));
+    }
+    return true;
+  }
+
   /* 模板的「原题语言」：带 {zh,en} 双语字段的（ICAS 真题）原题是英文，其余为中文原版 */
   function origLangOf(tpl) {
     var f = [tpl.stem, tpl.solution, tpl.hint];
@@ -538,6 +828,13 @@
   }
 
   function genPaper() {
+    /* 上一份限时卷还没交卷就再生成：先问清楚（否则限时卷会被静默作废） */
+    if (paper && !paper.graded && paper.limitMinutes) {
+      var leftSec = Math.max(0, Math.round((paper.deadline - Date.now()) / 1000));
+      if (!confirm('上一份限时卷还没交卷' + (leftSec > 0 ? '（还剩 ' + Papers.formatMMSS(leftSec) + '）' : '（时间已用完）') +
+        '。\n\n重新生成会作废它，确定吗？')) return;
+      abandonPaperRun();
+    }
     var size = Math.max(1, Math.min(60, +$('#ppSize').value || 10));
     var langMode = ($('#ppLang') && $('#ppLang').value) || 'orig';
     var origMode = !!($('#ppOriginal') && $('#ppOriginal').checked);
@@ -608,15 +905,32 @@
     Generator.preferLang = null;   // 复位，避免影响练习模式的随机语言
     if (!picked.length) { toast(origMode ? '原题数值缺失，无法出题' : '生成失败，请检查题库模板'); return; }
 
-    paper = { questions: picked, answers: {}, marks: {}, graded: false, createdAt: Date.now(), id: 'P' + Date.now(), original: origMode };
+    var lim = paperLimitMinutesFor(picked);
+    paper = {
+      questions: picked, answers: {}, marks: {}, graded: false, createdAt: Date.now(),
+      id: 'P' + Date.now(), original: origMode,
+      limitMinutes: lim.minutes, limitPlan: lim.plan, limitCustom: lim.custom,
+      deadline: lim.minutes ? Date.now() + lim.minutes * 60000 : 0, timedOut: false
+    };
     renderPaper();
     $('#btnPrintPaper').classList.remove('hidden');
     $('#btnSubmitPaper').classList.remove('hidden');
+    unlockPaperUI();
+    if (lim.minutes) { startPaperTimer(false); savePaperRun(); }
+    else { stopPaperTimer(); try { Store.clearPaperRun(); } catch (e) {} }
   }
 
   function renderPaper() {
     var h = '<div class="card"><div class="row"><h2 style="margin:0">卷子 · ' + paper.questions.length + ' 题' + (paper.original ? ' <span class="pill new">原题</span>' : '') + '</h2>' +
+      (paper.limitMinutes ? '<span class="pill ' + (paper.timedOut && !paper.graded ? 'wrong' : 'new') + '">⏱ 限时 ' + paper.limitMinutes + ' 分钟' +
+        (paper.limitCustom ? '·自定义' : '') + '</span>' : '') +
       '<span class="spacer"></span><span class="small muted">' + fmtDate(paper.createdAt) + ' 生成</span></div>';
+    if (paper.timedOut && !paper.graded) {
+      h += '<p class="small" style="margin:10px 0 0;padding:8px 12px;border-radius:10px;background:var(--bad-soft);color:var(--bad)">' +
+        '⏱ 时间到，已自动停止作答（答案已锁定）—— 点「交卷判分」看结果。</p>';
+    } else if (paper.limitMinutes && paper.limitPlan && paper.limitPlan.minutes) {
+      h += '<p class="small muted" style="margin:8px 0 0">' + esc(Papers.explain(paper.limitPlan)) + '</p>';
+    }
     if (paper.graded) {
       var ok = paper.questions.filter(function (q) { return paper.answers[q.key] && paper.answers[q.key].ok; }).length;
       h += '<div class="grid" style="margin:12px 0">' + stat(Math.round(ok / paper.questions.length * 100), '得分') +
@@ -673,7 +987,7 @@
 
     $$('#paperArea .opt').forEach(function (el) {
       el.addEventListener('click', function () {
-        if (paper.graded) return;
+        if (paper.graded || paper.timedOut) return;
         var key = el.dataset.q, i = +el.dataset.i;
         var q = paper.questions.filter(function (x) { return x.key === key; })[0];
         var cur = paper.answers[key] || { picked: null, raw: '' };
@@ -684,6 +998,7 @@
         } else cur.picked = i;
         paper.answers[key] = cur;
         renderPaper();
+        scheduleSaveRun();
       });
     });
     $$('#paperArea .pinput').forEach(function (el) {
@@ -691,11 +1006,12 @@
         var key = el.dataset.q;
         paper.answers[key] = paper.answers[key] || { picked: null, raw: '' };
         paper.answers[key].raw = el.value;
+        scheduleSaveRun();
       });
     });
     $$('#paperArea .markbtn').forEach(function (el) {
       el.addEventListener('click', function () {
-        if (paper.graded) return;
+        if (paper.graded || paper.timedOut) return;
         var key = el.dataset.q;
         paper.marks[key] = !paper.marks[key];
         var qDiv = el.closest('.paper-q');
@@ -703,6 +1019,7 @@
         el.classList.toggle('on', paper.marks[key]);
         el.textContent = paper.marks[key] ? '🔖 已标记' : '🔖 标记';
         updateMarkCount();
+        scheduleSaveRun();
       });
     });
     $$('#paperArea .match-wrap').forEach(function (mw) {
@@ -711,8 +1028,8 @@
       if (!q) return;
       setupMatch(mw, q,
         function () { return (paper.answers[key] || {}).links || []; },
-        function (l) { paper.answers[key] = paper.answers[key] || {}; paper.answers[key].links = l; },
-        { locked: paper.graded, correctLinks: paper.graded ? computeCorrectLinks(q) : null });
+        function (l) { paper.answers[key] = paper.answers[key] || {}; paper.answers[key].links = l; scheduleSaveRun(); },
+        { locked: paper.graded || paper.timedOut, correctLinks: (paper.graded || paper.timedOut) ? computeCorrectLinks(q) : null });
     });
     updateMarkCount();
   }
@@ -738,12 +1055,14 @@
     }
   }
 
-  function submitPaper() {
+  function submitPaper(opts) {
+    opts = opts || {};
     if (!paper || paper.graded) return;
-    ensureStudentName();
+    /* 时间到之后的交卷：姓名/标记题的确认都跳过 —— 反正已经不能再改了，别再折腾学生 */
+    if (!opts.fromTimeout) ensureStudentName();
     // 有被标记的题目时，先提示并允许跳回查看，避免漏做
     var markedKeys = Object.keys(paper.marks || {}).filter(function (k) { return paper.marks[k]; });
-    if (markedKeys.length) {
+    if (markedKeys.length && !opts.fromTimeout) {
       var idxByKey = {};
       paper.questions.forEach(function (q, i) { idxByKey[q.key] = i + 1; });
       var nums = markedKeys.map(function (k) { return idxByKey[k]; }).sort(function (a, b) { return a - b; });
@@ -778,6 +1097,11 @@
       Store.pushHistory({ ts: Date.now(), tid: q.tplId, ok: res.ok, given: res.given, expected: res.expected, stem: q.stemText, topic: q.tpl.topic || '', mode: 'paper' });
     });
     paper.graded = true;
+    paper.timedOut = false;
+    hideTimeUpDialog();
+    stopPaperTimer();                              // 交卷即收表，底栏消失
+    try { Store.clearPaperRun(); } catch (e) {}
+    unlockPaperUI();
     Store.savePaper({ id: paper.id, createdAt: paper.createdAt, size: paper.questions.length, score: 0 });
     renderPaper();
     autoMailReport('试卷', paperSummaryText(paper));
@@ -1607,6 +1931,11 @@
 
     Bank.load().then(function () {
       renderStart(); fillPaperSelects(); fillSettings(); updateWho();
+      /* 先把试卷限时数据读进来，再尝试接回上次没交卷的限时卷（倒计时按原截止时刻继续） */
+      Papers.load().then(function () {
+        refreshPaperTimerUI(true);
+        try { restorePaperRun(); } catch (e) { console.warn('恢复限时卷失败', e); }
+      });
       if (Store.settings().autoSync !== false) {
         // 先拉云端姓名索引，把本机档案归位到权威 sid，再按云端记录同步（同名即覆盖）
         fetchCloudIndex().then(function () {
@@ -1642,8 +1971,15 @@
     $('#btnAgain').addEventListener('click', function () { $('#pResult').classList.add('hidden'); $('#pStart').classList.remove('hidden'); renderStart(); });
     $('#btnBackHome').addEventListener('click', function () { $('#pResult').classList.add('hidden'); $('#pStart').classList.remove('hidden'); renderStart(); });
 
-    $('#ppSubject').addEventListener('change', refreshTopics);
-    $('#ppSize').addEventListener('input', function () { ppSizeTouched = true; });
+    $('#ppSubject').addEventListener('change', function () { refreshTopics(); refreshPaperTimerUI(true); });
+    $('#ppTopic').addEventListener('change', function () { refreshPaperTimerUI(true); });
+    $('#ppSize').addEventListener('input', function () { ppSizeTouched = true; refreshPaperTimerUI(); });
+    $('#ppTimerMin').addEventListener('input', function () { ppTimerTouched = true; refreshPaperTimerUI(); });
+    $('#ppTimerOn').addEventListener('change', function () { refreshPaperTimerUI(true); });
+    $('#ppTimerReset').addEventListener('click', function () { ppTimerTouched = false; refreshPaperTimerUI(true); toast('已按官方限时与本次题量重新折算'); });
+    $('#btnTimerSubmit').addEventListener('click', function () { switchView('paper'); submitPaper(); });
+    $('#btnTimeUpSubmit').addEventListener('click', function () { hideTimeUpDialog(); submitPaper({ fromTimeout: true }); });
+    $('#btnTimeUpLater').addEventListener('click', hideTimeUpDialog);
     $('#btnGenPaper').addEventListener('click', genPaper);
     $('#btnPrintPaper').addEventListener('click', function () { window.print(); });
     $('#btnSubmitPaper').addEventListener('click', submitPaper);

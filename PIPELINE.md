@@ -27,9 +27,13 @@ assets/originals/         可选：原题裁切图，模板里用 "image": "asse
 data/question-bank.json   主题库（提交进仓库，所有设备可见）
 data/imports/*.json       按批次拆分的题库（同样会被主题库合并，见下）
 papers/<卷名>.json         整卷「解析归档」的唯一数据源（.md/.html 由 tools/build-paper-archive.js 生成）
+data/papers.json           试卷级属性：每份真题卷的官方限时 + 出处（组卷限时/倒计时靠它，见 §4.9）
+assets/js/papers.js        限时匹配 + 按题量比例折算（浏览器与 Node 共用）
 tools/test-bank.js        模板自检（生成 300 次 + 判分自检）
 tools/test-bankui.js      「题库管理」界面渲染自检（无头浏览器不可用时替代冒烟测试）
 tools/test-srs.js         错题调度自检
+tools/test-papers.js      试卷限时自检：元数据完整性 + 与题库对应 + 折算算法
+tools/test-papertimer.js  倒计时链路自检（假 DOM + 假时钟 跑 app.js 真函数）
 tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 ```
 
@@ -413,6 +417,97 @@ node tools/_preview_original.js --set=icas21y2m --inline
 - 多设备同步：`instances` 是设备端额外历史，同步码只传 `{id,need,times,lastTs}` 摘要；
   合并时 `Store.preserveWrongInstances` 把本机已记录的原题历史按 id 带回来，避免被云端摘要覆盖丢失。
 
+## 4.9 试卷限时属性（每导入一份新试卷都要走一遍）
+
+「组卷」出来的卷子可以**限时**：倒计时固定在屏幕底部（上下滚动不影响显示），
+剩余不足 10% 给一次温和提醒，时间到**自动停止作答**并提示交卷。
+考生选题少于试卷总数时，**按选题比例缩减**总时长。
+
+这些行为由**试卷级**属性驱动（同一份卷的 40 道题共享一个官方时长，
+所以**不要**把时长逐题写进模板）。数据只放在 `data/papers.json`：一份真题卷一条记录。
+
+### 4.9.1 一份卷要写什么
+
+```jsonc
+{
+  "set": "SEAMO 2025 Paper A",     // ★ 必须与模板 sourceSet 完全一致（认卷第一靠它）
+  "setZh": "SEAMO 2025 数学竞赛 A 卷",
+  "totalQuestions": 25,            // 官方题数（不是题库模板数；一题拆两模板时两者不等）
+  "timeLimit": {
+    "official": true,              // 官方公布过限时 → true；查不到 → false
+    "minutes": 90,                 // 官方整卷分钟数（official=true 时用这个）
+    "source": "SEAMO 官方赛程：Level A–F 考试时段 10:00–11:30（90 分钟）",
+    "url": "https://www.seedasdan.asia/en/seamo-en/",
+    "checkedAt": "2026-10-07",     // 什么时候核对的
+    "note": "多个来源一致：25 题 / 90 分钟"
+  },
+  "idPrefix": "seamo25a"           // 兜底认卷：模板 id 以此开头（sourceSet 对不上时用）
+}
+```
+
+查不到官方限时的（**教辅练习卷基本都没有**，例如 `Mastering Mathematics Book 1` 的 Test）
+改成推算值，并写清依据：
+
+```jsonc
+"timeLimit": {
+  "official": false,
+  "suggestedMinutes": 46,
+  "basis": "该书为 15 套 × 40 题，书目未给每套限时；按 NSW Selective 数学推理卷 35 题 / 40 分钟（≈68.6 秒/题）折算",
+  "url": "https://education.nsw.gov.au/…/selective-high-school-practice-tests",
+  "checkedAt": "2026-10-07"
+}
+```
+
+前端会把 `official:false` 标成「推算」，家长仍可在组卷界面手动改分钟数（改完标「自定义」）。
+
+### 4.9.2 联网检索流程（新导入试卷时照做，顺序不可跳）
+
+1. **先搜主办方官方页面**：找「考试时长 / 赛程时间表 / Number of questions and test times」这类表。
+   关键词：`<卷名> time allowed minutes`、`<卷名> 考试时间 分钟`、`<卷名> duration`。
+2. **再看官方真题/样卷 PDF 的封面**：官方卷首一般印着 `Time allowed: 40 minutes` / `40 minutes`。
+   本地已存档的原卷可以直接抽文字核对（`assets/originals/*.pdf`，用 pymupdf 抽；扫描件没文字层就跳过）。
+3. **再看出版方书目描述**：确认题量（如「15 tests of 40 questions each」）以及**是否**给限时。
+4. **以上都查不到**才走推算：用**同类官方考试**的公开节奏折算，
+   在 `basis` 里写清「谁的时间 ÷ 谁的题数 → 折到本卷」和链接。**绝不许凭感觉编一个分钟数。**
+5. 写进 `data/papers.json`（含 `checkedAt`）→ 跑 `node tools/test-papers.js`。
+6. 日后官方改规则或找到更权威出处：**只改 papers.json 一处**，再跑一次自检即可。
+
+判定口径（优先级从高到低）：
+**官方页面 / 官方卷首 > 主办方赛程公告 > 出版方书目 > 同类官方考试折算**。
+同一份卷多来源冲突时以最权威的为准，并在 `note` 里写明「多来源一致」还是「存在分歧」。
+
+### 4.9.3 折算规则与前端行为（改代码前先读这段）
+
+- 折算（`assets/js/papers.js` 的 `Papers.plan`）：
+  ```
+  限时(分钟) = round(官方整卷分钟 × 本次题量 ÷ 试卷总题数)     // 不足 1 分钟按 1 分钟
+  ```
+  单卷且选满整卷时直接用官方原值（避免浮点做除法再乘回去的零头）；
+  多份卷混组（例如「全部来源」）先按 `Σ官方分钟 ÷ Σ官方题数` 求平均节奏再乘题量；
+  题库里查不到任何一份卷的限时时，按每题 1 分钟兜底并标「估算」。
+- 倒计时底栏是 `position: fixed` 的 `.timer-bar`（`#paperTimer`），所以**滚动不影响显示**；
+  `body.has-timer` 给页面留出底部空间，打印时底栏隐藏（`@media print`）。
+- 剩余 ≤ 10%（且不少于 15 秒）触发**一次**温和提醒：底栏转暖色 + 一句「先检查有没有漏题」，
+  不弹窗、不打断（`tickPaperTimer`）。
+- 到点：`onPaperTimeUp()` → 卷面加 `.paper-locked`（选项/输入框/标记全部不可点）、
+  弹「时间到」提示框、把状态落盘；提示框里的「立即交卷」走 `submitPaper({fromTimeout:true})`
+  （跳过姓名确认与标记题来回问）。
+- **刷新续答**：进行中的限时卷会落到本机（键 `<学生编号>:paperRun`，见 store.js），
+  只存「题序（模板 id + 变量取值）+ 答案 + 截止时刻」，重开页面按原 deadline 继续。
+  ★ 答案存的是**选项内容 / 配对 key**，不是下标 —— 重新实例化会重新洗牌，
+  存下标会让学生的选择悄悄指向另一个选项（`encodeAnswer/decodeAnswer` 就是干这个的）。
+  换设备或清缓存前请先交卷；用「导出备份」也会带上这一份（键名 `paperRun`）。
+- 模板/题库变了导致还原不出原卷时，整份作废并提示，**不给半卷**。
+
+### 4.9.4 新增试卷检查清单
+
+- [ ] 模板的 `sourceSet` 与 papers.json 的 `set` 字字一致（否则整卷认不到限时）
+- [ ] `totalQuestions` 填**官方**题数，并在 `note` 里说明与题库模板数的差异（如 13a/13b 拆分）
+- [ ] `timeLimit` 二选一写全：官方（minutes + source + url）或推算（suggestedMinutes + basis + url）
+- [ ] `checkedAt` 填核对日期
+- [ ] `node tools/test-papers.js` 通过（会报出「有真卷出处却没登记限时」的漏登记模板）
+- [ ] 改了 `assets/` 或 `index.html` → 按 §8 把 `?v=` 全部 +1
+
 ## 5. 表达式语法（constraints / answer.expr / derived）
 
 - 运算：`+ - * / % ^`（`^` 为乘方），比较 `== != < <= > >=`，逻辑 `&& || !`
@@ -440,6 +535,8 @@ node tools/test-bank.js data/imports/xx.json  # 只检新批次
 node tools/test-figs.js                       # 配图语义的独立交叉验算（ICAS 两批 + SEAMO 一批都在里面）
 node tools/test-original.js                   # 「原题模式」数值自检（答案 + 约束），见 §4.7
 node tools/test-bankui.js                     # 「题库管理」界面的渲染自检（改了 app.js 的题卡渲染就要跑）
+node tools/test-papers.js                     # 试卷限时：元数据 + 认卷 + 折算算法（加/改试卷必跑）
+node tools/test-papertimer.js                 # 倒计时链路：10% 提醒 / 到点锁定 / 刷新续答 / 组卷折算
 node tools/test-srs.js && node tools/test-sync.js
 ```
 
@@ -488,6 +585,8 @@ Q10 花盆下的空方框没有标注、Q9 干扰骨牌会取到 `0|0` 空白牌
 
 ## 8. 入库与发布
 
+0. **新导入一份真题卷 → 顺手补 `data/papers.json` 的限时属性**（联网检索官方时长，流程见 §4.9），
+   再跑 `node tools/test-papers.js`。漏登记不会报错，但那一卷的限时会退化成「每题 1 分钟」的估算。
 1. 把新模板追加进 `data/question-bank.json` 的 `templates` 数组（或放进 `data/imports/批次名.json`）。
    **改模板必须同时改 `data/imports/*.json` 和 `data/question-bank.json`** ——
    `node tools/merge-bank.js` 会用 imports 覆盖前者，只改一处下次 merge 就回滚。

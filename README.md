@@ -33,6 +33,7 @@ data/question-bank.json
 | 抽样检测 | 已掌握但到期的题，按间隔重复重新抽考 |
 | 按知识点练 | 从题库按 topic 抽题专项突破 |
 | 组卷 | 按科目/知识点/范围（全部 / 错题 / 未掌握 / 新题）生成整套卷子，在线作答判分，也可打印成纸质卷 |
+| 限时模考 | 按试卷的**官方限时**自动折算时长（选题少于整卷就按比例缩减），底部常驻倒计时（滚动不消失）、剩余不足 10% 温和提醒、时间到自动停答并提示交卷；刷新/关页面回来按原截止时刻继续 |
 | 错题本 | 记录错几次、还需答对几次、上次错在哪、正确答案 |
 | 掌握度 | 总体正确率 + 每个知识点的掌握进度条 + 最近作答流水 |
 | 题库管理 | 导入 JSON（WorkBuddy 生成的）、预览变式、导出、备份/恢复、练习参数设置 |
@@ -52,12 +53,16 @@ assets/js/grader.js        判分
 assets/js/store.js         localStorage 持久化 + 题库装载
 assets/js/srs.js           掌握度 / 错题调度 / 间隔重复
 assets/js/sync.js          多设备同步：同步码生成 / 解析 / 幂等合并（浏览器与 Node 共用）
+assets/js/papers.js        试卷限时：认卷 + 按题量比例折算时长（浏览器与 Node 共用）
 assets/js/app.js           界面逻辑
 data/question-bank.json    题库（模板）
+data/papers.json           每份真题卷的官方限时 + 出处（数据来源与检索流程见 PIPELINE.md §4.9）
 data/state/<sid>.json      某学生编号的云端汇总进度（由 merge-sync.js 生成）
 tools/test-bank.js         模板自检：每模板生成 300 次 + 判分自检
 tools/test-srs.js          错题 / 掌握 / 抽样调度链路
 tools/test-sync.js         同步码：往返 / 合并 / 冲突后写胜出 / 墓碑删除
+tools/test-papers.js       试卷限时：元数据 + 认卷 + 折算算法自检
+tools/test-papertimer.js   倒计时链路：10% 提醒 / 到点锁定 / 刷新续答自检
 tools/merge-sync.js        把一串同步码合并进 data/state/<sid>.json（WorkBuddy 端用）
 tools/merge-bank.js        合并 data/imports/*.json 进主题库
 inbox/                     放待识别的真题图片
@@ -81,6 +86,8 @@ python -m http.server 8000      # 或 npx serve
 node tools/test-bank.js     # 题库模板：每模板生成 300 次并检查判分
 node tools/test-srs.js      # 错题 / 掌握 / 抽样调度链路
 node tools/test-sync.js     # 同步码：往返 / 合并 / 冲突后写胜出 / 墓碑删除
+node tools/test-papers.js   # 试卷限时：官方时长数据 + 按题量折算算法
+node tools/test-papertimer.js  # 倒计时：10% 提醒 / 到点锁定 / 刷新续答 / 组卷折算
 ```
 
 ## 多设备同步（无需服务器）

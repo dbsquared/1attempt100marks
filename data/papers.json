@@ -1,0 +1,132 @@
+{
+  "v": 1,
+  "updated": "2026-10-07",
+  "note": "试卷级属性：每份已导入真题卷的官方限时（整卷时长 + 官方题数）。组卷时按「本次题量 ÷ 试卷总题数」比例折算限时，逻辑见 assets/js/papers.js。本文件由 WorkBuddy 联网检索官方规则后填写，新增试卷沿用同一流程（见 PIPELINE.md §10）。",
+  "retrieval": {
+    "order": [
+      "1. 考试主办方的官方页面（赛程时段 / 「Number of questions and test times」这类时长表）",
+      "2. 官方样卷或真题 PDF 封面（『40 minutes』『Time allowed』字样）",
+      "3. 出版社/发行方的书目描述（题量、是否限时）",
+      "4. 同类官方考试的公开时间节奏 —— 仅在完全查不到限时的情况下用于推算 suggestedMinutes，必须写 basis 与出处"
+    ],
+    "rules": [
+      "查到官方限时：timeLimit.official = true，只写官方公布的整卷分钟数，不做任何二次换算",
+      "查不到官方限时：timeLimit.official = false，写 suggestedMinutes + basis（推算依据 + 出处），前端会标『推算』并允许手动改",
+      "totalQuestions 填官方题数；与题库模板数不一致时在 note 里说明（例如同一题拆成 13a/13b 会有两个模板）",
+      "每条都要留 source / url / checkedAt，便于日后复核（官方改规则时只改这一处）"
+    ]
+  },
+  "defaultRate": {
+    "minutes": 1,
+    "questions": 1,
+    "note": "兜底节奏：题库里查不到任何一份卷的限时时，按每题 1 分钟估（前端会标注『估算』）"
+  },
+  "papers": [
+    {
+      "set": "SEAMO 2025 Paper A",
+      "setZh": "SEAMO 2025 数学竞赛 A 卷",
+      "subject": "数学",
+      "language": "en",
+      "level": "Level A–F（Grade 2 以上）",
+      "totalQuestions": 25,
+      "timeLimit": {
+        "official": true,
+        "minutes": 90,
+        "source": "SEAMO 官方赛程：Level A–F 考试时段 10:00–11:30（90 分钟）；A–F 组全卷 25 题（20 选择 + 5 填空）",
+        "url": "https://www.seedasdan.asia/en/seamo-en/",
+        "url2": "https://seamo-official.org/",
+        "checkedAt": "2026-10-07",
+        "note": "多个来源一致：25 题 / 90 分钟；答对 4 分、不答 0 分、答错不倒扣。题库本题量 25，与原卷一致。"
+      },
+      "idPrefix": "seamo25a"
+    },
+    {
+      "set": "ICAS 2021 Year 2 Mathematics",
+      "setZh": "ICAS 2021 二年级数学（Intro Paper）",
+      "subject": "数学",
+      "language": "en",
+      "level": "Intro（澳洲 Year 2）",
+      "totalQuestions": 30,
+      "timeLimit": {
+        "official": true,
+        "minutes": 35,
+        "source": "ICAS 官方「Number of questions and test times」表：Mathematics — Intro 卷 = 30 题 / 35m",
+        "url": "https://www.icasassessments.com/icas-year-levels-and-exam-papers/",
+        "checkedAt": "2026-10-07",
+        "note": "官方答案页标题即『Past Papers 2021 Mathematics Intro Paper』；题库 30 个模板 = 原卷 30 题。Intro = 澳洲 Year 2，故与前文 Year 2 批次对应。"
+      },
+      "idPrefix": "icas21y2m"
+    },
+    {
+      "set": "ICAS 2022 Year 2 Mathematics",
+      "setZh": "ICAS 2022 二年级数学（Intro Paper）",
+      "subject": "数学",
+      "language": "en",
+      "level": "Intro（澳洲 Year 2）",
+      "totalQuestions": 30,
+      "timeLimit": {
+        "official": true,
+        "minutes": 35,
+        "source": "ICAS 官方「Number of questions and test times」表：Mathematics — Intro 卷 = 30 题 / 35m",
+        "url": "https://www.icasassessments.com/icas-year-levels-and-exam-papers/",
+        "checkedAt": "2026-10-07",
+        "note": "题库 31 个模板 = 原卷 30 题（Q13 拆成 13a/13b 两个模板），故模板数比官方题数多 1。"
+      },
+      "idPrefix": "icas22y2m"
+    },
+    {
+      "set": "Mastering Mathematics Book 1 Test 1",
+      "setZh": "Mastering Mathematics 精选/奖学金卷 第 1 册 · Test 1",
+      "subject": "数学",
+      "language": "en",
+      "level": "Selective / Scholarship 备考（约五年级以上）",
+      "totalQuestions": 40,
+      "timeLimit": {
+        "official": false,
+        "suggestedMinutes": 46,
+        "basis": "该书（Yvonne Kang，Five Senses Education，ISBN 9781760322120）为「15 tests of 40 questions each」，书目描述未给每套限时；按同类官方考试节奏折算：NSW Selective 数学推理卷 35 题 / 40 分钟 ≈ 68.6 秒/题 → 40 题 ≈ 46 分钟",
+        "url": "https://education.nsw.gov.au/schooling/parents-and-carers/choosing-a-school-setting/selective-high-schools/placement-test/selective-high-school-practice-tests",
+        "url2": "https://www.fivesenseseducation.com.au/mastering-mathematics-selective-and-scholarship-tests-book-1-9781760322120",
+        "checkedAt": "2026-10-07",
+        "note": "教辅练习卷无官方限时，46 分钟是推算值；组卷界面可直接改成家长想要的时长（例如按 1 分钟/题 = 40 分钟）。"
+      },
+      "idPrefix": "mm1t1"
+    },
+    {
+      "set": "Mastering Mathematics Book 1 Test 2",
+      "setZh": "Mastering Mathematics 精选/奖学金卷 第 1 册 · Test 2",
+      "subject": "数学",
+      "language": "en",
+      "level": "Selective / Scholarship 备考（约五年级以上）",
+      "totalQuestions": 40,
+      "timeLimit": {
+        "official": false,
+        "suggestedMinutes": 46,
+        "basis": "同 Test 1：教辅练习卷无官方限时，按 NSW Selective 数学推理卷节奏（35 题 / 40 分钟 ≈ 68.6 秒/题）折算 40 题 ≈ 46 分钟",
+        "url": "https://education.nsw.gov.au/schooling/parents-and-carers/choosing-a-school-setting/selective-high-schools/placement-test/selective-high-school-practice-tests",
+        "url2": "https://www.fivesenseseducation.com.au/mastering-mathematics-selective-and-scholarship-tests-book-1-9781760322120",
+        "checkedAt": "2026-10-07",
+        "note": "推算值，可在组卷界面手动改。"
+      },
+      "idPrefix": "mm1t2"
+    },
+    {
+      "set": "Mastering Mathematics Book 1 Test 3",
+      "setZh": "Mastering Mathematics 精选/奖学金卷 第 1 册 · Test 3",
+      "subject": "数学",
+      "language": "en",
+      "level": "Selective / Scholarship 备考（约五年级以上）",
+      "totalQuestions": 40,
+      "timeLimit": {
+        "official": false,
+        "suggestedMinutes": 46,
+        "basis": "同 Test 1：教辅练习卷无官方限时，按 NSW Selective 数学推理卷节奏（35 题 / 40 分钟 ≈ 68.6 秒/题）折算 40 题 ≈ 46 分钟",
+        "url": "https://education.nsw.gov.au/schooling/parents-and-carers/choosing-a-school-setting/selective-high-schools/placement-test/selective-high-school-practice-tests",
+        "url2": "https://www.fivesenseseducation.com.au/mastering-mathematics-selective-and-scholarship-tests-book-1-9781760322120",
+        "checkedAt": "2026-10-07",
+        "note": "推算值，可在组卷界面手动改。"
+      },
+      "idPrefix": "mm1t3"
+    }
+  ]
+}

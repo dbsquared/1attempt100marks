@@ -155,7 +155,7 @@
     list.forEach(function (x) { if (x.id === id) p = x; });
     if (!p) return false;
     saveProfiles(list.filter(function (x) { return x.id !== id; }));
-    ['progress', 'wrong', 'history', 'papers', 'lastSync'].forEach(function (k) {
+    ['progress', 'wrong', 'history', 'papers', 'lastSync', 'paperRun'].forEach(function (k) {
       localStorage.removeItem(PREFIX + p.sid + ':' + k);
     });
     if (currentId() === id) write('current', profiles()[0].id);
@@ -170,7 +170,7 @@
     list.forEach(function (x) { if (x.id === id) p = x; });
     if (!p || p.sid === newSid) return false;
     var old = p.sid;
-    ['progress', 'wrong', 'history', 'papers', 'lastSync'].forEach(function (k) {
+    ['progress', 'wrong', 'history', 'papers', 'lastSync', 'paperRun'].forEach(function (k) {
       var val = read(old + ':' + k, null);
       if (val !== null) write(newSid + ':' + k, val);
       localStorage.removeItem(PREFIX + old + ':' + k);
@@ -293,6 +293,13 @@
       write(current().sid + ':papers', Store.papers().filter(function (p) { return p.id !== id; }));
     },
 
+    /* ---------- 进行中的限时卷（当前学生） ----------
+     * 限时卷必须能跨刷新续答：把题序（模板 id + 变量取值）、已填答案与截止时刻一起存下来，
+     * 重新打开页面时按原 deadline 继续倒计时 —— 否则刷新一次时钟就重置，限时形同虚设。 */
+    paperRun: function () { return read(current().sid + ':paperRun', null); },
+    savePaperRun: function (r) { write(current().sid + ':paperRun', r); },
+    clearPaperRun: function () { localStorage.removeItem(PREFIX + current().sid + ':paperRun'); },
+
     /* ---------- 自定义题库（设备级，跨学生共享） ---------- */
     customBank: function () { return read('bank', []) || []; },
     saveCustomBank: function (list) { write('bank', list); },
@@ -320,6 +327,7 @@
           wrong: read(p.sid + ':wrong', []),
           history: read(p.sid + ':history', []),
           papers: read(p.sid + ':papers', []),
+          paperRun: read(p.sid + ':paperRun', null),
           lastSync: read(p.sid + ':lastSync', 0)
         };
       });
@@ -345,6 +353,7 @@
           write(st.sid + ':wrong', st.wrong || []);
           write(st.sid + ':history', st.history || []);
           write(st.sid + ':papers', st.papers || []);
+          write(st.sid + ':paperRun', st.paperRun || null);
           write(st.sid + ':lastSync', st.lastSync || 0);
         });
         write('current', data.current || (data.profiles[0] && data.profiles[0].id) || null);
@@ -360,7 +369,7 @@
     resetProgress: function () {
       // 只清空“当前学生”的进度/错题/历史（套卷保留）
       var sid = current().sid;
-      ['progress', 'wrong', 'history'].forEach(function (k) {
+      ['progress', 'wrong', 'history', 'paperRun'].forEach(function (k) {
         localStorage.removeItem(PREFIX + sid + ':' + k);
       });
     },

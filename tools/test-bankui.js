@@ -236,8 +236,8 @@ for (const tpl of list) {
 console.log('   选择题抽样 ' + nChoice + ' 次，图形选项题抽样 ' + nFigOpt + ' 次，无图无选项的题 ' + nBlank + ' 条');
 
 /* ---- 6. index.html 与 app.js 的 id 交叉校验 ---- */
-console.log('3) bank 视图 id 交叉校验');
-const idRefs = Array.from(new Set((appSrc.match(/#(bank[A-Za-z]*|btnBankReload)/g) || []).map(s => s.slice(1)))).sort();
+console.log('3) 视图 id 交叉校验（bank 题卡 + 限时倒计时）');
+const idRefs = Array.from(new Set((appSrc.match(/#(bank[A-Za-z]*|btnBankReload|ppTimer[A-Za-z]*|paperTimer|timer[A-Za-z]*|timeUp[A-Za-z]*|btnTimer[A-Za-z]*|btnTimeUp[A-Za-z]*)/g) || []).map(s => s.slice(1)))).sort();
 const missing = idRefs.filter(id => htmlSrc.indexOf('id="' + id + '"') < 0);
 idRefs.forEach(id => chk(htmlSrc.indexOf('id="' + id + '"') >= 0, 'app.js 引用了 #' + id + '，但 index.html 里没有这个元素'));
 console.log('   引用 ' + idRefs.length + ' 个 id：' + idRefs.join(', '));

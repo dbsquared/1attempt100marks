@@ -251,6 +251,42 @@ table.tbl tr:last-child td { border-bottom: none; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ---------- 限时倒计时：固定底栏（position:fixed ⇒ 上下滚动始终可见，不随文档滚走） ---------- */
+.timer-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface); border-top: 2px solid var(--brand);
+  box-shadow: 0 -2px 14px rgba(16, 24, 40, .10);
+  font-variant-numeric: tabular-nums;
+}
+.timer-bar .tclock { display: flex; align-items: center; gap: 6px; }
+.timer-bar .ticon { font-size: 16px; }
+.timer-bar .clock { font-size: 22px; font-weight: 800; letter-spacing: .5px; color: var(--brand); line-height: 1.2; }
+.timer-bar .tmsg { color: var(--muted); }
+.timer-bar .tinfo { max-width: 42%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timer-bar .tprog {
+  position: absolute; left: 0; top: -2px; height: 2px; width: 0;
+  background: var(--brand); transition: width .5s linear;
+}
+/* 剩余不足 10%：温和提醒（换暖色 + 轻脉动，不弹窗、不打断） */
+.timer-bar.warn { border-top-color: var(--warn); background: var(--warn-soft); }
+.timer-bar.warn .clock { color: var(--warn); animation: tpulse 1.8s ease-in-out infinite; }
+.timer-bar.warn .tprog { background: var(--warn); }
+.timer-bar.warn .tmsg { color: var(--warn); font-weight: 600; }
+/* 时间到：红色 + 锁定 */
+.timer-bar.over { border-top-color: var(--bad); background: var(--bad-soft); }
+.timer-bar.over .clock { color: var(--bad); animation: none; }
+.timer-bar.over .tprog { background: var(--bad); }
+.timer-bar.over .tmsg { color: var(--bad); font-weight: 700; }
+@keyframes tpulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+/* 底栏占位：别让固定条遮住最后一题的选项/按钮 */
+body.has-timer { padding-bottom: 68px; }
+body.has-timer .toast { bottom: 88px; }
+/* 锁定态（时间到之后）：整卷答案不可再改 */
+.paper-locked .pinput, .paper-locked .markbtn,
+.paper-locked .opt, .paper-locked .mitem { opacity: .7; pointer-events: none !important; cursor: default; }
+
 kbd { background: var(--surface-2); border: 1px solid var(--border); border-bottom-width: 2px;
   border-radius: 6px; padding: 1px 6px; font-size: 12px; font-family: inherit; }
 
@@ -304,7 +340,7 @@ legend { font-size: 13px; color: var(--muted); padding: 0 6px; }
 
 /* ---------- 打印 ---------- */
 @media print {
-  header.top, nav.tabs, .no-print, .feedback, .answer-box input, .qbug { display: none !important; }
+  header.top, nav.tabs, .no-print, .feedback, .answer-box input, .qbug, .timer-bar { display: none !important; }
   /* 纸上不需要粘住的题头 */
   .qhold.hold-all, .qhold.hold-stem .qhold-stem { position: static !important; box-shadow: none !important; }
   .hold-sentinel { display: none !important; }

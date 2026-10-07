@@ -2132,6 +2132,12 @@
   /* 切换学生后：刷新界面与当前视图，并拉取该学生的云端进度 */
   function afterStudentChange() {
     updateWho();
+    /* 卷子是「某个学生」的：换人时先收起内存里的这份（限时卷的答案早已按原学生编号落盘），
+       再尝试接回新学生自己没交的限时卷 —— 不然接着作答会把答案写进另一个学生的存档。 */
+    if (paper && !paper.graded) {
+      abandonPaperRun();
+      restorePaperRun();
+    }
     if (typeof renderStart === 'function') renderStart();
     var active = document.querySelector('#tabs button.active');
     var v = active ? active.dataset.view : 'practice';

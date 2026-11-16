@@ -1119,12 +1119,15 @@
   }
 
   /* 还原某条"当时错的原题"：有保存的 vars 就精确还原；
-     旧数据没存 vars 时退而生成同类一道新变式，至少把配图和选项亮出来（仿题库管理"变式示例"） */
+     旧数据没存 vars 时退而生成同类一道新变式，至少把配图和选项亮出来（仿题库管理"变式示例"）
+     语言一律按「原题语言」（英文原卷 en / 中文原版 zh），与题库管理、试卷原题模式一致：
+     不能沿用 inst.lang（那是当时练习时随机抽中的语言），否则同一道错题会中英随机跳 */
   function restoreOrFresh(tpl, inst) {
+    var lang = origLangOf(tpl);
     if (inst && inst.vars) {
-      try { var q = Generator.instantiateWithVars(tpl, inst.vars, inst.lang); if (q) return { q: q, restored: true }; } catch (e) {}
+      try { var q = Generator.instantiateWithVars(tpl, inst.vars, lang); if (q) return { q: q, restored: true }; } catch (e) {}
     }
-    try { var f = Generator.instantiate(tpl); if (f) return { q: f, restored: false }; } catch (e) {}
+    try { var f = Generator.instantiate(tpl, null, { lang: lang }); if (f) return { q: f, restored: false }; } catch (e) {}
     return { q: null, restored: false };
   }
 

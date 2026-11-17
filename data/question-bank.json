@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "updated": "2026-09-28",
+  "updated": "2026-11-17",
   "note": "内置示例题库。真题模板由 WorkBuddy 从试卷图片识别后生成，写入本文件或通过网页「题库管理」导入。模板字段说明见 PIPELINE.md。",
   "templates": [
     {
@@ -16556,6 +16556,916 @@
         "i": 0
       },
       "originalAnswer": "B"
+    },
+    {
+      "id": "y2wq-01",
+      "subject": "数学",
+      "topic": "加减应用题",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "送出去一部分弹珠，还剩多少",
+      "tags": [
+        "减法",
+        "应用题"
+      ],
+      "source": "Year 2 数学错题集锦 Q1",
+      "stem": {
+        "en": "Mark had {T} marbles. He gave {a} marbles to George and {b} marbles to Nick. How many marbles had Mark left?",
+        "zh": "马克有 {T} 颗弹珠。他给了乔治 {a} 颗，又给了尼克 {b} 颗。马克还剩多少颗弹珠？"
+      },
+      "vars": {
+        "T": {
+          "type": "int",
+          "min": 90,
+          "max": 180
+        },
+        "a": {
+          "type": "int",
+          "min": 15,
+          "max": 55
+        },
+        "b": {
+          "type": "int",
+          "min": 15,
+          "max": 55
+        }
+      },
+      "constraints": [
+        "a != b",
+        "T - a - b >= 20"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "T - a - b",
+        "unit": "颗",
+        "sanity": {
+          "integer": true,
+          "min": 20
+        }
+      },
+      "solution": {
+        "en": "First add the two amounts he gave away: {a}＋{b}＝{a+b}. Then subtract from the total: {T}−{a+b}＝{T-a-b}. Mark has {T-a-b} marbles left.",
+        "zh": "先算一共送出去多少：{a}＋{b}＝{a+b} 颗。再从总数里减去：{T}−{a+b}＝{T-a-b}。马克还剩 {T-a-b} 颗。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（弹珠送出求剩余），无图",
+      "original": {
+        "T": 145,
+        "a": 39,
+        "b": 47
+      }
+    },
+    {
+      "id": "y2wq-02",
+      "subject": "数学",
+      "topic": "加减应用题",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "两条丝带求总长",
+      "tags": [
+        "加法",
+        "减法",
+        "长度"
+      ],
+      "source": "Year 2 数学错题集锦 Q2",
+      "stem": {
+        "en": "A yellow ribbon is {d} cm longer than a red ribbon. If the yellow ribbon is {Y} cm long, find the total length of the two ribbons.",
+        "zh": "一条黄丝带比红丝带长 {d} 厘米。如果黄丝带长 {Y} 厘米，求两条丝带的总长度。"
+      },
+      "vars": {
+        "d": {
+          "type": "int",
+          "min": 10,
+          "max": 45
+        },
+        "Y": {
+          "type": "int",
+          "min": 50,
+          "max": 90
+        }
+      },
+      "constraints": [
+        "Y - d >= 20"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "Y + (Y - d)",
+        "unit": "厘米",
+        "sanity": {
+          "integer": true,
+          "min": 40
+        }
+      },
+      "solution": {
+        "en": "The red ribbon is {d} cm shorter than the yellow, so it is {Y}−{d}＝{Y-d} cm. Total = {Y}＋{Y-d}＝{2*Y-d} cm. (A common mistake is to add the 25 instead of subtracting.)",
+        "zh": "红丝带比黄丝带短 {d} 厘米，所以红丝带是 {Y}−{d}＝{Y-d} 厘米。总长＝{Y}＋{Y-d}＝{2*Y-d} 厘米。（常见错误是把「长 {d} 厘米」直接加上而不是先减。）"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（丝带长度），无图",
+      "original": {
+        "d": 25,
+        "Y": 77
+      }
+    },
+    {
+      "id": "y2wq-03",
+      "subject": "数学",
+      "topic": "加减应用题",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "买书和笔后剩多少钱",
+      "tags": [
+        "减法",
+        "钱币"
+      ],
+      "source": "Year 2 数学错题集锦 Q3",
+      "stem": {
+        "en": "Charles had ${C}. He bought a storybook for ${S} and a pen. If the storybook cost ${d} more than the pen, how much money had Charles left?",
+        "zh": "查尔斯有 {C} 元。他买了一本 {S} 元的故事书和一支笔。如果故事书比笔贵 {d} 元，查尔斯还剩多少钱？"
+      },
+      "vars": {
+        "C": {
+          "type": "int",
+          "min": 30,
+          "max": 60
+        },
+        "S": {
+          "type": "int",
+          "min": 12,
+          "max": 25
+        },
+        "d": {
+          "type": "int",
+          "min": 6,
+          "max": 14
+        }
+      },
+      "constraints": [
+        "S - d >= 2",
+        "C - S - (S - d) >= 1"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "C - S - (S - d)",
+        "unit": "元",
+        "sanity": {
+          "integer": true,
+          "min": 1
+        }
+      },
+      "solution": {
+        "en": "The pen cost {S}−{d}＝{S-d} dollars (it is {d} dollars cheaper than the book). Total spent = {S}＋{S-d}＝{2*S-d}. Money left = {C}−{2*S-d}＝{C-S-(S-d)} dollars.",
+        "zh": "笔比书便宜 {d} 元，所以笔是 {S}−{d}＝{S-d} 元。一共花了 {S}＋{S-d}＝{2*S-d} 元。剩下 {C}−{2*S-d}＝{C-S-(S-d)} 元。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（买书和笔），无图",
+      "original": {
+        "C": 40,
+        "S": 16,
+        "d": 12
+      }
+    },
+    {
+      "id": "y2wq-04",
+      "subject": "数学",
+      "topic": "两步加减",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "三个人比多少求第三人的钱",
+      "tags": [
+        "两步",
+        "加减法",
+        "钱币"
+      ],
+      "source": "Year 2 数学错题集锦 Q4",
+      "stem": {
+        "en": "Peter has ${p} more than Tom. Sandy has ${s} less than Peter. If Tom has ${t}, how much money does Sandy have?",
+        "zh": "彼得比汤姆多 {p} 元。桑迪比彼得少 {s} 元。如果汤姆有 {t} 元，桑迪有多少钱？"
+      },
+      "vars": {
+        "p": {
+          "type": "int",
+          "min": 60,
+          "max": 180
+        },
+        "s": {
+          "type": "int",
+          "min": 30,
+          "max": 120
+        },
+        "t": {
+          "type": "int",
+          "min": 200,
+          "max": 400
+        }
+      },
+      "constraints": [
+        "t + p - s >= 50",
+        "s != p"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "t + p - s",
+        "unit": "元",
+        "sanity": {
+          "integer": true,
+          "min": 50
+        }
+      },
+      "solution": {
+        "en": "Peter has {t}＋{p}＝{t+p}. Sandy has {p} less... wait: Sandy has {s} LESS than Peter, so {t+p}−{s}＝{t+p-s}. Sandy has ${t+p-s}.",
+        "zh": "彼得有 {t}＋{p}＝{t+p} 元。桑迪比彼得少 {s} 元，所以是 {t+p}−{s}＝{t+p-s} 元。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（三人比多少），无图",
+      "original": {
+        "p": 129,
+        "s": 87,
+        "t": 357
+      }
+    },
+    {
+      "id": "y2wq-05",
+      "subject": "数学",
+      "topic": "两步加减",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "比高比矮求第三人身高",
+      "tags": [
+        "两步",
+        "加减法",
+        "长度"
+      ],
+      "source": "Year 2 数学错题集锦 Q5",
+      "stem": {
+        "en": "Barry is {x} cm taller than Jeff. Pete is {y} cm shorter than Barry. If Jeff is {J} cm tall, find Pete's height.",
+        "zh": "巴里比杰夫高 {x} 厘米。彼得比巴里矮 {y} 厘米。如果杰夫身高 {J} 厘米，求彼得的身高。"
+      },
+      "vars": {
+        "x": {
+          "type": "int",
+          "min": 8,
+          "max": 30
+        },
+        "y": {
+          "type": "int",
+          "min": 15,
+          "max": 45
+        },
+        "J": {
+          "type": "int",
+          "min": 90,
+          "max": 130
+        }
+      },
+      "constraints": [
+        "J + x - y >= 60",
+        "y != x"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "J + x - y",
+        "unit": "厘米",
+        "sanity": {
+          "integer": true,
+          "min": 60
+        }
+      },
+      "solution": {
+        "en": "Barry is {J}＋{x}＝{J+x} cm. Pete is {y} cm shorter than Barry, so {J+x}−{y}＝{J+x-y} cm.",
+        "zh": "巴里身高 {J}＋{x}＝{J+x} 厘米。彼得比巴里矮 {y} 厘米，所以是 {J+x}−{y}＝{J+x-y} 厘米。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（比高矮），无图",
+      "original": {
+        "x": 13,
+        "y": 29,
+        "J": 102
+      }
+    },
+    {
+      "id": "y2wq-06",
+      "subject": "数学",
+      "topic": "质量",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "秤上求水果质量",
+      "tags": [
+        "质量",
+        "减法"
+      ],
+      "source": "Year 2 数学错题集锦 Q6",
+      "stem": {
+        "en": "The mass of the bunch of bananas is {B} g. On the scale, the bananas and a mango together read {T} g. Find the mass of the mango.",
+        "zh": "一串香蕉的质量是 {B} 克。秤上放着一串香蕉和一个芒果，总读数是 {T} 克。求芒果的质量。"
+      },
+      "vars": {
+        "B": {
+          "type": "int",
+          "min": 300,
+          "max": 600
+        },
+        "T": {
+          "type": "int",
+          "min": 400,
+          "max": 800
+        }
+      },
+      "constraints": [
+        "T - B >= 50"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "T - B",
+        "unit": "克",
+        "sanity": {
+          "integer": true,
+          "min": 50
+        }
+      },
+      "solution": {
+        "en": "Total on the scale is {T} g; the bananas are {B} g. The mango is the difference: {T}−{B}＝{T-B} g.",
+        "zh": "秤上总质量是 {T} 克，香蕉是 {B} 克，芒果就是它们的差：{T}−{B}＝{T-B} 克。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为台秤图（香蕉＋芒果总质量，刻度 0/200/400/600g），学生误把指针 600 读成 700，正确答案 80g",
+      "original": {
+        "B": 520,
+        "T": 600
+      }
+    },
+    {
+      "id": "y2wq-07",
+      "subject": "数学",
+      "topic": "和差问题",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "两根杆子相差多少",
+      "tags": [
+        "和差",
+        "加减法",
+        "长度"
+      ],
+      "source": "Year 2 数学错题集锦 Q7",
+      "stem": {
+        "en": "The total length of Pole A and Pole B is {S} cm. If Pole A is {A} cm long, how much longer is Pole B than Pole A?",
+        "zh": "杆 A 和杆 B 的总长是 {S} 厘米。如果杆 A 长 {A} 厘米，杆 B 比杆 A 长多少厘米？"
+      },
+      "vars": {
+        "S": {
+          "type": "int",
+          "min": 400,
+          "max": 800
+        },
+        "A": {
+          "type": "int",
+          "min": 150,
+          "max": 350
+        }
+      },
+      "constraints": [
+        "S - A > A",
+        "S - 2*A >= 20"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "S - 2*A",
+        "unit": "厘米",
+        "sanity": {
+          "integer": true,
+          "min": 20
+        }
+      },
+      "solution": {
+        "en": "Pole B is {S}−{A}＝{S-A} cm. The difference is {S-A}−{A}＝{S-2*A} cm, so Pole B is {S-2*A} cm longer than Pole A.",
+        "zh": "杆 B 是 {S}−{A}＝{S-A} 厘米。差值＝{S-A}−{A}＝{S-2*A} 厘米，所以杆 B 比杆 A 长 {S-2*A} 厘米。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为线段图（两杆总长与一杆长），参数化后以文字表述",
+      "original": {
+        "S": 640,
+        "A": 294
+      }
+    },
+    {
+      "id": "y2wq-08",
+      "subject": "数学",
+      "topic": "钱币比较",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "花完钱后谁多谁少",
+      "tags": [
+        "钱币",
+        "小数",
+        "加减法"
+      ],
+      "source": "Year 2 数学错题集锦 Q8",
+      "stem": {
+        "en": "Dennis had ${d1} and Paul had ${p1}. Dennis spent ${d2} while Paul spent ${p2}. How much more money had Paul left than Dennis?",
+        "zh": "丹尼斯有 {d1} 元，保罗有 {p1} 元。丹尼斯花了 {d2} 元，保罗花了 {p2} 元。保罗剩下的钱比丹尼斯多多少？"
+      },
+      "vars": {
+        "d1": {
+          "type": "int",
+          "min": 8,
+          "max": 20
+        },
+        "p1": {
+          "type": "int",
+          "min": 6,
+          "max": 16
+        },
+        "d2": {
+          "type": "int",
+          "min": 4,
+          "max": 10
+        },
+        "p2": {
+          "type": "int",
+          "min": 1,
+          "max": 5
+        }
+      },
+      "constraints": [
+        "d1 - d2 >= 1",
+        "p1 - p2 >= 1",
+        "(p1 - p2) - (d1 - d2) >= 1",
+        "p1 - p2 > d1 - d2"
+      ],
+      "answer": {
+        "type": "number",
+        "expr": "(p1 - p2) - (d1 - d2)",
+        "unit": "元",
+        "sanity": {
+          "min": 1
+        }
+      },
+      "solution": {
+        "en": "Dennis has {d1}−{d2}＝{d1-d2} left; Paul has {p1}−{p2}＝{p1-p2} left. The difference is {p1-p2}−{d1-d2}＝{(p1-p2)-(d1-d2)}. Paul has ${(p1-p2)-(d1-d2)} more than Dennis.",
+        "zh": "丹尼斯剩 {d1}−{d2}＝{d1-d2} 元；保罗剩 {p1}−{p2}＝{p1-p2} 元。相差 {p1-p2}−{d1-d2}＝{(p1-p2)-(d1-d2)}。保罗比丹尼斯多 {(p1-p2)-(d1-d2)} 元。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（钱币比较），无图",
+      "original": {
+        "d1": 9,
+        "p1": 5.9,
+        "d2": 6,
+        "p2": 0.5
+      }
+    },
+    {
+      "id": "y2wq-09",
+      "subject": "数学",
+      "topic": "等量代换",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "两台秤求一个物体的质量",
+      "tags": [
+        "等量代换",
+        "质量",
+        "方程"
+      ],
+      "source": "Year 2 数学错题集锦 Q9",
+      "stem": {
+        "en": "On a scale, {c1} cubes and {b1} circles weigh {s1} kg. On another scale, {c2} cube and {b2} circle weigh {s2} kg. Each cube has the same mass, and each circle has the same mass. Find the mass of one circle.",
+        "zh": "一台秤上，{c1} 个方块和 {b1} 个圆球共重 {s1} 千克；另一台秤上，{c2} 个方块和 {b2} 个圆球共重 {s2} 千克。每个方块一样重，每个圆球也一样重。求一个圆球的质量。"
+      },
+      "vars": {
+        "cube": {
+          "type": "int",
+          "min": 3,
+          "max": 8
+        },
+        "ball": {
+          "type": "int",
+          "min": 2,
+          "max": 5
+        }
+      },
+      "derived": {
+        "c1": "2",
+        "b1": "3",
+        "c2": "1",
+        "b2": "1",
+        "s1": "2*cube + 3*ball",
+        "s2": "cube + ball"
+      },
+      "constraints": [
+        "cube > ball",
+        "cube != ball"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "ball",
+        "unit": "千克",
+        "sanity": {
+          "integer": true,
+          "min": 1
+        }
+      },
+      "solution": {
+        "en": "First scale: 2 cubes＋3 circles＝{s1} kg. Second scale: 1 cube＋1 circle＝{s2} kg. So one cube is {s2}−1 circle. Substitute into the first: 2×({s2}−circle)＋3 circles＝{s1}, i.e. {2*s2}＋1 circle＝{s1}, so one circle＝{s1}−{2*s2}＝{ball} kg.",
+        "zh": "第二台秤：1 方块＋1 圆球＝{s2} 千克，所以 1 方块＝{s2}−1 圆球。代入第一台：2×({s2}−圆球)＋3 圆球＝{s1}，即 {2*s2}＋1 圆球＝{s1}，所以 1 圆球＝{s1}−{2*s2}＝{ball} 千克。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为双台秤图（2方块+3球 vs 1方块+1球），参数化后以文字表述方程组",
+      "original": {
+        "cube": 4,
+        "ball": 2
+      }
+    },
+    {
+      "id": "y2wq-10",
+      "subject": "数学",
+      "topic": "加减应用题",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "两根绳子求总长",
+      "tags": [
+        "加法",
+        "减法",
+        "长度"
+      ],
+      "source": "Year 2 数学错题集锦 Q10",
+      "stem": {
+        "en": "String A is {A} cm long. String B is {d} cm shorter than String A. Find the total length of both strings.",
+        "zh": "绳子 A 长 {A} 厘米。绳子 B 比绳子 A 短 {d} 厘米。求两条绳子的总长度。"
+      },
+      "vars": {
+        "A": {
+          "type": "int",
+          "min": 150,
+          "max": 400
+        },
+        "d": {
+          "type": "int",
+          "min": 20,
+          "max": 100
+        }
+      },
+      "constraints": [
+        "A - d >= 40"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "A + (A - d)",
+        "unit": "厘米",
+        "sanity": {
+          "integer": true,
+          "min": 80
+        }
+      },
+      "solution": {
+        "en": "String B is {A}−{d}＝{A-d} cm. Total = {A}＋{A-d}＝{2*A-d} cm.",
+        "zh": "绳子 B 是 {A}−{d}＝{A-d} 厘米。总长＝{A}＋{A-d}＝{2*A-d} 厘米。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（两根绳子），无图",
+      "original": {
+        "A": 250,
+        "d": 64
+      }
+    },
+    {
+      "id": "y2wq-11",
+      "subject": "数学",
+      "topic": "钱币小数",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "买东西后剩多少钱",
+      "tags": [
+        "钱币",
+        "小数",
+        "加减法"
+      ],
+      "source": "Year 2 数学错题集锦 Q11",
+      "stem": {
+        "en": "Lucy had ${L}. Julie had ${j} more than Lucy. Julie bought a packet of tissue paper for {c}¢. How much money had she left?",
+        "zh": "露西有 {L} 元。朱莉比露西多 {j} 元。朱莉花 {c} 分买了一包纸巾。她还剩多少钱？"
+      },
+      "vars": {
+        "L": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "j": {
+          "type": "int",
+          "min": 3,
+          "max": 8
+        },
+        "c": {
+          "type": "int",
+          "min": 20,
+          "max": 90
+        }
+      },
+      "constraints": [
+        "c % 5 == 0"
+      ],
+      "answer": {
+        "type": "number",
+        "expr": "(L + j) - c/100",
+        "unit": "元",
+        "sanity": {
+          "min": 1
+        }
+      },
+      "solution": {
+        "en": "Julie had {L}＋{j}＝{L+j} dollars. She spent {c}¢＝{c/100} dollars. Left: {L+j}−{c/100}＝{(L+j)-c/100} dollars.",
+        "zh": "朱莉有 {L}＋{j}＝{L+j} 元。她花了 {c} 分＝{c/100} 元。剩下 {L+j}−{c/100}＝{(L+j)-c/100} 元。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为纯文字应用题（买纸巾），无图",
+      "original": {
+        "L": 3.9,
+        "j": 4,
+        "c": 35
+      }
+    },
+    {
+      "id": "y2wq-12",
+      "subject": "数学",
+      "topic": "质量",
+      "grade": "二年级",
+      "difficulty": 1,
+      "title": "看秤读数",
+      "tags": [
+        "质量",
+        "读数"
+      ],
+      "source": "Year 2 数学错题集锦 Q12",
+      "stem": {
+        "en": "What is the mass of the brick? The scale reads {m} g.",
+        "zh": "砖块的质量是多少？台秤的读数是 {m} 克。"
+      },
+      "vars": {
+        "m": {
+          "type": "int",
+          "min": 150,
+          "max": 290
+        }
+      },
+      "constraints": [
+        "m % 10 == 0"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "m",
+        "unit": "克",
+        "sanity": {
+          "integer": true,
+          "min": 100
+        }
+      },
+      "solution": {
+        "en": "Read the position of the needle on the dial: it points to {m} g, so the brick has mass {m} g.",
+        "zh": "看表盘上指针的位置：指针指向 {m} 克，所以砖块的质量是 {m} 克。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为台秤图（砖块，刻度 0/100/200/300g），参数化后以读数文字表述",
+      "original": {
+        "m": 270
+      }
+    },
+    {
+      "id": "y2wq-13",
+      "subject": "数学",
+      "topic": "分数比较",
+      "grade": "二年级",
+      "difficulty": 2,
+      "title": "找出最小的分数",
+      "tags": [
+        "分数",
+        "比较"
+      ],
+      "source": "Year 2 数学错题集锦 Q13",
+      "stem": {
+        "en": "Which of the following fractions is the smallest?",
+        "zh": "下面哪个分数最小？"
+      },
+      "vars": {
+        "n": {
+          "type": "pick",
+          "from": [
+            7,
+            8
+          ]
+        },
+        "big": {
+          "type": "pick",
+          "from": [
+            9,
+            10,
+            11
+          ]
+        },
+        "small": {
+          "type": "pick",
+          "from": [
+            5,
+            6
+          ]
+        }
+      },
+      "constraints": [
+        "small < n",
+        "n < big"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "1/{small}",
+            "zh": "1/{small}"
+          },
+          {
+            "en": "2/{n}",
+            "zh": "2/{n}"
+          },
+          {
+            "en": "1/{n}",
+            "zh": "1/{n}"
+          },
+          {
+            "en": "1/{big}",
+            "zh": "1/{big}"
+          }
+        ],
+        "correctIndex": 3
+      },
+      "solution": {
+        "en": "When the top (numerator) is the same, a bigger bottom (denominator) means a smaller fraction. Here 2/{n} is bigger than 1/{n} and 1/{small}. The smallest is 1/{big}, because {big} is the biggest denominator.",
+        "zh": "分子相同时，分母越大分数越小。这里 2/{n} 比 1/{n} 和 1/{small} 都大。最小的是 1/{big}，因为 {big} 是最大的分母。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为选择题（分数比较，四个选项），无图",
+      "original": {
+        "n": 7,
+        "big": 9,
+        "small": 5
+      }
+    },
+    {
+      "id": "y2wq-14",
+      "subject": "数学",
+      "topic": "钱币推理",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "用尽可能少的硬币付款",
+      "tags": [
+        "钱币",
+        "推理"
+      ],
+      "source": "Year 2 数学错题集锦 Q14",
+      "stem": {
+        "en": "Anna has plenty of 5c, 10c, 20c and 50c coins. She buys two items costing {p1} cents and {p2} cents. Anna pays the exact amount using as FEW coins as possible. What is the smallest number of coins she can use?",
+        "zh": "安娜有足够多的 5 分、10 分、20 分和 50 分硬币。她买了两件共 {p1} 分和 {p2} 分的商品。安娜用「尽可能少」的硬币正好付款。她最少用多少枚硬币？"
+      },
+      "vars": {
+        "p1": {
+          "type": "int",
+          "min": 40,
+          "max": 95
+        },
+        "p2": {
+          "type": "int",
+          "min": 40,
+          "max": 95
+        }
+      },
+      "constraints": [
+        "p1 % 5 == 0",
+        "p2 % 5 == 0"
+      ],
+      "derived": {
+        "price": "p1 + p2",
+        "n50": "floor(price / 50)",
+        "r50": "price % 50",
+        "n20": "floor(r50 / 20)",
+        "r20": "r50 % 20",
+        "n10": "floor(r20 / 10)",
+        "r10": "r20 % 10",
+        "n5": "r10 / 5",
+        "minCoins": "n50 + n20 + n10 + n5"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "minCoins",
+        "unit": "枚",
+        "sanity": {
+          "integer": true,
+          "min": 2
+        }
+      },
+      "solution": {
+        "en": "Total = {p1}＋{p2}＝{price} cents. To use as FEW coins as possible, use the biggest coin (50c) first: {n50}×50c＝{n50*50}, leaving {r50}c; then {n20}×20c leaving {r20}c; then {n10}×10c leaving {r10}c; then {n5}×5c. Total coins = {n50}＋{n20}＋{n10}＋{n5}＝{minCoins}.",
+        "zh": "总价＝{p1}＋{p2}＝{price} 分。要用尽可能少的硬币，就优先用最大面值的 50 分：{n50} 枚 50 分＝{n50*50} 分，剩 {r50} 分；再 {n20} 枚 20 分，剩 {r20} 分；再 {n10} 枚 10 分，剩 {r10} 分；最后 {n5} 枚 5 分。总共 {n50}＋{n20}＋{n10}＋{n5}＝{minCoins} 枚。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为「钱包有限硬币（14枚）付 145 分、用尽可能多硬币」的选择题（答案10）；因有限硬币凑数是背包问题、不适合参数化，改为同知识点的「尽可能少硬币」变式",
+      "original": {
+        "p1": 50,
+        "p2": 95
+      }
+    },
+    {
+      "id": "y2wq-15",
+      "subject": "数学",
+      "topic": "等差求和",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "每天多取一点，哪天取完",
+      "tags": [
+        "等差数列",
+        "累加"
+      ],
+      "source": "Year 2 数学错题集锦 Q15",
+      "stem": {
+        "en": "Pirate Pete had {G} gold pieces in his treasure chest. One day he took out {f} gold pieces. Each day after, he took out {f} more gold pieces than he had taken out the day before. On which day did Pirate Pete empty the treasure chest?",
+        "zh": "海盗皮特的宝箱里有 {G} 枚金币。某天他取出 {f} 枚。之后每一天他都比前一天多取 {f} 枚。皮特在第几天取空了宝箱？"
+      },
+      "vars": {
+        "f": {
+          "type": "int",
+          "min": 2,
+          "max": 3
+        },
+        "day": {
+          "type": "int",
+          "min": 4,
+          "max": 8
+        }
+      },
+      "derived": {
+        "G": "f * day * (day + 1) / 2"
+      },
+      "constraints": [],
+      "answer": {
+        "type": "integer",
+        "expr": "day",
+        "unit": "天",
+        "sanity": {
+          "integer": true,
+          "min": 4
+        }
+      },
+      "solution": {
+        "en": "Day 1: {f}; Day 2: {2*f}; Day 3: {3*f} … The amounts go {f}, {2*f}, {3*f}, … They add up to {f}＋{2*f}＋…＋{day}×{f}＝{f}×({1}＋{2}＋…＋{day})＝{G}, which exactly empties the chest. So it is the {day}th day.",
+        "zh": "第 1 天取 {f} 枚，第 2 天取 {2*f} 枚，第 3 天取 {3*f} 枚……每天多取 {f} 枚。累加到 {G} 枚正好取空：{f}＋{2*f}＋…＋{day}×{f}＝{G}。所以是第 {day} 天。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为藏宝箱图 + 三天表格（每天多取2枚），参数化后以文字表述",
+      "original": {
+        "f": 2,
+        "day": 5
+      }
+    },
+    {
+      "id": "y2wq-16",
+      "subject": "数学",
+      "topic": "倍数",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "同心正方形最大边长",
+      "tags": [
+        "倍数",
+        "翻倍"
+      ],
+      "source": "Year 2 数学错题集锦 Q16",
+      "stem": {
+        "en": "Mike drew four squares with the same centre. The side length of the smallest square is {s} units. Each square has a side twice as long as the one inside it. What is the side length of the largest square?",
+        "zh": "迈克画了四个同心的正方形。最小正方形的边长是 {s} 单位。每个正方形的边长都是里面那个的 2 倍。最大的正方形的边长是多少？"
+      },
+      "vars": {
+        "s": {
+          "type": "int",
+          "min": 3,
+          "max": 8
+        }
+      },
+      "derived": {
+        "maxSide": "s * 8"
+      },
+      "constraints": [],
+      "answer": {
+        "type": "integer",
+        "expr": "maxSide",
+        "unit": "单位",
+        "sanity": {
+          "integer": true,
+          "min": 10
+        }
+      },
+      "solution": {
+        "en": "The smallest square is {s} units. Doubling three times (for four squares) gives {s} → {2*s} → {4*s} → {8*s}. The largest square is {maxSide} units.",
+        "zh": "最小正方形是 {s} 单位。往外翻倍三次（共四个正方形）：{s} → {2*s} → {4*s} → {8*s}。最大的正方形边长是 {maxSide} 单位。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "noFigure": "原题为四个同心正方形图（边长逐层翻倍），参数化后以文字表述",
+      "original": {
+        "s": 5
+      }
     }
   ]
 }

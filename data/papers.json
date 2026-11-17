@@ -127,6 +127,23 @@
         "note": "推算值，可在组卷界面手动改。"
       },
       "idPrefix": "mm1t3"
+    },
+    {
+      "set": "year2数学错题集锦",
+      "setZh": "Year 2 数学错题集锦",
+      "subject": "数学",
+      "language": "en",
+      "level": "澳洲 Year 2（错题整理）",
+      "totalQuestions": 16,
+      "timeLimit": {
+        "official": false,
+        "suggestedMinutes": 16,
+        "basis": "错题集锦非限时考试，无官方时长；按 defaultRate 每题 1 分钟估算 16 题 ≈ 16 分钟（其中 ICAS 选择题部分参照 ICAS Intro 卷 30 题/35 分钟 ≈ 70 秒/题）",
+        "url": "https://www.icasassessments.com/icas-year-levels-and-exam-papers/",
+        "checkedAt": "2026-11-17",
+        "note": "学生做错的题整理成卷（应用题 + ICAS 选择题混合），无官方限时，16 分钟为估算值，可在组卷界面手动改。"
+      },
+      "idPrefix": "y2wq"
     }
   ]
 }

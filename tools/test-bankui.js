@@ -138,6 +138,7 @@ console.log('');
 console.log('1) tplQNo 题号识别');
 [['seamo25a-q01', 1], ['seamo25a-q07', 7], ['seamo25a-q25', 25],
  ['icas21y2m-09', 9], ['icas22y2m-13a', 13], ['icas22y2m-13b', 13],
+ ['y2wq-01', 1], ['y2wq-16', 16],
  ['m6-frac-add', null], ['demo-1', null]].forEach(([id, want]) => {
   const got = UI.tplQNo({ id: id });
   chk(got === want, 'tplQNo("' + id + '") = ' + got + '，应为 ' + want);

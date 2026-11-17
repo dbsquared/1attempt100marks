@@ -2070,11 +2070,22 @@
            '<path d="M' + (cx - s * 0.22).toFixed(1) + ',' + (cy - s * 0.40).toFixed(1) + ' q' + (s * 0.22).toFixed(1) + ',-' + (s * 0.46).toFixed(1) + ' ' + (s * 0.44).toFixed(1) + ',0" fill="none" stroke="' + INK + '" stroke-width="1.5"/>' +
            '<text x="' + cx + '" y="' + (cy + s * 0.16).toFixed(1) + '" font-size="' + (s * 0.34).toFixed(1) + '" text-anchor="middle" fill="#ffffff">' + esc(label) + '</text>';
   }
+  /* 方块（cube）：实心小方块，台秤题里代表"一个方块" */
+  function cubeIcon(cx, cy, s) {
+    var h = s * 0.72;
+    return '<rect x="' + (cx - h / 2).toFixed(1) + '" y="' + (cy - h / 2).toFixed(1) + '" width="' + h.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" fill="#94a3b8" stroke="' + INK + '" stroke-width="1.3"/>';
+  }
+  /* 圆球（ball/circle）：实心圆，台秤题里代表"一个圆球"（区别于带花纹的足球 ballIcon） */
+  function ballIcon2(cx, cy, s) {
+    return '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s * 0.38).toFixed(1) + '" fill="#1f6feb" stroke="' + INK + '" stroke-width="1.3"/>';
+  }
   function itemIcon(kind, cx, cy, s, label) {
     if (kind === 'grape') return grapeIcon(cx, cy, s);
     if (kind === 'banana') return bananaIcon(cx, cy, s);
     if (kind === 'apple') return appleIcon(cx, cy, s);
     if (kind === 'weight') return weightIcon(cx, cy, s, label || '');
+    if (kind === 'cube') return cubeIcon(cx, cy, s);
+    if (kind === 'ball') return ballIcon2(cx, cy, s);
     return '<rect x="' + (cx - s * 0.4).toFixed(1) + '" y="' + (cy - s * 0.4).toFixed(1) + '" width="' + (s * 0.8).toFixed(1) + '" height="' + (s * 0.8).toFixed(1) + '" fill="' + GREY + '" stroke="' + INK + '" stroke-width="1.2"/>';
   }
   /* 一行小图标：items = [[kind,count],…]；weight 的标签用 labelOf */
@@ -3497,6 +3508,72 @@
     }
   };
   Object.keys(TYPES8).forEach(function (k) { TYPES[k] = TYPES8[k]; });
+
+  /* 台秤（弹簧秤，圆形表盘 + 指针）。两种写法：
+       单秤：{ val, max, step, unit, item }
+       多秤：{ scales: [{ val, max, step, unit, item }, …] }  并排画多台
+       val   —— 指针指向的读数（变量名或数字）
+       max   —— 表盘最大刻度（表盘从 0 到 max，弧 270°，0 在左上、max 在右上）
+       step  —— 主刻度间隔（默认 max/4），主刻度线画数字标签
+       unit  —— 单位文字（图内一律英文，如 "g" / "kg"）
+       item  —— 秤盘上放的东西，写法同 itemRow：[["banana",1],["apple",1]]（可选）
+       指针角 = 270° × (val/max)，val 越界时夹到 [0,max]。
+       data-u="scale" data-val 挂读数，供 test-figs 自检「图上的指针读数 = 题干给的读数」。 */
+  var TYPESscale = {
+    scale: function (spec, vars) {
+      var specs = spec.scales || [spec];
+      var one = { W: 240, H: 300, cx: 120, cy: 120, R: 104 };
+      var pad = 16;
+      var W = Math.round(pad * 2 + specs.length * one.W), H = one.H;
+      var s = svgOpen(W, H, 'scale reading');
+
+      specs.forEach(function (sp, idx) {
+        var max = Math.max(1, Math.round(num(sp.max, vars) || 100));
+        var step = Math.max(1, Math.round(num(sp.step, vars) || (max / 4)));
+        var raw = num(sp.val, vars);
+        var val = isFinite(raw) ? Math.max(0, Math.min(max, raw)) : 0;
+        var unit = strSpec(sp.unit, vars) || '';
+        var item = sp.item || null;
+        var cx = pad + idx * one.W + one.cx, cy = one.cy, R = one.R;
+        var cell = '<g data-u="scale" data-val="' + fmt(val) + '" data-max="' + max + '">';
+
+        cell += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2.5"/>';
+        cell += '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + INK + '"/>';
+
+        /* 刻度：0 在左上（-225°），满刻度在右上（+45°），扫过 270° */
+        var a0 = -225, a1 = 45;
+        function ang(vv) { return (a0 + (vv / max) * (a1 - a0)) * Math.PI / 180; }
+        function px(a, r) { return cx + r * Math.cos(a); }
+        function py(a, r) { return cy + r * Math.sin(a); }
+
+        var majors = Math.round(max / step) + 1;
+        for (var i = 0; i < majors; i++) {
+          var vv = i * step;
+          if (vv > max) vv = max;
+          var a = ang(vv), r1 = R - 16, r2 = R - 6;
+          cell += '<line data-u="tick" data-v="' + vv + '" x1="' + px(a, r1).toFixed(1) + '" y1="' + py(a, r1).toFixed(1) +
+               '" x2="' + px(a, r2).toFixed(1) + '" y2="' + py(a, r2).toFixed(1) + '" stroke="' + INK + '" stroke-width="2"/>';
+          var lx = px(a, R - 32), ly = py(a, R - 32);
+          cell += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 5).toFixed(1) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + vv + '</text>';
+        }
+
+        var pa = ang(val);
+        cell += '<line data-u="needle" data-val="' + fmt(val) + '" x1="' + cx + '" y1="' + cy + '" x2="' + px(pa, R - 22).toFixed(1) + '" y2="' + py(pa, R - 22).toFixed(1) +
+             '" stroke="' + RED + '" stroke-width="4" stroke-linecap="round"/>';
+
+        if (unit) cell += '<text x="' + cx + '" y="' + (cy + R + 22) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(unit) + '</text>';
+
+        if (item) cell += itemRow(cx, cy + R + 70, item, vars);
+
+        cell += '</g>';
+        s += cell;
+      });
+
+      s += '</svg>';
+      return s;
+    }
+  };
+  Object.keys(TYPESscale).forEach(function (k) { TYPES[k] = TYPESscale[k]; });
 
   function render(spec, vars) {
     if (!spec || !spec.type) return '';

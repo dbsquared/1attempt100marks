@@ -1992,6 +1992,44 @@ function triGeoCount(lines) {
   }
 }
 
+/* ---------- y2wq 台秤（scale）图元：图上指针读数 = 题干给的读数 ----------
+   三道理由一致：读数题里，指针指向的读数就是题干已知量（或答案），图不能画错。
+   通过 data-u="scale" data-val 重建「每台秤的读数」，再和模板 vars 里对应变量比对。 */
+{
+  /* y2wq-06：单秤，指针 = T（总质量），题干 B/T 已知 */
+  const t6 = byId('y2wq-06');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t6);
+    const mv = [...String(q.diagramSvg).matchAll(/data-u="scale" data-val="([\d.]+)"/g)];
+    chk(mv.length === 1, 'y2wq-06 图上应有 1 台秤，实际 ' + mv.length);
+    if (mv.length) chk(parseFloat(mv[0][1]) === q.vars.T, 'y2wq-06 图指针 ' + mv[0][1] + ' ≠ 题干总读数 T=' + q.vars.T);
+  }
+  /* y2wq-09：双秤，指针 = s1 / s2（两台读数量分别对齐） */
+  const t9 = byId('y2wq-09');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t9);
+    const mv = [...String(q.diagramSvg).matchAll(/data-u="scale" data-val="([\d.]+)"/g)].map(m => parseFloat(m[1]));
+    chk(mv.length === 2, 'y2wq-09 图上应有 2 台秤，实际 ' + mv.length);
+    if (mv.length === 2) {
+      chk(mv[0] === q.vars.s1 && mv[1] === q.vars.s2,
+        'y2wq-09 图指针 ' + mv.join('/') + ' ≠ 题干 s1=' + q.vars.s1 + ' s2=' + q.vars.s2);
+    }
+    /* 答案 = 球质量，必须和两台读数一致地解出：s1 - 2*s2 */
+    chk(q.value === q.vars.s1 - 2 * q.vars.s2, 'y2wq-09 答案 ' + q.value + ' ≠ s1-2s2=' + (q.vars.s1 - 2 * q.vars.s2));
+  }
+  /* y2wq-12：单秤，指针 = m（答案），图上不能把读数漏掉或画错 */
+  const t12 = byId('y2wq-12');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t12);
+    const mv = [...String(q.diagramSvg).matchAll(/data-u="scale" data-val="([\d.]+)"/g)];
+    chk(mv.length === 1, 'y2wq-12 图上应有 1 台秤，实际 ' + mv.length);
+    if (mv.length) chk(parseFloat(mv[0][1]) === q.vars.m, 'y2wq-12 图指针 ' + mv[0][1] + ' ≠ 答案 m=' + q.vars.m);
+    /* 指针读数 = 答案，且题干文字里不能再出现读数（避免「读数是 X」自曝答案） */
+    chk(!/\d+\s*克|读数是/.test(q.stemText), 'y2wq-12 题干文字不应自曝读数：' + q.stemText);
+  }
+  console.log('y2wq 台秤图元  图上指针读数 = 题干/答案读数 ✓（06 单秤 / 09 双秤 / 12 看图读数）');
+}
+
 /* ---------- 图形类型表不能有重复 key（重复时后者静默覆盖，改前面那个等于白改） ---------- */
 {
   const src = fs.readFileSync(path.join(root, 'assets/js/diagrams.js'), 'utf8');

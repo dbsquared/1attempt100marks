@@ -1284,7 +1284,8 @@
     var id = String(t.id);
     var m = id.match(/-q(\d+)/i)          // seamo25a-q07 / xxx-q12
       || id.match(/^icas\d{2}y2m-(\d+)/)  // icas21y2m-09 / icas22y2m-13a
-      || id.match(/^mm\d+t\d+-(\d+)/i);   // mm1t1-07 / mm1t2-40 / mm1t3-01
+      || id.match(/^mm\d+t\d+-(\d+)/i)    // mm1t1-07 / mm1t2-40 / mm1t3-01
+      || id.match(/^y2wq-(\d+)/i);        // y2wq-01 / y2wq-16（year2 数学错题集锦）
     return m ? parseInt(m[1], 10) : null;
   }
   /* ---------------- 题库管理：题卡渲染（仿 papers/*.html 整卷归档页的表现方式） ----------------

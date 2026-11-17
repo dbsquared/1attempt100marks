@@ -16888,7 +16888,23 @@
         "zh": "秤上总质量是 {T} 克，香蕉是 {B} 克，芒果就是它们的差：{T}−{B}＝{T-B} 克。"
       },
       "sourceSet": "year2数学错题集锦",
-      "noFigure": "原题为台秤图（香蕉＋芒果总质量，刻度 0/200/400/600g），学生误把指针 600 读成 700，正确答案 80g",
+      "diagram": {
+        "type": "scale",
+        "val": "T",
+        "max": 800,
+        "step": 200,
+        "unit": "g",
+        "item": [
+          [
+            "banana",
+            1
+          ],
+          [
+            "apple",
+            1
+          ]
+        ]
+      },
       "original": {
         "B": 520,
         "T": 600
@@ -17068,7 +17084,43 @@
         "zh": "第二台秤：1 方块＋1 圆球＝{s2} 千克，所以 1 方块＝{s2}−1 圆球。代入第一台：2×({s2}−圆球)＋3 圆球＝{s1}，即 {2*s2}＋1 圆球＝{s1}，所以 1 圆球＝{s1}−{2*s2}＝{ball} 千克。"
       },
       "sourceSet": "year2数学错题集锦",
-      "noFigure": "原题为双台秤图（2方块+3球 vs 1方块+1球），参数化后以文字表述方程组",
+      "diagram": {
+        "type": "scale",
+        "scales": [
+          {
+            "val": "s1",
+            "max": 40,
+            "step": 10,
+            "unit": "kg",
+            "item": [
+              [
+                "cube",
+                "c1"
+              ],
+              [
+                "ball",
+                "b1"
+              ]
+            ]
+          },
+          {
+            "val": "s2",
+            "max": 40,
+            "step": 10,
+            "unit": "kg",
+            "item": [
+              [
+                "cube",
+                "c2"
+              ],
+              [
+                "ball",
+                "b2"
+              ]
+            ]
+          }
+        ]
+      },
       "original": {
         "cube": 4,
         "ball": 2
@@ -17196,8 +17248,8 @@
       ],
       "source": "Year 2 数学错题集锦 Q12",
       "stem": {
-        "en": "What is the mass of the brick? The scale reads {m} g.",
-        "zh": "砖块的质量是多少？台秤的读数是 {m} 克。"
+        "en": "Look at the scale. What is the mass of the brick?",
+        "zh": "看下面的台秤，砖块的质量是多少？"
       },
       "vars": {
         "m": {
@@ -17223,7 +17275,19 @@
         "zh": "看表盘上指针的位置：指针指向 {m} 克，所以砖块的质量是 {m} 克。"
       },
       "sourceSet": "year2数学错题集锦",
-      "noFigure": "原题为台秤图（砖块，刻度 0/100/200/300g），参数化后以读数文字表述",
+      "diagram": {
+        "type": "scale",
+        "val": "m",
+        "max": 300,
+        "step": 100,
+        "unit": "g",
+        "item": [
+          [
+            "cube",
+            1
+          ]
+        ]
+      },
       "original": {
         "m": 270
       }

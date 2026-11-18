@@ -285,18 +285,18 @@
         "zh": "一台秤上，{c1} 个方块和 {b1} 个圆球共重 {s1} 千克；另一台秤上，{c2} 个方块和 {b2} 个圆球共重 {s2} 千克。每个方块一样重，每个圆球也一样重。求一个圆球的质量。"
       },
       "vars": {
-        "cube": { "type": "int", "min": 3, "max": 8 },
-        "ball": { "type": "int", "min": 2, "max": 5 }
+        "cube": { "type": "int", "min": 3, "max": 6 },
+        "ball": { "type": "int", "min": 2, "max": 4 },
+        "c1": { "type": "int", "min": 2, "max": 3 },
+        "b1": { "type": "int", "min": 2, "max": 4 }
       },
       "derived": {
-        "c1": "2",
-        "b1": "3",
         "c2": "1",
         "b2": "1",
-        "s1": "2*cube + 3*ball",
+        "s1": "c1*cube + b1*ball",
         "s2": "cube + ball"
       },
-      "constraints": ["cube > ball", "cube != ball"],
+      "constraints": ["cube > ball", "c1 != b1"],
       "answer": {
         "type": "integer",
         "expr": "ball",
@@ -304,8 +304,8 @@
         "sanity": { "integer": true, "min": 1 }
       },
       "solution": {
-        "en": "First scale: 2 cubes＋3 circles＝{s1} kg. Second scale: 1 cube＋1 circle＝{s2} kg. So one cube is {s2}−1 circle. Substitute into the first: 2×({s2}−circle)＋3 circles＝{s1}, i.e. {2*s2}＋1 circle＝{s1}, so one circle＝{s1}−{2*s2}＝{ball} kg.",
-        "zh": "第二台秤：1 方块＋1 圆球＝{s2} 千克，所以 1 方块＝{s2}−1 圆球。代入第一台：2×({s2}−圆球)＋3 圆球＝{s1}，即 {2*s2}＋1 圆球＝{s1}，所以 1 圆球＝{s1}−{2*s2}＝{ball} 千克。"
+        "en": "Second scale: 1 cube＋1 circle＝{s2} kg, so one cube is {s2}−1 circle. Substitute into the first: {c1}×({s2}−circle)＋{b1} circles＝{s1}, i.e. {c1*s2}＋({b1}−{c1}) circle(s)＝{s1}. So one circle＝({s1}−{c1*s2})÷({b1}−{c1})＝{ball} kg.",
+        "zh": "第二台秤：1 方块＋1 圆球＝{s2} 千克，所以 1 方块＝{s2}−1 圆球。代入第一台：{c1}×({s2}−圆球)＋{b1} 圆球＝{s1}，即 {c1*s2}＋({b1}−{c1}) 圆球＝{s1}。所以 1 圆球＝({s1}−{c1*s2})÷({b1}−{c1})＝{ball} 千克。"
       },
       "sourceSet": "year2数学错题集锦",
       "diagram": {
@@ -315,7 +315,7 @@
           { "val": "s2", "max": 40, "step": 10, "unit": "kg", "item": [["cube", "c2"], ["ball", "b2"]] }
         ]
       },
-      "original": { "cube": 4, "ball": 2 }
+      "original": { "cube": 4, "ball": 2, "c1": 2, "b1": 3 }
     },
     {
       "id": "y2wq-10",

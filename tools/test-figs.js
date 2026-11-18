@@ -2014,8 +2014,12 @@ function triGeoCount(lines) {
       chk(mv[0] === q.vars.s1 && mv[1] === q.vars.s2,
         'y2wq-09 图指针 ' + mv.join('/') + ' ≠ 题干 s1=' + q.vars.s1 + ' s2=' + q.vars.s2);
     }
-    /* 答案 = 球质量，必须和两台读数一致地解出：s1 - 2*s2 */
-    chk(q.value === q.vars.s1 - 2 * q.vars.s2, 'y2wq-09 答案 ' + q.value + ' ≠ s1-2s2=' + (q.vars.s1 - 2 * q.vars.s2));
+    /* 答案 = 球质量，必须和两台读数一致地解出：ball = (s1 - c1*s2)/(b1 - c1)
+       （第二台固定 1方块+1圆球 ⇒ cube=s2-ball ⇒ c1*(s2-ball)+b1*ball=s1 ⇒ ball=(s1-c1*s2)/(b1-c1)） */
+    chk(q.value === (q.vars.s1 - q.vars.c1 * q.vars.s2) / (q.vars.b1 - q.vars.c1),
+      'y2wq-09 答案 ' + q.value + ' ≠ (s1-c1*s2)/(b1-c1)=' + ((q.vars.s1 - q.vars.c1 * q.vars.s2) / (q.vars.b1 - q.vars.c1)));
+    /* 消元后必须是正整数，且系数确实参数化过（c1≠b1 已由约束保证） */
+    chk(Number.isInteger(q.value) && q.value > 0, 'y2wq-09 答案应为正整数，实际 ' + q.value);
   }
   /* y2wq-12：单秤，指针 = m（答案），图上不能把读数漏掉或画错 */
   const t12 = byId('y2wq-12');

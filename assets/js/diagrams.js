@@ -2053,17 +2053,66 @@
     return o;
   }
   function bananaIcon(cx, cy, s) {
-    return '<path d="M' + (cx - s * 0.62).toFixed(1) + ',' + (cy - s * 0.5).toFixed(1) +
-           ' Q' + cx + ',' + (cy + s * 0.98).toFixed(1) + ' ' + (cx + s * 0.62).toFixed(1) + ',' + (cy - s * 0.42).toFixed(1) +
-           '" fill="none" stroke="#e8b400" stroke-width="' + (s * 0.40).toFixed(1) + '" stroke-linecap="round"/>' +
-           '<path d="M' + (cx - s * 0.62).toFixed(1) + ',' + (cy - s * 0.5).toFixed(1) +
-           ' Q' + cx + ',' + (cy + s * 0.98).toFixed(1) + ' ' + (cx + s * 0.62).toFixed(1) + ',' + (cy - s * 0.42).toFixed(1) +
-           '" fill="none" stroke="' + INK + '" stroke-width="0.9" stroke-linecap="round"/>';
+    /* 香蕉：横向弯月，宽度收在 s*1.35（约 30px，塞进 34px 槽不溢出），
+       靠「外弧下凸、内弧上凹」的上下高度差体现弯度，两端收尖。 */
+    var w = s * 1.35, h = s * 0.80;
+    var L = cx - w / 2, R = cx + w / 2;
+    var tipLx = L + s * 0.10, tipRx = R - s * 0.10;   // 两端尖角（略内收）
+    var tipY = cy + h * 0.05;
+    var outerY = cy + h * 0.62;                        // 外弧最低点（下凸）
+    var innerY = cy - h * 0.62;                        // 内弧最高点（上凹）
+    return '<path d="M' + tipLx.toFixed(1) + ',' + tipY.toFixed(1) +
+           /* 外弧（下沿，明显向下凸） */
+           ' Q' + cx.toFixed(1) + ',' + (outerY + s * 0.14).toFixed(1) + ' ' + tipRx.toFixed(1) + ',' + tipY.toFixed(1) +
+           /* 右端尖角 */
+           ' Q' + (tipRx + s * 0.06).toFixed(1) + ',' + (cy - h * 0.06).toFixed(1) + ' ' + (tipRx - s * 0.04).toFixed(1) + ',' + (cy - h * 0.22).toFixed(1) +
+           /* 内弧（上沿，明显向上凹） */
+           ' Q' + cx.toFixed(1) + ',' + (innerY - s * 0.14).toFixed(1) + ' ' + (tipLx + s * 0.04).toFixed(1) + ',' + (cy - h * 0.22).toFixed(1) +
+           /* 左端尖角 */
+           ' Q' + (tipLx - s * 0.06).toFixed(1) + ',' + (cy - h * 0.06).toFixed(1) + ' ' + tipLx.toFixed(1) + ',' + tipY.toFixed(1) +
+           ' Z" fill="#f5c518" stroke="' + INK + '" stroke-width="1.3"/>' +
+           /* 中缝棱线 */
+           '<path d="M' + (cx - w * 0.24).toFixed(1) + ',' + (cy - h * 0.02).toFixed(1) +
+           ' Q' + cx.toFixed(1) + ',' + (cy + h * 0.34).toFixed(1) + ' ' + (cx + w * 0.24).toFixed(1) + ',' + (cy - h * 0.02).toFixed(1) +
+           '" fill="none" stroke="#d3a30c" stroke-width="1.1" stroke-linecap="round" opacity="0.85"/>';
   }
   function appleIcon(cx, cy, s) {
     return '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s * 0.52).toFixed(1) + '" fill="#e5484d" stroke="' + INK + '" stroke-width="1.1"/>' +
            '<line x1="' + cx + '" y1="' + (cy - s * 0.5).toFixed(1) + '" x2="' + cx + '" y2="' + (cy - s * 0.80).toFixed(1) + '" stroke="#5a3d1e" stroke-width="1.8"/>' +
            '<ellipse cx="' + (cx + s * 0.30).toFixed(1) + '" cy="' + (cy - s * 0.74).toFixed(1) + '" rx="' + (s * 0.26).toFixed(1) + '" ry="' + (s * 0.13).toFixed(1) + '" fill="#2ea043" stroke="' + INK + '" stroke-width="0.7"/>';
+  }
+  function mangoIcon(cx, cy, s) {
+    /* 芒果：竖向卵形，上端圆、下端略收尖，橙黄色，无叶子，顶部小蒂。
+       关键：高度>宽度，纵向略长，底端一个平滑的小尖（芒果的标志性收口）。 */
+    var w = s * 1.15, h = s * 1.55;               // 高>宽 → 竖长卵形
+    var L = cx - w / 2, R = cx + w / 2;
+    var top = cy - h / 2, bot = cy + h / 2;
+    return '<path d="M' + cx.toFixed(1) + ',' + top.toFixed(1) +
+           /* 右半圆 */
+           ' C' + (cx + w * 0.48).toFixed(1) + ',' + top.toFixed(1) + ' ' +
+                (cx + w * 0.50).toFixed(1) + ',' + (cy + h * 0.12).toFixed(1) + ' ' +
+                (cx + w * 0.30).toFixed(1) + ',' + (cy + h * 0.34).toFixed(1) +
+           /* 右下收窄 → 底尖 */
+           ' C' + (cx + w * 0.12).toFixed(1) + ',' + (cy + h * 0.46).toFixed(1) + ' ' +
+                (cx + w * 0.02).toFixed(1) + ',' + (cy + h * 0.50).toFixed(1) + ' ' +
+                cx.toFixed(1) + ',' + bot.toFixed(1) +
+           /* 左下收窄 → 底尖（对称） */
+           ' C' + (cx - w * 0.02).toFixed(1) + ',' + (cy + h * 0.50).toFixed(1) + ' ' +
+                (cx - w * 0.12).toFixed(1) + ',' + (cy + h * 0.46).toFixed(1) + ' ' +
+                (cx - w * 0.30).toFixed(1) + ',' + (cy + h * 0.34).toFixed(1) +
+           /* 左半圆回到顶 */
+           ' C' + (cx - w * 0.50).toFixed(1) + ',' + (cy + h * 0.12).toFixed(1) + ' ' +
+                (cx - w * 0.48).toFixed(1) + ',' + top.toFixed(1) + ' ' +
+                cx.toFixed(1) + ',' + top.toFixed(1) +
+           ' Z" fill="#ffa726" stroke="' + INK + '" stroke-width="1.3"/>' +
+           /* 顶部小蒂（芒果柄） */
+           '<path d="M' + cx.toFixed(1) + ',' + (top + s * 0.03).toFixed(1) +
+           ' q' + (s * 0.06).toFixed(1) + ',-' + (s * 0.12).toFixed(1) + ' ' + (s * 0.16).toFixed(1) + ',-' + (s * 0.06).toFixed(1) +
+           '" fill="none" stroke="#7c5a1e" stroke-width="1.7" stroke-linecap="round"/>' +
+           /* 左侧高光，体现圆润 */
+           '<path d="M' + (cx - w * 0.26).toFixed(1) + ',' + (cy - h * 0.10).toFixed(1) +
+           ' Q' + (cx - w * 0.10).toFixed(1) + ',' + (cy - h * 0.02).toFixed(1) + ' ' + (cx - w * 0.24).toFixed(1) + ',' + (cy + h * 0.16).toFixed(1) +
+           '" fill="none" stroke="#ffd54f" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>';
   }
   function weightIcon(cx, cy, s, label) {
     return '<rect x="' + (cx - s * 0.52).toFixed(1) + '" y="' + (cy - s * 0.40).toFixed(1) + '" width="' + (s * 1.04).toFixed(1) + '" height="' + (s * 0.80).toFixed(1) + '" rx="3" fill="#6b7280" stroke="' + INK + '" stroke-width="1.3"/>' +
@@ -2083,6 +2132,7 @@
     if (kind === 'grape') return grapeIcon(cx, cy, s);
     if (kind === 'banana') return bananaIcon(cx, cy, s);
     if (kind === 'apple') return appleIcon(cx, cy, s);
+    if (kind === 'mango') return mangoIcon(cx, cy, s);
     if (kind === 'weight') return weightIcon(cx, cy, s, label || '');
     if (kind === 'cube') return cubeIcon(cx, cy, s);
     if (kind === 'ball') return ballIcon2(cx, cy, s);

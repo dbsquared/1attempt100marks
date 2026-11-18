@@ -201,7 +201,7 @@
         "max": 800,
         "step": 200,
         "unit": "g",
-        "item": [["banana", 1], ["apple", 1]]
+        "item": [["banana", 1], ["mango", 1]]
       },
       "original": { "B": 520, "T": 600 }
     },

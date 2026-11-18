@@ -2053,28 +2053,31 @@
     return o;
   }
   function bananaIcon(cx, cy, s) {
-    /* 香蕉：横向弯月，宽度收在 s*1.35（约 30px，塞进 34px 槽不溢出），
-       靠「外弧下凸、内弧上凹」的上下高度差体现弯度，两端收尖。 */
-    var w = s * 1.35, h = s * 0.80;
+    /* 香蕉：明显向上拱的弯弓（中间高、两端明显下垂），像一根弯曲的香蕉。
+       上下边缘同向大弧度弯曲，两端收成下垂的圆头，右端带柄。 */
+    var w = s * 2.2, h = s * 0.9;
     var L = cx - w / 2, R = cx + w / 2;
-    var tipLx = L + s * 0.10, tipRx = R - s * 0.10;   // 两端尖角（略内收）
-    var tipY = cy + h * 0.05;
-    var outerY = cy + h * 0.62;                        // 外弧最低点（下凸）
-    var innerY = cy - h * 0.62;                        // 内弧最高点（上凹）
-    return '<path d="M' + tipLx.toFixed(1) + ',' + tipY.toFixed(1) +
-           /* 外弧（下沿，明显向下凸） */
-           ' Q' + cx.toFixed(1) + ',' + (outerY + s * 0.14).toFixed(1) + ' ' + tipRx.toFixed(1) + ',' + tipY.toFixed(1) +
-           /* 右端尖角 */
-           ' Q' + (tipRx + s * 0.06).toFixed(1) + ',' + (cy - h * 0.06).toFixed(1) + ' ' + (tipRx - s * 0.04).toFixed(1) + ',' + (cy - h * 0.22).toFixed(1) +
-           /* 内弧（上沿，明显向上凹） */
-           ' Q' + cx.toFixed(1) + ',' + (innerY - s * 0.14).toFixed(1) + ' ' + (tipLx + s * 0.04).toFixed(1) + ',' + (cy - h * 0.22).toFixed(1) +
-           /* 左端尖角 */
-           ' Q' + (tipLx - s * 0.06).toFixed(1) + ',' + (cy - h * 0.06).toFixed(1) + ' ' + tipLx.toFixed(1) + ',' + tipY.toFixed(1) +
-           ' Z" fill="#f5c518" stroke="' + INK + '" stroke-width="1.3"/>' +
-           /* 中缝棱线 */
-           '<path d="M' + (cx - w * 0.24).toFixed(1) + ',' + (cy - h * 0.02).toFixed(1) +
-           ' Q' + cx.toFixed(1) + ',' + (cy + h * 0.34).toFixed(1) + ' ' + (cx + w * 0.24).toFixed(1) + ',' + (cy - h * 0.02).toFixed(1) +
-           '" fill="none" stroke="#d3a30c" stroke-width="1.1" stroke-linecap="round" opacity="0.85"/>';
+    /* 两端明显下垂（低），中间明显上拱（高） */
+    var endY = cy + s * 0.46;                 // 两端：明显低于中心
+    var midY = cy - s * 0.42;                 // 中间：明显高于中心
+    /* 身体厚度：上边缘和下边缘的垂直间距 */
+    var thick = s * 0.34;
+    return '<path d="M' + (L + s * 0.10).toFixed(1) + ',' + (endY - thick / 2).toFixed(1) +
+           /* 上边缘：左端（低）→ 中间（高）→ 右端（低），大弧度上拱 */
+           ' Q' + cx.toFixed(1) + ',' + (midY - thick / 2).toFixed(1) + ' ' + (R - s * 0.10).toFixed(1) + ',' + (endY - thick / 2).toFixed(1) +
+           /* 右端圆头 */
+           ' Q' + (R + s * 0.04).toFixed(1) + ',' + endY.toFixed(1) + ' ' + (R - s * 0.10).toFixed(1) + ',' + (endY + thick / 2).toFixed(1) +
+           /* 下边缘：右端（低）→ 中间（高）→ 左端（低） */
+           ' Q' + cx.toFixed(1) + ',' + (midY + thick / 2).toFixed(1) + ' ' + (L + s * 0.10).toFixed(1) + ',' + (endY + thick / 2).toFixed(1) +
+           /* 左端圆头 */
+           ' Q' + (L - s * 0.04).toFixed(1) + ',' + endY.toFixed(1) + ' ' + (L + s * 0.10).toFixed(1) + ',' + (endY - thick / 2).toFixed(1) +
+           ' Z" fill="#f5c518" stroke="' + INK + '" stroke-width="1.5" stroke-linejoin="round"/>' +
+           /* 中缝棱线（沿长轴，跟随拱形） */
+           '<path d="M' + (cx - w * 0.30).toFixed(1) + ',' + (endY + s * 0.02).toFixed(1) +
+           ' Q' + cx.toFixed(1) + ',' + (midY - s * 0.02).toFixed(1) + ' ' + (cx + w * 0.30).toFixed(1) + ',' + (endY + s * 0.02).toFixed(1) +
+           '" fill="none" stroke="#d3a30c" stroke-width="1.1" stroke-linecap="round" opacity="0.8"/>' +
+           /* 右端蒂（香蕉把儿，向右上方伸出） */
+           '<line x1="' + (R - s * 0.08).toFixed(1) + '" y1="' + (endY - s * 0.06).toFixed(1) + '" x2="' + (R + s * 0.10).toFixed(1) + '" y2="' + (endY - s * 0.34).toFixed(1) + '" stroke="#7c5a1e" stroke-width="1.6" stroke-linecap="round"/>';
   }
   function appleIcon(cx, cy, s) {
     return '<circle cx="' + cx + '" cy="' + cy + '" r="' + (s * 0.52).toFixed(1) + '" fill="#e5484d" stroke="' + INK + '" stroke-width="1.1"/>' +
@@ -2138,15 +2141,18 @@
     if (kind === 'ball') return ballIcon2(cx, cy, s);
     return '<rect x="' + (cx - s * 0.4).toFixed(1) + '" y="' + (cy - s * 0.4).toFixed(1) + '" width="' + (s * 0.8).toFixed(1) + '" height="' + (s * 0.8).toFixed(1) + '" fill="' + GREY + '" stroke="' + INK + '" stroke-width="1.2"/>';
   }
-  /* 一行小图标：items = [[kind,count],…]；weight 的标签用 labelOf */
-  function itemRow(cx, baseY, items, vars, labelOf) {
+  /* 一行小图标：items = [[kind,count],…]；weight 的标签用 labelOf。
+     slot = 槽位宽（默认 34），s = 图标尺度（默认 22）；需要画大件（如香蕉）时调大两者 */
+  function itemRow(cx, baseY, items, vars, labelOf, s, slot) {
     var list = [], i, o = '';
     (items || []).forEach(function (it) {
       var cnt = Math.round(num(it[1], vars));
       for (i = 0; i < cnt; i++) list.push(it[0]);
     });
-    var slot = 34, x0 = cx - (list.length - 1) * slot / 2;
-    for (i = 0; i < list.length; i++) o += itemIcon(list[i], x0 + i * slot, baseY - 20, 22, labelOf ? labelOf(list[i]) : '');
+    s = s || 22;
+    slot = slot || Math.round(s * 1.55);
+    var x0 = cx - (list.length - 1) * slot / 2;
+    for (i = 0; i < list.length; i++) o += itemIcon(list[i], x0 + i * slot, baseY - 20, s, labelOf ? labelOf(list[i]) : '');
     return o;
   }
   /* 一段折线集合（Q19 叠加规律）：segs = ["00-20", …]，坐标在 3×3 点阵上，y 向上 */
@@ -3613,7 +3619,7 @@
 
         if (unit) cell += '<text x="' + cx + '" y="' + (cy + R + 22) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(unit) + '</text>';
 
-        if (item) cell += itemRow(cx, cy + R + 70, item, vars);
+        if (item) cell += itemRow(cx, cy + R + 70, item, vars, null, 30, 76);
 
         cell += '</g>';
         s += cell;

@@ -2030,6 +2030,11 @@ function triGeoCount(lines) {
     if (mv.length) chk(parseFloat(mv[0][1]) === q.vars.m, 'y2wq-12 图指针 ' + mv[0][1] + ' ≠ 答案 m=' + q.vars.m);
     /* 指针读数 = 答案，且题干文字里不能再出现读数（避免「读数是 X」自曝答案） */
     chk(!/\d+\s*克|读数是/.test(q.stemText), 'y2wq-12 题干文字不应自曝读数：' + q.stemText);
+    /* 原卷表盘有细分刻度（10 g 一档）：图上应有次要刻度线，间隔=minor、避开主刻度 */
+    const mnr = [...String(q.diagramSvg).matchAll(/data-u="tickminor" data-v="(\d+)"/g)].map(m => +m[1]);
+    chk(mnr.length === 27, 'y2wq-12 表盘应有 27 条细分刻度（10g 档），实际 ' + mnr.length);
+    chk(mnr.every(v => v % 10 === 0 && v % 100 !== 0),
+      'y2wq-12 细分刻度应落在 10g 档且避开主刻度，实际 ' + mnr.join(','));
   }
   console.log('y2wq 台秤图元  图上指针读数 = 题干/答案读数 ✓（06 单秤 / 09 双秤 / 12 看图读数）');
 }

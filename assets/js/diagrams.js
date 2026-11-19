@@ -3613,6 +3613,18 @@
           cell += '<text x="' + lx.toFixed(1) + '" y="' + (ly + 5).toFixed(1) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + vv + '</text>';
         }
 
+        /* 次要刻度线（细分刻度，无数字标签）：原卷表盘上主刻度之间还有更细的小刻度。
+           minor 给间隔（如 10 g），跳过主刻度位置（那里已画过长刻度）。 */
+        var minor = Math.round(num(sp.minor, vars) || 0);
+        if (minor > 0 && minor < step) {
+          for (var mv = minor; mv < max; mv += minor) {
+            if (mv % step === 0) continue;
+            var ma = ang(mv), mr1 = R - 12, mr2 = R - 6;
+            cell += '<line data-u="tickminor" data-v="' + mv + '" x1="' + px(ma, mr1).toFixed(1) + '" y1="' + py(ma, mr1).toFixed(1) +
+                 '" x2="' + px(ma, mr2).toFixed(1) + '" y2="' + py(ma, mr2).toFixed(1) + '" stroke="' + INK + '" stroke-width="1.1"/>';
+          }
+        }
+
         var pa = ang(val);
         cell += '<line data-u="needle" data-val="' + fmt(val) + '" x1="' + cx + '" y1="' + cy + '" x2="' + px(pa, R - 22).toFixed(1) + '" y2="' + py(pa, R - 22).toFixed(1) +
              '" stroke="' + RED + '" stroke-width="4" stroke-linecap="round"/>';

@@ -1786,9 +1786,10 @@
   }
 
   /* ---------------- 自动发邮件（学生无需任何操作） ----------------
-   * 纯静态站点本身不能发信，这里借第三方表单服务把内容转发到指定邮箱。
-   * 首次使用会给目标邮箱发一封激活确认信，点一次链接即永久生效。 */
-  var AUTO_MAIL_ENDPOINT = 'https://formsubmit.co/dbsquared1311@hotmail.com';
+   * 纯静态站点本身不能发信，这里借第三方表单服务把内容转发到 Agent Mail。
+   * 目标已激活（token 形式），邮件正文带 [1a1m-sync] 主题，后台定时任务自动收取、
+   * 抠出同步码合并入库并推送，学生/家长无需再手动粘码。 */
+  var AUTO_MAIL_ENDPOINT = 'https://formsubmit.co/4fd5f730f8f82d264ba0e95a64c20770';
 
   // 用隐藏 iframe + 表单 POST（官方推荐用法），跨域提交不依赖 CORS，比 fetch 稳
   function autoSendEmail(subject, body) {
@@ -1845,7 +1846,7 @@
     var head = '一次一百分 自动汇报（学生 ' + (c.name || c.sid || '?') + '｜' + kind + '）\n' +
       '已掌握 ' + stats.mastered + ' / 待清错题 ' + stats.wrong + ' / 到期待检测 ' + stats.due + '\n';
     var body = head + (reportText ? ('\n' + reportText + '\n\n') : '\n') +
-      '── 同步码（把下面这串粘回 WorkBuddy 即可合并入库）──\n' + syncCode(true);
+      '── 同步码（后台自动收取合并，无需手动操作）──\n' + syncCode(true);
     autoSendEmail('[1a1m-sync] ' + (c.sid || '') + ' ' + kind, body);
   }
 

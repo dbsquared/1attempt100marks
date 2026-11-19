@@ -3647,6 +3647,84 @@
   };
   Object.keys(TYPESscale).forEach(function (k) { TYPES[k] = TYPESscale[k]; });
 
+  /* ==================================================================
+     year2 数学错题集锦（y2wq）的配图。
+     原则：图上文字一律英文（原卷 ICAS 英文），只标题干已给的量，
+     答案量一律画成 "?"，不得在图里直接写出答案数值。
+     ================================================================== */
+  var TYPESy2wq = {
+    /* 两根杆子（Q7）：总长 S、杆 A 长 A，求杆 B 比杆 A 长多少。
+       画一条「部分-整体」线段：左段 = 杆 A（A cm，已知），右段 = 杆 B（? cm），
+       下方双箭头标总长 S。右段比左段长多少就是答案，但图里只写 A 和 S、B 写 ?。 */
+    twopoles: function (spec, vars) {
+      var A = Math.max(1, num(spec.A, vars));
+      var S = Math.max(A + 1, num(spec.S, vars));
+      var B = S - A;
+      var W = 460, H = 168, x0 = 46, y0 = 58, barH = 44, barW = 368;
+      var split = x0 + barW * (A / S);
+      var out = svgOpen(W, H, 'Pole A and Pole B, total ' + S + ' cm');
+      out += '<rect data-u="part" data-name="A" data-v="' + A + '" x="' + x0 + '" y="' + y0 + '" width="' + (split - x0).toFixed(1) + '" height="' + barH + '" fill="#bfe3ff" stroke="' + INK + '" stroke-width="2"/>';
+      out += '<rect data-u="part" data-name="B" data-v="' + B + '" x="' + split.toFixed(1) + '" y="' + y0 + '" width="' + (x0 + barW - split).toFixed(1) + '" height="' + barH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="2"/>';
+      out += '<text x="' + ((x0 + split) / 2).toFixed(1) + '" y="' + (y0 - 12) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">Pole A</text>';
+      out += '<text x="' + ((x0 + split) / 2).toFixed(1) + '" y="' + (y0 + barH / 2 + 5) + '" font-size="16" text-anchor="middle" fill="' + INK + '">' + A + ' cm</text>';
+      out += '<text x="' + ((split + x0 + barW) / 2).toFixed(1) + '" y="' + (y0 - 12) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">Pole B</text>';
+      out += '<text x="' + ((split + x0 + barW) / 2).toFixed(1) + '" y="' + (y0 + barH / 2 + 5) + '" font-size="16" text-anchor="middle" fill="' + INK + '">? cm</text>';
+      var ty = y0 + barH + 34;
+      out += '<line x1="' + x0 + '" y1="' + ty + '" x2="' + (x0 + barW) + '" y2="' + ty + '" stroke="' + INK + '" stroke-width="1.6"/>';
+      out += '<line x1="' + x0 + '" y1="' + (ty - 6) + '" x2="' + x0 + '" y2="' + (ty + 6) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+      out += '<line x1="' + (x0 + barW) + '" y1="' + (ty - 6) + '" x2="' + (x0 + barW) + '" y2="' + (ty + 6) + '" stroke="' + INK + '" stroke-width="1.6"/>';
+      out += '<text data-u="total" data-v="' + S + '" x="' + (x0 + barW / 2) + '" y="' + (ty + 20) + '" font-size="16" font-weight="700" text-anchor="middle" fill="' + INK + '">total = ' + S + ' cm</text>';
+      out += '</svg>';
+      return out;
+    },
+
+    /* 尽可能少硬币付款（Q14）：安娜有足量 5c/10c/20c/50c 硬币，买两件 p1¢、p2¢ 商品，
+       用最少的硬币正好付款。图：一行四种面值的硬币 + 两件商品的价格牌，
+       不画「最少几枚」的答案（那才是要求的东西）。 */
+    fewestcoins: function (spec, vars) {
+      var p1 = num(spec.p1, vars), p2 = num(spec.p2, vars);
+      var vals = [5, 10, 20, 50], r = [20, 25, 31, 38];
+      var W = 440, H = 200, out = svgOpen(W, H, 'coins 5c 10c 20c 50c');
+      out += '<text x="' + (W / 2) + '" y="26" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">Anna\u2019s coins</text>';
+      var cx0 = 70, gap = 104, cy = 72, i;
+      for (i = 0; i < 4; i++) {
+        var cx = cx0 + i * gap;
+        out += '<circle data-u="coin" data-v="' + vals[i] + '" cx="' + cx + '" cy="' + cy + '" r="' + r[i] + '" fill="#f5d67b" stroke="' + INK + '" stroke-width="2"/>';
+        out += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r[i] - 6) + '" fill="none" stroke="' + INK + '" stroke-width="1" stroke-dasharray="4 4"/>';
+        out += '<text x="' + cx + '" y="' + (cy + 5) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + vals[i] + 'c</text>';
+      }
+      var tagY = 144, tagW = 96, tagH = 40, bx1 = 108, bx2 = 236;
+      out += '<rect x="' + bx1 + '" y="' + tagY + '" width="' + tagW + '" height="' + tagH + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      out += '<text data-u="price" data-v="' + p1 + '" x="' + (bx1 + tagW / 2) + '" y="' + (tagY + tagH / 2 + 6) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + p1 + 'c</text>';
+      out += '<text x="' + ((bx1 + tagW + bx2) / 2) + '" y="' + (tagY + tagH / 2 + 6) + '" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">+</text>';
+      out += '<rect x="' + bx2 + '" y="' + tagY + '" width="' + tagW + '" height="' + tagH + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      out += '<text data-u="price" data-v="' + p2 + '" x="' + (bx2 + tagW / 2) + '" y="' + (tagY + tagH / 2 + 6) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + p2 + 'c</text>';
+      out += '</svg>';
+      return out;
+    },
+
+    /* 同心正方形（Q16）：四个正方形同中心，边长逐层 ×2（s,2s,4s,8s），
+       求最大正方形边长。图里只标最小的 s、最大标 ?，不泄 8s。 */
+    concentric: function (spec, vars) {
+      var side = Math.max(1, num(spec.s, vars));
+      var sides = [side, side * 2, side * 4, side * 8];
+      var W = 330, H = 330, cx = 165, cy = 150;
+      var scale = 264 / (side * 8);
+      var fills = ['#ffffff', '#fde2a2', '#bfe3ff', '#f7d774'];
+      var out = svgOpen(W, H, 'four concentric squares, smallest ' + side);
+      for (var i = 3; i >= 0; i--) {
+        var half = sides[i] * scale / 2;
+        out += '<rect data-u="square" data-i="' + i + '" data-side="' + sides[i] + '" x="' + (cx - half).toFixed(1) + '" y="' + (cy - half).toFixed(1) + '" width="' + (half * 2).toFixed(1) + '" height="' + (half * 2).toFixed(1) + '" fill="' + fills[i] + '" stroke="' + INK + '" stroke-width="2"/>';
+      }
+      var bHalf = sides[3] * scale / 2;
+      out += '<text x="' + (cx + bHalf + 16).toFixed(1) + '" y="' + (cy + 6) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + RED + '">?</text>';
+      out += '<text x="' + cx + '" y="' + (H - 12) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">smallest square = ' + side + ' units</text>';
+      out += '</svg>';
+      return out;
+    }
+  };
+  Object.keys(TYPESy2wq).forEach(function (k) { TYPES[k] = TYPESy2wq[k]; });
+
   function render(spec, vars) {
     if (!spec || !spec.type) return '';
     var fn = TYPES[spec.type];

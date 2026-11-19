@@ -2034,6 +2034,65 @@ function triGeoCount(lines) {
   console.log('y2wq 台秤图元  图上指针读数 = 题干/答案读数 ✓（06 单秤 / 09 双秤 / 12 看图读数）');
 }
 
+/* ---------- y2wq 新增配图交叉验算（07 双杆 / 14 硬币 / 15 藏宝箱表 / 16 同心正方形） ----------
+   原则：照图独立重算答案，不引用模板公式；图上只标题干已给的量、答案量写「?」。 */
+{
+  /* y2wq-07：部分-整体线段，A 段 + B 段 = 总长 S，答案 = S − 2A = B − A */
+  const t07 = byId('y2wq-07');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t07);
+    const parts = mAll(q.diagramSvg, /data-u="part" data-name="([AB])" data-v="(\d+)"/g);
+    const total = +(mAll(q.diagramSvg, /data-u="total" data-v="(\d+)"/g)[0] || [])[1];
+    const A = +(parts.find(m => m[1] === 'A') || [])[2];
+    const B = +(parts.find(m => m[1] === 'B') || [])[2];
+    chk(parts.length === 2, 'y2wq-07 图上应有 A、B 两段，实际 ' + parts.length);
+    chk(A + B === total, 'y2wq-07 A+B=' + (A + B) + ' ≠ 总长 S=' + total);
+    chk(q.value === total - 2 * A && q.value === B - A, 'y2wq-07 答案 ' + q.value + ' ≠ S−2A=' + (total - 2 * A));
+    chk(/[?] cm/.test(q.diagramSvg), 'y2wq-07 杆 B 应画成「? cm」而不是直接写答案');
+  }
+
+  /* y2wq-14：四种硬币 5/10/20/50 + 两件价格牌，最少硬币数独立贪心重算 */
+  const t14 = byId('y2wq-14');
+  const greedy = (p) => { let c = 0; for (const d of [50, 20, 10, 5]) { c += Math.floor(p / d); p %= d; } return c; };
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t14);
+    const coins = mAll(q.diagramSvg, /data-u="coin" data-v="(\d+)"/g).map(m => +m[1]);
+    const prices = mAll(q.diagramSvg, /data-u="price" data-v="(\d+)"/g).map(m => +m[1]);
+    chk(coins.join(',') === '5,10,20,50', 'y2wq-14 图上应有 5/10/20/50 四种硬币，实际 ' + coins.join(','));
+    chk(prices.length === 2 && prices[0] === q.vars.p1 && prices[1] === q.vars.p2,
+      'y2wq-14 价格牌 ' + prices.join('/') + ' ≠ 题干 p1=' + q.vars.p1 + ' p2=' + q.vars.p2);
+    chk(q.value === greedy(q.vars.p1 + q.vars.p2),
+      'y2wq-14 答案 ' + q.value + ' ≠ 贪心最少硬币数 ' + greedy(q.vars.p1 + q.vars.p2));
+  }
+
+  /* y2wq-15：藏宝箱表 Day1/2/3 = f,2f,3f（只画前三天，不画到答案那天）；G = f·d·(d+1)/2 */
+  const t15 = byId('y2wq-15');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t15);
+    const c1 = mAll(q.diagramSvg, /data-u="cell" data-r="\d+" data-c="1"[^>]*>([^<]*)<\//g).map(m => +m[1]);
+    chk(c1.length === 3 && c1[0] === q.vars.f && c1[1] === 2 * q.vars.f && c1[2] === 3 * q.vars.f,
+      'y2wq-15 表内 Day1/2/3 取金币数 ' + c1.join('/') + ' ≠ f,2f,3f=' + [q.vars.f, 2 * q.vars.f, 3 * q.vars.f].join('/'));
+    chk(q.vars.G === q.vars.f * q.vars.day * (q.vars.day + 1) / 2,
+      'y2wq-15 G=' + q.vars.G + ' ≠ f·day·(day+1)/2=' + (q.vars.f * q.vars.day * (q.vars.day + 1) / 2));
+    chk(!new RegExp('Day ' + q.vars.day + '\\b').test(q.diagramSvg), 'y2wq-15 图上不该画出答案那天的行');
+  }
+
+  /* y2wq-16：四个同心正方形边长 s,2s,4s,8s，答案 = 8s，最大边画「?」 */
+  const t16 = byId('y2wq-16');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t16);
+    const sides = mAll(q.diagramSvg, /data-u="square" data-i="\d+" data-side="(\d+)"/g).map(m => +m[1]).sort((a, b) => a - b);
+    chk(sides.length === 4, 'y2wq-16 图上应有 4 个正方形，实际 ' + sides.length);
+    const s = q.vars.s;
+    chk(JSON.stringify(sides) === JSON.stringify([s, 2 * s, 4 * s, 8 * s]),
+      'y2wq-16 正方形边长 ' + sides.join('/') + ' ≠ s,2s,4s,8s=' + [s, 2 * s, 4 * s, 8 * s].join('/'));
+    chk(q.value === 8 * s, 'y2wq-16 答案 ' + q.value + ' ≠ 8s=' + (8 * s));
+    chk(/>[?]<|>\?<|font-size="20"[^>]*>\?/.test(q.diagramSvg), 'y2wq-16 最大正方形边应画「?」');
+  }
+
+  console.log('y2wq 新增配图  07 双杆 / 14 硬币 / 15 藏宝箱表 / 16 同心正方形 交叉验算 ✓');
+}
+
 /* ---------- 图形类型表不能有重复 key（重复时后者静默覆盖，改前面那个等于白改） ---------- */
 {
   const src = fs.readFileSync(path.join(root, 'assets/js/diagrams.js'), 'utf8');

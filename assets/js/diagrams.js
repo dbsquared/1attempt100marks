@@ -3619,11 +3619,27 @@
 
         if (unit) cell += '<text x="' + cx + '" y="' + (cy + R + 22) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(unit) + '</text>';
 
-        if (item) cell += itemRow(cx, cy + R + 70, item, vars, null, 30, 76);
+        if (item) {
+          /* 物品槽位按数量自适应：物品多时缩小，保证总宽不超过秤宽（约 200px 可用），
+             避免多物品（如 Q9 左秤 2方块+3球）横向溢出到相邻秤的区域 */
+          var icnt = item.reduce(function (a, it) { return a + Math.round(num(it[1], vars)); }, 0);
+          var isz = icnt > 3 ? 24 : 30;
+          var islot = icnt > 0 ? Math.min(76, Math.floor(200 / icnt)) : 76;
+          cell += itemRow(cx, cy + R + 70, item, vars, null, isz, islot);
+        }
 
         cell += '</g>';
         s += cell;
       });
+
+      /* 多秤并排时，在相邻两台之间画竖向虚线分隔（下方物品区各归各，不串位） */
+      if (specs.length > 1) {
+        for (var bi = 1; bi < specs.length; bi++) {
+          var bx = pad + bi * one.W;
+          s += '<line x1="' + bx + '" y1="' + pad + '" x2="' + bx + '" y2="' + (one.H - pad) +
+               '" stroke="' + GREY + '" stroke-width="1.2" stroke-dasharray="5,4"/>';
+        }
+      }
 
       s += '</svg>';
       return s;

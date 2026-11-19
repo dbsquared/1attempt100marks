@@ -242,7 +242,7 @@ const EXPECT = {
   'y2wq-13': '1/9',        // 分母最大的 1/n 最小
   'y2wq-14': '5',          // 145 分最少硬币：2×50＋2×20＋1×5
   'y2wq-15': '5',          // 2＋4＋6＋8＋10＝30，第 5 天取完
-  'y2wq-16': '40',         // 5×2×2×2
+  'y2wq-16': '75',         // 距离逐层翻倍 5→10→20：边长 5/15/35/75
 };
 
 const bank = JSON.parse(fs.readFileSync(path.join(root, 'data/question-bank.json'), 'utf8'));

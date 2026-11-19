@@ -3707,18 +3707,50 @@
        求最大正方形边长。图里只标最小的 s、最大标 ?，不泄 8s。 */
     concentric: function (spec, vars) {
       var side = Math.max(1, num(spec.s, vars));
-      var sides = [side, side * 2, side * 4, side * 8];
-      var W = 330, H = 330, cx = 165, cy = 150;
-      var scale = 264 / (side * 8);
+      var sides = [side, side * 3, side * 7, side * 15];
+      var gaps = [side, side * 2, side * 4];              // 相邻正方形之间的「距离」，逐层翻倍
+      var maxPx = 400, scale = maxPx / (side * 15);
+      var W = 500, H = 470, cx = 260, cy = 215;
       var fills = ['#ffffff', '#fde2a2', '#bfe3ff', '#f7d774'];
       var out = svgOpen(W, H, 'four concentric squares, smallest ' + side);
       for (var i = 3; i >= 0; i--) {
         var half = sides[i] * scale / 2;
         out += '<rect data-u="square" data-i="' + i + '" data-side="' + sides[i] + '" x="' + (cx - half).toFixed(1) + '" y="' + (cy - half).toFixed(1) + '" width="' + (half * 2).toFixed(1) + '" height="' + (half * 2).toFixed(1) + '" fill="' + fills[i] + '" stroke="' + INK + '" stroke-width="2"/>';
       }
-      var bHalf = sides[3] * scale / 2;
-      out += '<text x="' + (cx + bHalf + 16).toFixed(1) + '" y="' + (cy + 6) + '" font-size="20" font-weight="700" text-anchor="middle" fill="' + RED + '">?</text>';
-      out += '<text x="' + cx + '" y="' + (H - 12) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">smallest square = ' + side + ' units</text>';
+      /* 水平尺寸线（两端箭头 + 短竖刻度） */
+      function dimLine(x1, x2, y) {
+        var d = '<line x1="' + x1.toFixed(1) + '" y1="' + y + '" x2="' + x2.toFixed(1) + '" y2="' + y + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<line x1="' + x1.toFixed(1) + '" y1="' + (y - 5) + '" x2="' + x1.toFixed(1) + '" y2="' + (y + 5) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<line x1="' + x2.toFixed(1) + '" y1="' + (y - 5) + '" x2="' + x2.toFixed(1) + '" y2="' + (y + 5) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<polygon points="' + x1.toFixed(1) + ',' + y + ' ' + (x1 + 8).toFixed(1) + ',' + (y - 4) + ' ' + (x1 + 8).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
+        d += '<polygon points="' + x2.toFixed(1) + ',' + y + ' ' + (x2 - 8).toFixed(1) + ',' + (y - 4) + ' ' + (x2 - 8).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
+        return d;
+      }
+      var bHalf = sides[3] * scale / 2;                  // 最外层半边长（像素）
+      var sHalf = sides[0] * scale / 2;                  // 最内层半边长（像素）
+      /* 左侧竖直尺寸线：标相邻正方形之间的「距离」（s, 2s, 4s，逐层翻倍） */
+      var gx = cx - bHalf - 24;
+      var gTop = cy - bHalf, gBot = cy - sHalf;
+      out += '<line x1="' + gx + '" y1="' + gTop.toFixed(1) + '" x2="' + gx + '" y2="' + gBot.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+      var y0 = gTop;
+      for (var k = 2; k >= 0; k--) {
+        var gapPx = gaps[k] * scale;
+        var y1 = y0 + gapPx, ym = (y0 + y1) / 2;
+        out += '<line x1="' + (gx - 4) + '" y1="' + y0.toFixed(1) + '" x2="' + (gx + 4) + '" y2="' + y0.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+        out += '<rect x="' + (gx - 24) + '" y="' + (ym - 9).toFixed(1) + '" width="48" height="17" rx="3" fill="#ffffff"/>';
+        out += '<text data-u="gap" data-v="' + gaps[k] + '" x="' + gx + '" y="' + (ym + 4).toFixed(1) + '" font-size="13" font-weight="700" text-anchor="middle" fill="' + INK + '">' + gaps[k] + '</text>';
+        y0 = y1;
+      }
+      out += '<line x1="' + (gx - 4) + '" y1="' + gBot.toFixed(1) + '" x2="' + (gx + 4) + '" y2="' + gBot.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.2"/>';
+      /* 最大正方形底边尺寸线：标「?」（题目所求的边长） */
+      var by = cy + bHalf + 16;
+      out += dimLine(cx - bHalf, cx + bHalf, by);
+      out += '<text data-u="dim" data-v="?" x="' + cx + '" y="' + (by + 18) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + RED + '">?</text>';
+      /* 最小正方形底边尺寸线：标 {side} units（题干已给，白色衬底保证嵌套里可读） */
+      var sy = cy + sHalf + 12;
+      out += dimLine(cx - sHalf, cx + sHalf, sy);
+      out += '<rect x="' + (cx - 32) + '" y="' + (sy - 3).toFixed(1) + '" width="64" height="18" rx="3" fill="#ffffff"/>';
+      out += '<text data-u="dim" data-v="' + side + '" x="' + cx + '" y="' + (sy + 11).toFixed(1) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + side + ' units</text>';
       out += '</svg>';
       return out;
     }

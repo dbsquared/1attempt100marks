@@ -2077,17 +2077,24 @@ function triGeoCount(lines) {
     chk(!new RegExp('Day ' + q.vars.day + '\\b').test(q.diagramSvg), 'y2wq-15 图上不该画出答案那天的行');
   }
 
-  /* y2wq-16：四个同心正方形边长 s,2s,4s,8s，答案 = 8s，最大边画「?」 */
+  /* y2wq-16：四个同心正方形，距离逐层翻倍（s,2s,4s），边长 s,3s,7s,15s，答案 = 15s */
   const t16 = byId('y2wq-16');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t16);
     const sides = mAll(q.diagramSvg, /data-u="square" data-i="\d+" data-side="(\d+)"/g).map(m => +m[1]).sort((a, b) => a - b);
     chk(sides.length === 4, 'y2wq-16 图上应有 4 个正方形，实际 ' + sides.length);
     const s = q.vars.s;
-    chk(JSON.stringify(sides) === JSON.stringify([s, 2 * s, 4 * s, 8 * s]),
-      'y2wq-16 正方形边长 ' + sides.join('/') + ' ≠ s,2s,4s,8s=' + [s, 2 * s, 4 * s, 8 * s].join('/'));
-    chk(q.value === 8 * s, 'y2wq-16 答案 ' + q.value + ' ≠ 8s=' + (8 * s));
-    chk(/>[?]<|>\?<|font-size="20"[^>]*>\?/.test(q.diagramSvg), 'y2wq-16 最大正方形边应画「?」');
+    chk(JSON.stringify(sides) === JSON.stringify([s, 3 * s, 7 * s, 15 * s]),
+      'y2wq-16 正方形边长 ' + sides.join('/') + ' ≠ s,3s,7s,15s=' + [s, 3 * s, 7 * s, 15 * s].join('/'));
+    chk(q.value === 15 * s, 'y2wq-16 答案 ' + q.value + ' ≠ 15s=' + (15 * s));
+    const gaps = mAll(q.diagramSvg, /data-u="gap" data-v="(\d+)"/g).map(m => +m[1]).sort((a, b) => a - b);
+    chk(JSON.stringify(gaps) === JSON.stringify([s, 2 * s, 4 * s]),
+      'y2wq-16 相邻距离 ' + gaps.join('/') + ' ≠ s,2s,4s=' + [s, 2 * s, 4 * s].join('/'));
+    const dims = mAll(q.diagramSvg, /data-u="dim" data-v="([^"]*)"/g).map(m => m[1]);
+    chk(dims.indexOf('?') >= 0, 'y2wq-16 最大正方形底边应标「?」尺寸线');
+    chk(dims.indexOf(String(s)) >= 0, 'y2wq-16 最小正方形底边应标「' + s + '」尺寸线');
+    chk(dims.length === 2, 'y2wq-16 尺寸标注应为 2 处（最小 + 最大），实际 ' + dims.length);
+    chk(!/smallest square = /.test(q.diagramSvg), 'y2wq-16 长度应标在图上，不能只写在图下方文字里');
   }
 
   console.log('y2wq 新增配图  07 双杆 / 14 硬币 / 15 藏宝箱表 / 16 同心正方形 交叉验算 ✓');

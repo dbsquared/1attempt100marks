@@ -1371,11 +1371,16 @@
   function tplInfoHtml(t) {
     var h = '';
     if (t.source) h += '<p class="small muted">' + esc(t.source) + '</p>';
+    if (t.originalFig) {
+      h += '<div class="bk-origwrap"><a href="' + esc(t.originalFig) + '" target="_blank" rel="noopener" title="点击看大图">' +
+        '<img src="' + esc(t.originalFig) + '" alt="原题配图" class="bk-origimg"></a>' +
+        '<div class="small muted">原题配图（从原卷截图裁剪）</div></div>';
+    }
     if (t.originalImage) {
       h += '<div class="bk-origwrap"><a href="' + esc(t.originalImage) + '" target="_blank" rel="noopener" title="点击看大图">' +
         '<img src="' + esc(t.originalImage) + '" alt="原题" class="bk-origimg"></a>' +
         '<div class="small muted">原卷截图（' + esc(t.originalImage.split('/').pop()) + '）</div></div>';
-    } else {
+    } else if (!t.originalFig) {
       h += '<p class="small muted">（没有录入原卷截图）</p>';
     }
     h += '<div class="bk-sub">原始题干（含占位符）</div>' + stemLangHtml(t);

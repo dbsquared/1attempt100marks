@@ -16908,7 +16908,8 @@
       "original": {
         "B": 520,
         "T": 600
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q06-fig.jpg"
     },
     {
       "id": "y2wq-07",
@@ -16965,7 +16966,8 @@
       "original": {
         "S": 640,
         "A": 294
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q07-fig.jpg"
     },
     {
       "id": "y2wq-08",
@@ -17138,7 +17140,8 @@
         "ball": 2,
         "c1": 2,
         "b1": 3
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q09-fig.jpg"
     },
     {
       "id": "y2wq-10",
@@ -17304,7 +17307,8 @@
       },
       "original": {
         "m": 270
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q12-fig.jpg"
     },
     {
       "id": "y2wq-13",
@@ -17449,7 +17453,8 @@
       "original": {
         "p1": 50,
         "p2": 95
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q14-fig.jpg"
     },
     {
       "id": "y2wq-15",
@@ -17524,7 +17529,8 @@
       "original": {
         "f": 2,
         "day": 5
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q15-fig.jpg"
     },
     {
       "id": "y2wq-16",
@@ -17539,8 +17545,8 @@
       ],
       "source": "Year 2 数学错题集锦 Q16",
       "stem": {
-        "en": "Mike drew four squares with the same centre. The side length of the smallest square is {s} units. Each square has a side twice as long as the one inside it. What is the side length of the largest square?",
-        "zh": "迈克画了四个同心的正方形。最小正方形的边长是 {s} 单位。每个正方形的边长都是里面那个的 2 倍。最大的正方形的边长是多少？"
+        "en": "Mike drew four squares with the same centre. The side length of the smallest square is {s} units. The distance between the squares doubles each time. What is the side length of the largest square?",
+        "zh": "迈克画了四个同心的正方形。最小正方形的边长是 {s} 单位。正方形之间的距离每次翻倍。最大的正方形的边长是多少？"
       },
       "vars": {
         "s": {
@@ -17550,7 +17556,7 @@
         }
       },
       "derived": {
-        "maxSide": "s * 8"
+        "maxSide": "s * 15"
       },
       "constraints": [],
       "answer": {
@@ -17563,8 +17569,8 @@
         }
       },
       "solution": {
-        "en": "The smallest square is {s} units. Doubling three times (for four squares) gives {s} → {2*s} → {4*s} → {8*s}. The largest square is {maxSide} units.",
-        "zh": "最小正方形是 {s} 单位。往外翻倍三次（共四个正方形）：{s} → {2*s} → {4*s} → {8*s}。最大的正方形边长是 {maxSide} 单位。"
+        "en": "The gaps between the squares double each time: {s}, {2*s}, {4*s} units. Each side grows by twice a gap, so the sides are {s}, then {s}+{2*s}＝{3*s}, then {3*s}+{4*s}＝{7*s}, then {7*s}+{8*s}＝{15*s}. The largest square has side {maxSide} units.",
+        "zh": "正方形之间的距离每次翻倍：{s}、{2*s}、{4*s} 单位。每条边都比里面那条多出「两倍的这段距离」，所以边长依次是 {s}、{s}+{2*s}＝{3*s}、{3*s}+{4*s}＝{7*s}、{7*s}+{8*s}＝{15*s}。最大的正方形边长是 {maxSide} 单位。"
       },
       "sourceSet": "year2数学错题集锦",
       "diagram": {
@@ -17573,7 +17579,8 @@
       },
       "original": {
         "s": 5
-      }
+      },
+      "originalFig": "assets/originals/y2wq-q16-fig.jpg"
     }
   ]
 }

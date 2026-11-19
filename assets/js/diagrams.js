@@ -3753,6 +3753,53 @@
       out += '<text data-u="dim" data-v="' + side + '" x="' + cx + '" y="' + (sy + 11).toFixed(1) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + side + ' units</text>';
       out += '</svg>';
       return out;
+    },
+
+    /* 海盗藏宝箱 + 「前 N 天取金币」表（Q15）。表头第二列「Number of {item} taken out」
+       随 item 变量变（gold pieces / gold coins）；天数行由 show 参数动态生成 Day1..show，
+       每行数值 = k·f。只画前 show 天（show < day，恒不泄答案），下方小字注明「first show days」。 */
+    dailytake: function (spec, vars) {
+      var item = strSpec(spec.item, vars) || 'gold pieces';
+      var f = Math.max(1, Math.round(num(spec.f, vars)));
+      var show = Math.max(1, Math.min(9, Math.round(num(spec.show, vars)) || 3));
+      var col2 = 'Number of ' + item + ' taken out';
+      var widths = [104, 320];
+      var pad = 16, rowH = 32, bw = 176, bh = 104;
+      var total = widths[0] + widths[1];
+      var W = Math.max(total + pad * 2, bw + pad * 2);
+      var ty = pad + bh + 26;
+      var captionY = ty + (show + 1) * rowH + 22;
+      var H = captionY + 16;
+      var cxm = W / 2;
+      var s = svgOpen(W, H, 'treasure chest and table of the first ' + show + ' days');
+      /* --- 宝箱（装饰，金币不挂 data-u，避免被当成条件去数） --- */
+      var tx = cxm - bw / 2;
+      s += '<path d="M' + tx + ',' + (pad + 40) + ' Q' + tx + ',' + pad + ' ' + (tx + bw / 2) + ',' + pad +
+           ' Q' + (tx + bw) + ',' + pad + ' ' + (tx + bw) + ',' + (pad + 40) + ' Z" fill="#8a5a2b" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<rect x="' + tx + '" y="' + (pad + 40) + '" width="' + bw + '" height="64" fill="#a9743f" stroke="' + INK + '" stroke-width="2.4"/>';
+      s += '<rect x="' + tx + '" y="' + (pad + 40) + '" width="' + bw + '" height="12" fill="#7b4a2d" stroke="' + INK + '" stroke-width="1.6"/>';
+      var pile = [[-34, 6], [-17, 2], [0, 0], [17, 2], [34, 6]];
+      for (var i = 0; i < pile.length; i++) {
+        s += '<circle cx="' + (cxm + pile[i][0]) + '" cy="' + (pad + 36 + pile[i][1]) + '" r="10" fill="#f5c518" stroke="' + INK + '" stroke-width="1.6"/>';
+      }
+      s += '<rect x="' + (cxm - 11) + '" y="' + (pad + 44) + '" width="22" height="28" rx="3" fill="#f5c518" stroke="' + INK + '" stroke-width="2"/>';
+      /* --- 表格 --- */
+      var xOf = function (cc) { var xx = (W - total) / 2; for (var q = 0; q < cc; q++) xx += widths[q]; return xx; };
+      s += '<rect x="' + ((W - total) / 2) + '" y="' + ty + '" width="' + total + '" height="' + ((show + 1) * rowH) + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<rect x="' + xOf(0) + '" y="' + ty + '" width="' + widths[0] + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+      s += '<text data-u="hdr" data-c="0" x="' + (xOf(0) + widths[0] / 2) + '" y="' + (ty + rowH - 10) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">Day</text>';
+      s += '<rect x="' + xOf(1) + '" y="' + ty + '" width="' + widths[1] + '" height="' + rowH + '" fill="#f7d774" stroke="' + INK + '" stroke-width="1.4"/>';
+      s += '<text data-u="hdr" data-c="1" x="' + (xOf(1) + widths[1] / 2) + '" y="' + (ty + rowH - 10) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(col2) + '</text>';
+      for (var k = 1; k <= show; k++) {
+        var ry = ty + k * rowH;
+        s += '<rect x="' + xOf(0) + '" y="' + ry + '" width="' + widths[0] + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
+        s += '<rect x="' + xOf(1) + '" y="' + ry + '" width="' + widths[1] + '" height="' + rowH + '" fill="none" stroke="' + INK + '" stroke-width="1"/>';
+        s += '<text data-u="cell" data-r="' + (k - 1) + '" data-c="0" data-day="' + k + '" x="' + (xOf(0) + widths[0] / 2) + '" y="' + (ry + rowH - 10) + '" font-size="15" text-anchor="middle" fill="' + INK + '">Day ' + k + '</text>';
+        s += '<text data-u="cell" data-r="' + (k - 1) + '" data-c="1" data-day="' + k + '" data-val="' + (k * f) + '" x="' + (xOf(1) + widths[1] / 2) + '" y="' + (ry + rowH - 10) + '" font-size="15" text-anchor="middle" fill="' + INK + '">' + (k * f) + '</text>';
+      }
+      s += '<text data-u="caption" data-show="' + show + '" x="' + (W / 2) + '" y="' + captionY + '" font-size="13" font-style="italic" text-anchor="middle" fill="' + INK + '">The table shows the first ' + show + ' days.</text>';
+      s += '</svg>';
+      return s;
     }
   };
   Object.keys(TYPESy2wq).forEach(function (k) { TYPES[k] = TYPESy2wq[k]; });

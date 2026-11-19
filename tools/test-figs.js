@@ -2065,16 +2065,25 @@ function triGeoCount(lines) {
       'y2wq-14 答案 ' + q.value + ' ≠ 贪心最少硬币数 ' + greedy(q.vars.p1 + q.vars.p2));
   }
 
-  /* y2wq-15：藏宝箱表 Day1/2/3 = f,2f,3f（只画前三天，不画到答案那天）；G = f·d·(d+1)/2 */
+  /* y2wq-15：藏宝箱表「前 3 天」——表头第二列 Number of {item} taken out、天数行 Day1..show
+     均由 item/f/show 参数化生成；只画前 3 天（<day，恒不泄答案）；G = f·day·(day+1)/2 */
   const t15 = byId('y2wq-15');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t15);
+    const item = q.vars.item || 'gold pieces';
+    const hdr = (q.diagramSvg.match(/data-u="hdr" data-c="1"[^>]*>([^<]*)<\//) || [])[1] || '';
+    chk(hdr === 'Number of ' + item + ' taken out',
+      'y2wq-15 表头第二列 "' + hdr + '" 应为参数化的 "Number of ' + item + ' taken out"');
+    const days = mAll(q.diagramSvg, /data-u="cell" data-r="\d+" data-c="0"[^>]*data-day="(\d+)"/g).map(m => +m[1]);
+    chk(days.length === 3 && days.join(',') === '1,2,3',
+      'y2wq-15 天数行应为 Day 1/2/3（前三天），实际 ' + days.join(','));
     const c1 = mAll(q.diagramSvg, /data-u="cell" data-r="\d+" data-c="1"[^>]*>([^<]*)<\//g).map(m => +m[1]);
     chk(c1.length === 3 && c1[0] === q.vars.f && c1[1] === 2 * q.vars.f && c1[2] === 3 * q.vars.f,
       'y2wq-15 表内 Day1/2/3 取金币数 ' + c1.join('/') + ' ≠ f,2f,3f=' + [q.vars.f, 2 * q.vars.f, 3 * q.vars.f].join('/'));
     chk(q.vars.G === q.vars.f * q.vars.day * (q.vars.day + 1) / 2,
       'y2wq-15 G=' + q.vars.G + ' ≠ f·day·(day+1)/2=' + (q.vars.f * q.vars.day * (q.vars.day + 1) / 2));
     chk(!new RegExp('Day ' + q.vars.day + '\\b').test(q.diagramSvg), 'y2wq-15 图上不该画出答案那天的行');
+    chk(/data-u="caption" data-show="3"/.test(q.diagramSvg), 'y2wq-15 应有「first 3 days」说明');
   }
 
   /* y2wq-16：四个同心正方形，距离逐层翻倍（s,2s,4s），边长 s,3s,7s,15s，答案 = 15s */

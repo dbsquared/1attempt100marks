@@ -914,7 +914,7 @@
       ],
       "source": "Year 2 数学错题集锦 Q15",
       "stem": {
-        "en": "Pirate Pete had {G} gold pieces in his treasure chest. One day he took out {f} gold pieces. Each day after, he took out {f} more gold pieces than he had taken out the day before. On which day did Pirate Pete empty the treasure chest?",
+        "en": "Pirate Pete had {G} {item} in his treasure chest. One day he took out {f} {item}. Each day after, he took out {f} more {item} than he had taken out the day before. On which day did Pirate Pete empty the treasure chest?",
         "zh": "海盗皮特的宝箱里有 {G} 枚金币。某天他取出 {f} 枚。之后每一天他都比前一天多取 {f} 枚。皮特在第几天取空了宝箱？"
       },
       "vars": {
@@ -927,12 +927,16 @@
           "type": "int",
           "min": 4,
           "max": 8
+        },
+        "item": {
+          "type": "pick",
+          "from": [
+            "gold pieces",
+            "gold coins"
+          ]
         }
       },
       "derived": {
-        "d1": "f",
-        "d2": "2*f",
-        "d3": "3*f",
         "G": "f * day * (day + 1) / 2"
       },
       "constraints": [],
@@ -951,29 +955,15 @@
       },
       "sourceSet": "year2数学错题集锦",
       "diagram": {
-        "type": "chest",
-        "cols": [
-          "Day",
-          "Number of gold pieces taken out"
-        ],
-        "rows": [
-          [
-            "Day 1",
-            "d1"
-          ],
-          [
-            "Day 2",
-            "d2"
-          ],
-          [
-            "Day 3",
-            "d3"
-          ]
-        ]
+        "type": "dailytake",
+        "item": "{item}",
+        "f": "f",
+        "show": 3
       },
       "original": {
         "f": 2,
-        "day": 5
+        "day": 5,
+        "item": "gold pieces"
       },
       "originalFig": "assets/originals/y2wq-q15-fig.jpg"
     },

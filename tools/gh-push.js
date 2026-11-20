@@ -64,16 +64,39 @@ const skipped = [];
 if (skipped.length) console.log('跳过 ' + skipped.length + ' 个文件：' + skipped.join(', '));
 console.log('待提交文件 ' + files.length + ' 个');
 
-/* 2. 逐个建 blob */
+/* 2. 逐个建 blob —— 先跟远程 tree 比 git blob sha，一致就复用，省掉重复上传
+      （assets/originals 里有 60MB 的 PDF，每次全传一遍既慢又容易撞上 GitHub 的偶发 400） */
+const crypto = require('crypto');
+function blobSha(buf) {
+  return crypto.createHash('sha1').update('blob ' + buf.length + '\0').update(buf).digest('hex');
+}
+const remoteSha = {};
+(function loadRemoteTree() {
+  const rt = curl('GET', API + '/git/trees/' + BRANCH + '?recursive=1');
+  (rt.tree || []).forEach(e => { if (e.type === 'blob') remoteSha[e.path] = e.sha; });
+})();
+
+function makeBlob(fp, buf) {
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const r = curl('POST', API + '/git/blobs', { content: buf.toString('base64'), encoding: 'base64' });
+    if (r && r.sha) return r.sha;
+    const msg = JSON.stringify(r || {}).slice(0, 160);
+    if (attempt === 4) { console.error('blob 失败 ' + fp + '（重试 4 次）: ' + msg); process.exit(1); }
+    process.stdout.write('!');
+  }
+}
+
 const tree = [];
+let reused = 0;
 for (const f of files) {
-  const content = fs.readFileSync(f.full).toString('base64');
-  const r = curl('POST', API + '/git/blobs', { content, encoding: 'base64' });
-  if (!r.sha) { console.error('blob 失败 ' + f.path + ': ' + JSON.stringify(r).slice(0, 200)); process.exit(1); }
-  tree.push({ path: f.path.replace(/\\/g, '/'), mode: '100644', type: 'blob', sha: r.sha });
+  const rel = f.path.replace(/\\/g, '/');
+  const buf = fs.readFileSync(f.full);
+  const sha = blobSha(buf);
+  if (remoteSha[rel] === sha) { tree.push({ path: rel, mode: '100644', type: 'blob', sha }); reused++; process.stdout.write('='); continue; }
+  tree.push({ path: rel, mode: '100644', type: 'blob', sha: makeBlob(rel, buf) });
   process.stdout.write('.');
 }
-console.log('\nblob 完成');
+console.log('\nblob 完成（复用 ' + reused + ' 个未改动文件，上传 ' + (files.length - reused) + ' 个）');
 
 /* 3. 建 tree */
 const t = curl('POST', API + '/git/trees', { tree });

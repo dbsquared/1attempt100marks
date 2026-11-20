@@ -2143,7 +2143,7 @@
   }
   /* 一行小图标：items = [[kind,count],…]；weight 的标签用 labelOf。
      slot = 槽位宽（默认 34），s = 图标尺度（默认 22）；需要画大件（如香蕉）时调大两者 */
-  function itemRow(cx, baseY, items, vars, labelOf, s, slot) {
+  function itemRow(cx, baseY, items, vars, labelOf, s, slot, pad) {
     var list = [], i, o = '';
     (items || []).forEach(function (it) {
       var cnt = Math.round(num(it[1], vars));
@@ -2152,7 +2152,9 @@
     s = s || 22;
     slot = slot || Math.round(s * 1.55);
     var x0 = cx - (list.length - 1) * slot / 2;
-    for (i = 0; i < list.length; i++) o += itemIcon(list[i], x0 + i * slot, baseY - 20, s, labelOf ? labelOf(list[i]) : '');
+    /* pad = 图标中心到 baseY 的距离（缺省 20）；balance 传 icon*0.45，让果子/砝码正好落在托盘面上 */
+    var dy = (pad === undefined || pad === null) ? 20 : pad;
+    for (i = 0; i < list.length; i++) o += itemIcon(list[i], x0 + i * slot, baseY - dy, s, labelOf ? labelOf(list[i]) : '');
     return o;
   }
   /* 一段折线集合（Q19 叠加规律）：segs = ["00-20", …]，坐标在 3×3 点阵上，y 向上 */
@@ -2480,7 +2482,26 @@
           s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px - hw) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
           s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px + hw) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
           s += '<path d="M' + (px - half) + ',' + (beamY + 26) + ' L' + (px + half) + ',' + (beamY + 26) + ' L' + (px + half - 9) + ',' + (beamY + 36) + ' L' + (px - half + 9) + ',' + (beamY + 36) + ' Z" fill="#c9d3e0" stroke="' + INK + '" stroke-width="1.6"/>';
-          s += itemRow(px, beamY + 26, k ? bs[i].r : bs[i].l, vars, function () { return label; }, icon, slot);
+          /* 果子按 icon 缩放；砝码用「固定尺寸块 + 13px 字」，否则果子一多 icon 变小，
+             块里的数字会缩到看不清（原卷也是把「140 g」印在块上的）。 */
+          var side = k ? bs[i].r : bs[i].l, fruits = [], wts = 0;
+          (side || []).forEach(function (it) {
+            var cn = Math.max(0, Math.round(num(it[1], vars)));
+            if (it[0] === 'weight') wts += cn;
+            else fruits.push([it[0], cn]);
+          });
+          s += itemRow(px, beamY + 26, fruits, vars, function () { return label; }, icon, slot, icon * 0.45);
+          if (wts > 0 && label) {
+            var tw = Math.max(36, Math.round(label.length * 7.2 + 12));
+            var gw = 6, totw = wts * tw + (wts - 1) * gw, wx0 = px - totw / 2;
+            for (var wi = 0; wi < wts; wi++) {
+              var bx = Math.round(wx0 + wi * (tw + gw));
+              s += '<rect data-u="weight" data-label="' + esc(label) + '" x="' + bx + '" y="' + (beamY + 6) +
+                   '" width="' + tw + '" height="20" rx="3" fill="#6b7280" stroke="' + INK + '" stroke-width="1.3"/>';
+              s += '<text x="' + (bx + tw / 2) + '" y="' + (beamY + 21) + '" font-size="13" text-anchor="middle" fill="#ffffff">' +
+                   esc(label) + '</text>';
+            }
+          }
         }
         s += '</g>';
       }

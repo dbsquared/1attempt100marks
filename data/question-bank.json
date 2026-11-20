@@ -6943,6 +6943,16 @@
           "type": "int",
           "min": 2,
           "max": 4
+        },
+        "p": {
+          "type": "int",
+          "min": 1,
+          "max": 2
+        },
+        "r": {
+          "type": "int",
+          "min": 1,
+          "max": 2
         }
       },
       "derived": {
@@ -6953,10 +6963,18 @@
         "o1": "na*A",
         "o2": "nb*A",
         "o3": "nc*nb*A",
-        "o4": "nc*nb*A+A"
+        "o4": "nc*nb*A+A",
+        "bL": "p*nc",
+        "aL": "r*nb",
+        "plP": "p==1",
+        "uP": "sel(plP,'bunches','bunch')",
+        "plR": "r==1",
+        "uR": "sel(plR,'bananas','banana')"
       },
       "constraints": [
-        "nb > na"
+        "nb > na",
+        "bL <= 6",
+        "aL <= 6"
       ],
       "answer": {
         "type": "choice",
@@ -6970,8 +6988,8 @@
         "correctIndex": 3
       },
       "solution": {
-        "en": "Start with the balance that has the weights: {na} apples = {W} g, so 1 apple = {W} ÷ {na} = {A} g. Next, 1 banana = {nb} apples = {nb} × {A} = {B} g. Finally, 1 bunch of grapes = {nc} bananas = {nc} × {B} = {T} g.",
-        "zh": "先从有砝码的那架天平入手：{na} 个苹果 = {W} g，所以 1 个苹果 = {W}÷{na} = {A} g。接着 1 根香蕉 = {nb} 个苹果 = {nb}×{A} = {B} g。最后一串葡萄 = {nc} 根香蕉 = {nc}×{B} = {T} g。"
+        "en": "Start with the balance that has the weights: {na} apples ＝ {W} g, so 1 apple ＝ {W}÷{na}＝{A} g. Next: {r} {uR} ＝ {aL} apples ⇒ each banana ＝ {aL}÷{r}＝{nb} apples ＝ {nb}×{A}＝{B} g. Finally: {p} {uP} of grapes ＝ {bL} bananas ⇒ each bunch ＝ {bL}÷{p}＝{nc} bananas ＝ {nc}×{B}＝{T} g.",
+        "zh": "先从有砝码的那架天平入手：{na} 个苹果 ＝ {W} g，所以 1 个苹果 ＝ {W}÷{na}＝{A} g。接着：{r} 根香蕉 ＝ {aL} 个苹果 ⇒ 每根香蕉 ＝ {aL}÷{r}＝{nb} 个苹果 ＝ {nb}×{A}＝{B} g。最后：{p} 串葡萄 ＝ {bL} 根香蕉 ⇒ 每串葡萄 ＝ {bL}÷{p}＝{nc} 根香蕉 ＝ {nc}×{B}＝{T} g。"
       },
       "sourceSet": "SEAMO 2025 Paper A",
       "originalImage": "assets/originals/2025seamoA-q16.png",
@@ -6982,13 +7000,13 @@
             "l": [
               [
                 "grape",
-                1
+                "p"
               ]
             ],
             "r": [
               [
                 "banana",
-                "nc"
+                "bL"
               ]
             ]
           },
@@ -6996,13 +7014,13 @@
             "l": [
               [
                 "banana",
-                1
+                "r"
               ]
             ],
             "r": [
               [
                 "apple",
-                "nb"
+                "aL"
               ]
             ]
           },
@@ -7027,7 +7045,9 @@
         "A": 70,
         "na": 2,
         "nb": 3,
-        "nc": 2
+        "nc": 2,
+        "p": 1,
+        "r": 1
       }
     },
     {
@@ -17977,151 +17997,6 @@
     {
       "id": "y2wq-23",
       "subject": "数学",
-      "topic": "天平代换",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "一串葡萄有多重",
-      "tags": [
-        "等量代换",
-        "天平",
-        "质量"
-      ],
-      "source": "SEAMO错题训练 Q7",
-      "stem": {
-        "en": "What is the mass, in grams, of a bunch of grapes? The three balance scales below are all level.",
-        "zh": "一串葡萄的质量是多少克？下面三台天平都是平衡的。"
-      },
-      "vars": {
-        "k": {
-          "type": "int",
-          "min": 2,
-          "max": 3
-        },
-        "j": {
-          "type": "int",
-          "min": 2,
-          "max": 4
-        },
-        "m": {
-          "type": "int",
-          "min": 2,
-          "max": 3
-        },
-        "w10": {
-          "type": "int",
-          "min": 3,
-          "max": 9
-        },
-        "p": {
-          "type": "int",
-          "min": 1,
-          "max": 2
-        },
-        "r": {
-          "type": "int",
-          "min": 1,
-          "max": 2
-        }
-      },
-      "derived": {
-        "w": "w10*10",
-        "W": "m*w",
-        "nb": "p*k",
-        "na": "r*j",
-        "ans": "k*j*w",
-        "o1": "w",
-        "o2": "j*w",
-        "o3": "m*w",
-        "o4": "ans+j*w",
-        "plP": "p==1",
-        "uP": "sel(plP,'bunches','bunch')",
-        "plR": "r==1",
-        "uR": "sel(plR,'bananas','banana')"
-      },
-      "constraints": [
-        "nb <= 4",
-        "na <= 4",
-        "j != m",
-        "j != k"
-      ],
-      "answer": {
-        "type": "choice",
-        "options": [
-          "{ans}",
-          "{o1}",
-          "{o2}",
-          "{o3}",
-          "{o4}"
-        ],
-        "correctIndex": 0
-      },
-      "solution": {
-        "en": "Third scale: {m} apples ＝ {W} g ⇒ 1 apple ＝ {W}÷{m}＝{w} g. Second scale: {r} {uR} ＝ {na} apples ⇒ each banana ＝ {na}÷{r}＝{j} apples ＝ {j}×{w}＝{j*w} g. First scale: {p} {uP} of grapes ＝ {nb} bananas ⇒ each bunch ＝ {nb}÷{p}＝{k} bananas ＝ {k}×{j*w}＝{ans} g.",
-        "zh": "第三台：{m} 个苹果 ＝ {W} 克 ⇒ 1 个苹果 ＝ {W}÷{m}＝{w} 克。第二台：{r} 根香蕉 ＝ {na} 个苹果 ⇒ 每根香蕉 ＝ {na}÷{r}＝{j} 个苹果 ＝ {j}×{w}＝{j*w} 克。第一台：{p} 串葡萄 ＝ {nb} 根香蕉 ⇒ 每串葡萄 ＝ {nb}÷{p}＝{k} 根香蕉 ＝ {k}×{j*w}＝{ans} 克。"
-      },
-      "sourceSet": "year2数学错题集锦",
-      "originalImage": "assets/originals/seamox-q07.png",
-      "originalFig": "assets/originals/seamox-q07-fig.png",
-      "diagram": {
-        "type": "balance",
-        "balances": [
-          {
-            "l": [
-              [
-                "grape",
-                "p"
-              ]
-            ],
-            "r": [
-              [
-                "banana",
-                "nb"
-              ]
-            ]
-          },
-          {
-            "l": [
-              [
-                "banana",
-                "r"
-              ]
-            ],
-            "r": [
-              [
-                "apple",
-                "na"
-              ]
-            ]
-          },
-          {
-            "l": [
-              [
-                "apple",
-                "m"
-              ]
-            ],
-            "r": [
-              [
-                "weight",
-                1
-              ]
-            ],
-            "weight": "W"
-          }
-        ]
-      },
-      "original": {
-        "k": 2,
-        "j": 3,
-        "m": 2,
-        "w10": 7,
-        "p": 1,
-        "r": 1
-      }
-    },
-    {
-      "id": "y2wq-24",
-      "subject": "数学",
       "topic": "网格最短路径",
       "grade": "二年级",
       "difficulty": 4,
@@ -18177,7 +18052,7 @@
       }
     },
     {
-      "id": "y2wq-25",
+      "id": "y2wq-24",
       "subject": "数学",
       "topic": "图形叠加规律",
       "grade": "二年级",
@@ -18348,7 +18223,7 @@
       "original": {}
     },
     {
-      "id": "y2wq-26",
+      "id": "y2wq-25",
       "subject": "数学",
       "topic": "数三角形",
       "grade": "二年级",
@@ -18406,7 +18281,7 @@
       }
     },
     {
-      "id": "y2wq-27",
+      "id": "y2wq-26",
       "subject": "数学",
       "topic": "抽屉原理",
       "grade": "二年级",
@@ -18484,7 +18359,7 @@
       "unit": "个"
     },
     {
-      "id": "y2wq-28",
+      "id": "y2wq-27",
       "subject": "数学",
       "topic": "解简易方程",
       "grade": "二年级",
@@ -18560,7 +18435,7 @@
       }
     },
     {
-      "id": "y2wq-29",
+      "id": "y2wq-28",
       "subject": "数学",
       "topic": "植树问题",
       "grade": "二年级",
@@ -18619,7 +18494,7 @@
       }
     },
     {
-      "id": "y2wq-30",
+      "id": "y2wq-29",
       "subject": "数学",
       "topic": "定义新运算",
       "grade": "二年级",
@@ -18732,7 +18607,7 @@
       }
     },
     {
-      "id": "y2wq-31",
+      "id": "y2wq-30",
       "subject": "数学",
       "topic": "数字规律",
       "grade": "二年级",
@@ -18844,7 +18719,7 @@
       }
     },
     {
-      "id": "y2wq-32",
+      "id": "y2wq-31",
       "subject": "数学",
       "topic": "和差/假设法",
       "grade": "二年级",
@@ -18911,7 +18786,7 @@
       }
     },
     {
-      "id": "y2wq-33",
+      "id": "y2wq-32",
       "subject": "数学",
       "topic": "数列规律",
       "grade": "二年级",
@@ -18968,7 +18843,7 @@
       }
     },
     {
-      "id": "y2wq-34",
+      "id": "y2wq-33",
       "subject": "数学",
       "topic": "日期与星期",
       "grade": "二年级",
@@ -19062,7 +18937,7 @@
       }
     },
     {
-      "id": "y2wq-35",
+      "id": "y2wq-34",
       "subject": "数学",
       "topic": "盈亏问题",
       "grade": "二年级",
@@ -19129,7 +19004,7 @@
       }
     },
     {
-      "id": "y2wq-36",
+      "id": "y2wq-35",
       "subject": "数学",
       "topic": "抽屉原理",
       "grade": "二年级",
@@ -19203,7 +19078,7 @@
       }
     },
     {
-      "id": "y2wq-37",
+      "id": "y2wq-36",
       "subject": "数学",
       "topic": "数字方阵规律",
       "grade": "二年级",
@@ -19306,7 +19181,7 @@
       }
     },
     {
-      "id": "y2wq-38",
+      "id": "y2wq-37",
       "subject": "数学",
       "topic": "余数与周期",
       "grade": "二年级",
@@ -19354,7 +19229,7 @@
       }
     },
     {
-      "id": "y2wq-39",
+      "id": "y2wq-38",
       "subject": "数学",
       "topic": "相遇问题",
       "grade": "二年级",
@@ -19422,7 +19297,7 @@
       "unit": "千米/时"
     },
     {
-      "id": "y2wq-40",
+      "id": "y2wq-39",
       "subject": "数学",
       "topic": "数三角形",
       "grade": "二年级",
@@ -19475,7 +19350,7 @@
       "unit": "个"
     },
     {
-      "id": "y2wq-41",
+      "id": "y2wq-40",
       "subject": "数学",
       "topic": "逆推还原",
       "grade": "二年级",

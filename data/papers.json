@@ -134,14 +134,14 @@
    "subject": "数学",
    "language": "en",
    "level": "澳洲 Year 2（错题整理）",
-   "totalQuestions": 41,
+   "totalQuestions": 40,
    "timeLimit": {
     "official": false,
-    "suggestedMinutes": 66,
-    "basis": "错题集锦非限时考试，无官方时长。按题源分两档估算：NAS 照片那 16 题（应用题 + ICAS 选择题）每题 1 分钟 ≈ 16 分钟；SEAMO 错题训练那 25 题含数三角形、网格路径、天平换算等耗时图题，按 SEAMO 官方「25 题 / 90 分钟」放宽到每题 2 分钟 ≈ 50 分钟。合计 66 分钟。",
+    "suggestedMinutes": 64,
+    "basis": "错题集锦非限时考试，无官方时长。按题源分两档估算：NAS 照片那 16 题（应用题 + ICAS 选择题）每题 1 分钟 ≈ 16 分钟；SEAMO 错题训练那 24 题含数三角形、网格路径、天平换算等耗时图题，按 SEAMO 官方「25 题 / 90 分钟」放宽到每题 2 分钟 ≈ 48 分钟。合计 64 分钟。",
     "url": "https://www.seedasdan.asia/en/seamo-en/",
     "checkedAt": "2026-11-20",
-    "note": "一份错题集，41 题 = 家长拍的错题照片 16 题（Q1–Q16）＋《SEAMO错题训练.docx》25 题（Q17–Q41，原卷 Q1–Q25）。66 分钟是两档节奏相加的估算值，可在组卷界面手动改；混组按每份卷的平均节奏折算。SEAMO Q15（本卷 Q31，三组三角形数字谜）原卷没给答案，按唯一自洽的「同一位置三个数相加相等」（6+5+9 = 7+8+5 = 20 ⇒ ? = 6，选项 D）定答案，若标准答案与之不符只需改这一条模板。",
+    "note": "一份错题集，40 题 = 家长拍的错题照片 16 题（Q1–Q16）＋《SEAMO错题训练.docx》24 题（Q17–Q40）。原卷共 25 题，其中 Q7「三架天平·一串葡萄有多重」与「SEAMO 2025 Paper A」的 Q16 是同一道题（数值、答案 420 全同），只保留 2025 卷那份，故本卷少一道。64 分钟是两档节奏相加的估算值，可在组卷界面手动改。",
     "url2": "https://www.icasassessments.com/icas-year-levels-and-exam-papers/"
    },
    "idPrefix": "y2wq"

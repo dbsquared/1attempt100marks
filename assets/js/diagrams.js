@@ -3753,54 +3753,66 @@
       return out;
     },
 
-    /* 同心正方形（Q16）：四个正方形同中心，边长逐层 ×2（s,2s,4s,8s），
-       求最大正方形边长。图里只标最小的 s、最大标 ?，不泄 8s。 */
+    /* 同心正方形（Q16）：四个正方形同中心，边长 s / 3s / 7s / 15s，
+       也就是相邻两层之间的间距 s / 2s / 4s（由内向外翻倍）；答案 = 最大正方形边长 15s。
+       长度标注**全部画在图形内部**、沿竖直中轴用「数字 + 短量线」表示：
+       上段标三层间距（4s、2s），第三段改标最内层边长（横向量线跨过最内层正方形），
+       下段标最内层间距（s），最大正方形边长用贴着底边的红色「?」量线。不写 units 字样。 */
     concentric: function (spec, vars) {
       var side = Math.max(1, num(spec.s, vars));
       var sides = [side, side * 3, side * 7, side * 15];
-      var gaps = [side, side * 2, side * 4];              // 相邻正方形之间的「距离」，逐层翻倍
-      var maxPx = 400, scale = maxPx / (side * 15);
-      var W = 500, H = 470, cx = 260, cy = 215;
-      var fills = ['#ffffff', '#fde2a2', '#bfe3ff', '#f7d774'];
-      var out = svgOpen(W, H, 'four concentric squares, smallest ' + side);
-      for (var i = 3; i >= 0; i--) {
-        var half = sides[i] * scale / 2;
-        out += '<rect data-u="square" data-i="' + i + '" data-side="' + sides[i] + '" x="' + (cx - half).toFixed(1) + '" y="' + (cy - half).toFixed(1) + '" width="' + (half * 2).toFixed(1) + '" height="' + (half * 2).toFixed(1) + '" fill="' + fills[i] + '" stroke="' + INK + '" stroke-width="2"/>';
+      var gaps = [side * 4, side * 2, side];                  // 由外向内：外↔2、2↔3、3↔最内
+      var OUT = 430, u = OUT / sides[3];                      // 最大正方形边长（像素）、每单位像素
+      var W = OUT + 60, H = OUT + 60, cx = W / 2, cy = H / 2;
+      var fills = ['#f2a48c', '#f9cf7a', '#eef0b8', '#f7fbe4'];   // 由内到外
+      var out = svgOpen(W, H, 'four concentric squares and the distances between them');
+      var i, hh;
+      function half(idx) { return sides[idx] * u / 2; }
+      for (i = 3; i >= 0; i--) {
+        hh = half(i);
+        out += '<rect data-u="square" data-i="' + i + '" data-side="' + sides[i] +
+               '" x="' + (cx - hh).toFixed(1) + '" y="' + (cy - hh).toFixed(1) +
+               '" width="' + (hh * 2).toFixed(1) + '" height="' + (hh * 2).toFixed(1) +
+               '" fill="' + fills[i] + '" stroke="' + INK + '" stroke-width="2"/>';
       }
-      /* 水平尺寸线（两端箭头 + 短竖刻度） */
-      function dimLine(x1, x2, y) {
-        var d = '<line x1="' + x1.toFixed(1) + '" y1="' + y + '" x2="' + x2.toFixed(1) + '" y2="' + y + '" stroke="' + INK + '" stroke-width="1.4"/>';
-        d += '<line x1="' + x1.toFixed(1) + '" y1="' + (y - 5) + '" x2="' + x1.toFixed(1) + '" y2="' + (y + 5) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-        d += '<line x1="' + x2.toFixed(1) + '" y1="' + (y - 5) + '" x2="' + x2.toFixed(1) + '" y2="' + (y + 5) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-        d += '<polygon points="' + x1.toFixed(1) + ',' + y + ' ' + (x1 + 8).toFixed(1) + ',' + (y - 4) + ' ' + (x1 + 8).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
-        d += '<polygon points="' + x2.toFixed(1) + ',' + y + ' ' + (x2 - 8).toFixed(1) + ',' + (y - 4) + ' ' + (x2 - 8).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
+      /* 数字写在白底小块里，正压在量线中间（线被遮住一小段，读数最清楚） */
+      function numTag(x, y, val, key, col, fs) {
+        var t = String(val), tw = t.length * fs * 0.62 + 12, th = fs + 6;
+        return '<rect x="' + (x - tw / 2).toFixed(1) + '" y="' + (y - th / 2).toFixed(1) +
+               '" width="' + tw.toFixed(1) + '" height="' + th + '" rx="3" fill="#ffffff"/>' +
+               '<text data-u="' + key + '" data-v="' + val + '" x="' + x.toFixed(1) + '" y="' + (y + fs * 0.36).toFixed(1) +
+               '" font-size="' + fs + '" font-weight="700" text-anchor="middle" fill="' + col + '">' + t + '</text>';
+      }
+      /* 横向量线：两端短竖刻度；跨度够大才加箭头（最内层太窄，只留刻度） */
+      function dimH(x1, x2, y) {
+        var tk = 6;
+        var d = '<line x1="' + x1.toFixed(1) + '" y1="' + y.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<line x1="' + x1.toFixed(1) + '" y1="' + (y - tk) + '" x2="' + x1.toFixed(1) + '" y2="' + (y + tk) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<line x1="' + x2.toFixed(1) + '" y1="' + (y - tk) + '" x2="' + x2.toFixed(1) + '" y2="' + (y + tk) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        if (x2 - x1 >= 60) {
+          d += '<polygon points="' + x1.toFixed(1) + ',' + y.toFixed(1) + ' ' + (x1 + 9).toFixed(1) + ',' + (y - 4) + ' ' + (x1 + 9).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
+          d += '<polygon points="' + x2.toFixed(1) + ',' + y.toFixed(1) + ' ' + (x2 - 9).toFixed(1) + ',' + (y - 4) + ' ' + (x2 - 9).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
+        }
         return d;
       }
-      var bHalf = sides[3] * scale / 2;                  // 最外层半边长（像素）
-      var sHalf = sides[0] * scale / 2;                  // 最内层半边长（像素）
-      /* 左侧竖直尺寸线：标相邻正方形之间的「距离」（s, 2s, 4s，逐层翻倍） */
-      var gx = cx - bHalf - 24;
-      var gTop = cy - bHalf, gBot = cy - sHalf;
-      out += '<line x1="' + gx + '" y1="' + gTop.toFixed(1) + '" x2="' + gx + '" y2="' + gBot.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-      var y0 = gTop;
-      for (var k = 2; k >= 0; k--) {
-        var gapPx = gaps[k] * scale;
-        var y1 = y0 + gapPx, ym = (y0 + y1) / 2;
-        out += '<line x1="' + (gx - 4) + '" y1="' + y0.toFixed(1) + '" x2="' + (gx + 4) + '" y2="' + y0.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.2"/>';
-        out += '<rect x="' + (gx - 24) + '" y="' + (ym - 9).toFixed(1) + '" width="48" height="17" rx="3" fill="#ffffff"/>';
-        out += '<text data-u="gap" data-v="' + gaps[k] + '" x="' + gx + '" y="' + (ym + 4).toFixed(1) + '" font-size="13" font-weight="700" text-anchor="middle" fill="' + INK + '">' + gaps[k] + '</text>';
-        y0 = y1;
-      }
-      out += '<line x1="' + (gx - 4) + '" y1="' + gBot.toFixed(1) + '" x2="' + (gx + 4) + '" y2="' + gBot.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.2"/>';
-      /* 最大正方形底边尺寸线：标「?」（题目所求的边长） */
-      var by = cy + bHalf + 16;
-      out += dimLine(cx - bHalf, cx + bHalf, by);
-      out += '<text data-u="dim" data-v="?" x="' + cx + '" y="' + (by + 18) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + RED + '">?</text>';
-      /* 最小正方形底边尺寸线：标 {side} units（题干已给，白色衬底保证嵌套里可读） */
-      var sy = cy + sHalf + 12;
-      out += dimLine(cx - sHalf, cx + sHalf, sy);
-      out += '<rect x="' + (cx - 32) + '" y="' + (sy - 3).toFixed(1) + '" width="64" height="18" rx="3" fill="#ffffff"/>';
-      out += '<text data-u="dim" data-v="' + side + '" x="' + cx + '" y="' + (sy + 11).toFixed(1) + '" font-size="14" font-weight="700" text-anchor="middle" fill="' + INK + '">' + side + ' units</text>';
+      var top = [cy - half(3), cy - half(2), cy - half(1), cy - half(0)];   // 各层顶边（外→内）
+      var bot = [cy + half(3), cy + half(2), cy + half(1), cy + half(0)];
+      /* 竖直中轴：最大正方形顶边 → 最内层顶边 */
+      out += '<line x1="' + cx + '" y1="' + top[0].toFixed(1) + '" x2="' + cx + '" y2="' + top[3].toFixed(1) + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      /* 上两段：外↔2 的间距 4s、2↔3 的间距 2s */
+      out += numTag(cx, (top[0] + top[1]) / 2, gaps[0], 'gap', INK, 18);
+      out += numTag(cx, (top[1] + top[2]) / 2, gaps[1], 'gap', INK, 18);
+      /* 第三段留空，改标「最内层边长」：横向量线正好跨过最内层正方形 */
+      var ySide = (top[2] + top[3]) / 2;
+      out += dimH(cx - half(0), cx + half(0), ySide);
+      out += numTag(cx, ySide, side, 'dim', INK, 15);
+      /* 下段：3↔最内 的间距 s */
+      out += '<line x1="' + cx + '" y1="' + bot[3].toFixed(1) + '" x2="' + cx + '" y2="' + bot[2].toFixed(1) + '" stroke="' + INK + '" stroke-width="1.5"/>';
+      out += numTag(cx, (bot[3] + bot[2]) / 2, gaps[2], 'gap', INK, 15);
+      /* 最大正方形边长：贴着底边、仍在其内部的量线 + 红色「?」 */
+      var yQ = cy + half(3) - 22;
+      out += dimH(cx - half(3), cx + half(3), yQ);
+      out += numTag(cx, yQ, '?', 'dim', RED, 20);
       out += '</svg>';
       return out;
     },

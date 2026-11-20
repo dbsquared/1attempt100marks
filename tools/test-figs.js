@@ -2123,10 +2123,20 @@ function triGeoCount(lines) {
     chk(JSON.stringify(gaps) === JSON.stringify([s, 2 * s, 4 * s]),
       'y2wq-16 相邻距离 ' + gaps.join('/') + ' ≠ s,2s,4s=' + [s, 2 * s, 4 * s].join('/'));
     const dims = mAll(q.diagramSvg, /data-u="dim" data-v="([^"]*)"/g).map(m => m[1]);
-    chk(dims.indexOf('?') >= 0, 'y2wq-16 最大正方形底边应标「?」尺寸线');
-    chk(dims.indexOf(String(s)) >= 0, 'y2wq-16 最小正方形底边应标「' + s + '」尺寸线');
-    chk(dims.length === 2, 'y2wq-16 尺寸标注应为 2 处（最小 + 最大），实际 ' + dims.length);
+    chk(dims.indexOf('?') >= 0, 'y2wq-16 最大正方形边长应标「?」尺寸线');
+    chk(dims.indexOf(String(s)) >= 0, 'y2wq-16 最内层边长应标「' + s + '」尺寸线');
+    chk(dims.length === 2, 'y2wq-16 尺寸标注应为 2 处（最内层边长 + 最大边长），实际 ' + dims.length);
     chk(!/smallest square = /.test(q.diagramSvg), 'y2wq-16 长度应标在图上，不能只写在图下方文字里');
+    /* 尺寸标注必须全部落在最大正方形内部（用户要求：统一标在图里面，不许放到图外或旁边） */
+    const outer = q.diagramSvg.match(/data-u="square" data-i="3" data-side="\d+" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/);
+    chk(outer, 'y2wq-16 图上找不到最大正方形（data-i="3"）的 rect');
+    const [ox, oy, ow, oh] = [1, 2, 3, 4].map(k => +outer[k]);
+    const tags = mAll(q.diagramSvg, /data-u="(?:gap|dim)" data-v="([^"]*)" x="([\d.]+)" y="([\d.]+)"/g)
+      .map(m => ({ v: m[1], x: +m[2], y: +m[3] }));
+    chk(tags.length === 5, 'y2wq-16 图上长度标注应有 5 处（三层间距 + 两条边长），实际 ' + tags.length);
+    const stray = tags.filter(t => t.x < ox + 4 || t.x > ox + ow - 4 || t.y < oy + 8 || t.y > oy + oh - 2);
+    chk(!stray.length, 'y2wq-16 有长度标注画到了最大正方形外：' + stray.map(t => t.v + '@(' + t.x + ',' + t.y + ')').join(' '));
+    chk(!/unit/i.test(q.diagramSvg), 'y2wq-16 图上只写数字 + 线段，不该出现 units 字样');
   }
 
   console.log('y2wq 新增配图  07 双杆 / 14 硬币 / 15 藏宝箱表 / 16 同心正方形 交叉验算 ✓');

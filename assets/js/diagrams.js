@@ -3911,6 +3911,41 @@
       return s;
     },
 
+    /* 三组三角形数字谜（Q15）：每个三角形三个角上各一个数，三组之间按「同一位置」纵向等和。
+       t/l/r 各 n 个元素，写变量名或数字；"?" 画成绿色问号（不泄答案）。
+       渲染器不做任何运算 —— 等和关系由模板的 derived 保证。 */
+    trisums: function (spec, vars) {
+      var t = spec.t || [], l = spec.l || [], r = spec.r || [];
+      var n = Math.max(t.length, l.length, r.length), i, k;
+      if (!n) return '';
+      var tw = 132, th = 104, gap = 34, pad = 20, top = 18;
+      var W = Math.round(pad * 2 + n * tw + (n - 1) * gap), H = Math.round(top + th + 26);
+      var s = svgOpen(W, H, 'number puzzle with ' + n + ' triangles');
+      for (i = 0; i < n; i++) {
+        var cx = Math.round(pad + tw / 2 + i * (tw + gap));
+        var ay = top, by = top + th;
+        s += '<polygon data-u="tri3" data-i="' + i + '" points="' + cx + ',' + ay + ' ' + (cx - tw / 2) + ',' + by + ' ' + (cx + tw / 2) + ',' + by +
+             '" fill="none" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/>';
+        var slots = [
+          { pos: 't', x: cx, y: ay + 36, v: t[i] },
+          { pos: 'l', x: cx - 30, y: by - 16, v: l[i] },
+          { pos: 'r', x: cx + 30, y: by - 16, v: r[i] }
+        ];
+        for (k = 0; k < 3; k++) {
+          var v = slots[k].v;
+          if (v === null || v === undefined) continue;
+          var blank = String(v) === '?';
+          var txt = blank ? '?' : cellText(v, vars);
+          s += '<text data-u="' + (blank ? 'blank' : 'num') + '" data-pos="' + slots[k].pos + '" data-i="' + i + '"' +
+               (blank ? '' : ' data-v="' + esc(txt) + '"') +
+               ' x="' + slots[k].x + '" y="' + slots[k].y + '" font-size="23" font-weight="700" text-anchor="middle" fill="' +
+               (blank ? '#3a9b41' : INK) + '">' + esc(txt) + '</text>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
     /* 相遇问题（Q23）：两列车相向而行，下方标出全程距离。图上只给距离，不给速度。 */
     trainmeet: function (spec, vars) {
       var d = cellText(spec.d, vars);

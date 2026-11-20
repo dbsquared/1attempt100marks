@@ -151,15 +151,15 @@
    "subject": "数学",
    "language": "en",
    "level": "SEAMO Level A–F（Grade 2 以上）",
-   "totalQuestions": 24,
+   "totalQuestions": 25,
    "timeLimit": {
     "official": false,
     "suggestedMinutes": 50,
-    "basis": "这不是一份正式试卷，而是家长从 SEAMO 真题里整理出的错题集（原卷共 25 题），没有官方限时。按 SEAMO 官方「25 题 / 90 分钟」≈ 每题 3.6 分钟，考虑到本集含数三角形、网格路径、抽屉原理等耗时图题，取更宽松的每题 2 分钟 → 50 分钟。",
+    "basis": "这不是一份正式试卷，而是家长从 SEAMO 真题里整理出的错题集（原卷共 25 题），没有官方限时。按 SEAMO 官方「25 题 / 90 分钟」≈ 每题 3.6 分钟，考虑到本集含数三角形、网格路径、抽屉原理等耗时图题，取更宽松的每题 2 分钟 × 25 题 → 50 分钟。",
     "source": "SEAMO 官方赛程（Level A–F：25 题 / 90 分钟）折算",
     "url": "https://www.seedasdan.asia/en/seamo-en/",
     "checkedAt": "2026-11-20",
-    "note": "原文档共 25 题截图；Q15（数字三角形找规律）三个示例三角形的规律在原卷里不自洽（选项 0/2/4/6/8 无法唯一定位），答案无法核定，暂未导入，故题库为 24 个模板，totalQuestions 也按 24 记（组卷时限据此折算）。补到 Q15 答案后把它加进模板、再把 totalQuestions 改回 25 即可。"
+    "note": "Q15（三组三角形数字谜）原卷没给答案，组内三数之间也找不到统一公式；按唯一自洽的「同一位置的三个数相加相等」（6+5+9 = 7+8+5 = 20 ⇒ ? = 20−11−3 = 6，选项 D）定答案。若日后拿到标准答案与之不符，改 seamox-q15 的 answer 与 original 两处即可。"
    },
    "idPrefix": "seamox"
   }

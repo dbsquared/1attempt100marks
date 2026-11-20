@@ -2351,6 +2351,36 @@ function triGeoCount(lines) {
   console.log('seamox q23  图上 840km 类距离 ÷ 时间 − 已知速度 = 答案 ✓');
 }
 
+/* ---------- seamox-q15：三组三角形——同一位置的三个数等和 ---------- */
+{
+  const t = byId('seamox-q15');
+  for (let i = 0; i < REP; i++) {
+    const q = Generator.instantiate(t);
+    chk(!!q, 'seamox-q15 实例化失败（约束可能过紧）');
+    if (!q) break;
+    const cells = {};
+    mAll(q.diagramSvg, /data-u="num" data-pos="([tlr])" data-i="(\d)" data-v="(-?\d+)"/g)
+      .forEach(m => { cells[m[1] + m[2]] = +m[3]; });
+    chk(Object.keys(cells).length === 8, 'seamox-q15 图上应给出 8 个数，实际 ' + Object.keys(cells).length);
+    chk(mAll(q.diagramSvg, /data-u="blank"/g).length === 1, 'seamox-q15 图上应有且仅有 1 个问号');
+    chk(mAll(q.diagramSvg, /data-u="tri3"/g).length === 3, 'seamox-q15 图上应画 3 个三角形');
+    const sum = a => a.reduce((x, y) => x + y, 0);
+    const st = sum([0, 1, 2].map(k => cells['t' + k]));       // 上面一列
+    const sl = sum([0, 1, 2].map(k => cells['l' + k]));       // 左下一列
+    const sr = sum([0, 1].map(k => cells['r' + k]));          // 右下一列（第三组是空）
+    chk(st === sl, 'seamox-q15 上面一列和 ' + st + ' ≠ 左下一列和 ' + sl);
+    const want = st - sr;
+    chk(want === Number(q.display), 'seamox-q15 等和推缺数 ' + st + '−' + sr + ' = ' + want + '，答案 ' + q.display);
+    chk(Object.keys(cells).every(k => cells[k] > 0), 'seamox-q15 图上出现非正整数');
+    // 选项：正确项数值 = 答案，且五选项是公差 2 的等差数列（原卷 0/2/4/6/8 同构）
+    const asc = q.options.map(Number).sort((a, b) => a - b);
+    chk(Number(q.options[q.correctIndex]) === want, 'seamox-q15 正确选项数值 ' + q.options[q.correctIndex] + ' ≠ 答案 ' + want);
+    chk(asc.length === 5 && asc.every((x, k) => k === 0 || x - asc[k - 1] === 2), 'seamox-q15 选项不是公差 2 的等差数列：' + asc.join(','));
+    chk(asc[0] >= 0, 'seamox-q15 选项出现负数：' + asc.join(','));
+  }
+  console.log('seamox q15  图上三列各自等和 → 等和减已知两数 = 答案 ✓ 选项为公差 2 长梯 ✓');
+}
+
 /* ---------- 图形类型表不能有重复 key（重复时后者静默覆盖，改前面那个等于白改） ---------- */
 {
   const src = fs.readFileSync(path.join(root, 'assets/js/diagrams.js'), 'utf8');

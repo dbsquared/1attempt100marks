@@ -1,6 +1,6 @@
 {
- "v": 1,
- "batch": "SEAMO错题训练：来自 D:/downloads/SEAMO错题训练.docx 的截图（原卷 25 题，Q15 因规律不自洽暂缺）",
+ "v": 2,
+ "batch": "SEAMO错题训练：来自 D:/downloads/SEAMO错题训练.docx 的截图（原卷 25 题）",
  "templates": [
   {
    "id": "seamox-q01",
@@ -1135,6 +1135,118 @@
     "b3": 3,
     "a4": 5,
     "b4": 4
+   }
+  },
+  {
+   "id": "seamox-q15",
+   "subject": "数学",
+   "topic": "数字规律",
+   "grade": "二年级",
+   "difficulty": 3,
+   "title": "三个三角形同一位置上的数加起来相等",
+   "tags": [
+    "数字谜",
+    "等和",
+    "多组对照"
+   ],
+   "source": "SEAMO错题训练 Q15",
+   "stem": {
+    "en": "Find the missing number in the number puzzle below.",
+    "zh": "求下面数字谜中缺少的数。"
+   },
+   "vars": {
+    "t1": {
+     "type": "int",
+     "min": 4,
+     "max": 9
+    },
+    "t2": {
+     "type": "int",
+     "min": 4,
+     "max": 9
+    },
+    "t3": {
+     "type": "int",
+     "min": 4,
+     "max": 9
+    },
+    "l1": {
+     "type": "int",
+     "min": 3,
+     "max": 9
+    },
+    "l2": {
+     "type": "int",
+     "min": 3,
+     "max": 9
+    },
+    "r1": {
+     "type": "int",
+     "min": 3,
+     "max": 11
+    },
+    "r2": {
+     "type": "int",
+     "min": 3,
+     "max": 11
+    }
+   },
+   "derived": {
+    "S": "t1+t2+t3",
+    "l3": "S-l1-l2",
+    "ans": "S-r1-r2"
+   },
+   "constraints": [
+    "l3 >= 2",
+    "l3 <= 18",
+    "ans >= 6",
+    "ans <= 20",
+    "l3 != ans"
+   ],
+   "answer": {
+    "type": "choice",
+    "options": [
+     "{ans-6}",
+     "{ans-4}",
+     "{ans-2}",
+     "{ans}",
+     "{ans+2}"
+    ],
+    "correctIndex": 3
+   },
+   "solution": {
+    "en": "Read the three triangles as one table. Top row: {t1}+{t2}+{t3} = {S}. Bottom-left row: {l1}+{l2}+{l3} = {S}. So the three numbers in the same position always add up to {S}. The bottom-right row must also give {S}, and {r1}+{r2} = {r1+r2}, so the missing number is {S}-{r1+r2} = {ans}.",
+    "zh": "把三组三角形当成一张表看：上面一行 {t1}+{t2}+{t3}={S}，左下这一行 {l1}+{l2}+{l3}={S}，也就是「同一个位置」上的三个数加起来总是 {S}。右下这一行同样要等于 {S}，而 {r1}+{r2}={r1+r2}，所以缺的数是 {S}-{r1+r2}={ans}。"
+   },
+   "sourceSet": "SEAMO错题训练",
+   "originalImage": "assets/originals/seamox-q15.png",
+   "originalFig": "assets/originals/seamox-q15-fig.png",
+   "diagram": {
+    "type": "trisums",
+    "t": [
+     "t1",
+     "t2",
+     "t3"
+    ],
+    "l": [
+     "l1",
+     "l2",
+     "l3"
+    ],
+    "r": [
+     "r1",
+     "r2",
+     "?"
+    ]
+   },
+   "original": {
+    "t1": 6,
+    "t2": 5,
+    "t3": 9,
+    "l1": 7,
+    "l2": 8,
+    "r1": 11,
+    "r2": 3
    }
   },
   {

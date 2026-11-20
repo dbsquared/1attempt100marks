@@ -2204,24 +2204,40 @@ function triGeoCount(lines) {
   console.log('y2wq Q22  8 格都满足 base+(r+c)·step ✓ 问号格 = 左邻 + step ✓');
 }
 
-/* ---------- y2wq-23：天平——苹果→香蕉→葡萄逐级换算 ---------- */
+/* ---------- y2wq-23：天平——苹果→香蕉→葡萄逐级换算（果子数量也随机） ---------- */
 {
   const t = byId('y2wq-23');
+  const seen = new Set();
   for (let i = 0; i < REP; i++) {
-    const q = Generator.instantiate(t), v = q.vars;
+    const q = Generator.instantiate(t);
     const bs = mAll(q.diagramSvg, /data-u="balance" data-arm="\d+" data-side-l="([^"]*)" data-side-r="([^"]*)" data-w="([^"]*)"/g)
       .map(m => ({ l: m[1], r: m[2], w: m[3] }));
     chk(bs.length === 3, 'y2wq-23 应画 3 台天平，实际 ' + bs.length);
-    chk(bs[0].l === 'grape:1' && bs[0].r === 'banana:' + v.k, 'y2wq-23 第 1 台应「1 串葡萄 = ' + v.k + ' 根香蕉」，实际 ' + bs[0].l + ' / ' + bs[0].r);
-    chk(bs[1].l === 'banana:1' && bs[1].r === 'apple:' + v.j, 'y2wq-23 第 2 台应「1 根香蕉 = ' + v.j + ' 个苹果」，实际 ' + bs[1].l + ' / ' + bs[1].r);
-    chk(bs[2].l === 'apple:' + v.m && bs[2].w === String(v.W), 'y2wq-23 第 3 台应「' + v.m + ' 个苹果 = ' + v.W + ' g」，实际 ' + bs[2].l + ' / ' + bs[2].w);
-    const apple = Number(bs[2].w) / v.m;                       // 图上只有总重，自己除
-    const banana = apple * v.j;
-    const grape = banana * v.k;
-    chk(Number(q.display) === grape, 'y2wq-23 逐级换算葡萄 = ' + grape + '，答案 ' + q.display);
-    chk(Number.isInteger(apple), 'y2wq-23 单个苹果质量应为整数克，实际 ' + apple);
+    if (bs.length < 3) break;
+    /* 只从图上读数字，不碰 vars：kind:count（多品种用 + 连起来） */
+    const cnt = (side, kind) => {
+      const hit = side.split('+').find(x => x.indexOf(kind + ':') === 0);
+      return hit ? +hit.split(':')[1] : 0;
+    };
+    const g = cnt(bs[0].l, 'grape'), b1 = cnt(bs[0].r, 'banana');
+    const b2 = cnt(bs[1].l, 'banana'), a1 = cnt(bs[1].r, 'apple');
+    const a2 = cnt(bs[2].l, 'apple'), W = Number(bs[2].w);
+    chk(g >= 1 && b1 >= 1 && b2 >= 1 && a1 >= 1 && a2 >= 1, 'y2wq-23 有托盘空着：' +
+      [bs[0].l, bs[0].r, bs[1].l, bs[1].r, bs[2].l].join(' | '));
+    chk(W > 0, 'y2wq-23 第三台砝码应为正数，实际 ' + bs[2].w);
+    chk(Math.max(g, b1, b2, a1, a2) <= 4, 'y2wq-23 托盘上果子超过 4 个，图会糊：' +
+      [g, b1, b2, a1, a2].join(','));
+    chk(b1 % g === 0, 'y2wq-23 第一台「' + g + ' 串葡萄 = ' + b1 + ' 根香蕉」不是整数倍');
+    chk(a1 % b2 === 0, 'y2wq-23 第二台「' + b2 + ' 根香蕉 = ' + a1 + ' 个苹果」不是整数倍');
+    chk(W % a2 === 0, 'y2wq-23 单个苹果质量不是整数克：' + W + '÷' + a2);
+    const apple = W / a2, banana = (a1 / b2) * apple, grape = (b1 / g) * banana;
+    chk(Number.isInteger(apple) && Number.isInteger(banana) && Number.isInteger(grape),
+      'y2wq-23 逐级换算出现小数：苹果 ' + apple + ' / 香蕉 ' + banana + ' / 葡萄 ' + grape);
+    chk(Number(q.display) === grape, 'y2wq-23 图上换算葡萄 = ' + grape + '，答案 ' + q.display);
+    seen.add(g + '串/' + b1 + '蕉·' + b2 + '蕉/' + a1 + '果');
   }
-  console.log('y2wq Q23  三台天平读数 → 苹果/香蕉/葡萄逐级换算 = 答案 ✓');
+  chk(seen.size >= 3, 'y2wq-23 果子数量没有真正随机化，只有 ' + seen.size + ' 种组合');
+  console.log('y2wq Q23  从图上数果子 → 三台天平逐级换算 = 答案 ✓（串数/根数随机，' + seen.size + ' 种组合）');
 }
 
 /* ---------- y2wq-24：阶梯网格——从图上每条边做 DP 数路径 ---------- */

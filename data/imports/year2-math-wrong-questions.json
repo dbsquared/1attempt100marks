@@ -1456,18 +1456,36 @@
      "type": "int",
      "min": 3,
      "max": 9
+    },
+    "p": {
+     "type": "int",
+     "min": 1,
+     "max": 2
+    },
+    "r": {
+     "type": "int",
+     "min": 1,
+     "max": 2
     }
    },
    "derived": {
     "w": "w10*10",
     "W": "m*w",
+    "nb": "p*k",
+    "na": "r*j",
     "ans": "k*j*w",
     "o1": "w",
     "o2": "j*w",
     "o3": "m*w",
-    "o4": "ans+j*w"
+    "o4": "ans+j*w",
+    "plP": "p==1",
+    "uP": "sel(plP,'bunches','bunch')",
+    "plR": "r==1",
+    "uR": "sel(plR,'bananas','banana')"
    },
    "constraints": [
+    "nb <= 4",
+    "na <= 4",
     "j != m",
     "j != k"
    ],
@@ -1483,8 +1501,8 @@
     "correctIndex": 0
    },
    "solution": {
-    "en": "{m} apples weigh {W} g, so 1 apple weighs {W}÷{m}＝{w} g. 1 banana ＝ {j} apples ＝ {j}×{w}＝{j*w} g. 1 bunch of grapes ＝ {k} bananas ＝ {k}×{j*w}＝{ans} g.",
-    "zh": "{m} 个苹果重 {W} 克，所以 1 个苹果 {W}÷{m}＝{w} 克。1 根香蕉 ＝ {j} 个苹果 ＝ {j}×{w}＝{j*w} 克。一串葡萄 ＝ {k} 根香蕉 ＝ {k}×{j*w}＝{ans} 克。"
+    "en": "Third scale: {m} apples ＝ {W} g ⇒ 1 apple ＝ {W}÷{m}＝{w} g. Second scale: {r} {uR} ＝ {na} apples ⇒ each banana ＝ {na}÷{r}＝{j} apples ＝ {j}×{w}＝{j*w} g. First scale: {p} {uP} of grapes ＝ {nb} bananas ⇒ each bunch ＝ {nb}÷{p}＝{k} bananas ＝ {k}×{j*w}＝{ans} g.",
+    "zh": "第三台：{m} 个苹果 ＝ {W} 克 ⇒ 1 个苹果 ＝ {W}÷{m}＝{w} 克。第二台：{r} 根香蕉 ＝ {na} 个苹果 ⇒ 每根香蕉 ＝ {na}÷{r}＝{j} 个苹果 ＝ {j}×{w}＝{j*w} 克。第一台：{p} 串葡萄 ＝ {nb} 根香蕉 ⇒ 每串葡萄 ＝ {nb}÷{p}＝{k} 根香蕉 ＝ {k}×{j*w}＝{ans} 克。"
    },
    "sourceSet": "year2数学错题集锦",
    "originalImage": "assets/originals/seamox-q07.png",
@@ -1496,13 +1514,13 @@
       "l": [
        [
         "grape",
-        1
+        "p"
        ]
       ],
       "r": [
        [
         "banana",
-        "k"
+        "nb"
        ]
       ]
      },
@@ -1510,13 +1528,13 @@
       "l": [
        [
         "banana",
-        1
+        "r"
        ]
       ],
       "r": [
        [
         "apple",
-        "j"
+        "na"
        ]
       ]
      },
@@ -1541,7 +1559,9 @@
     "k": 2,
     "j": 3,
     "m": 2,
-    "w10": 7
+    "w10": 7,
+    "p": 1,
+    "r": 1
    }
   },
   {

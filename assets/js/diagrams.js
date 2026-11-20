@@ -2448,11 +2448,26 @@
 
     /* 天平（Q16）：balances = [{l:[[kind,count]…], r:[[kind,count]…], weight:"140 g"}…]，全部平衡 */
     balance: function (spec, vars) {
-      var bs = spec.balances || [], bw = 150, bh = 186, pad = 8, i;
+      var bs = spec.balances || [], bh = 186, pad = 8, i;
+      function cntOf(items) {
+        var n = 0;
+        (items || []).forEach(function (it) { n += Math.max(0, Math.round(num(it[1], vars))); });
+        return n;
+      }
+      /* 托盘上最多摆几个图标 → 决定图标尺寸、托盘半宽与每台天平的占位宽度，
+         否则「一串葡萄 = 3 根香蕉」「1 根香蕉 = 4 个苹果」这种会画到隔壁天平上。 */
+      var mx = 1;
+      bs.forEach(function (b) { mx = Math.max(mx, cntOf(b.l), cntOf(b.r)); });
+      var icon = mx <= 2 ? 22 : (mx === 3 ? 19 : (mx === 4 ? 17 : 15));
+      var slot = Math.round(icon * 1.5);
+      var half = Math.max(26, Math.round((mx - 1) * slot / 2 + icon / 2) + 8);   // 托盘半宽
+      var arm = Math.max(62, half + 12);
+      /* 托盘比横梁还宽，所以每台天平的占位要把「横梁 + 两侧托盘」都算进去，否则并排时会压到隔壁 */
+      var bw = Math.max(150, 2 * arm + 2 * half + 20);
       var W = Math.round(pad * 2 + Math.max(1, bs.length) * bw), H = Math.round(pad * 2 + bh);
       var s = svgOpen(W, H, 'balance scales');
       for (i = 0; i < bs.length; i++) {
-        var ox = pad + i * bw, cx = ox + bw / 2, beamY = 96, baseY = 168, arm = 62;
+        var ox = pad + i * bw, cx = ox + bw / 2, beamY = 96, baseY = 168;
         var label = bs[i].weight ? (cellText(bs[i].weight, vars) + ' g') : '';
         s += '<rect x="' + (cx - 26) + '" y="' + baseY + '" width="52" height="8" rx="3" fill="#9aa3af" stroke="' + INK + '" stroke-width="1.4"/>';
         s += '<rect x="' + (cx - 4) + '" y="' + beamY + '" width="8" height="' + (baseY - beamY) + '" fill="#9aa3af" stroke="' + INK + '" stroke-width="1.4"/>';
@@ -2461,11 +2476,11 @@
         s += '<line x1="' + (cx - arm) + '" y1="' + beamY + '" x2="' + (cx + arm) + '" y2="' + beamY + '" stroke="' + INK + '" stroke-width="4" stroke-linecap="round"/>';
         s += '<circle cx="' + cx + '" cy="' + beamY + '" r="4" fill="' + INK + '"/>';
         for (var k = 0; k < 2; k++) {
-          var px = cx + (k ? arm : -arm);
-          s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px - 22) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-          s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px + 22) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-          s += '<path d="M' + (px - 26) + ',' + (beamY + 26) + ' L' + (px + 26) + ',' + (beamY + 26) + ' L' + (px + 17) + ',' + (beamY + 36) + ' L' + (px - 17) + ',' + (beamY + 36) + ' Z" fill="#c9d3e0" stroke="' + INK + '" stroke-width="1.6"/>';
-          s += itemRow(px, beamY + 26, k ? bs[i].r : bs[i].l, vars, function () { return label; });
+          var px = cx + (k ? arm : -arm), hw = half;
+          s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px - hw) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<line x1="' + px + '" y1="' + beamY + '" x2="' + (px + hw) + '" y2="' + (beamY + 26) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+          s += '<path d="M' + (px - half) + ',' + (beamY + 26) + ' L' + (px + half) + ',' + (beamY + 26) + ' L' + (px + half - 9) + ',' + (beamY + 36) + ' L' + (px - half + 9) + ',' + (beamY + 36) + ' Z" fill="#c9d3e0" stroke="' + INK + '" stroke-width="1.6"/>';
+          s += itemRow(px, beamY + 26, k ? bs[i].r : bs[i].l, vars, function () { return label; }, icon, slot);
         }
         s += '</g>';
       }
@@ -3817,6 +3832,123 @@
     }
   };
   Object.keys(TYPESy2wq).forEach(function (k) { TYPES[k] = TYPESy2wq[k]; });
+
+  /* ==========================================================================
+   * SEAMO 错题训练（seamox）新增图元
+   * ========================================================================== */
+  var TYPESseamo = {
+
+    /* 圆圈数字阵（Q21）：cells 是二维数组，元素写变量名/数字；null 或 "?" 画成待填空格。
+       不参与任何运算 —— 格子里的数由模板的 derived 算好，这里只负责画。 */
+    circgrid: function (spec, vars) {
+      var cells = spec.cells || [], nr = cells.length, nc = 0, i, j;
+      for (i = 0; i < nr; i++) nc = Math.max(nc, (cells[i] || []).length);
+      if (!nr || !nc) return '';
+      var r = 33, cell = 2 * r + 14, pad = 10;
+      var W = Math.round(pad * 2 + nc * cell - 14), H = Math.round(pad * 2 + nr * cell - 14);
+      var s = svgOpen(W, H, 'grid of numbered circles');
+      for (i = 0; i < nr; i++) {
+        for (j = 0; j < nc; j++) {
+          var raw = (cells[i] || [])[j];
+          var blank = (raw === null || raw === undefined || raw === '' || String(raw) === '?');
+          var cx = Math.round(pad + r + j * cell), cy = Math.round(pad + r + i * cell);
+          var txt = blank ? '?' : cellText(raw, vars);
+          s += '<circle data-u="' + (blank ? 'blank' : 'num') + '" data-r="' + i + '" data-c="' + j + '"' +
+               (blank ? '' : ' data-v="' + esc(txt) + '"') +
+               ' cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + (blank ? '#6cbf72' : '#ffffff') +
+               '" stroke="' + INK + '" stroke-width="2"/>';
+          s += '<text x="' + cx + '" y="' + (cy + (blank ? 11 : 8)) + '" font-size="' + (blank ? 30 : 21) +
+               '" font-weight="700" text-anchor="middle" fill="' + (blank ? '#ffffff' : INK) + '">' + esc(txt) + '</text>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 数三角形（Q10 / Q24）：m 条从「聚焦顶点」出发的塞瓦线，外加一条横切线段。
+       focus="bl"：聚焦左下顶点 B，塞瓦线落在 AC 上，横切线从 AB 上的 Q 连到 C；
+       focus="top"：聚焦顶点 A，塞瓦线落在 BC 上，横切线从 AB 上的 D 连到 C。
+       图上不标任何数字（不泄题）；顶点/分点挂 data-* 供自检脚本按边集复算三角形个数。 */
+    tricount: function (spec, vars) {
+      var m = Math.max(1, Math.min(5, Math.round(num(spec.m, vars) || 2)));
+      var focus = String(spec.focus || 'bl');
+      var W = 430, H = 302, padX = 62, padTop = 30, padBot = 34;
+      var A = [W / 2, padTop], B = [padX, H - padBot], C = [W - padX, H - padBot];
+      var i, s = svgOpen(W, H, 'triangle counting puzzle');
+      function lerp(p, q, t) { return [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t]; }
+      function xy(p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }
+      s += '<polygon data-u="tri" data-m="' + m + '" data-focus="' + esc(focus) + '" points="' + xy(A) + ' ' + xy(C) + ' ' + xy(B) +
+           '" fill="none" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/>';
+      var from = (focus === 'top') ? A : B;
+      var onSeg = (focus === 'top') ? [B, C] : [A, C];
+      for (i = 1; i <= m; i++) {
+        var p = lerp(onSeg[0], onSeg[1], i / (m + 1));
+        s += '<line data-u="cev" data-i="' + i + '" data-x="' + p[0].toFixed(1) + '" data-y="' + p[1].toFixed(1) +
+             '" x1="' + from[0].toFixed(1) + '" y1="' + from[1].toFixed(1) + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) +
+             '" stroke="' + INK + '" stroke-width="2"/>';
+      }
+      var q = lerp(focus === 'top' ? B : A, focus === 'top' ? A : B, 0.5);
+      s += '<line data-u="cross" data-x1="' + q[0].toFixed(1) + '" data-y1="' + q[1].toFixed(1) +
+           '" x1="' + q[0].toFixed(1) + '" y1="' + q[1].toFixed(1) + '" x2="' + C[0] + '" y2="' + C[1] + '" stroke="' + INK + '" stroke-width="2"/>';
+      if (focus === 'top') {
+        var names = ['A', 'B', 'C'], j;
+        var vlines = { A: A, B: B, C: C };
+        for (j = 0; j < 3; j++) {
+          var nm = names[j], vp = vlines[nm], dx = 0, dy = 0;
+          if (nm === 'A') { dy = -12; }
+          if (nm === 'B') { dx = -16; dy = 14; }
+          if (nm === 'C') { dx = 16; dy = 14; }
+          s += '<text data-u="lbl" data-name="' + nm + '" x="' + (vp[0] + dx) + '" y="' + (vp[1] + dy) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + nm + '</text>';
+        }
+        s += '<text data-u="lbl" data-name="D" x="' + (q[0] - 15) + '" y="' + (q[1] + 2) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">D</text>';
+        var lab = ['E', 'F', 'G', 'H', 'I'];
+        for (i = 1; i <= m; i++) {
+          var pp = lerp(B, C, i / (m + 1));
+          s += '<text data-u="lbl" data-name="' + lab[i - 1] + '" x="' + pp[0].toFixed(1) + '" y="' + (pp[1] + 26) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + lab[i - 1] + '</text>';
+        }
+      }
+      s += '</svg>';
+      return s;
+    },
+
+    /* 相遇问题（Q23）：两列车相向而行，下方标出全程距离。图上只给距离，不给速度。 */
+    trainmeet: function (spec, vars) {
+      var d = cellText(spec.d, vars);
+      var W = 470, H = 196, s = svgOpen(W, H, 'two trains ' + d + ' km apart');
+      function loco(cx, cy, dir) {
+        return '<g data-u="train" data-dir="' + dir + '" data-x="' + cx + '" transform="translate(' + cx + ',' + cy + ') scale(' + dir + ',1)">' +
+          '<rect x="-58" y="-6" width="56" height="26" rx="4" fill="#8fc0ec" stroke="' + INK + '" stroke-width="2"/>' +
+          '<rect x="-52" y="-1" width="12" height="10" rx="2" fill="#ffffff" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<rect x="-36" y="-1" width="12" height="10" rx="2" fill="#ffffff" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<rect x="-20" y="-1" width="12" height="10" rx="2" fill="#ffffff" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<rect x="-2" y="-20" width="34" height="40" rx="4" fill="#c8452f" stroke="' + INK + '" stroke-width="2"/>' +
+          '<rect x="4" y="-14" width="12" height="11" rx="2" fill="#ffffff" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<rect x="20" y="-14" width="9" height="11" rx="2" fill="#ffe9a8" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<rect x="-6" y="14" width="34" height="7" rx="2" fill="#8b5a2b" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<circle cx="-46" cy="26" r="6" fill="#4b5563" stroke="' + INK + '" stroke-width="1.6"/>' +
+          '<circle cx="-26" cy="26" r="6" fill="#4b5563" stroke="' + INK + '" stroke-width="1.6"/>' +
+          '<circle cx="6" cy="27" r="7" fill="#4b5563" stroke="' + INK + '" stroke-width="1.6"/>' +
+          '<circle cx="25" cy="27" r="7" fill="#4b5563" stroke="' + INK + '" stroke-width="1.6"/>' +
+          '<circle cx="-40" cy="-26" r="8" fill="#d1d5db" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<circle cx="-26" cy="-34" r="6" fill="#d1d5db" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '<circle cx="-14" cy="-40" r="4" fill="#d1d5db" stroke="' + INK + '" stroke-width="1.2"/>' +
+          '</g>';
+      }
+      s += loco(118, 74, 1);
+      s += loco(352, 74, -1);
+      var y = 152, x1 = 60, x2 = 410;
+      s += '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line data-u="dim" data-d="' + esc(d) + '" x1="' + x1 + '" y1="' + (y - 10) + '" x2="' + x1 + '" y2="' + (y + 10) + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<line x1="' + x2 + '" y1="' + (y - 10) + '" x2="' + x2 + '" y2="' + (y + 10) + '" stroke="' + INK + '" stroke-width="2"/>';
+      s += '<path d="M' + (x1 + 14) + ',' + (y - 6) + ' L' + x1 + ',' + y + ' L' + (x1 + 14) + ',' + (y + 6) + ' Z" fill="' + INK + '"/>';
+      s += '<path d="M' + (x2 - 14) + ',' + (y - 6) + ' L' + x2 + ',' + y + ' L' + (x2 - 14) + ',' + (y + 6) + ' Z" fill="' + INK + '"/>';
+      s += '<rect x="' + (W / 2 - 46) + '" y="' + (y - 15) + '" width="92" height="30" fill="#ffffff"/>';
+      s += '<text x="' + (W / 2) + '" y="' + (y + 7) + '" font-size="18" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(d) + ' km</text>';
+      s += '</svg>';
+      return s;
+    }
+  };
+  Object.keys(TYPESseamo).forEach(function (k) { TYPES[k] = TYPESseamo[k]; });
 
   function render(spec, vars) {
     if (!spec || !spec.type) return '';

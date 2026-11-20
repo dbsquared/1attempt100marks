@@ -3785,13 +3785,13 @@
       }
       /* 横向量线：两端短竖刻度；跨度够大才加箭头（最内层太窄，只留刻度） */
       function dimH(x1, x2, y) {
-        var tk = 6;
-        var d = '<line x1="' + x1.toFixed(1) + '" y1="' + y.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-        d += '<line x1="' + x1.toFixed(1) + '" y1="' + (y - tk) + '" x2="' + x1.toFixed(1) + '" y2="' + (y + tk) + '" stroke="' + INK + '" stroke-width="1.4"/>';
-        d += '<line x1="' + x2.toFixed(1) + '" y1="' + (y - tk) + '" x2="' + x2.toFixed(1) + '" y2="' + (y + tk) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        var tk = 6, yt = (y - tk).toFixed(1), yb = (y + tk).toFixed(1), yy = y.toFixed(1);
+        var d = '<line x1="' + x1.toFixed(1) + '" y1="' + yy + '" x2="' + x2.toFixed(1) + '" y2="' + yy + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<line x1="' + x1.toFixed(1) + '" y1="' + yt + '" x2="' + x1.toFixed(1) + '" y2="' + yb + '" stroke="' + INK + '" stroke-width="1.4"/>';
+        d += '<line x1="' + x2.toFixed(1) + '" y1="' + yt + '" x2="' + x2.toFixed(1) + '" y2="' + yb + '" stroke="' + INK + '" stroke-width="1.4"/>';
         if (x2 - x1 >= 60) {
-          d += '<polygon points="' + x1.toFixed(1) + ',' + y.toFixed(1) + ' ' + (x1 + 9).toFixed(1) + ',' + (y - 4) + ' ' + (x1 + 9).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
-          d += '<polygon points="' + x2.toFixed(1) + ',' + y.toFixed(1) + ' ' + (x2 - 9).toFixed(1) + ',' + (y - 4) + ' ' + (x2 - 9).toFixed(1) + ',' + (y + 4) + '" fill="' + INK + '"/>';
+          d += '<polygon points="' + x1.toFixed(1) + ',' + yy + ' ' + (x1 + 9).toFixed(1) + ',' + (y - 4).toFixed(1) + ' ' + (x1 + 9).toFixed(1) + ',' + (y + 4).toFixed(1) + '" fill="' + INK + '"/>';
+          d += '<polygon points="' + x2.toFixed(1) + ',' + yy + ' ' + (x2 - 9).toFixed(1) + ',' + (y - 4).toFixed(1) + ' ' + (x2 - 9).toFixed(1) + ',' + (y + 4).toFixed(1) + '" fill="' + INK + '"/>';
         }
         return d;
       }

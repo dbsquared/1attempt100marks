@@ -3797,18 +3797,20 @@
       }
       var top = [cy - half(3), cy - half(2), cy - half(1), cy - half(0)];   // 各层顶边（外→内）
       var bot = [cy + half(3), cy + half(2), cy + half(1), cy + half(0)];
-      /* 竖直中轴：最大正方形顶边 → 最内层顶边 */
-      out += '<line x1="' + cx + '" y1="' + top[0].toFixed(1) + '" x2="' + cx + '" y2="' + top[3].toFixed(1) + '" stroke="' + INK + '" stroke-width="1.5"/>';
-      /* 上两段：外↔2 的间距 4s、2↔3 的间距 2s */
+      /* 竖直中轴：最大正方形顶边 → 第 3 层顶边，标「外↔2」「2↔3」两段间距 4s、2s */
+      out += '<line x1="' + cx + '" y1="' + top[0].toFixed(1) + '" x2="' + cx + '" y2="' + top[2].toFixed(1) + '" stroke="' + INK + '" stroke-width="1.5"/>';
       out += numTag(cx, (top[0] + top[1]) / 2, gaps[0], 'gap', INK, 18);
       out += numTag(cx, (top[1] + top[2]) / 2, gaps[1], 'gap', INK, 18);
-      /* 第三段留空，改标「最内层边长」：横向量线正好跨过最内层正方形 */
-      var ySide = (top[2] + top[3]) / 2;
-      out += dimH(cx - half(0), cx + half(0), ySide);
-      out += numTag(cx, ySide, side, 'dim', INK, 15);
-      /* 下段：3↔最内 的间距 s */
+      /* 最内层边长：照原卷版式——横向短量线紧贴最内层正方形上边，两端刻度朝上，数字夹在两刻度之间
+         （量线不穿数字，中轴也停在第 3 层顶边，所以不会互相压住）。 */
+      var sp = half(0), yL = cy - sp - 3.3;
+      out += '<line x1="' + (cx - sp).toFixed(1) + '" y1="' + yL.toFixed(1) + '" x2="' + (cx + sp).toFixed(1) + '" y2="' + yL.toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+      out += '<line x1="' + (cx - sp).toFixed(1) + '" y1="' + (yL - 8).toFixed(1) + '" x2="' + (cx - sp).toFixed(1) + '" y2="' + (yL + 2).toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+      out += '<line x1="' + (cx + sp).toFixed(1) + '" y1="' + (yL - 8).toFixed(1) + '" x2="' + (cx + sp).toFixed(1) + '" y2="' + (yL + 2).toFixed(1) + '" stroke="' + INK + '" stroke-width="1.4"/>';
+      out += '<text data-u="dim" data-v="' + side + '" x="' + cx + '" y="' + (yL - 6).toFixed(1) + '" font-size="15" font-weight="700" text-anchor="middle" fill="' + INK + '">' + side + '</text>';
+      /* 最内层 ↔ 第 3 层之间的间距 s：标在最内层正方形下方（中轴 + 数字） */
       out += '<line x1="' + cx + '" y1="' + bot[3].toFixed(1) + '" x2="' + cx + '" y2="' + bot[2].toFixed(1) + '" stroke="' + INK + '" stroke-width="1.5"/>';
-      out += numTag(cx, (bot[3] + bot[2]) / 2, gaps[2], 'gap', INK, 15);
+      out += numTag(cx, (bot[3] + bot[2]) / 2, gaps[2], 'gap', INK, 14);
       /* 最大正方形边长：贴着底边、仍在其内部的量线 + 红色「?」 */
       var yQ = cy + half(3) - 22;
       out += dimH(cx - half(3), cx + half(3), yQ);

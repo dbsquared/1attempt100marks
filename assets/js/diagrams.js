@@ -3614,9 +3614,11 @@
         }
 
         /* 次要刻度线（细分刻度，无数字标签）：原卷表盘上主刻度之间还有更细的小刻度。
-           minor 给间隔（如 10 g），跳过主刻度位置（那里已画过长刻度）。 */
-        var minor = Math.round(num(sp.minor, vars) || 0);
-        if (minor > 0 && minor < step) {
+           minor 缺省 = step/10（每个主刻度区间分 10 小格，与原卷表盘一致）；
+           也可显式给 minor（如 10 g）覆盖。跳过主刻度位置（那里已画过长刻度）。 */
+        var minorRaw = num(sp.minor, vars);
+        var minor = minorRaw > 0 ? Math.round(minorRaw) : Math.max(1, Math.round(step / 10));
+        if (minor < step) {
           for (var mv = minor; mv < max; mv += minor) {
             if (mv % step === 0) continue;
             var ma = ang(mv), mr1 = R - 12, mr2 = R - 6;

@@ -2003,6 +2003,11 @@ function triGeoCount(lines) {
     const mv = [...String(q.diagramSvg).matchAll(/data-u="scale" data-val="([\d.]+)"/g)];
     chk(mv.length === 1, 'y2wq-06 图上应有 1 台秤，实际 ' + mv.length);
     if (mv.length) chk(parseFloat(mv[0][1]) === q.vars.T, 'y2wq-06 图指针 ' + mv[0][1] + ' ≠ 题干总读数 T=' + q.vars.T);
+    /* 原卷表盘有细分刻度（20 g 一档）：36 条次要刻度线，避开主刻度 */
+    const mnr6 = [...String(q.diagramSvg).matchAll(/data-u="tickminor" data-v="(\d+)"/g)].map(m => +m[1]);
+    chk(mnr6.length === 36, 'y2wq-06 表盘应有 36 条细分刻度（20g 档），实际 ' + mnr6.length);
+    chk(mnr6.every(v => v % 20 === 0 && v % 200 !== 0),
+      'y2wq-06 细分刻度应落在 20g 档且避开主刻度，实际 ' + mnr6.join(','));
   }
   /* y2wq-09：双秤，指针 = s1 / s2（两台读数量分别对齐） */
   const t9 = byId('y2wq-09');
@@ -2020,6 +2025,10 @@ function triGeoCount(lines) {
       'y2wq-09 答案 ' + q.value + ' ≠ (s1-c1*s2)/(b1-c1)=' + ((q.vars.s1 - q.vars.c1 * q.vars.s2) / (q.vars.b1 - q.vars.c1)));
     /* 消元后必须是正整数，且系数确实参数化过（c1≠b1 已由约束保证） */
     chk(Number.isInteger(q.value) && q.value > 0, 'y2wq-09 答案应为正整数，实际 ' + q.value);
+    /* 原卷表盘刻度很密（1 kg 一档）：两台共 72 条次要刻度线，避开主刻度 */
+    const mnr9 = [...String(q.diagramSvg).matchAll(/data-u="tickminor" data-v="(\d+)"/g)].map(m => +m[1]);
+    chk(mnr9.length === 72, 'y2wq-09 两台表盘应有 72 条细分刻度（每台 36 条），实际 ' + mnr9.length);
+    chk(mnr9.every(v => v % 10 !== 0), 'y2wq-09 细分刻度应避开主刻度（主刻度为 10 的倍数）');
   }
   /* y2wq-12：单秤，指针 = m（答案），图上不能把读数漏掉或画错 */
   const t12 = byId('y2wq-12');

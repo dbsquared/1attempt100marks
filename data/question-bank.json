@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "updated": "2026-11-19",
+  "updated": "2026-11-20",
   "note": "内置示例题库。真题模板由 WorkBuddy 从试卷图片识别后生成，写入本文件或通过网页「题库管理」导入。模板字段说明见 PIPELINE.md。",
   "templates": [
     {
@@ -16893,6 +16893,7 @@
         "val": "T",
         "max": 800,
         "step": 200,
+        "minor": 20,
         "unit": "g",
         "item": [
           [
@@ -17105,6 +17106,7 @@
             "val": "s1",
             "max": 40,
             "step": 10,
+            "minor": 1,
             "unit": "kg",
             "item": [
               [
@@ -17121,6 +17123,7 @@
             "val": "s2",
             "max": 40,
             "step": 10,
+            "minor": 1,
             "unit": "kg",
             "item": [
               [

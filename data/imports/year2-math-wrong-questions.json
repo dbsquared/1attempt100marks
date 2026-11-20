@@ -338,6 +338,7 @@
         "val": "T",
         "max": 800,
         "step": 200,
+        "minor": 20,
         "unit": "g",
         "item": [
           [
@@ -550,6 +551,7 @@
             "val": "s1",
             "max": 40,
             "step": 10,
+            "minor": 1,
             "unit": "kg",
             "item": [
               [
@@ -566,6 +568,7 @@
             "val": "s2",
             "max": 40,
             "step": 10,
+            "minor": 1,
             "unit": "kg",
             "item": [
               [

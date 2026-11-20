@@ -17577,7 +17577,7 @@
       "originalFig": "assets/originals/y2wq-q16-fig.jpg"
     },
     {
-      "id": "seamox-q01",
+      "id": "y2wq-17",
       "subject": "数学",
       "topic": "数页码/数字个数",
       "grade": "二年级",
@@ -17622,7 +17622,7 @@
         "en": "Pages 1 to 9 need 9 digits (1 digit each). Pages 10 to {T} are {T-9} pages and need {T-9}×2＝{2*T-18} digits. Altogether: 9＋{2*T-18}＝{ans} digits.",
         "zh": "第 1–9 页每页 1 个数字，共 9 个；第 10–{T} 页一共有 {T-9} 页，每页 2 个数字，共 {T-9}×2＝{2*T-18} 个。合计 9＋{2*T-18}＝{ans} 个数字。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q01.png",
       "noFigure": "原题为纯文字应用题（数页码用到的数字个数），无配图",
       "original": {
@@ -17630,7 +17630,7 @@
       }
     },
     {
-      "id": "seamox-q02",
+      "id": "y2wq-18",
       "subject": "数学",
       "topic": "数列规律",
       "grade": "二年级",
@@ -17675,7 +17675,7 @@
         "en": "Row 1 has 1 number, row 2 has 2, row 3 has 3 … so row {n} has {n} numbers and ends at the {ans}th number of the sequence 1, 2, 3, 4, … The last number of row {n} is 1＋2＋…＋{n}＝{n}×{n+1}÷2＝{ans}.",
         "zh": "第 1 行 1 个数、第 2 行 2 个数、第 3 行 3 个数……所以第 {n} 行有 {n} 个数，行末就是整个数列 1,2,3,4,… 的第 {ans} 个数。第 {n} 行最后一个数 ＝ 1＋2＋…＋{n} ＝ {n}×{n+1}÷2 ＝ {ans}。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q02.png",
       "originalFig": "assets/originals/seamox-q02-fig.png",
       "diagram": {
@@ -17687,7 +17687,7 @@
       }
     },
     {
-      "id": "seamox-q03",
+      "id": "y2wq-19",
       "subject": "数学",
       "topic": "盈亏问题",
       "grade": "二年级",
@@ -17744,7 +17744,7 @@
         "en": "From {a} sweets each to {a1} sweets each, every child takes 1 more sweet. The sweets change from {b} left over to {c} short, a difference of {b+c} sweets, so there are {b+c} children. Sweets ＝ {a}×{b+c}＋{b} ＝ {ans}.",
         "zh": "每人从 {a} 颗变成 {a1} 颗，每人多拿 1 颗；糖果从「剩 {b} 颗」变成「差 {c} 颗」，相差 {b+c} 颗，正好等于人数，所以有 {b+c} 个小朋友。糖果数 ＝ {a}×{b+c}＋{b} ＝ {ans} 颗。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q03.png",
       "noFigure": "原题为纯文字应用题（盈亏问题），无配图",
       "original": {
@@ -17754,7 +17754,7 @@
       }
     },
     {
-      "id": "seamox-q04",
+      "id": "y2wq-20",
       "subject": "数学",
       "topic": "鸡兔同笼",
       "grade": "二年级",
@@ -17812,7 +17812,7 @@
         "en": "If all {N} were chickens there would be 2×{N}＝{2*N} legs. The extra {L-2*N} legs come from the rabbits, 2 extra legs each, so there are {L-2*N}÷2＝{ans} rabbits.",
         "zh": "假设 {N} 只全是鸡，只有 2×{N}＝{2*N} 条腿。实际多了 {L-2*N} 条腿，每只兔比鸡多 2 条腿，所以兔有 {L-2*N}÷2＝{ans} 只。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q04.png",
       "noFigure": "原题为纯文字应用题（鸡兔同笼），无配图",
       "original": {
@@ -17821,7 +17821,7 @@
       }
     },
     {
-      "id": "seamox-q05",
+      "id": "y2wq-21",
       "subject": "数学",
       "topic": "日期与星期",
       "grade": "二年级",
@@ -17896,7 +17896,7 @@
         "en": "February has {dm} days. {dm}÷7 leaves a remainder of {dm-28} day, so the 1st of March is {dm-28} day(s) after the {wn}. That is {wn2}.",
         "zh": "2 月有 {dm} 天，{dm}÷7 余 {dm-28}，所以 3 月 1 日比 2 月 1 日晚 {dm-28} 天，是{wn2Zh}。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q05.png",
       "originalFig": "assets/originals/seamox-q05-fig.png",
       "diagram": {
@@ -17909,7 +17909,7 @@
       }
     },
     {
-      "id": "seamox-q06",
+      "id": "y2wq-22",
       "subject": "数学",
       "topic": "数字方阵规律",
       "grade": "二年级",
@@ -17959,7 +17959,7 @@
         "en": "Going one cell right or one cell down adds {s} (for example {b}→{b+s} and {b+s}→{b+2*s}). The missing cell is two rows down and two columns right of {b}, so it is {b}＋4×{s}＝{ans}.",
         "zh": "每往右一格或往下一格都加 {s}（例如 {b}→{b+s}、{b+s}→{b+2*s}）。缺的那一格在 {b} 的右下两行两列，所以是 {b}＋4×{s}＝{ans}。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q06.png",
       "originalFig": "assets/originals/seamox-q06-fig.png",
       "diagram": {
@@ -17975,7 +17975,7 @@
       }
     },
     {
-      "id": "seamox-q07",
+      "id": "y2wq-23",
       "subject": "数学",
       "topic": "天平代换",
       "grade": "二年级",
@@ -18041,7 +18041,7 @@
         "en": "{m} apples weigh {W} g, so 1 apple weighs {W}÷{m}＝{w} g. 1 banana ＝ {j} apples ＝ {j}×{w}＝{j*w} g. 1 bunch of grapes ＝ {k} bananas ＝ {k}×{j*w}＝{ans} g.",
         "zh": "{m} 个苹果重 {W} 克，所以 1 个苹果 {W}÷{m}＝{w} 克。1 根香蕉 ＝ {j} 个苹果 ＝ {j}×{w}＝{j*w} 克。一串葡萄 ＝ {k} 根香蕉 ＝ {k}×{j*w}＝{ans} 克。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q07.png",
       "originalFig": "assets/originals/seamox-q07-fig.png",
       "diagram": {
@@ -18100,7 +18100,7 @@
       }
     },
     {
-      "id": "seamox-q08",
+      "id": "y2wq-24",
       "subject": "数学",
       "topic": "网格最短路径",
       "grade": "二年级",
@@ -18145,7 +18145,7 @@
         "en": "Use the adding method: write 1 at A, then at every corner write the sum of the numbers on the corners you can come from (left and below). Following the staircase of {n} steps up to B gives {ans} shortest paths.",
         "zh": "用标数法：A 点写 1，之后每个拐点写「能走到它的相邻拐点」上的数之和（左边和下边）。沿着 {n} 级阶梯一路标到 B，得到最短路线 {ans} 条。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q08.png",
       "originalFig": "assets/originals/seamox-q08-fig.png",
       "diagram": {
@@ -18157,7 +18157,7 @@
       }
     },
     {
-      "id": "seamox-q09",
+      "id": "y2wq-25",
       "subject": "数学",
       "topic": "图形叠加规律",
       "grade": "二年级",
@@ -18259,7 +18259,7 @@
         "en": "In every row, lay the first figure on top of the second one — the third figure is exactly what you get (all the lines of both, none left out). In row 3 the first figure is the “5” shape with a vertical line down the middle, the second is the same “5” shape, so their overlay is still that “5” shape with the vertical line: option D.",
         "zh": "每一行把前两格的图形叠在一起，就得到第三格（两条图形的所有线段都保留）。第三行第 1 格是「5」字形再加一条竖直中线，第 2 格是同样的「5」字形，叠加后还是「5」字形带竖中线，所以选 D。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q09.png",
       "originalFig": "assets/originals/seamox-q09-fig.png",
       "diagram": {
@@ -18328,7 +18328,7 @@
       "original": {}
     },
     {
-      "id": "seamox-q10",
+      "id": "y2wq-26",
       "subject": "数学",
       "topic": "数三角形",
       "grade": "二年级",
@@ -18373,7 +18373,7 @@
         "en": "The figure is the triangle plus {m} lines from the bottom-left corner to the right side and 1 line from the left side to the bottom-right corner — {m+4} straight lines in all. Any 3 of them make a triangle except the ones we pick all from the {m+2} lines through the bottom-left corner or all 3 through the bottom-right corner: {m+4}C3 － {m+2}C3 － 1 ＝ {ans}.",
         "zh": "图里一共有 {m+4} 条直线：三角形的三条边、{m} 条从左下顶点连到右边的线、1 条从左边连到右下顶点的线。任取 3 条都能围成三角形，除非这 3 条都过左下顶点（{m+2} 条里取 3 条）或都过右下顶点（3 条里取 3 条）：C({m+4},3) − C({m+2},3) − 1 ＝ {ans} 个。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q10.png",
       "originalFig": "assets/originals/seamox-q10-fig.png",
       "diagram": {
@@ -18386,7 +18386,7 @@
       }
     },
     {
-      "id": "seamox-q11",
+      "id": "y2wq-27",
       "subject": "数学",
       "topic": "抽屉原理",
       "grade": "二年级",
@@ -18451,7 +18451,7 @@
         "en": "Think of the worst luck: he could draw {k-1} balls of every colour — {k-1}×4＝{(k-1)*4} balls — and still not have {k} of one colour. The next ball, number {(k-1)*4+1}, must make {k} of some colour. So he needs {ans} balls.",
         "zh": "想最倒霉的情况：每种颜色都只摸到 {k-1} 个，共 {k-1}×4＝{(k-1)*4} 个，还是没有 {k} 个同色。再摸第 {ans} 个，无论什么颜色都会凑成 {k} 个同色。所以至少要摸 {ans} 个。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q11.png",
       "noFigure": "原题为纯文字应用题（抽屉原理摸球），无配图",
       "original": {
@@ -18464,7 +18464,7 @@
       "unit": "个"
     },
     {
-      "id": "seamox-q12",
+      "id": "y2wq-28",
       "subject": "数学",
       "topic": "解简易方程",
       "grade": "二年级",
@@ -18529,7 +18529,7 @@
         "en": "{A} ÷ {b}＝{A/b}, so {A/b} × ({c} − n)＝{D}. Then {c} − n ＝ {D} ÷ {A/b} ＝ {D/(A/b)}, so n ＝ {c} − {D/(A/b)} ＝ {ans}.",
         "zh": "先算 {A} ÷ {b}＝{A/b}，于是 {A/b} × ({c} − n)＝{D}。所以 {c} − n ＝ {D} ÷ {A/b} ＝ {D/(A/b)}，n ＝ {c} − {D/(A/b)} ＝ {ans}。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q12.png",
       "noFigure": "原题为纯文字算式题，无配图",
       "original": {
@@ -18540,7 +18540,7 @@
       }
     },
     {
-      "id": "seamox-q13",
+      "id": "y2wq-29",
       "subject": "数学",
       "topic": "植树问题",
       "grade": "二年级",
@@ -18590,7 +18590,7 @@
         "en": "{N} pots in a row make only {N-1} gaps (the two end pots do not create a gap outside). {N-1}×{d}＝{ans}, so the corridor is {ans} m long.",
         "zh": "一排 {N} 盆花之间只有 {N-1} 个间隔（最两头的花不再往外形成间隔）。{N-1}×{d}＝{ans}，所以走廊长 {ans} 米。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q13.png",
       "noFigure": "原题为纯文字应用题（等距摆放求总长），无配图",
       "original": {
@@ -18599,7 +18599,7 @@
       }
     },
     {
-      "id": "seamox-q14",
+      "id": "y2wq-30",
       "subject": "数学",
       "topic": "定义新运算",
       "grade": "二年级",
@@ -18697,7 +18697,7 @@
         "en": "Try the examples: {a1}⊙{b1} looks like “the first number times itself, minus the second”. Check: {a2}×{a2}−{b2}＝{r2} ✓ and {a3}×{a3}−{b3}＝{r3} ✓. So a⊙b ＝ a×a − b, and {a4}⊙{b4}＝{a4}×{a4}−{b4}＝{ans}.",
         "zh": "看例子找规律：{a1}⊙{b1} 像是「前一个数自己乘自己，再减去后一个数」。验算：{a2}×{a2}−{b2}＝{r2} ✓，{a3}×{a3}−{b3}＝{r3} ✓。所以 a⊙b ＝ a×a − b，{a4}⊙{b4}＝{a4}×{a4}−{b4}＝{ans}。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q14.png",
       "noFigure": "原题为纯文字定义新运算（三个示例等式即全部信息），无配图",
       "original": {
@@ -18712,713 +18712,7 @@
       }
     },
     {
-      "id": "seamox-q16",
-      "subject": "数学",
-      "topic": "和差/假设法",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "每个女孩 4 个气球、每个男孩 2 个",
-      "tags": [
-        "假设法",
-        "方程",
-        "应用题"
-      ],
-      "source": "SEAMO错题训练 Q16",
-      "stem": {
-        "en": "There were {N} children at a Chinese New Year Party. Each girl was given 4 balloons, each boy was given 2 balloons. Altogether, {T} balloons were given out. How many girls were at the party?",
-        "zh": "春节聚会上有 {N} 个小朋友。每个女孩分到 4 个气球，每个男孩分到 2 个气球，一共分出去 {T} 个气球。聚会上有多少个女孩？"
-      },
-      "vars": {
-        "N": {
-          "type": "int",
-          "min": 10,
-          "max": 20
-        },
-        "g": {
-          "type": "int",
-          "min": 5,
-          "max": 12
-        }
-      },
-      "derived": {
-        "T": "2*N+2*g",
-        "ans": "(T-2*N)/2",
-        "o1": "ans+1",
-        "o2": "ans-1",
-        "o3": "N-ans",
-        "o4": "ans+2"
-      },
-      "constraints": [
-        "2*g != N",
-        "N - 2*g != 0",
-        "N - 2*g != 1",
-        "N - 2*g != 2",
-        "N - 2*g != -1"
-      ],
-      "answer": {
-        "type": "choice",
-        "options": [
-          "{ans}",
-          "{o1}",
-          "{o2}",
-          "{o3}",
-          "{o4}"
-        ],
-        "correctIndex": 0
-      },
-      "solution": {
-        "en": "If all {N} children were boys they would get 2×{N}＝{2*N} balloons. The extra {T-2*N} balloons come from the girls, 2 extra each, so there are {T-2*N}÷2＝{ans} girls.",
-        "zh": "假设 {N} 个全是男孩，只要 2×{N}＝{2*N} 个气球。实际多出的 {T-2*N} 个气球来自女孩，每个女孩比男孩多 2 个，所以女孩有 {T-2*N}÷2＝{ans} 个。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q16.png",
-      "noFigure": "原题为纯文字应用题（气球分配），无配图",
-      "original": {
-        "N": 14,
-        "g": 8
-      }
-    },
-    {
-      "id": "seamox-q17",
-      "subject": "数学",
-      "topic": "数列规律",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "每行个数递增，第 n 行末尾是 n 的平方",
-      "tags": [
-        "找规律",
-        "三角形数列",
-        "平方数"
-      ],
-      "source": "SEAMO错题训练 Q17",
-      "stem": {
-        "en": "Find the last number in row {n}.",
-        "zh": "求第 {n} 行最后一个数。"
-      },
-      "vars": {
-        "n": {
-          "type": "int",
-          "min": 8,
-          "max": 15
-        }
-      },
-      "derived": {
-        "ans": "n*n",
-        "o1": "n*(n+1)/2",
-        "o2": "ans-1",
-        "o3": "ans+1",
-        "o4": "n*(n-1)/2+1"
-      },
-      "answer": {
-        "type": "choice",
-        "options": [
-          "{ans}",
-          "{o1}",
-          "{o2}",
-          "{o3}",
-          "{o4}"
-        ],
-        "correctIndex": 0
-      },
-      "solution": {
-        "en": "Row 1 ends at 1, row 2 at 4, row 3 at 9, row 4 at 16 — the last number of row k is k×k. So row {n} ends at {n}×{n}＝{ans}. (Check: row 3 has 5, 6, 7, 8, 9 — that is 5 numbers, and 9＝3×3.)",
-        "zh": "第 1 行末尾是 1，第 2 行 4，第 3 行 9，第 4 行 16 —— 第 k 行最后一个是 k×k。所以第 {n} 行末尾是 {n}×{n}＝{ans}。（验证：第 3 行是 5、6、7、8、9 共 5 个数，末尾 9＝3×3。）"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q17.png",
-      "originalFig": "assets/originals/seamox-q17-fig.png",
-      "diagram": {
-        "type": "numtri",
-        "rows": "n"
-      },
-      "original": {
-        "n": 12
-      }
-    },
-    {
-      "id": "seamox-q18",
-      "subject": "数学",
-      "topic": "日期与星期",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "从 3 月某日推算 4 月某日是星期几",
-      "tags": [
-        "日期",
-        "星期",
-        "周期"
-      ],
-      "source": "SEAMO错题训练 Q18",
-      "stem": {
-        "en": "The {d1}th of March fell on a {wn}. On which day of the week was the {d2}th of April in that same year? You may use the table to assist you.",
-        "zh": "某年 3 月 {d1} 日是{wnZh}。那一年的 4 月 {d2} 日是星期几？可以借助下面的表格。"
-      },
-      "vars": {
-        "d1": {
-          "type": "int",
-          "min": 4,
-          "max": 20
-        },
-        "d2": {
-          "type": "int",
-          "min": 4,
-          "max": 20
-        },
-        "wd": {
-          "type": "int",
-          "min": 1,
-          "max": 7
-        }
-      },
-      "derived": {
-        "off": "(31-d1)+d2",
-        "rem": "off % 7",
-        "wn": "sel(wd-1,'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')",
-        "wnZh": "sel(wd-1,'星期日','星期一','星期二','星期三','星期四','星期五','星期六')",
-        "wd2": "((wd - 1 + off) % 7) + 1",
-        "wn2": "sel(wd2-1,'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')",
-        "wn2Zh": "sel(wd2-1,'星期日','星期一','星期二','星期三','星期四','星期五','星期六')"
-      },
-      "answer": {
-        "type": "choice",
-        "options": [
-          {
-            "en": "Sunday",
-            "zh": "星期日"
-          },
-          {
-            "en": "Monday",
-            "zh": "星期一"
-          },
-          {
-            "en": "Tuesday",
-            "zh": "星期二"
-          },
-          {
-            "en": "Wednesday",
-            "zh": "星期三"
-          },
-          {
-            "en": "Thursday",
-            "zh": "星期四"
-          },
-          {
-            "en": "Friday",
-            "zh": "星期五"
-          },
-          {
-            "en": "Saturday",
-            "zh": "星期六"
-          }
-        ],
-        "correctIndex": "(wd - 1 + off) % 7"
-      },
-      "solution": {
-        "en": "From {d1} March to {d2} April: (31−{d1})＋{d2}＝{off} days. {off}÷7 leaves a remainder of {rem}, so the weekday moves on by {rem} day(s) from {wn}: that is {wn2}.",
-        "zh": "从 3 月 {d1} 日到 4 月 {d2} 日一共 (31−{d1})＋{d2}＝{off} 天。{off}÷7 余 {rem}，所以星期要从{wnZh}往后推 {rem} 天，是{wn2Zh}。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q18.png",
-      "originalFig": "assets/originals/seamox-q18-fig.png",
-      "diagram": {
-        "type": "calgrid",
-        "rows": 5
-      },
-      "original": {
-        "d1": 12,
-        "d2": 5,
-        "wd": 7
-      }
-    },
-    {
-      "id": "seamox-q19",
-      "subject": "数学",
-      "topic": "盈亏问题",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "每人 10 颗剩 3 颗、每人 11 颗差 2 颗",
-      "tags": [
-        "盈亏问题",
-        "应用题",
-        "整数解"
-      ],
-      "source": "SEAMO错题训练 Q19",
-      "stem": {
-        "en": "A teacher has a bag of sweets. If she gives each student {a} sweets, {b} sweets will remain. If she wishes to give each student {a1} sweets, she will be short of {c} sweets. How many sweets does the teacher have?",
-        "zh": "老师有一袋糖。如果每个学生分 {a} 颗，还会剩下 {b} 颗；如果每个学生分 {a1} 颗，就还差 {c} 颗。老师一共有多少颗糖？"
-      },
-      "vars": {
-        "a": {
-          "type": "int",
-          "min": 8,
-          "max": 14
-        },
-        "b": {
-          "type": "int",
-          "min": 2,
-          "max": 6
-        },
-        "c": {
-          "type": "int",
-          "min": 2,
-          "max": 6
-        }
-      },
-      "derived": {
-        "a1": "a+1",
-        "ch": "b+c",
-        "ans": "a*ch+b",
-        "o1": "a*ch",
-        "o2": "ans-1",
-        "o3": "ans+1",
-        "o4": "ans+b"
-      },
-      "answer": {
-        "type": "choice",
-        "options": [
-          "{ans}",
-          "{o1}",
-          "{o2}",
-          "{o3}",
-          "{o4}"
-        ],
-        "correctIndex": 0
-      },
-      "solution": {
-        "en": "Each student gets 1 more sweet, and the sweets go from {b} left over to {c} short — a difference of {b+c} sweets. That difference is exactly 1 sweet per student, so there are {b+c} students. Sweets ＝ {a}×{b+c}＋{b} ＝ {ans}.",
-        "zh": "每个学生多分 1 颗，糖果就从「剩 {b} 颗」变成「差 {c} 颗」，相差 {b+c} 颗。这个差正好是每人多分的 1 颗，所以有 {b+c} 个学生。糖果数 ＝ {a}×{b+c}＋{b} ＝ {ans} 颗。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q19.png",
-      "noFigure": "原题为纯文字应用题（盈亏问题），无配图",
-      "original": {
-        "a": 10,
-        "b": 3,
-        "c": 2
-      }
-    },
-    {
-      "id": "seamox-q20",
-      "subject": "数学",
-      "topic": "抽屉原理",
-      "grade": "二年级",
-      "difficulty": 4,
-      "title": "四种颜色的球，至少摸几个才有 3 个同色",
-      "tags": [
-        "抽屉原理",
-        "最不利原则",
-        "摸球"
-      ],
-      "source": "SEAMO错题训练 Q20",
-      "stem": {
-        "en": "There are {c1} red balls, {c2} green balls, {c3} yellow balls and {c4} white {plu} in a bag. Jane is blindfolded. At least how many balls must she remove from the bag to guarantee she has drawn 3 balls of the same colour?",
-        "zh": "袋子里有 {c1} 个红球、{c2} 个绿球、{c3} 个黄球和 {c4} 个白球。简蒙着眼睛摸球。她至少要摸出多少个球，才能保证其中一定有 3 个同色的球？"
-      },
-      "vars": {
-        "c1": {
-          "type": "int",
-          "min": 4,
-          "max": 7
-        },
-        "c2": {
-          "type": "int",
-          "min": 3,
-          "max": 6
-        },
-        "c3": {
-          "type": "int",
-          "min": 2,
-          "max": 4
-        },
-        "c4": {
-          "type": "int",
-          "min": 1,
-          "max": 2
-        }
-      },
-      "derived": {
-        "plu": "sel(c4==1,'balls','ball')",
-        "ans": "2*(c1>=2)+c1*(c1<2)+2*(c2>=2)+c2*(c2<2)+2*(c3>=2)+c3*(c3<2)+2*(c4>=2)+c4*(c4<2)+1",
-        "o1": "ans-1",
-        "o2": "ans-2",
-        "o3": "ans-3"
-      },
-      "answer": {
-        "type": "choice",
-        "options": [
-          "{ans}",
-          "{o1}",
-          "{o2}",
-          "{o3}",
-          {
-            "en": "None of the above",
-            "zh": "以上都不是"
-          }
-        ],
-        "correctIndex": 0
-      },
-      "solution": {
-        "en": "Worst luck: take as many as possible without having 3 of one colour — at most 2 red, 2 green, 2 yellow, and {c4} white (there are only {c4}). That is 2＋2＋2＋{c4}＝{ans-1} balls. The next ball must give 3 of one colour, so {ans} balls are needed.",
-        "zh": "最不利的情况：尽量不凑出 3 个同色 —— 红、绿、黄各最多 2 个，白球只有 {c4} 个全摸到，一共 2＋2＋2＋{c4}＝{ans-1} 个。再摸 1 个必定凑成 3 个同色，所以要摸 {ans} 个。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q20.png",
-      "noFigure": "原题为纯文字应用题（抽屉原理摸球），无配图",
-      "original": {
-        "c1": 5,
-        "c2": 4,
-        "c3": 2,
-        "c4": 1
-      }
-    },
-    {
-      "id": "seamox-q21",
-      "subject": "数学",
-      "topic": "数字方阵规律",
-      "grade": "二年级",
-      "difficulty": 4,
-      "title": "三行数字方阵，每列相邻两行的差递增",
-      "tags": [
-        "找规律",
-        "方阵",
-        "差值"
-      ],
-      "source": "SEAMO错题训练 Q21",
-      "stem": {
-        "en": "Find the missing number.",
-        "zh": "求缺少的那个数。"
-      },
-      "vars": {
-        "k": {
-          "type": "int",
-          "min": 2,
-          "max": 4
-        },
-        "a1": {
-          "type": "int",
-          "min": 50,
-          "max": 80
-        },
-        "a2": {
-          "type": "int",
-          "min": 40,
-          "max": 70
-        },
-        "a3": {
-          "type": "int",
-          "min": 60,
-          "max": 90
-        }
-      },
-      "derived": {
-        "b1": "a1-k",
-        "b2": "a2-2*k",
-        "b3": "a3-3*k",
-        "c1": "a1-5*k",
-        "c2": "a2-7*k",
-        "ans": "a3-9*k",
-        "o1": "ans+2",
-        "o2": "ans-1",
-        "o3": "ans-3"
-      },
-      "constraints": [
-        "a1-5*k >= 5",
-        "a2-7*k >= 5",
-        "a3-9*k >= 5"
-      ],
-      "answer": {
-        "type": "choice",
-        "options": [
-          "{ans}",
-          "{o1}",
-          "{o2}",
-          "{o3}",
-          {
-            "en": "None of the above",
-            "zh": "以上都不是"
-          }
-        ],
-        "correctIndex": 0
-      },
-      "solution": {
-        "en": "Look at each column from the top row down. Col 1 drops by {k}, then by {3*k}＋{k}＝{4*k}; col 2 drops by {2*k}, then by {3*k}＋{2*k}＝{5*k}; col 3 drops by {3*k}, then by {3*k}＋{3*k}＝{6*k}. So the missing number is {a3}−{3*k}−{6*k}＝{ans}.",
-        "zh": "按列从上往下看：第 1 列先减 {k}、再减 {3*k}＋{k}＝{4*k}；第 2 列先减 {2*k}、再减 {3*k}＋{2*k}＝{5*k}；第 3 列先减 {3*k}、再减 {3*k}＋{3*k}＝{6*k}。所以缺的数是 {a3}−{3*k}−{6*k}＝{ans}。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q21.png",
-      "originalFig": "assets/originals/seamox-q21-fig.png",
-      "diagram": {
-        "type": "circgrid",
-        "cells": [
-          [
-            "a1",
-            "a2",
-            "a3"
-          ],
-          [
-            "b1",
-            "b2",
-            "b3"
-          ],
-          [
-            "c1",
-            "c2",
-            "?"
-          ]
-        ]
-      },
-      "original": {
-        "k": 3,
-        "a1": 41,
-        "a2": 37,
-        "a3": 53
-      }
-    },
-    {
-      "id": "seamox-q22",
-      "subject": "数学",
-      "topic": "余数与周期",
-      "grade": "二年级",
-      "difficulty": 4,
-      "title": "除以 5 余 4、除以 3 余 2、除以 2 余 1",
-      "tags": [
-        "余数",
-        "公倍数",
-        "不定方程"
-      ],
-      "source": "SEAMO错题训练 Q22",
-      "stem": {
-        "en": "When n is divided by 5, the remainder is 4. When n is divided by 3, the remainder is 2. When n is divided by 2, the remainder is 1. Given that {hi} > n > {lo}, find n.",
-        "zh": "n 除以 5 余 4，除以 3 余 2，除以 2 余 1。已知 {hi} > n > {lo}，求 n。"
-      },
-      "vars": {
-        "m": {
-          "type": "int",
-          "min": 2,
-          "max": 4
-        }
-      },
-      "derived": {
-        "lo": "30*m-9",
-        "hi": "30*m+9",
-        "ans": "30*m-1"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "ans",
-        "sanity": {
-          "integer": true,
-          "min": 10
-        }
-      },
-      "solution": {
-        "en": "Each remainder is exactly 1 less than its divisor, so n＋1 is a multiple of 5, of 3 and of 2 — that is a multiple of 30. In the range {lo} to {hi} the only multiple of 30 is {30*m}, so n ＝ {30*m} − 1 ＝ {ans}. Check: {ans}÷5 leaves 4, {ans}÷3 leaves 2, {ans}÷2 leaves 1.",
-        "zh": "每个余数都比除数少 1，所以 n＋1 同时是 5、3、2 的倍数，也就是 30 的倍数。在 {lo} 到 {hi} 之间只有 {30*m} 是 30 的倍数，所以 n ＝ {30*m} − 1 ＝ {ans}。检验：{ans}÷5 余 4、÷3 余 2、÷2 余 1。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q22.png",
-      "noFigure": "原题为纯文字余数题（条件即全部信息），无配图",
-      "original": {
-        "m": 2
-      }
-    },
-    {
-      "id": "seamox-q23",
-      "subject": "数学",
-      "topic": "相遇问题",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "两列火车相向而行，几小时相遇",
-      "tags": [
-        "行程问题",
-        "相遇",
-        "速度和"
-      ],
-      "source": "SEAMO错题训练 Q23",
-      "stem": {
-        "en": "The distance between 2 train stations, A and B, is {D} km. A train travels from A at a speed of {v1} km/h. Another train travels from B at the same time. What is the speed, in km/h, of the 2nd train, if the two trains meet {t} hours later?",
-        "zh": "A、B 两个火车站相距 {D} 千米。一列火车以每小时 {v1} 千米的速度从 A 站开出，另一列火车同时从 B 站开出。两车 {t} 小时后相遇，第二列火车的速度是每小时多少千米？"
-      },
-      "vars": {
-        "t": {
-          "type": "int",
-          "min": 6,
-          "max": 10
-        },
-        "v1": {
-          "type": "int",
-          "min": 40,
-          "max": 70
-        },
-        "v2": {
-          "type": "int",
-          "min": 40,
-          "max": 70
-        }
-      },
-      "derived": {
-        "D": "(v1+v2)*t",
-        "ans": "v2"
-      },
-      "constraints": [
-        "v1 != v2"
-      ],
-      "answer": {
-        "type": "integer",
-        "expr": "ans",
-        "unit": "千米/时",
-        "sanity": {
-          "integer": true,
-          "min": 10
-        }
-      },
-      "solution": {
-        "en": "The two trains together cover {D} km in {t} hours, so their speeds add up to {D}÷{t}＝{v1+v2} km/h. The 2nd train goes {v1+v2}−{v1}＝{ans} km/h.",
-        "zh": "两车 {t} 小时一共走了 {D} 千米，所以速度和是 {D}÷{t}＝{v1+v2} 千米/时。第二列火车的速度 ＝ {v1+v2}−{v1}＝{ans} 千米/时。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q23.png",
-      "originalFig": "assets/originals/seamox-q23-fig.png",
-      "diagram": {
-        "type": "trainmeet",
-        "d": "D"
-      },
-      "original": {
-        "t": 8,
-        "v1": 52,
-        "v2": 53
-      },
-      "unit": "千米/时"
-    },
-    {
-      "id": "seamox-q24",
-      "subject": "数学",
-      "topic": "数三角形",
-      "grade": "二年级",
-      "difficulty": 5,
-      "title": "带字母标注的三角形里数三角形",
-      "tags": [
-        "数图形",
-        "三角形",
-        "组合计数"
-      ],
-      "source": "SEAMO错题训练 Q24",
-      "stem": {
-        "en": "How many triangles are there in the figure below?",
-        "zh": "下图一共有多少个三角形？"
-      },
-      "vars": {
-        "m": {
-          "type": "int",
-          "min": 1,
-          "max": 3
-        }
-      },
-      "derived": {
-        "ans": "(m+4)*(m+3)*(m+2)/6 - (m+2)*(m+1)*m/6 - 1"
-      },
-      "answer": {
-        "type": "integer",
-        "expr": "ans",
-        "unit": "个",
-        "sanity": {
-          "integer": true,
-          "min": 1
-        }
-      },
-      "solution": {
-        "en": "Altogether there are {m+4} straight lines: AB, BC, CA, the {m} lines from A to the bottom side, and DC. Three lines make a triangle unless all three pass through one point. The {m+2} lines through A give C({m+2},3) bad choices and the 3 lines through C give 1 more, so the number of triangles is C({m+4},3) − C({m+2},3) − 1 ＝ {ans}.",
-        "zh": "图里一共有 {m+4} 条直线：AB、BC、CA、从 A 连到底边的 {m} 条线，以及 DC。任取 3 条就能围成一个三角形，除非这 3 条都过同一个点。过 A 的 {m+2} 条线里取 3 条要排除，过 C 的 3 条线也排除 1 组，所以三角形个数 ＝ C({m+4},3) − C({m+2},3) − 1 ＝ {ans} 个。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q24.png",
-      "originalFig": "assets/originals/seamox-q24-fig.png",
-      "diagram": {
-        "type": "tricount",
-        "m": "m",
-        "focus": "top"
-      },
-      "original": {
-        "m": 2
-      },
-      "unit": "个"
-    },
-    {
-      "id": "seamox-q25",
-      "subject": "数学",
-      "topic": "逆推还原",
-      "grade": "二年级",
-      "difficulty": 3,
-      "title": "加、乘、减、除之后得到 7，原数是多少",
-      "tags": [
-        "逆运算",
-        "还原",
-        "四则运算"
-      ],
-      "source": "SEAMO错题训练 Q25",
-      "stem": {
-        "en": "{a} is added to a number m. The result of the addition is multiplied by {b}. {c} is subtracted from the result of the multiplication. The result is {e} when it is finally divided by {d}. What is m?",
-        "zh": "一个数 m 先加上 {a}，所得的和再乘 {b}，所得的积再减去 {c}，最后除以 {d} 得到 {e}。m 是多少？"
-      },
-      "vars": {
-        "a": {
-          "type": "int",
-          "min": 3,
-          "max": 9
-        },
-        "b": {
-          "type": "int",
-          "min": 2,
-          "max": 9
-        },
-        "d": {
-          "type": "int",
-          "min": 2,
-          "max": 9
-        },
-        "e": {
-          "type": "int",
-          "min": 2,
-          "max": 9
-        },
-        "x": {
-          "type": "int",
-          "min": 1,
-          "max": 9
-        }
-      },
-      "derived": {
-        "c": "(x+a)*b - e*d",
-        "ans": "x"
-      },
-      "constraints": [
-        "c >= 1",
-        "c <= 60"
-      ],
-      "answer": {
-        "type": "integer",
-        "expr": "ans",
-        "sanity": {
-          "integer": true,
-          "min": 1
-        }
-      },
-      "solution": {
-        "en": "Work backwards. Before the last division the number was {e}×{d}＝{e*d}. Before subtracting {c} it was {e*d}＋{c}＝{e*d+c}. Before multiplying by {b} it was {e*d+c}÷{b}＝{x+a}. So m ＝ {x+a}−{a}＝{ans}.",
-        "zh": "倒着推。最后一步除以 {d} 之前是 {e}×{d}＝{e*d}；减去 {c} 之前是 {e*d}＋{c}＝{e*d+c}；乘 {b} 之前是 {e*d+c}÷{b}＝{x+a}。所以 m ＝ {x+a}−{a}＝{ans}。"
-      },
-      "sourceSet": "SEAMO错题训练",
-      "originalImage": "assets/originals/seamox-q25.png",
-      "noFigure": "原题为纯文字还原题（四步运算即全部信息），无配图",
-      "original": {
-        "a": 7,
-        "b": 7,
-        "d": 7,
-        "e": 7,
-        "x": 1
-      }
-    },
-    {
-      "id": "seamox-q15",
+      "id": "y2wq-31",
       "subject": "数学",
       "topic": "数字规律",
       "grade": "二年级",
@@ -19498,7 +18792,7 @@
         "en": "Read the three triangles as one table. Top row: {t1}+{t2}+{t3} = {S}. Bottom-left row: {l1}+{l2}+{l3} = {S}. So the three numbers in the same position always add up to {S}. The bottom-right row must also give {S}, and {r1}+{r2} = {r1+r2}, so the missing number is {S}-{r1+r2} = {ans}.",
         "zh": "把三组三角形当成一张表看：上面一行 {t1}+{t2}+{t3}={S}，左下这一行 {l1}+{l2}+{l3}={S}，也就是「同一个位置」上的三个数加起来总是 {S}。右下这一行同样要等于 {S}，而 {r1}+{r2}={r1+r2}，所以缺的数是 {S}-{r1+r2}={ans}。"
       },
-      "sourceSet": "SEAMO错题训练",
+      "sourceSet": "year2数学错题集锦",
       "originalImage": "assets/originals/seamox-q15.png",
       "originalFig": "assets/originals/seamox-q15-fig.png",
       "diagram": {
@@ -19527,6 +18821,712 @@
         "l2": 8,
         "r1": 11,
         "r2": 3
+      }
+    },
+    {
+      "id": "y2wq-32",
+      "subject": "数学",
+      "topic": "和差/假设法",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "每个女孩 4 个气球、每个男孩 2 个",
+      "tags": [
+        "假设法",
+        "方程",
+        "应用题"
+      ],
+      "source": "SEAMO错题训练 Q16",
+      "stem": {
+        "en": "There were {N} children at a Chinese New Year Party. Each girl was given 4 balloons, each boy was given 2 balloons. Altogether, {T} balloons were given out. How many girls were at the party?",
+        "zh": "春节聚会上有 {N} 个小朋友。每个女孩分到 4 个气球，每个男孩分到 2 个气球，一共分出去 {T} 个气球。聚会上有多少个女孩？"
+      },
+      "vars": {
+        "N": {
+          "type": "int",
+          "min": 10,
+          "max": 20
+        },
+        "g": {
+          "type": "int",
+          "min": 5,
+          "max": 12
+        }
+      },
+      "derived": {
+        "T": "2*N+2*g",
+        "ans": "(T-2*N)/2",
+        "o1": "ans+1",
+        "o2": "ans-1",
+        "o3": "N-ans",
+        "o4": "ans+2"
+      },
+      "constraints": [
+        "2*g != N",
+        "N - 2*g != 0",
+        "N - 2*g != 1",
+        "N - 2*g != 2",
+        "N - 2*g != -1"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{ans}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "If all {N} children were boys they would get 2×{N}＝{2*N} balloons. The extra {T-2*N} balloons come from the girls, 2 extra each, so there are {T-2*N}÷2＝{ans} girls.",
+        "zh": "假设 {N} 个全是男孩，只要 2×{N}＝{2*N} 个气球。实际多出的 {T-2*N} 个气球来自女孩，每个女孩比男孩多 2 个，所以女孩有 {T-2*N}÷2＝{ans} 个。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q16.png",
+      "noFigure": "原题为纯文字应用题（气球分配），无配图",
+      "original": {
+        "N": 14,
+        "g": 8
+      }
+    },
+    {
+      "id": "y2wq-33",
+      "subject": "数学",
+      "topic": "数列规律",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "每行个数递增，第 n 行末尾是 n 的平方",
+      "tags": [
+        "找规律",
+        "三角形数列",
+        "平方数"
+      ],
+      "source": "SEAMO错题训练 Q17",
+      "stem": {
+        "en": "Find the last number in row {n}.",
+        "zh": "求第 {n} 行最后一个数。"
+      },
+      "vars": {
+        "n": {
+          "type": "int",
+          "min": 8,
+          "max": 15
+        }
+      },
+      "derived": {
+        "ans": "n*n",
+        "o1": "n*(n+1)/2",
+        "o2": "ans-1",
+        "o3": "ans+1",
+        "o4": "n*(n-1)/2+1"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{ans}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Row 1 ends at 1, row 2 at 4, row 3 at 9, row 4 at 16 — the last number of row k is k×k. So row {n} ends at {n}×{n}＝{ans}. (Check: row 3 has 5, 6, 7, 8, 9 — that is 5 numbers, and 9＝3×3.)",
+        "zh": "第 1 行末尾是 1，第 2 行 4，第 3 行 9，第 4 行 16 —— 第 k 行最后一个是 k×k。所以第 {n} 行末尾是 {n}×{n}＝{ans}。（验证：第 3 行是 5、6、7、8、9 共 5 个数，末尾 9＝3×3。）"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q17.png",
+      "originalFig": "assets/originals/seamox-q17-fig.png",
+      "diagram": {
+        "type": "numtri",
+        "rows": "n"
+      },
+      "original": {
+        "n": 12
+      }
+    },
+    {
+      "id": "y2wq-34",
+      "subject": "数学",
+      "topic": "日期与星期",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "从 3 月某日推算 4 月某日是星期几",
+      "tags": [
+        "日期",
+        "星期",
+        "周期"
+      ],
+      "source": "SEAMO错题训练 Q18",
+      "stem": {
+        "en": "The {d1}th of March fell on a {wn}. On which day of the week was the {d2}th of April in that same year? You may use the table to assist you.",
+        "zh": "某年 3 月 {d1} 日是{wnZh}。那一年的 4 月 {d2} 日是星期几？可以借助下面的表格。"
+      },
+      "vars": {
+        "d1": {
+          "type": "int",
+          "min": 4,
+          "max": 20
+        },
+        "d2": {
+          "type": "int",
+          "min": 4,
+          "max": 20
+        },
+        "wd": {
+          "type": "int",
+          "min": 1,
+          "max": 7
+        }
+      },
+      "derived": {
+        "off": "(31-d1)+d2",
+        "rem": "off % 7",
+        "wn": "sel(wd-1,'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')",
+        "wnZh": "sel(wd-1,'星期日','星期一','星期二','星期三','星期四','星期五','星期六')",
+        "wd2": "((wd - 1 + off) % 7) + 1",
+        "wn2": "sel(wd2-1,'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday')",
+        "wn2Zh": "sel(wd2-1,'星期日','星期一','星期二','星期三','星期四','星期五','星期六')"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          {
+            "en": "Sunday",
+            "zh": "星期日"
+          },
+          {
+            "en": "Monday",
+            "zh": "星期一"
+          },
+          {
+            "en": "Tuesday",
+            "zh": "星期二"
+          },
+          {
+            "en": "Wednesday",
+            "zh": "星期三"
+          },
+          {
+            "en": "Thursday",
+            "zh": "星期四"
+          },
+          {
+            "en": "Friday",
+            "zh": "星期五"
+          },
+          {
+            "en": "Saturday",
+            "zh": "星期六"
+          }
+        ],
+        "correctIndex": "(wd - 1 + off) % 7"
+      },
+      "solution": {
+        "en": "From {d1} March to {d2} April: (31−{d1})＋{d2}＝{off} days. {off}÷7 leaves a remainder of {rem}, so the weekday moves on by {rem} day(s) from {wn}: that is {wn2}.",
+        "zh": "从 3 月 {d1} 日到 4 月 {d2} 日一共 (31−{d1})＋{d2}＝{off} 天。{off}÷7 余 {rem}，所以星期要从{wnZh}往后推 {rem} 天，是{wn2Zh}。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q18.png",
+      "originalFig": "assets/originals/seamox-q18-fig.png",
+      "diagram": {
+        "type": "calgrid",
+        "rows": 5
+      },
+      "original": {
+        "d1": 12,
+        "d2": 5,
+        "wd": 7
+      }
+    },
+    {
+      "id": "y2wq-35",
+      "subject": "数学",
+      "topic": "盈亏问题",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "每人 10 颗剩 3 颗、每人 11 颗差 2 颗",
+      "tags": [
+        "盈亏问题",
+        "应用题",
+        "整数解"
+      ],
+      "source": "SEAMO错题训练 Q19",
+      "stem": {
+        "en": "A teacher has a bag of sweets. If she gives each student {a} sweets, {b} sweets will remain. If she wishes to give each student {a1} sweets, she will be short of {c} sweets. How many sweets does the teacher have?",
+        "zh": "老师有一袋糖。如果每个学生分 {a} 颗，还会剩下 {b} 颗；如果每个学生分 {a1} 颗，就还差 {c} 颗。老师一共有多少颗糖？"
+      },
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 8,
+          "max": 14
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        },
+        "c": {
+          "type": "int",
+          "min": 2,
+          "max": 6
+        }
+      },
+      "derived": {
+        "a1": "a+1",
+        "ch": "b+c",
+        "ans": "a*ch+b",
+        "o1": "a*ch",
+        "o2": "ans-1",
+        "o3": "ans+1",
+        "o4": "ans+b"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{ans}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          "{o4}"
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Each student gets 1 more sweet, and the sweets go from {b} left over to {c} short — a difference of {b+c} sweets. That difference is exactly 1 sweet per student, so there are {b+c} students. Sweets ＝ {a}×{b+c}＋{b} ＝ {ans}.",
+        "zh": "每个学生多分 1 颗，糖果就从「剩 {b} 颗」变成「差 {c} 颗」，相差 {b+c} 颗。这个差正好是每人多分的 1 颗，所以有 {b+c} 个学生。糖果数 ＝ {a}×{b+c}＋{b} ＝ {ans} 颗。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q19.png",
+      "noFigure": "原题为纯文字应用题（盈亏问题），无配图",
+      "original": {
+        "a": 10,
+        "b": 3,
+        "c": 2
+      }
+    },
+    {
+      "id": "y2wq-36",
+      "subject": "数学",
+      "topic": "抽屉原理",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "四种颜色的球，至少摸几个才有 3 个同色",
+      "tags": [
+        "抽屉原理",
+        "最不利原则",
+        "摸球"
+      ],
+      "source": "SEAMO错题训练 Q20",
+      "stem": {
+        "en": "There are {c1} red balls, {c2} green balls, {c3} yellow balls and {c4} white {plu} in a bag. Jane is blindfolded. At least how many balls must she remove from the bag to guarantee she has drawn 3 balls of the same colour?",
+        "zh": "袋子里有 {c1} 个红球、{c2} 个绿球、{c3} 个黄球和 {c4} 个白球。简蒙着眼睛摸球。她至少要摸出多少个球，才能保证其中一定有 3 个同色的球？"
+      },
+      "vars": {
+        "c1": {
+          "type": "int",
+          "min": 4,
+          "max": 7
+        },
+        "c2": {
+          "type": "int",
+          "min": 3,
+          "max": 6
+        },
+        "c3": {
+          "type": "int",
+          "min": 2,
+          "max": 4
+        },
+        "c4": {
+          "type": "int",
+          "min": 1,
+          "max": 2
+        }
+      },
+      "derived": {
+        "plu": "sel(c4==1,'balls','ball')",
+        "ans": "2*(c1>=2)+c1*(c1<2)+2*(c2>=2)+c2*(c2<2)+2*(c3>=2)+c3*(c3<2)+2*(c4>=2)+c4*(c4<2)+1",
+        "o1": "ans-1",
+        "o2": "ans-2",
+        "o3": "ans-3"
+      },
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{ans}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          {
+            "en": "None of the above",
+            "zh": "以上都不是"
+          }
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Worst luck: take as many as possible without having 3 of one colour — at most 2 red, 2 green, 2 yellow, and {c4} white (there are only {c4}). That is 2＋2＋2＋{c4}＝{ans-1} balls. The next ball must give 3 of one colour, so {ans} balls are needed.",
+        "zh": "最不利的情况：尽量不凑出 3 个同色 —— 红、绿、黄各最多 2 个，白球只有 {c4} 个全摸到，一共 2＋2＋2＋{c4}＝{ans-1} 个。再摸 1 个必定凑成 3 个同色，所以要摸 {ans} 个。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q20.png",
+      "noFigure": "原题为纯文字应用题（抽屉原理摸球），无配图",
+      "original": {
+        "c1": 5,
+        "c2": 4,
+        "c3": 2,
+        "c4": 1
+      }
+    },
+    {
+      "id": "y2wq-37",
+      "subject": "数学",
+      "topic": "数字方阵规律",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "三行数字方阵，每列相邻两行的差递增",
+      "tags": [
+        "找规律",
+        "方阵",
+        "差值"
+      ],
+      "source": "SEAMO错题训练 Q21",
+      "stem": {
+        "en": "Find the missing number.",
+        "zh": "求缺少的那个数。"
+      },
+      "vars": {
+        "k": {
+          "type": "int",
+          "min": 2,
+          "max": 4
+        },
+        "a1": {
+          "type": "int",
+          "min": 50,
+          "max": 80
+        },
+        "a2": {
+          "type": "int",
+          "min": 40,
+          "max": 70
+        },
+        "a3": {
+          "type": "int",
+          "min": 60,
+          "max": 90
+        }
+      },
+      "derived": {
+        "b1": "a1-k",
+        "b2": "a2-2*k",
+        "b3": "a3-3*k",
+        "c1": "a1-5*k",
+        "c2": "a2-7*k",
+        "ans": "a3-9*k",
+        "o1": "ans+2",
+        "o2": "ans-1",
+        "o3": "ans-3"
+      },
+      "constraints": [
+        "a1-5*k >= 5",
+        "a2-7*k >= 5",
+        "a3-9*k >= 5"
+      ],
+      "answer": {
+        "type": "choice",
+        "options": [
+          "{ans}",
+          "{o1}",
+          "{o2}",
+          "{o3}",
+          {
+            "en": "None of the above",
+            "zh": "以上都不是"
+          }
+        ],
+        "correctIndex": 0
+      },
+      "solution": {
+        "en": "Look at each column from the top row down. Col 1 drops by {k}, then by {3*k}＋{k}＝{4*k}; col 2 drops by {2*k}, then by {3*k}＋{2*k}＝{5*k}; col 3 drops by {3*k}, then by {3*k}＋{3*k}＝{6*k}. So the missing number is {a3}−{3*k}−{6*k}＝{ans}.",
+        "zh": "按列从上往下看：第 1 列先减 {k}、再减 {3*k}＋{k}＝{4*k}；第 2 列先减 {2*k}、再减 {3*k}＋{2*k}＝{5*k}；第 3 列先减 {3*k}、再减 {3*k}＋{3*k}＝{6*k}。所以缺的数是 {a3}−{3*k}−{6*k}＝{ans}。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q21.png",
+      "originalFig": "assets/originals/seamox-q21-fig.png",
+      "diagram": {
+        "type": "circgrid",
+        "cells": [
+          [
+            "a1",
+            "a2",
+            "a3"
+          ],
+          [
+            "b1",
+            "b2",
+            "b3"
+          ],
+          [
+            "c1",
+            "c2",
+            "?"
+          ]
+        ]
+      },
+      "original": {
+        "k": 3,
+        "a1": 41,
+        "a2": 37,
+        "a3": 53
+      }
+    },
+    {
+      "id": "y2wq-38",
+      "subject": "数学",
+      "topic": "余数与周期",
+      "grade": "二年级",
+      "difficulty": 4,
+      "title": "除以 5 余 4、除以 3 余 2、除以 2 余 1",
+      "tags": [
+        "余数",
+        "公倍数",
+        "不定方程"
+      ],
+      "source": "SEAMO错题训练 Q22",
+      "stem": {
+        "en": "When n is divided by 5, the remainder is 4. When n is divided by 3, the remainder is 2. When n is divided by 2, the remainder is 1. Given that {hi} > n > {lo}, find n.",
+        "zh": "n 除以 5 余 4，除以 3 余 2，除以 2 余 1。已知 {hi} > n > {lo}，求 n。"
+      },
+      "vars": {
+        "m": {
+          "type": "int",
+          "min": 2,
+          "max": 4
+        }
+      },
+      "derived": {
+        "lo": "30*m-9",
+        "hi": "30*m+9",
+        "ans": "30*m-1"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "ans",
+        "sanity": {
+          "integer": true,
+          "min": 10
+        }
+      },
+      "solution": {
+        "en": "Each remainder is exactly 1 less than its divisor, so n＋1 is a multiple of 5, of 3 and of 2 — that is a multiple of 30. In the range {lo} to {hi} the only multiple of 30 is {30*m}, so n ＝ {30*m} − 1 ＝ {ans}. Check: {ans}÷5 leaves 4, {ans}÷3 leaves 2, {ans}÷2 leaves 1.",
+        "zh": "每个余数都比除数少 1，所以 n＋1 同时是 5、3、2 的倍数，也就是 30 的倍数。在 {lo} 到 {hi} 之间只有 {30*m} 是 30 的倍数，所以 n ＝ {30*m} − 1 ＝ {ans}。检验：{ans}÷5 余 4、÷3 余 2、÷2 余 1。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q22.png",
+      "noFigure": "原题为纯文字余数题（条件即全部信息），无配图",
+      "original": {
+        "m": 2
+      }
+    },
+    {
+      "id": "y2wq-39",
+      "subject": "数学",
+      "topic": "相遇问题",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "两列火车相向而行，几小时相遇",
+      "tags": [
+        "行程问题",
+        "相遇",
+        "速度和"
+      ],
+      "source": "SEAMO错题训练 Q23",
+      "stem": {
+        "en": "The distance between 2 train stations, A and B, is {D} km. A train travels from A at a speed of {v1} km/h. Another train travels from B at the same time. What is the speed, in km/h, of the 2nd train, if the two trains meet {t} hours later?",
+        "zh": "A、B 两个火车站相距 {D} 千米。一列火车以每小时 {v1} 千米的速度从 A 站开出，另一列火车同时从 B 站开出。两车 {t} 小时后相遇，第二列火车的速度是每小时多少千米？"
+      },
+      "vars": {
+        "t": {
+          "type": "int",
+          "min": 6,
+          "max": 10
+        },
+        "v1": {
+          "type": "int",
+          "min": 40,
+          "max": 70
+        },
+        "v2": {
+          "type": "int",
+          "min": 40,
+          "max": 70
+        }
+      },
+      "derived": {
+        "D": "(v1+v2)*t",
+        "ans": "v2"
+      },
+      "constraints": [
+        "v1 != v2"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "ans",
+        "unit": "千米/时",
+        "sanity": {
+          "integer": true,
+          "min": 10
+        }
+      },
+      "solution": {
+        "en": "The two trains together cover {D} km in {t} hours, so their speeds add up to {D}÷{t}＝{v1+v2} km/h. The 2nd train goes {v1+v2}−{v1}＝{ans} km/h.",
+        "zh": "两车 {t} 小时一共走了 {D} 千米，所以速度和是 {D}÷{t}＝{v1+v2} 千米/时。第二列火车的速度 ＝ {v1+v2}−{v1}＝{ans} 千米/时。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q23.png",
+      "originalFig": "assets/originals/seamox-q23-fig.png",
+      "diagram": {
+        "type": "trainmeet",
+        "d": "D"
+      },
+      "original": {
+        "t": 8,
+        "v1": 52,
+        "v2": 53
+      },
+      "unit": "千米/时"
+    },
+    {
+      "id": "y2wq-40",
+      "subject": "数学",
+      "topic": "数三角形",
+      "grade": "二年级",
+      "difficulty": 5,
+      "title": "带字母标注的三角形里数三角形",
+      "tags": [
+        "数图形",
+        "三角形",
+        "组合计数"
+      ],
+      "source": "SEAMO错题训练 Q24",
+      "stem": {
+        "en": "How many triangles are there in the figure below?",
+        "zh": "下图一共有多少个三角形？"
+      },
+      "vars": {
+        "m": {
+          "type": "int",
+          "min": 1,
+          "max": 3
+        }
+      },
+      "derived": {
+        "ans": "(m+4)*(m+3)*(m+2)/6 - (m+2)*(m+1)*m/6 - 1"
+      },
+      "answer": {
+        "type": "integer",
+        "expr": "ans",
+        "unit": "个",
+        "sanity": {
+          "integer": true,
+          "min": 1
+        }
+      },
+      "solution": {
+        "en": "Altogether there are {m+4} straight lines: AB, BC, CA, the {m} lines from A to the bottom side, and DC. Three lines make a triangle unless all three pass through one point. The {m+2} lines through A give C({m+2},3) bad choices and the 3 lines through C give 1 more, so the number of triangles is C({m+4},3) − C({m+2},3) − 1 ＝ {ans}.",
+        "zh": "图里一共有 {m+4} 条直线：AB、BC、CA、从 A 连到底边的 {m} 条线，以及 DC。任取 3 条就能围成一个三角形，除非这 3 条都过同一个点。过 A 的 {m+2} 条线里取 3 条要排除，过 C 的 3 条线也排除 1 组，所以三角形个数 ＝ C({m+4},3) − C({m+2},3) − 1 ＝ {ans} 个。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q24.png",
+      "originalFig": "assets/originals/seamox-q24-fig.png",
+      "diagram": {
+        "type": "tricount",
+        "m": "m",
+        "focus": "top"
+      },
+      "original": {
+        "m": 2
+      },
+      "unit": "个"
+    },
+    {
+      "id": "y2wq-41",
+      "subject": "数学",
+      "topic": "逆推还原",
+      "grade": "二年级",
+      "difficulty": 3,
+      "title": "加、乘、减、除之后得到 7，原数是多少",
+      "tags": [
+        "逆运算",
+        "还原",
+        "四则运算"
+      ],
+      "source": "SEAMO错题训练 Q25",
+      "stem": {
+        "en": "{a} is added to a number m. The result of the addition is multiplied by {b}. {c} is subtracted from the result of the multiplication. The result is {e} when it is finally divided by {d}. What is m?",
+        "zh": "一个数 m 先加上 {a}，所得的和再乘 {b}，所得的积再减去 {c}，最后除以 {d} 得到 {e}。m 是多少？"
+      },
+      "vars": {
+        "a": {
+          "type": "int",
+          "min": 3,
+          "max": 9
+        },
+        "b": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "d": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "e": {
+          "type": "int",
+          "min": 2,
+          "max": 9
+        },
+        "x": {
+          "type": "int",
+          "min": 1,
+          "max": 9
+        }
+      },
+      "derived": {
+        "c": "(x+a)*b - e*d",
+        "ans": "x"
+      },
+      "constraints": [
+        "c >= 1",
+        "c <= 60"
+      ],
+      "answer": {
+        "type": "integer",
+        "expr": "ans",
+        "sanity": {
+          "integer": true,
+          "min": 1
+        }
+      },
+      "solution": {
+        "en": "Work backwards. Before the last division the number was {e}×{d}＝{e*d}. Before subtracting {c} it was {e*d}＋{c}＝{e*d+c}. Before multiplying by {b} it was {e*d+c}÷{b}＝{x+a}. So m ＝ {x+a}−{a}＝{ans}.",
+        "zh": "倒着推。最后一步除以 {d} 之前是 {e}×{d}＝{e*d}；减去 {c} 之前是 {e*d}＋{c}＝{e*d+c}；乘 {b} 之前是 {e*d+c}÷{b}＝{x+a}。所以 m ＝ {x+a}−{a}＝{ans}。"
+      },
+      "sourceSet": "year2数学错题集锦",
+      "originalImage": "assets/originals/seamox-q25.png",
+      "noFigure": "原题为纯文字还原题（四步运算即全部信息），无配图",
+      "original": {
+        "a": 7,
+        "b": 7,
+        "d": 7,
+        "e": 7,
+        "x": 1
       }
     }
   ]

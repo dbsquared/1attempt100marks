@@ -134,34 +134,17 @@
    "subject": "数学",
    "language": "en",
    "level": "澳洲 Year 2（错题整理）",
-   "totalQuestions": 16,
+   "totalQuestions": 41,
    "timeLimit": {
     "official": false,
-    "suggestedMinutes": 16,
-    "basis": "错题集锦非限时考试，无官方时长；按 defaultRate 每题 1 分钟估算 16 题 ≈ 16 分钟（其中 ICAS 选择题部分参照 ICAS Intro 卷 30 题/35 分钟 ≈ 70 秒/题）",
-    "url": "https://www.icasassessments.com/icas-year-levels-and-exam-papers/",
-    "checkedAt": "2026-11-17",
-    "note": "学生做错的题整理成卷（应用题 + ICAS 选择题混合），无官方限时，16 分钟为估算值，可在组卷界面手动改。"
-   },
-   "idPrefix": "y2wq"
-  },
-  {
-   "set": "SEAMO错题训练",
-   "setZh": "SEAMO 错题训练（SEAMO错题训练.docx，原卷 25 题）",
-   "subject": "数学",
-   "language": "en",
-   "level": "SEAMO Level A–F（Grade 2 以上）",
-   "totalQuestions": 25,
-   "timeLimit": {
-    "official": false,
-    "suggestedMinutes": 50,
-    "basis": "这不是一份正式试卷，而是家长从 SEAMO 真题里整理出的错题集（原卷共 25 题），没有官方限时。按 SEAMO 官方「25 题 / 90 分钟」≈ 每题 3.6 分钟，考虑到本集含数三角形、网格路径、抽屉原理等耗时图题，取更宽松的每题 2 分钟 × 25 题 → 50 分钟。",
-    "source": "SEAMO 官方赛程（Level A–F：25 题 / 90 分钟）折算",
+    "suggestedMinutes": 66,
+    "basis": "错题集锦非限时考试，无官方时长。按题源分两档估算：NAS 照片那 16 题（应用题 + ICAS 选择题）每题 1 分钟 ≈ 16 分钟；SEAMO 错题训练那 25 题含数三角形、网格路径、天平换算等耗时图题，按 SEAMO 官方「25 题 / 90 分钟」放宽到每题 2 分钟 ≈ 50 分钟。合计 66 分钟。",
     "url": "https://www.seedasdan.asia/en/seamo-en/",
     "checkedAt": "2026-11-20",
-    "note": "Q15（三组三角形数字谜）原卷没给答案，组内三数之间也找不到统一公式；按唯一自洽的「同一位置的三个数相加相等」（6+5+9 = 7+8+5 = 20 ⇒ ? = 20−11−3 = 6，选项 D）定答案。若日后拿到标准答案与之不符，改 seamox-q15 的 answer 与 original 两处即可。"
+    "note": "一份错题集，41 题 = 家长拍的错题照片 16 题（Q1–Q16）＋《SEAMO错题训练.docx》25 题（Q17–Q41，原卷 Q1–Q25）。66 分钟是两档节奏相加的估算值，可在组卷界面手动改；混组按每份卷的平均节奏折算。SEAMO Q15（本卷 Q31，三组三角形数字谜）原卷没给答案，按唯一自洽的「同一位置三个数相加相等」（6+5+9 = 7+8+5 = 20 ⇒ ? = 6，选项 D）定答案，若标准答案与之不符只需改这一条模板。",
+    "url2": "https://www.icasassessments.com/icas-year-levels-and-exam-papers/"
    },
-   "idPrefix": "seamox"
+   "idPrefix": "y2wq"
   }
  ]
 }

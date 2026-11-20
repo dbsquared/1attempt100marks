@@ -1,4 +1,4 @@
-/* 临时预览：把 seamox-q15 的原题图与两个随机变体渲染成 HTML，供无头浏览器截图检查。 */
+/* 临时预览：把 y2wq-31 的原题图与两个随机变体渲染成 HTML，供无头浏览器截图检查。 */
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const root = path.join(__dirname, '..');
 const ctx = { console, Math, JSON, Object, Array, Number, String, isFinite, parseFloat, Date, Set };
@@ -7,7 +7,7 @@ ctx.window = ctx; ctx.globalThis = ctx; vm.createContext(ctx);
   .forEach(f => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f }));
 const { Generator } = ctx;
 const bank = JSON.parse(fs.readFileSync(path.join(root, 'data/question-bank.json'), 'utf8')).templates;
-const tpl = bank.find(t => t.id === 'seamox-q15');
+const tpl = bank.find(t => t.id === 'y2wq-31');
 
 const rows = [];
 const orig = Generator.instantiate(tpl, null, { original: true });

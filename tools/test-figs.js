@@ -2127,10 +2127,10 @@ function triGeoCount(lines) {
  * SEAMO错题训练（seamox）：每道带图题都用「另一种算法」独立复算
  * ========================================================================== */
 
-/* ---------- seamox-q02 / q17：数字三角形，图上数字必须是 1..R(R+1)/2 连续，
+/* ---------- y2wq-18 / q17：数字三角形，图上数字必须是 1..R(R+1)/2 连续，
      且「第 R 行最后一个数」只能由行数算出（q02 = n(n+1)/2，q17 = n²） ---------- */
 {
-  ['seamox-q02', 'seamox-q17'].forEach(id => {
+  ['y2wq-18', 'y2wq-33'].forEach(id => {
     const t = byId(id);
     for (let i = 0; i < REP; i++) {
       const q = Generator.instantiate(t), n = q.vars.n;
@@ -2142,7 +2142,7 @@ function triGeoCount(lines) {
       // 行末规律：行 r 的最后一个数 = 到 r 行为止的总个数
       let acc = 0;
       for (let r = 1; r <= n; r++) acc += r;
-      if (id === 'seamox-q02') {
+      if (id === 'y2wq-18') {
         chk(Number(q.display) === n * (n + 1) / 2, id + ' n=' + n + ' 行末应为 ' + (n * (n + 1) / 2) + '，实际 ' + q.display);
         chk(acc === Number(q.display), id + ' 逐行累加 1+…+' + n + ' = ' + acc + ' ≠ 答案 ' + q.display);
       } else {
@@ -2154,22 +2154,22 @@ function triGeoCount(lines) {
       }
     }
   });
-  console.log('seamox q02/q17  数字三角形 1..R(R+1)/2 连续 ✓ 行末另法复算 = 答案 ✓');
+  console.log('y2wq Q18/Q33  数字三角形 1..R(R+1)/2 连续 ✓ 行末另法复算 = 答案 ✓');
 }
 
-/* ---------- seamox-q05 / q18：日历表 + 星期推算（按「天数取余」独立推） ---------- */
+/* ---------- y2wq-21 / q18：日历表 + 星期推算（按「天数取余」独立推） ---------- */
 {
   const EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const ZH = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
   const idxOf = s => { const k = EN.indexOf(s); return k >= 0 ? k : ZH.indexOf(s); };
-  ['seamox-q05', 'seamox-q18'].forEach(id => {
+  ['y2wq-21', 'y2wq-34'].forEach(id => {
     const t = byId(id);
     for (let i = 0; i < REP; i++) {
       const q = Generator.instantiate(t), v = q.vars;
       const dows = mAll(q.diagramSvg, /data-u="dow" data-d="(\w+)"/g).map(m => m[1]);
       chk(dows.length === 7 && dows[0] === 'Sun' && dows[6] === 'Sat', id + ' 日历表头应为 Sun..Sat，实际 ' + dows.join(','));
       let steps;
-      if (id === 'seamox-q05') {
+      if (id === 'y2wq-21') {
         chk(v.dm === 28 || v.dm === 29, id + ' 2 月天数只能 28/29，实际 ' + v.dm);
         steps = v.dm;                                  // 2 月 1 日 → 3 月 1 日 = 整个 2 月
       } else {
@@ -2184,54 +2184,54 @@ function triGeoCount(lines) {
       chk(new Set(q.options.map(idxOf)).size === 7, id + ' 选项应覆盖 7 个不同星期，实际 ' + q.options.join(','));
     }
   });
-  console.log('seamox q05/q18  日历表头 Sun..Sat ✓ 天数取余推星期 = 正确选项 ✓');
+  console.log('y2wq Q21/Q34  日历表头 Sun..Sat ✓ 天数取余推星期 = 正确选项 ✓');
 }
 
-/* ---------- seamox-q06：3×3 方阵每格 = base + (行+列)·step ---------- */
+/* ---------- y2wq-22：3×3 方阵每格 = base + (行+列)·step ---------- */
 {
-  const t = byId('seamox-q06');
+  const t = byId('y2wq-22');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t), v = q.vars;
     const cells = mAll(q.diagramSvg, /data-u="cell" data-r="(\d)" data-c="(\d)" data-v="(-?\d+)"/g)
       .map(m => ({ r: +m[1], c: +m[2], v: +m[3] }));
-    chk(cells.length === 8, 'seamox-q06 图上应给出 8 个数（留 1 格问号），实际 ' + cells.length);
+    chk(cells.length === 8, 'y2wq-22 图上应给出 8 个数（留 1 格问号），实际 ' + cells.length);
     cells.forEach(o => chk(o.v === v.b + (o.r + o.c) * v.s,
-      'seamox-q06 格(' + o.r + ',' + o.c + ')=' + o.v + ' ≠ base+(r+c)·step=' + (v.b + (o.r + o.c) * v.s)));
+      'y2wq-22 格(' + o.r + ',' + o.c + ')=' + o.v + ' ≠ base+(r+c)·step=' + (v.b + (o.r + o.c) * v.s)));
     // 用「同行左格 + step」推问号格，再和答案对
     const r2c2 = cells.find(o => o.r === 2 && o.c === 1).v;
-    chk(Number(q.display) === r2c2 + v.s, 'seamox-q06 问号格应 = 左邻 ' + r2c2 + ' + ' + v.s + '，实际 ' + q.display);
+    chk(Number(q.display) === r2c2 + v.s, 'y2wq-22 问号格应 = 左邻 ' + r2c2 + ' + ' + v.s + '，实际 ' + q.display);
   }
-  console.log('seamox q06  8 格都满足 base+(r+c)·step ✓ 问号格 = 左邻 + step ✓');
+  console.log('y2wq Q22  8 格都满足 base+(r+c)·step ✓ 问号格 = 左邻 + step ✓');
 }
 
-/* ---------- seamox-q07：天平——苹果→香蕉→葡萄逐级换算 ---------- */
+/* ---------- y2wq-23：天平——苹果→香蕉→葡萄逐级换算 ---------- */
 {
-  const t = byId('seamox-q07');
+  const t = byId('y2wq-23');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t), v = q.vars;
     const bs = mAll(q.diagramSvg, /data-u="balance" data-arm="\d+" data-side-l="([^"]*)" data-side-r="([^"]*)" data-w="([^"]*)"/g)
       .map(m => ({ l: m[1], r: m[2], w: m[3] }));
-    chk(bs.length === 3, 'seamox-q07 应画 3 台天平，实际 ' + bs.length);
-    chk(bs[0].l === 'grape:1' && bs[0].r === 'banana:' + v.k, 'seamox-q07 第 1 台应「1 串葡萄 = ' + v.k + ' 根香蕉」，实际 ' + bs[0].l + ' / ' + bs[0].r);
-    chk(bs[1].l === 'banana:1' && bs[1].r === 'apple:' + v.j, 'seamox-q07 第 2 台应「1 根香蕉 = ' + v.j + ' 个苹果」，实际 ' + bs[1].l + ' / ' + bs[1].r);
-    chk(bs[2].l === 'apple:' + v.m && bs[2].w === String(v.W), 'seamox-q07 第 3 台应「' + v.m + ' 个苹果 = ' + v.W + ' g」，实际 ' + bs[2].l + ' / ' + bs[2].w);
+    chk(bs.length === 3, 'y2wq-23 应画 3 台天平，实际 ' + bs.length);
+    chk(bs[0].l === 'grape:1' && bs[0].r === 'banana:' + v.k, 'y2wq-23 第 1 台应「1 串葡萄 = ' + v.k + ' 根香蕉」，实际 ' + bs[0].l + ' / ' + bs[0].r);
+    chk(bs[1].l === 'banana:1' && bs[1].r === 'apple:' + v.j, 'y2wq-23 第 2 台应「1 根香蕉 = ' + v.j + ' 个苹果」，实际 ' + bs[1].l + ' / ' + bs[1].r);
+    chk(bs[2].l === 'apple:' + v.m && bs[2].w === String(v.W), 'y2wq-23 第 3 台应「' + v.m + ' 个苹果 = ' + v.W + ' g」，实际 ' + bs[2].l + ' / ' + bs[2].w);
     const apple = Number(bs[2].w) / v.m;                       // 图上只有总重，自己除
     const banana = apple * v.j;
     const grape = banana * v.k;
-    chk(Number(q.display) === grape, 'seamox-q07 逐级换算葡萄 = ' + grape + '，答案 ' + q.display);
-    chk(Number.isInteger(apple), 'seamox-q07 单个苹果质量应为整数克，实际 ' + apple);
+    chk(Number(q.display) === grape, 'y2wq-23 逐级换算葡萄 = ' + grape + '，答案 ' + q.display);
+    chk(Number.isInteger(apple), 'y2wq-23 单个苹果质量应为整数克，实际 ' + apple);
   }
-  console.log('seamox q07  三台天平读数 → 苹果/香蕉/葡萄逐级换算 = 答案 ✓');
+  console.log('y2wq Q23  三台天平读数 → 苹果/香蕉/葡萄逐级换算 = 答案 ✓');
 }
 
-/* ---------- seamox-q08：阶梯网格——从图上每条边做 DP 数路径 ---------- */
+/* ---------- y2wq-24：阶梯网格——从图上每条边做 DP 数路径 ---------- */
 {
-  const t = byId('seamox-q08');
+  const t = byId('y2wq-24');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t), n = q.vars.n;
     const edges = mAll(q.diagramSvg, /data-u="edge" data-x1="(\d+)" data-y1="(\d+)" data-x2="(\d+)" data-y2="(\d+)"/g)
       .map(m => [[+m[1], +m[2]], [+m[3], +m[4]]]);
-    chk(edges.length > 0, 'seamox-q08 图上应有网格线');
+    chk(edges.length > 0, 'y2wq-24 图上应有网格线');
     const key = p => p[0] + ',' + p[1];
     const ok = (a, b) => edges.some(e => (key(e[0]) === key(a) && key(e[1]) === key(b)) || (key(e[0]) === key(b) && key(e[1]) === key(a)));
     const dp = { '0,0': 1 };
@@ -2246,16 +2246,16 @@ function triGeoCount(lines) {
       }
     }
     const paths = dp[(n + 1) + ',' + n];
-    chk(paths === Number(q.display), 'seamox-q08 n=' + n + ' 从图上边集 DP 得 ' + paths + ' 条，答案 ' + q.display);
+    chk(paths === Number(q.display), 'y2wq-24 n=' + n + ' 从图上边集 DP 得 ' + paths + ' 条，答案 ' + q.display);
     chk(mAll(q.diagramSvg, /data-u="pt" data-name="A"/g).length === 1 && mAll(q.diagramSvg, /data-u="pt" data-name="B"/g).length === 1,
-      'seamox-q08 图上必须有 A、B 两个端点');
+      'y2wq-24 图上必须有 A、B 两个端点');
   }
-  console.log('seamox q08  按图上线段 DP 数最短路径 = 答案 ✓ A/B 齐备 ✓');
+  console.log('y2wq Q24  按图上线段 DP 数最短路径 = 答案 ✓ A/B 齐备 ✓');
 }
 
-/* ---------- seamox-q09：叠加规律——前两格线段之并 = 第三格 ---------- */
+/* ---------- y2wq-25：叠加规律——前两格线段之并 = 第三格 ---------- */
 {
-  const t = byId('seamox-q09');
+  const t = byId('y2wq-25');
   // 线段写成 "x1,y1-x2,y2"，同一个线段可能正反写法不同 → 比较前先归一化
   const norm = s => s.split('-').map(p => p.trim()).sort().join('-');
   const setOf = arr => Array.from(new Set(arr.map(norm))).sort();
@@ -2271,33 +2271,33 @@ function triGeoCount(lines) {
     for (let r = 0; r <= 1; r++) {
       const a = figs[r + ',0'] || [], b = figs[r + ',1'] || [], u = figs[r + ',2'] || [];
       chk(JSON.stringify(setOf(a.concat(b))) === JSON.stringify(setOf(u)),
-        'seamox-q09 第 ' + (r + 1) + ' 行第三格 ≠ 前两格之并：' + setOf(a.concat(b)).join(' ') + ' vs ' + setOf(u).join(' '));
+        'y2wq-25 第 ' + (r + 1) + ' 行第三格 ≠ 前两格之并：' + setOf(a.concat(b)).join(' ') + ' vs ' + setOf(u).join(' '));
       // 叠加 ≠ 异或：前两格必须有公共线段，否则「重叠处去掉」也能成立
       const inter = setOf(a).filter(s => setOf(b).indexOf(s) >= 0);
-      chk(inter.length > 0, 'seamox-q09 第 ' + (r + 1) + ' 行前两格没有公共线段，无法区分「叠加」和「异或」');
+      chk(inter.length > 0, 'y2wq-25 第 ' + (r + 1) + ' 行前两格没有公共线段，无法区分「叠加」和「异或」');
     }
-    chk(figs['2,0'] && figs['2,1'] && !figs['2,2'], 'seamox-q09 第三行第三格必须是空格（问号）');
+    chk(figs['2,0'] && figs['2,1'] && !figs['2,2'], 'y2wq-25 第三行第三格必须是空格（问号）');
     const want = setOf(figs['2,0'].concat(figs['2,1']));
     // 正确选项的图形（optionsSvg 与选项一起洗牌，用 correctIndex 取）
     const svgOpt = q.optionsSvg[q.correctIndex];
     const segs = (svgOpt.match(/data-u="fig" data-segs="([^"]*)"/) || [])[1];
-    chk(!!segs, 'seamox-q09 正确选项应当是一个线段图形');
+    chk(!!segs, 'y2wq-25 正确选项应当是一个线段图形');
     if (segs) {
       chk(JSON.stringify(setOf(segs.split(';').filter(Boolean))) === JSON.stringify(want),
-        'seamox-q09 正确选项图形 ≠ 第三行应有的叠加结果：' + segs + ' vs ' + want.join(';'));
+        'y2wq-25 正确选项图形 ≠ 第三行应有的叠加结果：' + segs + ' vs ' + want.join(';'));
     }
     // 四个图形选项必须互不相同（否则靠排除就能选对）
     const all = (q.optionsSvg || []).map(s => (s.match(/data-u="fig" data-segs="([^"]*)"/) || [])[1] || '').filter(Boolean)
       .map(str => setOf(str.split(';').filter(Boolean)));
-    chk(new Set(all.map(x => x.join(';'))).size === all.length, 'seamox-q09 选项里的线段图形有重复');
+    chk(new Set(all.map(x => x.join(';'))).size === all.length, 'y2wq-25 选项里的线段图形有重复');
   }
-  console.log('seamox q09  前两格线段之并 = 第三格 ✓ 正确选项图形 = 第三行叠加结果 ✓');
+  console.log('y2wq Q25  前两格线段之并 = 第三格 ✓ 正确选项图形 = 第三行叠加结果 ✓');
 }
 
-/* ---------- seamox-q10 / q24：数三角形——按图上真实直线数走组合计数 ---------- */
+/* ---------- y2wq-26 / q24：数三角形——按图上真实直线数走组合计数 ---------- */
 {
   const C3 = x => x * (x - 1) * (x - 2) / 6;
-  [['seamox-q10', 'bl'], ['seamox-q24', 'top']].forEach(([id, focus]) => {
+  [['y2wq-26', 'bl'], ['y2wq-40', 'top']].forEach(([id, focus]) => {
     const t = byId(id);
     for (let i = 0; i < REP; i++) {
       const q = Generator.instantiate(t), m = q.vars.m;
@@ -2315,70 +2315,70 @@ function triGeoCount(lines) {
       chk(acc === Number(q.display), id + ' m=' + m + ' 逐条累加得 ' + acc + '，答案 ' + q.display);
     }
   });
-  console.log('seamox q10/q24  图上直线数 → C(L,3) 扣同点组 = 答案 ✓ 逐条累加另法复核 ✓');
+  console.log('y2wq Q26/Q40  图上直线数 → C(L,3) 扣同点组 = 答案 ✓ 逐条累加另法复核 ✓');
 }
 
-/* ---------- seamox-q21：圆圈方阵——用可见数字外推差值（不看模板公式） ---------- */
+/* ---------- y2wq-37：圆圈方阵——用可见数字外推差值（不看模板公式） ---------- */
 {
-  const t = byId('seamox-q21');
+  const t = byId('y2wq-37');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t);
     const g = {};
     mAll(q.diagramSvg, /data-u="num" data-r="(\d)" data-c="(\d)" data-v="(-?\d+)"/g).forEach(m => { g[m[1] + ',' + m[2]] = +m[3]; });
-    chk(Object.keys(g).length === 8, 'seamox-q21 图上应给出 8 个数，实际 ' + Object.keys(g).length);
+    chk(Object.keys(g).length === 8, 'y2wq-37 图上应给出 8 个数，实际 ' + Object.keys(g).length);
     const d1 = [0, 1, 2].map(c => g['0,' + c] - g['1,' + c]);          // 第一段的差
     const d2 = [0, 1].map(c => g['1,' + c] - g['2,' + c]);              // 第二段的差（只有前两列可读）
-    chk(d1[1] - d1[0] === d1[2] - d1[1], 'seamox-q21 第一段差值不成等差：' + d1.join(','));
-    chk(d2[1] - d2[0] === d1[2] - d1[1], 'seamox-q21 第二段差值增幅与第一段不一致：' + d2.join(',') + ' vs ' + d1.join(','));
+    chk(d1[1] - d1[0] === d1[2] - d1[1], 'y2wq-37 第一段差值不成等差：' + d1.join(','));
+    chk(d2[1] - d2[0] === d1[2] - d1[1], 'y2wq-37 第二段差值增幅与第一段不一致：' + d2.join(',') + ' vs ' + d1.join(','));
     const step = d1[1] - d1[0];
     const want = g['1,2'] - (d2[1] + step);                             // 外推第三列的第二个差
-    chk(want === Number(q.display), 'seamox-q21 外推缺数 = ' + want + '，答案 ' + q.display);
+    chk(want === Number(q.display), 'y2wq-37 外推缺数 = ' + want + '，答案 ' + q.display);
   }
-  console.log('seamox q21  只用图上可见数字外推列内差值 = 答案 ✓');
+  console.log('y2wq Q37  只用图上可见数字外推列内差值 = 答案 ✓');
 }
 
-/* ---------- seamox-q23：相遇问题——图上距离 + 速度和推另一车速度 ---------- */
+/* ---------- y2wq-39：相遇问题——图上距离 + 速度和推另一车速度 ---------- */
 {
-  const t = byId('seamox-q23');
+  const t = byId('y2wq-39');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t), v = q.vars;
     const dm = q.diagramSvg.match(/data-u="dim" data-d="(\d+)"/) || [];
-    chk(+dm[1] === v.D, 'seamox-q23 图上距离 ' + dm[1] + ' 与模板 D=' + v.D + ' 不一致');
+    chk(+dm[1] === v.D, 'y2wq-39 图上距离 ' + dm[1] + ' 与模板 D=' + v.D + ' 不一致');
     const other = Number(dm[1]) / v.t - v.v1;
-    chk(other === Number(q.display), 'seamox-q23 D/t−v1 = ' + other + '，答案 ' + q.display);
-    chk(other > 0 && other !== v.v1, 'seamox-q23 另一车速度应正且不等于第一车，实际 ' + other);
+    chk(other === Number(q.display), 'y2wq-39 D/t−v1 = ' + other + '，答案 ' + q.display);
+    chk(other > 0 && other !== v.v1, 'y2wq-39 另一车速度应正且不等于第一车，实际 ' + other);
   }
-  console.log('seamox q23  图上 840km 类距离 ÷ 时间 − 已知速度 = 答案 ✓');
+  console.log('y2wq Q39  图上 840km 类距离 ÷ 时间 − 已知速度 = 答案 ✓');
 }
 
-/* ---------- seamox-q15：三组三角形——同一位置的三个数等和 ---------- */
+/* ---------- y2wq-31：三组三角形——同一位置的三个数等和 ---------- */
 {
-  const t = byId('seamox-q15');
+  const t = byId('y2wq-31');
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t);
-    chk(!!q, 'seamox-q15 实例化失败（约束可能过紧）');
+    chk(!!q, 'y2wq-31 实例化失败（约束可能过紧）');
     if (!q) break;
     const cells = {};
     mAll(q.diagramSvg, /data-u="num" data-pos="([tlr])" data-i="(\d)" data-v="(-?\d+)"/g)
       .forEach(m => { cells[m[1] + m[2]] = +m[3]; });
-    chk(Object.keys(cells).length === 8, 'seamox-q15 图上应给出 8 个数，实际 ' + Object.keys(cells).length);
-    chk(mAll(q.diagramSvg, /data-u="blank"/g).length === 1, 'seamox-q15 图上应有且仅有 1 个问号');
-    chk(mAll(q.diagramSvg, /data-u="tri3"/g).length === 3, 'seamox-q15 图上应画 3 个三角形');
+    chk(Object.keys(cells).length === 8, 'y2wq-31 图上应给出 8 个数，实际 ' + Object.keys(cells).length);
+    chk(mAll(q.diagramSvg, /data-u="blank"/g).length === 1, 'y2wq-31 图上应有且仅有 1 个问号');
+    chk(mAll(q.diagramSvg, /data-u="tri3"/g).length === 3, 'y2wq-31 图上应画 3 个三角形');
     const sum = a => a.reduce((x, y) => x + y, 0);
     const st = sum([0, 1, 2].map(k => cells['t' + k]));       // 上面一列
     const sl = sum([0, 1, 2].map(k => cells['l' + k]));       // 左下一列
     const sr = sum([0, 1].map(k => cells['r' + k]));          // 右下一列（第三组是空）
-    chk(st === sl, 'seamox-q15 上面一列和 ' + st + ' ≠ 左下一列和 ' + sl);
+    chk(st === sl, 'y2wq-31 上面一列和 ' + st + ' ≠ 左下一列和 ' + sl);
     const want = st - sr;
-    chk(want === Number(q.display), 'seamox-q15 等和推缺数 ' + st + '−' + sr + ' = ' + want + '，答案 ' + q.display);
-    chk(Object.keys(cells).every(k => cells[k] > 0), 'seamox-q15 图上出现非正整数');
+    chk(want === Number(q.display), 'y2wq-31 等和推缺数 ' + st + '−' + sr + ' = ' + want + '，答案 ' + q.display);
+    chk(Object.keys(cells).every(k => cells[k] > 0), 'y2wq-31 图上出现非正整数');
     // 选项：正确项数值 = 答案，且五选项是公差 2 的等差数列（原卷 0/2/4/6/8 同构）
     const asc = q.options.map(Number).sort((a, b) => a - b);
-    chk(Number(q.options[q.correctIndex]) === want, 'seamox-q15 正确选项数值 ' + q.options[q.correctIndex] + ' ≠ 答案 ' + want);
-    chk(asc.length === 5 && asc.every((x, k) => k === 0 || x - asc[k - 1] === 2), 'seamox-q15 选项不是公差 2 的等差数列：' + asc.join(','));
-    chk(asc[0] >= 0, 'seamox-q15 选项出现负数：' + asc.join(','));
+    chk(Number(q.options[q.correctIndex]) === want, 'y2wq-31 正确选项数值 ' + q.options[q.correctIndex] + ' ≠ 答案 ' + want);
+    chk(asc.length === 5 && asc.every((x, k) => k === 0 || x - asc[k - 1] === 2), 'y2wq-31 选项不是公差 2 的等差数列：' + asc.join(','));
+    chk(asc[0] >= 0, 'y2wq-31 选项出现负数：' + asc.join(','));
   }
-  console.log('seamox q15  图上三列各自等和 → 等和减已知两数 = 答案 ✓ 选项为公差 2 长梯 ✓');
+  console.log('y2wq Q31  图上三列各自等和 → 等和减已知两数 = 答案 ✓ 选项为公差 2 长梯 ✓');
 }
 
 /* ---------- 图形类型表不能有重复 key（重复时后者静默覆盖，改前面那个等于白改） ---------- */

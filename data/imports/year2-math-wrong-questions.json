@@ -1126,8 +1126,8 @@
    "vars": {
     "n": {
      "type": "int",
-     "min": 4,
-     "max": 9
+     "min": 7,
+     "max": 12
     }
    },
    "derived": {
@@ -1157,7 +1157,7 @@
    "originalFig": "assets/originals/seamox-q02-fig.png",
    "diagram": {
     "type": "numtri",
-    "rows": "n"
+    "show": 5
    },
    "original": {
     "n": 7
@@ -2293,7 +2293,8 @@
    "originalFig": "assets/originals/seamox-q17-fig.png",
    "diagram": {
     "type": "numtri",
-    "rows": "n"
+    "odd": true,
+    "show": 4
    },
    "original": {
     "n": 12

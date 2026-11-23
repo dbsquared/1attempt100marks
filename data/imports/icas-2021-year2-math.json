@@ -2426,6 +2426,9 @@
         "t2": "a + d",
         "t3": "a + 2 * d"
       },
+      "constraints": [
+        "n > 3"
+      ],
       "sanity": {
         "integer": true,
         "positive": true

@@ -109,9 +109,12 @@
         }
       }
       s += '<text x="' + x0 + '" y="' + (y + 32) + '" font-size="17" text-anchor="middle" fill="' + INK + '">0</text>';
-      /* 每两格标一个数值（原卷：0.5 / 1.0 / 1.5 / 2.0），末格若已标就不再单独画 E */
+      /* 每 every 格标一个数值（原卷：0.5 / 1.0 / 1.5 / 2.0），末格若已标就不再单独画 E。
+         every = 0 表示**只标两端 0 与 E** —— 箭头指在第 k 格时，格上绝不能带数值标签，
+         否则等于把答案写在箭头上（Q7 就这么泄的题；原卷也只标 0 和 50）。 */
+      var every = (spec.labelEvery === undefined || spec.labelEvery === null) ? 2 : Math.round(num(spec.labelEvery, vars));
       var lastLabeled = false;
-      for (var vi = 2; vi <= n; vi += 2) {
+      for (var vi = (every > 0 ? every : n + 1); vi <= n; vi += every) {
         var vx = x0 + vi * step;
         var val = E * vi / n;
         var vs = (Math.abs(val - Math.round(val)) < 1e-9) ? String(Math.round(val)) : String(+val.toFixed(2));
@@ -2303,23 +2306,39 @@
       return s;
     },
 
-    /* 三角形数字阵（Q6）：画出前 rows 行，下面用「...」表示继续 */
+    /* 三角形数字阵（y2wq-18/32、seamo q06）：**只画固定前 show 行 + 一行省略号**。
+       原卷就是这么截断的（q02 画 5 行、q17 画 4 行），题问的那一行永远在图外；
+       照 n 行画满等于把答案印在图上（Q18 就是这么出的错）。
+       spec.show = 可见行数（常量，别绑题问的 n）；spec.odd = 每行 2r-1 个数（1｜2 3 4｜5 6 7 8 9｜…），
+       否则每行 r 个数（三角数列 1｜2 3｜4 5 6｜…）。 */
     numtri: function (spec, vars) {
-      var rows = Math.max(2, Math.min(6, Math.round(num(spec.rows, vars) || 4)));
-      var rowH = 30, cw = 34, pad = 16, r, c, v = 1;
-      var W = Math.round(pad * 2 + rows * cw + 24);
-      if (W > 480) { cw = (480 - pad * 2 - 24) / rows; W = 480; }
-      var H = Math.round(pad * 2 + rows * rowH + 26);
+      var odd = !!spec.odd;
+      var show = Math.round(num(spec.show != null ? spec.show : spec.rows, vars));
+      if (!show) show = odd ? 4 : 5;
+      show = Math.max(1, Math.min(7, show));
+      function cnt(r) { return odd ? 2 * r - 1 : r; }
+      var rowH = 28, cw = 34, pad = 16, c, r, v = 1;
+      var cols = Math.max(cnt(show), cnt(show + 1));   /* 省略号行比末行更宽 */
+      var W = Math.round(pad * 2 + cols * cw);
+      if (W > 480) { cw = (480 - pad * 2) / cols; W = 480; }
+      var H = Math.round(pad * 2 + (show + 1) * rowH + 4);
       var s = svgOpen(W, H, 'number triangle');
-      for (r = 1; r <= rows; r++) {
-        var y = pad + r * rowH - 6, x0 = (W - r * cw) / 2;
-        for (c = 0; c < r; c++) {
+      s += '<g data-u="numtri" data-rows="' + show + '" data-odd="' + (odd ? 1 : 0) + '" data-cols="' + cols + '">';
+      for (r = 1; r <= show; r++) {
+        var y = pad + r * rowH - 6, nc = cnt(r), x0 = (W - nc * cw) / 2;
+        s += '<g data-u="row" data-r="' + r + '" data-n="' + nc + '">';
+        for (c = 0; c < nc; c++) {
           s += '<text data-u="num" data-v="' + v + '" x="' + (x0 + (c + 0.5) * cw).toFixed(1) + '" y="' + y + '" font-size="18" text-anchor="middle" fill="' + INK + '">' + v + '</text>';
           v++;
         }
+        s += '</g>';
       }
-      s += '<text x="' + (W / 2) + '" y="' + (pad + rows * rowH + 20) + '" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">...</text>';
-      s += '</svg>';
+      var en = cnt(show + 1), ex0 = (W - en * cw) / 2, ey = pad + (show + 1) * rowH - 4;
+      s += '<g data-u="dots" data-r="' + (show + 1) + '" data-n="' + en + '">';
+      for (c = 0; c < en; c++) {
+        s += '<text x="' + (ex0 + (c + 0.5) * cw).toFixed(1) + '" y="' + ey + '" font-size="22" font-weight="700" text-anchor="middle" fill="' + INK + '">…</text>';
+      }
+      s += '</g></g></svg>';
       return s;
     },
 

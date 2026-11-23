@@ -1277,20 +1277,8 @@ function clockOk(svg, cx, cy, h, m, tag) {
   console.log('SEAMO Q5  图上距离 ÷ 题干速度 = 答案 ✓');
 }
 
-/* ---------- SEAMO Q6：图上只画前 k 行，答案必须超出去 ---------- */
-{
-  const t = SE('q06');
-  for (let i = 0; i < REP; i++) {
-    const q = Generator.instantiate(t), k = q.vars.k, e = q.vars.e;
-    const drawn = mAll(q.diagramSvg, /data-u="num" data-v="(\d+)"/g).map(m => +m[1]);
-    chk(drawn.length === k * (k + 1) / 2, 'SEAMO Q6 图上应画 ' + k + ' 行共 ' + (k * (k + 1) / 2) + ' 个数，实际 ' + drawn.length);
-    chk(drawn.every((v, idx) => v === idx + 1), 'SEAMO Q6 图上数字应是 1 开始的连续整数');
-    const n = k + e, T = n * (n + 1) / 2;
-    chk(ansNum(q) === T, 'SEAMO Q6 第 ' + n + ' 行末位应为 ' + T);
-    chk(T > drawn.length, 'SEAMO Q6 答案必须超出图上画出的范围（否则等于把答案画出来了）');
-  }
-  console.log('SEAMO Q6  图上只画前 k 行 ✓  答案 = 第 n 行末位（超出图外）✓');
-}
+/* ---------- SEAMO Q6（数字三角形）：断言已并入下方 numtri 三题的统一检查块，
+     这里不再单独重复（图从「按 k 行画」改成「固定画前 5 行」，k/e 两个变量已合并成 n） ---------- */
 
 /* ---------- SEAMO Q7：两种分法解出孩子数，再算糖数 ---------- */
 {
@@ -2197,34 +2185,47 @@ function triGeoCount(lines) {
  * SEAMO错题训练（seamox）：每道带图题都用「另一种算法」独立复算
  * ========================================================================== */
 
-/* ---------- y2wq-18 / q17：数字三角形，图上数字必须是 1..R(R+1)/2 连续，
-     且「第 R 行最后一个数」只能由行数算出（q02 = n(n+1)/2，q17 = n²） ---------- */
+/* ---------- numtri 三题（y2wq-18 / y2wq-32 / seamo25a-q06）：
+     ① 图**只画固定的前 show 行**（原卷就是这么截断的），题问的 n 行永远在图外 —— 画满 n 行等于印答案；
+     ② 图上数字必须从 1 连续排；
+     ③ 省略号行「…」的个数 = 下一行的个数（原卷 q02 是 6 个、q17 是 9 个）；
+     ④ 行末用「前 n 行个数之和」另算一遍，必须等于答案；⑤ 答案不得出现在图上。 ---------- */
 {
-  ['y2wq-18', 'y2wq-32'].forEach(id => {
-    const t = byId(id);
+  const CFG = {
+    'y2wq-18': { show: 5, odd: false },       // 1｜2 3｜4 5 6…，原卷画 5 行 + 6 个 …
+    'seamo25a-q06': { show: 5, odd: false },  // 同上（2025 SEAMO A Q6）
+    'y2wq-32': { show: 4, odd: true }         // 1｜2 3 4｜5 6 7 8 9…，原卷画 4 行 + 9 个 …
+  };
+  Object.keys(CFG).forEach(id => {
+    const t = byId(id), cfg = CFG[id];
     for (let i = 0; i < REP; i++) {
-      const q = Generator.instantiate(t), n = q.vars.n;
-      const nums = mAll(q.diagramSvg, /data-u="num" data-v="(\d+)"/g).map(m => +m[1]);
-      // 图里最多画 6 行（numtri 上限），但要画满 R 行、数字从 1 连续排
-      const R = Math.min(n, 6);
-      chk(nums.length === R * (R + 1) / 2, id + ' 图上应有 ' + (R * (R + 1) / 2) + ' 个数，实际 ' + nums.length);
-      chk(nums.every((v, k) => v === k + 1), id + ' 图上数字必须从 1 连续排到 ' + nums.length);
-      // 行末规律：行 r 的最后一个数 = 到 r 行为止的总个数
+      const q = Generator.instantiate(t), n = q.vars.n, ans = Number(q.display);
+      const head = q.diagramSvg.match(/data-u="numtri" data-rows="(\d+)" data-odd="(\d)"/);
+      chk(!!head, id + ' 配图应带 data-u="numtri" data-rows data-odd');
+      if (!head) continue;
+      const show = +head[1], odd = head[2] === '1';
+      chk(show === cfg.show && odd === cfg.odd, id + ' 应画 ' + cfg.show + ' 行（odd=' + cfg.odd + '），实际 ' + show + ' 行 odd=' + odd);
+      const cnt = r => (odd ? 2 * r - 1 : r);
+      const nums = mAll(q.diagramSvg, /data-u="num" data-v="(\d+)"/g).map(x => +x[1]);
+      let tot = 0;
+      for (let r = 1; r <= show; r++) tot += cnt(r);
+      chk(nums.length === tot, id + ' 图上应有 ' + tot + ' 个数，实际 ' + nums.length);
+      chk(nums.every((v, k) => v === k + 1), id + ' 图上数字必须从 1 连续排');
+      // ④ 独立复算：第 n 行末 = 前 n 行个数之和
       let acc = 0;
-      for (let r = 1; r <= n; r++) acc += r;
-      if (id === 'y2wq-18') {
-        chk(Number(q.display) === n * (n + 1) / 2, id + ' n=' + n + ' 行末应为 ' + (n * (n + 1) / 2) + '，实际 ' + q.display);
-        chk(acc === Number(q.display), id + ' 逐行累加 1+…+' + n + ' = ' + acc + ' ≠ 答案 ' + q.display);
-      } else {
-        chk(Number(q.display) === n * n, id + ' n=' + n + ' 行末应为 n²=' + (n * n) + '，实际 ' + q.display);
-        // 用「上一行末 + 本行个数」推一遍，验证 n² 等价
-        let last = 0;
-        for (let r = 1; r <= n; r++) last = last + (2 * r - 1);
-        chk(last === Number(q.display), id + ' 逐行加上奇数 1+3+5+… 得 ' + last + ' ≠ 答案 ' + q.display);
-      }
+      for (let r = 1; r <= n; r++) acc += cnt(r);
+      chk(acc === ans, id + ' n=' + n + ' 前 ' + n + ' 行共 ' + acc + ' 个数，答案却是 ' + ans);
+      // ⑤ 不泄题：图上最大数必须小于答案，且答案不能印在图上
+      const maxOnFig = Math.max.apply(null, nums);
+      chk(n > show, id + ' 题问第 ' + n + ' 行，却画了 ' + show + ' 行（题目行必须在图外）');
+      chk(nums.indexOf(ans) < 0, id + ' 图上印着答案 ' + ans + '（图最大只到 ' + maxOnFig + ' 才对）');
+      chk(maxOnFig < ans, id + ' 图上最大数 ' + maxOnFig + ' 应小于答案 ' + ans);
+      // ③ 省略号行
+      const dots = q.diagramSvg.match(/data-u="dots" data-r="(\d+)" data-n="(\d+)"/);
+      chk(!!dots && +dots[2] === cnt(show + 1), id + ' 省略号行应有 ' + cnt(show + 1) + ' 个 …，实际 ' + (dots ? dots[2] : '无'));
     }
   });
-  console.log('y2wq Q18/Q33  数字三角形 1..R(R+1)/2 连续 ✓ 行末另法复算 = 答案 ✓');
+  console.log('numtri 三题  只画固定前 5/4 行 + 省略号 ✓  问的行在图外（不泄答案）✓  行末另法复算 = 答案 ✓');
 }
 
 /* ---------- y2wq-21 / q18：日历表 + 星期推算（按「天数取余」独立推） ---------- */

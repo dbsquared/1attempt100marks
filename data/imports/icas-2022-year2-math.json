@@ -394,7 +394,8 @@
         "type": "numberline",
         "E": "E",
         "n": "n",
-        "k": "k"
+        "k": "k",
+        "labelEvery": 0
       },
       "originalImage": "assets/originals/2022y2m-q07.png",
       "original": {

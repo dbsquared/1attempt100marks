@@ -28,11 +28,13 @@ data/question-bank.json   主题库（提交进仓库，所有设备可见）
 data/imports/*.json       按批次拆分的题库（同样会被主题库合并，见下）
 papers/<卷名>.json         整卷「解析归档」的唯一数据源（.md/.html 由 tools/build-paper-archive.js 生成）
 data/papers.json           试卷级属性：每份真题卷的官方限时 + 出处（组卷限时/倒计时靠它，见 §4.9）
+data/figure-leak-allow.json 配图泄题白名单：每条都要写 kind + why（见 §2.5.3）
 assets/js/papers.js        限时匹配 + 按题量比例折算（浏览器与 Node 共用）
 tools/test-bank.js        模板自检（生成 300 次 + 判分 + 配图 + 变式 四道闸门）
 tools/test-figs.js        配图语义独立验算（照图重算答案，不读模板公式）
 tools/test-original.js    「原题模式」数值自检（答案 + 约束）
 tools/test-options.js     选项层硬错（字面重复 / 答案与干扰项等值 / 答案里出现小数分数）
+tools/test-logic.js       逻辑体检：图不泄题 / SVG 无 NaN / 选项自洽（见 §2.5.3、§7）
 tools/test-bankui.js      「题库管理」界面渲染自检（无头浏览器不可用时替代冒烟测试）
 tools/test-srs.js         错题调度自检
 tools/test-sync.js        多设备同步自检（增量码解析 / 幂等 / 冲突 / 墓碑 / 折行容错）
@@ -96,6 +98,24 @@ tools/merge-bank.js       把 data/imports/*.json 合并进主题库
 - 抽完要验收**多样性**：抽 200~600 次，打印"不同实例数"（§7 里 `不同数值 1` 就是这一关在报警），
   太少就继续拆参数。
 - 参数化的前提是**图能跟着变**：新参数若在图上看不出来、或画不出来，就别抽它。
+
+### 2.5.3 铁律三：图不许把答案画出来
+
+题目问什么，图就不能正好画到那里。（2026-11 Q18 的教训：问「第 n 行最后一个数」，
+配图就按 n 行画满，那个数直接印在最后一行末尾，学生不用算，抄一眼就行。）
+
+- **别把「被问的那一行/那一项」画全。** 问第 n 行，图只画固定的前几行 + 一行省略号
+  （原卷 q02 画 5 行、q17 画 4 行），**被问的行永远在图外**。行数要写成常量（`show`），
+  别绑到题问的 `n` 上。
+- **被问的位置不许带数值标签。** 数轴上箭头指的那一格不能标数值（原卷只标 0 和 50）；
+  被问的格子要么空着、要么写 `?`。
+- **表格/列表别覆盖到答案那一行。** 表里只给「前 3 天」，答案的天数就必须 `n > 3`（写进 `constraints`）；
+  只给前 4 项，答案就必须在第 4 项之后。
+- **有 `?` 的图是安全的**：待求位置画成 `?`，学生必须自己算出来，别处出现同值只是巧合。
+- 自查一句话：**把图上所有数字读一遍 —— 如果其中有一个正是答案，那图就泄题了。**
+
+自动闸门：`node tools/test-logic.js` 会全库抽样查这件事（详见 §7）。真泄题只能改图；
+确认是巧合的，才在 `data/figure-leak-allow.json` 里登记 `kind` + `why`。
 
 ## 3. 模板字段
 
@@ -577,11 +597,13 @@ node tools/test-original.js                   # 「原题模式」数值自检�
 node tools/test-bankui.js                     # 「题库管理」界面的渲染自检（改了 app.js 的题卡渲染就要跑）
 node tools/test-papers.js                     # 试卷限时：元数据 + 认卷 + 折算算法（加/改试卷必跑）
 node tools/test-papertimer.js                 # 倒计时链路：10% 提醒 / 到点锁定 / 刷新续答 / 组卷折算
-node tools/test-srs.js && node tools/test-sync.js
+node tools/test-options.js                    # 选项层硬错（字面重复 / 答案与干扰项等值）
+node tools/test-logic.js                      # 逻辑体检：图不泄题 / SVG 无 NaN / 选项自洽
+node tools/test-srs.js && node tools/test-sync.js && node tools/test-profiles.js
 ```
 
 测试跑绿只说明「自洽」，**不说明「跟原卷是一路的」**。改完/新加一道图题，还要做一遍
-**人工对卷**（这是 §2.5 两条铁律的验收动作，机器替不了）：
+**人工对卷**（这是 §2.5 三条铁律的验收动作，机器替不了）：
 
 - [ ] **并排看**：把我们的图和原卷截图放一起，学生应该觉得「同一道题换了个数」，
       而不是「这题被重新设计过」。题干句型、已知量/待求量分配、配图版式逐条对。
@@ -589,6 +611,8 @@ node tools/test-srs.js && node tools/test-sync.js
 - [ ] **刻度撑得住数字**：一格 10 g 的表盘上不许出现 437 g；题干说「每次翻倍」，图上间距就真翻倍。
 - [ ] **参数抽到骨**：数量/读数/单位/物品/人名/方向/倍数都过一遍；`test-bank` 的「不同数值」
       不是 1、也不是 2，并且抽出来的每种题面都能解（非整数、两量撞数等已被 constraints 挡掉）。
+- [ ] **图里读不到答案**：把图上数字逐个念一遍，没有一个是答案；被问的那一行/那一格
+      要么在图外、要么是 `?`（见 §2.5.3）。
 
 **`test-bankui.js` 为什么必要**：本机没有可用的无头浏览器（Chrome/Edge 的
 `--headless --dump-dom` 静默退出、输出 0 字节），`index.html` 没法做端到端冒烟，
@@ -601,6 +625,16 @@ node tools/test-srs.js && node tools/test-sync.js
 
 > 想肉眼核对题卡外观：`node tools/test-bankui.js --html=.workbuddy/tmp/bank.html [--only=seamo --limit=10]`
 > 会导出一个静态页面，样式内联 `style.css`，内容就是真实 `renderBankList` 的输出（放 `.workbuddy/` 下，不入库）。
+
+**`test-logic.js` 为什么必要**：`test-bank` 验「能生成、判分自洽」，`test-figs` 验「这道图题算得对」，
+但两者都看不出「**答案已经印在图上了**」——`y2wq-18` 问「第 n 行最后一个数」，却按 n 行把三角形画满，
+那个数就明明白白写在最后一行末尾。它做法很直白：全库对每个带图模板抽样，把配图里**真正的文字数字**
+（不是 `data-v` 这种给测试用的属性）与答案比对，命中就必须在 `data/figure-leak-allow.json` 登记
+`kind` + `why`，否则失败并打印一串变量值，方便当场复现。图上画了 `?` 的样本一律豁免——待求位置
+明摆着未知，印在别处的同值只是巧合。随机数按模板 id 定种，同一份题库连跑两次结果完全一致，
+不会出现"时红时绿"的噪音。另有两条不需要白名单的硬检查：SVG 里不许出现 `NaN`/`undefined`
+（多半是 spec 键名与 vars 对不上，`num(undefined)` 会静默画成 0），选择题的 `correctIndex` 必须合法、
+`display` 必须是其中一个选项（多选题按数组逐个比）。
 
 
 改图/加图题时还有两个临时脚本值得跑（放在 `.workbuddy/tmp*/` 下，不入库）：

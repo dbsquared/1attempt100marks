@@ -428,21 +428,15 @@
     "zh": "下图的数字排列中，第 {n} 行的最后一个数是多少？"
    },
    "vars": {
-    "k": {
+    "n": {
      "type": "int",
-     "min": 3,
-     "max": 5
-    },
-    "e": {
-     "type": "int",
-     "min": 1,
-     "max": 3
+     "min": 7,
+     "max": 12
     }
    },
    "derived": {
-    "n": "k+e",
     "T": "n*(n+1)/2",
-    "o0": "T-3",
+    "o0": "T-2",
     "o1": "T-1",
     "o2": "T",
     "o3": "T+1",
@@ -467,11 +461,10 @@
    "originalImage": "assets/originals/2025seamoA-q06.png",
    "diagram": {
     "type": "numtri",
-    "rows": "k"
+    "show": 5
    },
    "original": {
-    "k": 5,
-    "e": 2
+    "n": 7
    }
   },
   {

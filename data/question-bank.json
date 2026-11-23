@@ -1256,7 +1256,8 @@
         "type": "numberline",
         "E": "E",
         "n": "n",
-        "k": "k"
+        "k": "k",
+        "labelEvery": 0
       },
       "originalImage": "assets/originals/2022y2m-q07.png",
       "original": {
@@ -5571,6 +5572,9 @@
         "t2": "a + d",
         "t3": "a + 2 * d"
       },
+      "constraints": [
+        "n > 3"
+      ],
       "sanity": {
         "integer": true,
         "positive": true
@@ -6042,21 +6046,15 @@
         "zh": "下图的数字排列中，第 {n} 行的最后一个数是多少？"
       },
       "vars": {
-        "k": {
+        "n": {
           "type": "int",
-          "min": 3,
-          "max": 5
-        },
-        "e": {
-          "type": "int",
-          "min": 1,
-          "max": 3
+          "min": 7,
+          "max": 12
         }
       },
       "derived": {
-        "n": "k+e",
         "T": "n*(n+1)/2",
-        "o0": "T-3",
+        "o0": "T-2",
         "o1": "T-1",
         "o2": "T",
         "o3": "T+1",
@@ -6081,11 +6079,10 @@
       "originalImage": "assets/originals/2025seamoA-q06.png",
       "diagram": {
         "type": "numtri",
-        "rows": "k"
+        "show": 5
       },
       "original": {
-        "k": 5,
-        "e": 2
+        "n": 7
       }
     },
     {
@@ -17701,8 +17698,8 @@
       "vars": {
         "n": {
           "type": "int",
-          "min": 4,
-          "max": 9
+          "min": 7,
+          "max": 12
         }
       },
       "derived": {
@@ -17732,7 +17729,7 @@
       "originalFig": "assets/originals/seamox-q02-fig.png",
       "diagram": {
         "type": "numtri",
-        "rows": "n"
+        "show": 5
       },
       "original": {
         "n": 7
@@ -18868,7 +18865,8 @@
       "originalFig": "assets/originals/seamox-q17-fig.png",
       "diagram": {
         "type": "numtri",
-        "rows": "n"
+        "odd": true,
+        "show": 4
       },
       "original": {
         "n": 12

@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "updated": "2026-11-20",
+  "updated": "2026-11-23",
   "note": "内置示例题库。真题模板由 WorkBuddy 从试卷图片识别后生成，写入本文件或通过网页「题库管理」导入。模板字段说明见 PIPELINE.md。",
   "templates": [
     {
@@ -16883,12 +16883,14 @@
         "B": {
           "type": "int",
           "min": 300,
-          "max": 600
+          "max": 600,
+          "step": 10
         },
         "T": {
           "type": "int",
           "min": 400,
-          "max": 800
+          "max": 800,
+          "step": 10
         }
       },
       "constraints": [
@@ -16912,8 +16914,8 @@
         "type": "scale",
         "val": "T",
         "max": 800,
-        "step": 200,
-        "minor": 20,
+        "step": 100,
+        "minor": 10,
         "unit": "g",
         "item": [
           [

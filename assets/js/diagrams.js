@@ -3663,8 +3663,10 @@
           }
         }
 
+        /* 指针：只画到数字圈内侧（R-42），像原卷那样「短针 + 外圈数字」——
+           避免针尖正好压在它所指的那个数字上把自己遮掉。 */
         var pa = ang(val);
-        cell += '<line data-u="needle" data-val="' + fmt(val) + '" x1="' + cx + '" y1="' + cy + '" x2="' + px(pa, R - 22).toFixed(1) + '" y2="' + py(pa, R - 22).toFixed(1) +
+        cell += '<line data-u="needle" data-val="' + fmt(val) + '" x1="' + cx + '" y1="' + cy + '" x2="' + px(pa, R - 42).toFixed(1) + '" y2="' + py(pa, R - 42).toFixed(1) +
              '" stroke="' + RED + '" stroke-width="4" stroke-linecap="round"/>';
 
         if (unit) cell += '<text x="' + cx + '" y="' + (cy + R + 22) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(unit) + '</text>';

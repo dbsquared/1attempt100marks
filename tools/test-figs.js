@@ -2012,11 +2012,19 @@ function triGeoCount(lines) {
     const mv = [...String(q.diagramSvg).matchAll(/data-u="scale" data-val="([\d.]+)"/g)];
     chk(mv.length === 1, 'y2wq-06 图上应有 1 台秤，实际 ' + mv.length);
     if (mv.length) chk(parseFloat(mv[0][1]) === q.vars.T, 'y2wq-06 图指针 ' + mv[0][1] + ' ≠ 题干总读数 T=' + q.vars.T);
-    /* 原卷表盘有细分刻度（20 g 一档）：36 条次要刻度线，避开主刻度 */
+    /* 表盘精度 10 g：题干数字必须是整十数（秤上读不出个位），指针必须正好落在刻度线上 */
+    chk(q.vars.B % 10 === 0 && q.vars.T % 10 === 0,
+      'y2wq-06 题干数字应为整十数（秤只精确到 10 g），实际 B=' + q.vars.B + ' T=' + q.vars.T);
+    /* 原卷表盘有细分刻度，且 10 g 一档要数得清 ⇒ 主刻度 100 g、每格 10 g */
     const mnr6 = [...String(q.diagramSvg).matchAll(/data-u="tickminor" data-v="(\d+)"/g)].map(m => +m[1]);
-    chk(mnr6.length === 36, 'y2wq-06 表盘应有 36 条细分刻度（20g 档），实际 ' + mnr6.length);
-    chk(mnr6.every(v => v % 20 === 0 && v % 200 !== 0),
-      'y2wq-06 细分刻度应落在 20g 档且避开主刻度，实际 ' + mnr6.join(','));
+    chk(mnr6.length === 72, 'y2wq-06 表盘应有 72 条细分刻度（10g 档），实际 ' + mnr6.length);
+    chk(mnr6.every(v => v % 10 === 0 && v % 100 !== 0),
+      'y2wq-06 细分刻度应落在 10g 档且避开主刻度（100g），实际 ' + mnr6.slice(0, 12).join(','));
+    const tickVals = [...String(q.diagramSvg).matchAll(/data-u="tick" data-v="(\d+)"/g)].map(m => +m[1]);
+    chk(tickVals.length === 9 && tickVals[0] === 0 && tickVals[8] === 800,
+      'y2wq-06 主刻度应为 0/100/…/800 共 9 条，实际 ' + tickVals.join(','));
+    chk(tickVals.indexOf(q.vars.T) >= 0 || mnr6.indexOf(q.vars.T) >= 0,
+      'y2wq-06 读数 T=' + q.vars.T + ' 没有正好落在任何刻度线上（秤上读不出来）');
   }
   /* y2wq-09：双秤，指针 = s1 / s2（两台读数量分别对齐） */
   const t9 = byId('y2wq-09');

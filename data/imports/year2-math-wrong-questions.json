@@ -308,12 +308,14 @@
     "B": {
      "type": "int",
      "min": 300,
-     "max": 600
+     "max": 600,
+     "step": 10
     },
     "T": {
      "type": "int",
      "min": 400,
-     "max": 800
+     "max": 800,
+     "step": 10
     }
    },
    "constraints": [
@@ -337,8 +339,8 @@
     "type": "scale",
     "val": "T",
     "max": 800,
-    "step": 200,
-    "minor": 20,
+    "step": 100,
+    "minor": 10,
     "unit": "g",
     "item": [
      [

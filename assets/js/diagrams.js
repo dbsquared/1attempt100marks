@@ -2143,7 +2143,10 @@
   }
   /* 一行小图标：items = [[kind,count],…]；weight 的标签用 labelOf。
      slot = 槽位宽（默认 34），s = 图标尺度（默认 22）；需要画大件（如香蕉）时调大两者 */
-  function itemRow(cx, baseY, items, vars, labelOf, s, slot, pad) {
+  /* 各图元「最低点」相对图标尺度 s 的比例（图标中心 → 底边）。
+     把东西摆到秤盘/托盘上时按这个比例下沉，才不会出现芒果/葡萄穿过盘面。 */
+  var ITEM_BOTTOM = { apple: 0.52, mango: 0.78, grape: 0.83, banana: 0.46, weight: 0.40, cube: 0.36, ball: 0.38 };
+  function itemRow(cx, baseY, items, vars, labelOf, s, slot, pad, botFrac) {
     var list = [], i, o = '';
     (items || []).forEach(function (it) {
       var cnt = Math.round(num(it[1], vars));
@@ -2152,9 +2155,14 @@
     s = s || 22;
     slot = slot || Math.round(s * 1.55);
     var x0 = cx - (list.length - 1) * slot / 2;
-    /* pad = 图标中心到 baseY 的距离（缺省 20）；balance 传 icon*0.45，让果子/砝码正好落在托盘面上 */
+    /* pad = 图标中心到 baseY 的距离（缺省 20）；balance 传 icon*0.45，让果子/砝码正好落在托盘面上。
+       botFrac（第 9 参）给了比例表时，改用「该图元最低点正好贴到 baseY」逐件算下沉量。 */
     var dy = (pad === undefined || pad === null) ? 20 : pad;
-    for (i = 0; i < list.length; i++) o += itemIcon(list[i], x0 + i * slot, baseY - dy, s, labelOf ? labelOf(list[i]) : '');
+    for (i = 0; i < list.length; i++) {
+      var py = baseY - dy;
+      if (botFrac) { var f = botFrac[list[i]]; if (f) py = baseY - s * f; }
+      o += itemIcon(list[i], x0 + i * slot, py, s, labelOf ? labelOf(list[i]) : '');
+    }
     return o;
   }
   /* 一段折线集合（Q19 叠加规律）：segs = ["00-20", …]，坐标在 3×3 点阵上，y 向上 */
@@ -3614,10 +3622,16 @@
   var TYPESscale = {
     scale: function (spec, vars) {
       var specs = spec.scales || [spec];
-      var one = { W: 240, H: 300, cx: 120, cy: 120, R: 104 };
+      var one = { W: 240, R: 104 };
       var pad = 16;
-      var W = Math.round(pad * 2 + specs.length * one.W), H = one.H;
-      var s = svgOpen(W, H, 'scale reading');
+      /* 版式照原卷：被称的东西放在**秤盘**上、秤盘在**表盘上方**，表盘在下。
+         panY = 托盘台面，dialCy = 表盘圆心，两者之间是托颈。 */
+      var panY = pad + 48;
+      var neck = 40;
+      var dialCy = panY + neck + one.R;
+      var H = Math.round(dialCy + one.R + 34);
+      var W = Math.round(pad * 2 + specs.length * one.W);
+      var s = svgOpen(W, H, 'scale with a pan on top and a dial below');
 
       specs.forEach(function (sp, idx) {
         var max = Math.max(1, Math.round(num(sp.max, vars) || 100));
@@ -3626,10 +3640,20 @@
         var val = isFinite(raw) ? Math.max(0, Math.min(max, raw)) : 0;
         var unit = strSpec(sp.unit, vars) || '';
         var item = sp.item || null;
-        var cx = pad + idx * one.W + one.cx, cy = one.cy, R = one.R;
+        var cx = pad + idx * one.W + one.W / 2, cy = dialCy, R = one.R;
         var cell = '<g data-u="scale" data-val="' + fmt(val) + '" data-max="' + max + '">';
 
-        cell += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2.5"/>';
+        /* 秤盘（两端上翘的托盘）+ 托颈：物体坐在托盘上，托盘压在表盘上方 */
+        var panHalf = 104;
+        cell += '<path data-u="pan" data-y="' + panY + '" d="M' + (cx - panHalf) + ' ' + (panY - 16) +
+             ' Q' + (cx - panHalf) + ' ' + panY + ' ' + (cx - panHalf + 20) + ' ' + panY +
+             ' L' + (cx + panHalf - 20) + ' ' + panY +
+             ' Q' + (cx + panHalf) + ' ' + panY + ' ' + (cx + panHalf) + ' ' + (panY - 16) +
+             '" fill="none" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>';
+        cell += '<path data-u="neck" d="M' + (cx - 20) + ' ' + panY + ' L' + (cx + 20) + ' ' + panY +
+             ' L' + (cx + 30) + ' ' + (cy - R) + ' L' + (cx - 30) + ' ' + (cy - R) + ' Z" fill="#eef2f6" stroke="' + INK + '" stroke-width="2"/>';
+
+        cell += '<circle data-u="dial" data-cy="' + cy + '" cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="#ffffff" stroke="' + INK + '" stroke-width="2.5"/>';
         cell += '<circle cx="' + cx + '" cy="' + cy + '" r="6" fill="' + INK + '"/>';
 
         /* 刻度：0 在左上（-225°），满刻度在右上（+45°），扫过 270° */
@@ -3672,23 +3696,24 @@
         if (unit) cell += '<text x="' + cx + '" y="' + (cy + R + 22) + '" font-size="17" font-weight="700" text-anchor="middle" fill="' + INK + '">' + esc(unit) + '</text>';
 
         if (item) {
-          /* 物品槽位按数量自适应：物品多时缩小，保证总宽不超过秤宽（约 200px 可用），
+          /* 物品槽位按数量自适应：物品多时缩小，保证总宽不超过秤盘宽（约 200px 可用），
              避免多物品（如 Q9 左秤 2方块+3球）横向溢出到相邻秤的区域 */
           var icnt = item.reduce(function (a, it) { return a + Math.round(num(it[1], vars)); }, 0);
           var isz = icnt > 3 ? 24 : 30;
           var islot = icnt > 0 ? Math.min(76, Math.floor(200 / icnt)) : 76;
-          cell += itemRow(cx, cy + R + 70, item, vars, null, isz, islot);
+          /* 底部对齐托盘台面（第 9 参传「最低点比例表」），物体正好「坐」在秤盘上、不穿盘面 */
+          cell += '<g data-u="panitems">' + itemRow(cx, panY, item, vars, null, isz, islot, isz / 2, ITEM_BOTTOM) + '</g>';
         }
 
         cell += '</g>';
         s += cell;
       });
 
-      /* 多秤并排时，在相邻两台之间画竖向虚线分隔（下方物品区各归各，不串位） */
+      /* 多秤并排时，在相邻两台之间画竖向虚线分隔（两台秤各归各，不串位） */
       if (specs.length > 1) {
         for (var bi = 1; bi < specs.length; bi++) {
           var bx = pad + bi * one.W;
-          s += '<line x1="' + bx + '" y1="' + pad + '" x2="' + bx + '" y2="' + (one.H - pad) +
+          s += '<line x1="' + bx + '" y1="' + 4 + '" x2="' + bx + '" y2="' + (H - 4) +
                '" stroke="' + GREY + '" stroke-width="1.2" stroke-dasharray="5,4"/>';
         }
       }

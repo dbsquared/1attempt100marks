@@ -2026,26 +2026,54 @@ function triGeoCount(lines) {
     chk(tickVals.indexOf(q.vars.T) >= 0 || mnr6.indexOf(q.vars.T) >= 0,
       'y2wq-06 读数 T=' + q.vars.T + ' 没有正好落在任何刻度线上（秤上读不出来）');
   }
-  /* y2wq-09：双秤，指针 = s1 / s2（两台读数量分别对齐） */
+  /* y2wq-09：双秤，指针 = s1 / s2；读数必须是整十（秤只精确到 10），题干不许替考生读秤 */
   const t9 = byId('y2wq-09');
+  const SOLVE9 = {};
   for (let i = 0; i < REP; i++) {
     const q = Generator.instantiate(t9);
-    const mv = [...String(q.diagramSvg).matchAll(/data-u="scale" data-val="([\d.]+)"/g)].map(m => parseFloat(m[1]));
+    const svg = String(q.diagramSvg);
+    const mv = [...svg.matchAll(/data-u="scale" data-val="([\d.]+)"/g)].map(m => parseFloat(m[1]));
     chk(mv.length === 2, 'y2wq-09 图上应有 2 台秤，实际 ' + mv.length);
     if (mv.length === 2) {
       chk(mv[0] === q.vars.s1 && mv[1] === q.vars.s2,
         'y2wq-09 图指针 ' + mv.join('/') + ' ≠ 题干 s1=' + q.vars.s1 + ' s2=' + q.vars.s2);
     }
-    /* 答案 = 球质量，必须和两台读数一致地解出：ball = (s1 - c1*s2)/(b1 - c1)
-       （第二台固定 1方块+1圆球 ⇒ cube=s2-ball ⇒ c1*(s2-ball)+b1*ball=s1 ⇒ ball=(s1-c1*s2)/(b1-c1)） */
-    chk(q.value === (q.vars.s1 - q.vars.c1 * q.vars.s2) / (q.vars.b1 - q.vars.c1),
-      'y2wq-09 答案 ' + q.value + ' ≠ (s1-c1*s2)/(b1-c1)=' + ((q.vars.s1 - q.vars.c1 * q.vars.s2) / (q.vars.b1 - q.vars.c1)));
-    /* 消元后必须是正整数，且系数确实参数化过（c1≠b1 已由约束保证） */
-    chk(Number.isInteger(q.value) && q.value > 0, 'y2wq-09 答案应为正整数，实际 ' + q.value);
-    /* 原卷表盘刻度很密（1 kg 一档）：两台共 72 条次要刻度线，避开主刻度 */
-    const mnr9 = [...String(q.diagramSvg).matchAll(/data-u="tickminor" data-v="(\d+)"/g)].map(m => +m[1]);
-    chk(mnr9.length === 72, 'y2wq-09 两台表盘应有 72 条细分刻度（每台 36 条），实际 ' + mnr9.length);
-    chk(mnr9.every(v => v % 10 !== 0), 'y2wq-09 细分刻度应避开主刻度（主刻度为 10 的倍数）');
+    /* 读数整十 + 正好落在主刻度上（表盘 10 kg 一档，读不出 14 这种数） */
+    chk(q.vars.s1 % 10 === 0 && q.vars.s2 % 10 === 0 && q.vars.s1 !== q.vars.s2,
+      'y2wq-09 两台读数应为不同的整十数，实际 ' + q.vars.s1 + '/' + q.vars.s2);
+    const ticks9 = [...svg.matchAll(/data-u="tick" data-v="(\d+)"/g)].map(m => +m[1]);
+    chk(ticks9.length === 10 && ticks9.slice(0, 5).join(',') === '0,10,20,30,40' && ticks9.slice(5).join(',') === '0,10,20,30,40',
+      'y2wq-09 每台表盘主刻度应为 0/10/20/30/40 共 5 条（两台共 10 条），实际 ' + ticks9.join(','));
+    chk(ticks9.indexOf(q.vars.s1) >= 0 && ticks9.indexOf(q.vars.s2) >= 0,
+      'y2wq-09 读数 ' + q.vars.s1 + '/' + q.vars.s2 + ' 没有落在刻度线上');
+    /* 不许替考生读秤：题干里不能出现读数 */
+    chk(q.stemText.indexOf(String(q.vars.s1)) < 0 && q.stemText.indexOf(String(q.vars.s2)) < 0,
+      'y2wq-09 题干把秤上的读数写出来了（应让考生自己读图）：' + q.stemText);
+    /* 图上两台秤盘的方块/圆球个数必须 = 题干给的个数（数图上的实际图形，不看 data） */
+    const pans = svg.split('<g data-u="scale"').slice(1);
+    chk(pans.length === 2, 'y2wq-09 应能拆出 2 台秤的图元，实际 ' + pans.length);
+    const cnt = pans.map(p => ({
+      cube: (p.match(/fill="#94a3b8"/g) || []).length,
+      ball: (p.match(/fill="#1f6feb"/g) || []).length
+    }));
+    chk(cnt[0] && cnt[0].cube === q.vars.c1 && cnt[0].ball === q.vars.b1,
+      'y2wq-09 第一台秤上画了 ' + (cnt[0] ? cnt[0].cube + '方' + cnt[0].ball + '球' : '?') + '，题干说 ' + q.vars.c1 + '方' + q.vars.b1 + '球');
+    chk(cnt[1] && cnt[1].cube === q.vars.c2 && cnt[1].ball === q.vars.b2,
+      'y2wq-09 第二台秤上画了 ' + (cnt[1] ? cnt[1].cube + '方' + cnt[1].ball + '球' : '?') + '，题干说 ' + q.vars.c2 + '方' + q.vars.b2 + '球');
+    /* 秤盘必须在表盘上方（物体放在盘里、盘在上，表盘在下） */
+    const panY = +(svg.match(/data-u="pan" data-y="([\d.]+)"/) || [])[1];
+    const dialY = +(svg.match(/data-u="dial" data-cy="([\d.]+)"/) || [])[1];
+    chk(isFinite(panY) && isFinite(dialY) && panY < dialY,
+      'y2wq-09 秤盘应在表盘上方，实际 盘 y=' + panY + ' 表盘 y=' + dialY);
+    /* 独立解方程：c1·x + b1·y = s1，c2·x + b2·y = s2 */
+    const det = q.vars.c1 * q.vars.b2 - q.vars.c2 * q.vars.b1;
+    const cube = (q.vars.s1 * q.vars.b2 - q.vars.s2 * q.vars.b1) / det;
+    const ball = (q.vars.c1 * q.vars.s2 - q.vars.c2 * q.vars.s1) / det;
+    chk(det !== 0, 'y2wq-09 两式系数行列式为 0，题目无唯一解');
+    chk(q.value === ball, 'y2wq-09 答案 ' + q.value + ' ≠ 解方程算出的圆球质量 ' + ball);
+    chk(Number.isInteger(cube) && Number.isInteger(ball) && ball > 0 && cube > ball,
+      'y2wq-09 解出的质量应为整数且方块 > 圆球，实际 方块 ' + cube + ' 圆球 ' + ball);
+    SOLVE9[ball] = SOLVE9[ball] || { c1: q.vars.c1, b1: q.vars.b1, c2: q.vars.c2, b2: q.vars.b2, s1: q.vars.s1, s2: q.vars.s2 };
   }
   /* y2wq-12：单秤，指针 = m（答案），图上不能把读数漏掉或画错 */
   const t12 = byId('y2wq-12');

@@ -497,40 +497,71 @@
    ],
    "source": "Year 2 数学错题集锦 Q9",
    "stem": {
-    "en": "On a scale, {c1} cubes and {b1} circles weigh {s1} kg. On another scale, {c2} cube and {b2} circle weigh {s2} kg. Each cube has the same mass, and each circle has the same mass. Find the mass of one circle.",
-    "zh": "一台秤上，{c1} 个方块和 {b1} 个圆球共重 {s1} 千克；另一台秤上，{c2} 个方块和 {b2} 个圆球共重 {s2} 千克。每个方块一样重，每个圆球也一样重。求一个圆球的质量。"
+    "en": "The first scale holds {c1} {u1c} and {b1} {u1b}. The second scale holds {c2} {u2c} and {b2} {u2b}. Every cube has the same mass and every ball has the same mass. Find the mass of one ball.",
+    "zh": "第一台秤上放着 {c1} 个方块和 {b1} 个圆球，第二台秤上放着 {c2} 个方块和 {b2} 个圆球。每个方块一样重，每个圆球也一样重。求一个圆球的质量。"
    },
    "vars": {
-    "cube": {
-     "type": "int",
-     "min": 3,
-     "max": 6
+    "m": {
+     "type": "pick",
+     "from": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
     },
-    "ball": {
-     "type": "int",
-     "min": 2,
-     "max": 4
+    "s1": {
+     "type": "pick",
+     "from": [
+      10,
+      20,
+      30,
+      40
+     ]
     },
-    "c1": {
-     "type": "int",
-     "min": 2,
-     "max": 3
-    },
-    "b1": {
-     "type": "int",
-     "min": 2,
-     "max": 4
+    "s2": {
+     "type": "pick",
+     "from": [
+      10,
+      20,
+      30,
+      40
+     ]
     }
    },
    "derived": {
-    "c2": "1",
-    "b2": "1",
-    "s1": "c1*cube + b1*ball",
-    "s2": "cube + ball"
+    "c1": "sel(m,2,3,4,1,1,4)",
+    "b1": "sel(m,3,2,2,2,4,3)",
+    "c2": "sel(m,1,1,1,1,1,1)",
+    "b2": "sel(m,1,4,3,4,2,2)",
+    "det": "c1*b2 - c2*b1",
+    "cube": "(s1*b2 - s2*b1)/det",
+    "ball": "(c1*s2 - c2*s1)/det",
+    "nB": "(b1 - c1*b2)*(2*((b1 - c1*b2) > 0) - 1)",
+    "nM": "(s1 - c1*s2)*(2*((s1 - c1*s2) > 0) - 1)",
+    "p1c": "c1==1",
+    "u1c": "sel(p1c,'cubes','cube')",
+    "p1b": "b1==1",
+    "u1b": "sel(p1b,'balls','ball')",
+    "p2c": "c2==1",
+    "u2c": "sel(p2c,'cubes','cube')",
+    "p2b": "b2==1",
+    "u2b": "sel(p2b,'balls','ball')",
+    "pP": "c1*b2==1",
+    "uPb": "sel(pP,'balls','ball')",
+    "nBP": "nB==1",
+    "uNb": "sel(nBP,'balls','ball')"
    },
    "constraints": [
+    "det != 0",
+    "cube == floor(cube)",
+    "ball == floor(ball)",
     "cube > ball",
-    "c1 != b1"
+    "ball >= 1",
+    "cube <= 15",
+    "nB != 0"
    ],
    "answer": {
     "type": "integer",
@@ -542,8 +573,8 @@
     }
    },
    "solution": {
-    "en": "Second scale: 1 cube＋1 circle＝{s2} kg, so one cube is {s2}−1 circle. Substitute into the first: {c1}×({s2}−circle)＋{b1} circles＝{s1}, i.e. {c1*s2}＋({b1}−{c1}) circle(s)＝{s1}. So one circle＝({s1}−{c1*s2})÷({b1}−{c1})＝{ball} kg.",
-    "zh": "第二台秤：1 方块＋1 圆球＝{s2} 千克，所以 1 方块＝{s2}−1 圆球。代入第一台：{c1}×({s2}−圆球)＋{b1} 圆球＝{s1}，即 {c1*s2}＋({b1}−{c1}) 圆球＝{s1}。所以 1 圆球＝({s1}−{c1*s2})÷({b1}−{c1})＝{ball} 千克。"
+    "en": "Read the dials: the first scale shows {s1} kg and the second shows {s2} kg. The second scale is 1 cube plus {b2} {u2b}, so 1 cube = {s2} kg minus {b2} {u2b}. Swap the {c1} cubes on the first scale for that: {c1} × {s2} = {c1*s2} kg minus {c1*b2} {uPb}; together with the {b1} {u1b} already there, that leaves {nB} {uNb} = {nM} kg. So one ball = {nM} ÷ {nB} = {ball} kg.",
+    "zh": "先读两台秤：第一台读 {s1} 千克，第二台读 {s2} 千克。第二台秤是 1 个方块 + {b2} 个圆球，所以 1 个方块 = {s2} 千克减去 {b2} 个圆球。把它代进第一台秤：{c1} 个方块 = {c1*s2} 千克减去 {c1*b2} 个圆球，再加上第一台原有的 {b1} 个圆球，就得到 {nB} 个圆球 = {nM} 千克。所以 1 个圆球 = {nM} ÷ {nB} = {ball} 千克。"
    },
    "sourceSet": "year2数学错题集锦",
    "diagram": {
@@ -586,10 +617,9 @@
     ]
    },
    "original": {
-    "cube": 4,
-    "ball": 2,
-    "c1": 2,
-    "b1": 3
+    "m": 0,
+    "s1": 14,
+    "s2": 6
    },
    "originalFig": "assets/originals/y2wq-q09-fig.jpg"
   },

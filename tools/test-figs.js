@@ -2025,6 +2025,21 @@ function triGeoCount(lines) {
       'y2wq-06 主刻度应为 0/100/…/800 共 9 条，实际 ' + tickVals.join(','));
     chk(tickVals.indexOf(q.vars.T) >= 0 || mnr6.indexOf(q.vars.T) >= 0,
       'y2wq-06 读数 T=' + q.vars.T + ' 没有正好落在任何刻度线上（秤上读不出来）');
+    /* 不替考生读秤：题干只给香蕉的质量，总质量必须自己看表盘（原卷就是这样） */
+    chk(q.stemText.indexOf(String(q.vars.T)) < 0,
+      'y2wq-06 题干把秤上的总读数写出来了（应让考生自己读图）：' + q.stemText);
+    chk(q.stemText.indexOf(String(q.vars.B)) >= 0,
+      'y2wq-06 题干应给出香蕉的质量 B=' + q.vars.B + '：' + q.stemText);
+    /* 香蕉和芒果要坐在表盘上方的秤盘里 */
+    const pan6 = +(String(q.diagramSvg).match(/data-u="pan" data-y="([\d.]+)"/) || [])[1];
+    const dial6 = +(String(q.diagramSvg).match(/data-u="dial" data-cy="([\d.]+)"/) || [])[1];
+    chk(isFinite(pan6) && isFinite(dial6) && pan6 < dial6,
+      'y2wq-06 秤盘应在表盘上方，实际 盘 y=' + pan6 + ' 表盘 y=' + dial6);
+    const onPan = String(q.diagramSvg).match(/data-u="panitems"[\s\S]*?<\/g>/);
+    chk(onPan && /data-u="panitems"/.test(q.diagramSvg),
+      'y2wq-06 香蕉和芒果应画在秤盘上（data-u="panitems"）');
+    chk(onPan && (onPan[0].match(/fill="#f5c518"/g) || []).length >= 1,
+      'y2wq-06 秤盘上应画着香蕉');
   }
   /* y2wq-09：双秤，指针 = s1 / s2；读数必须是整十（秤只精确到 10），题干不许替考生读秤 */
   const t9 = byId('y2wq-09');

@@ -16876,8 +16876,8 @@
       ],
       "source": "Year 2 数学错题集锦 Q6",
       "stem": {
-        "en": "The mass of the bunch of bananas is {B} g. On the scale, the bananas and a mango together read {T} g. Find the mass of the mango.",
-        "zh": "一串香蕉的质量是 {B} 克。秤上放着一串香蕉和一个芒果，总读数是 {T} 克。求芒果的质量。"
+        "en": "The mass of the bunch of bananas is {B} g. The bananas and a mango are put on the scale together. Look at the scale. What is the mass of the mango?",
+        "zh": "一串香蕉的质量是 {B} 克。把香蕉和一个芒果一起放到秤上（如图），看秤读出总质量。求芒果的质量。"
       },
       "vars": {
         "B": {
@@ -16906,8 +16906,8 @@
         }
       },
       "solution": {
-        "en": "Total on the scale is {T} g; the bananas are {B} g. The mango is the difference: {T}−{B}＝{T-B} g.",
-        "zh": "秤上总质量是 {T} 克，香蕉是 {B} 克，芒果就是它们的差：{T}−{B}＝{T-B} 克。"
+        "en": "The dial reads {T} g. The bananas are {B} g, so the mango is the difference: {T}−{B}＝{T-B} g.",
+        "zh": "秤上的指针指着 {T} 克。香蕉是 {B} 克，芒果就是它们的差：{T}−{B}＝{T-B} 克。"
       },
       "sourceSet": "year2数学错题集锦",
       "diagram": {

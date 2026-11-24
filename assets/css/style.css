@@ -68,11 +68,12 @@ header.top {
 .icon-btn:hover { border-color: var(--brand); }
 
 nav.tabs { max-width: 880px; margin: 0 auto; padding: 0 16px 10px; display: flex; gap: 6px; flex-wrap: wrap; }
-nav.tabs button {
+nav.tabs button, nav.tabs a {
   border: 1px solid transparent; background: transparent; color: var(--muted);
   padding: 7px 14px; border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 600;
+  text-decoration: none; display: inline-block;
 }
-nav.tabs button:hover { color: var(--text); }
+nav.tabs button:hover, nav.tabs a:hover { color: var(--text); }
 nav.tabs button.active { background: var(--brand-soft); color: var(--brand); border-color: transparent; }
 
 /* ---------- Cards ---------- */

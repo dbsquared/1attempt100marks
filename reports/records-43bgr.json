@@ -1,0 +1,19 @@
+{
+  "sid": "43bgr",
+  "name": "丘小团",
+  "records": [
+    {
+      "id": "20261124-1",
+      "date": "2026-11-24",
+      "time": "16:41",
+      "paper": "Y2 数学英文卷",
+      "total": 12,
+      "correct": 6,
+      "rawCorrect": 4,
+      "note": "金额题 y2wq-03 / y2wq-04 数值正确、仅多写 $，按家长裁定改判为答对",
+      "report": "paper-43bgr-20261124.html",
+      "wrongReport": "wrong-report-43bgr-20261124.html",
+      "source": "[1a1m-sync] 43bgr 试卷"
+    }
+  ]
+}
